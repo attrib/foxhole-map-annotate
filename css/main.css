@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+}
+
+#map {
+    /*background: url("../images/upload/railmap.png") no-repeat;*/
+    /*background-size: 100%;*/
+    position: absolute;;
+    width: 100%;
+    height: 90%;
+}
+
+#additional .tooltip {
+    position: absolute;
+    opacity: 0;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 5px;
+}
