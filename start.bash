@@ -3,6 +3,7 @@
 docker build -t born .
 
 docker stop born || true
+docker rm born || true
 
 docker run -d \
   -v `pwd`/uploads:/app/uploads \
