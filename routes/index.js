@@ -19,8 +19,8 @@ router.get('/', function(req, res, next) {
 router.get('/login', async function(req, res, next) {
   let discord = new Discord(req.session.grant.response.access_token);
   discord.getVStatus((data) => {
-    if (data.nick && data.roles && data.roles.includes('1003485459676139551')) {
-      req.session.user = data.nick;
+    if ((data.nick || data.user.username) && data.roles && data.roles.includes('1003485459676139551')) {
+      req.session.user = data.nick ? data.nick : data.user.username;
       req.session.id = uuid.v4();
       req.session.save(() => {
         res.redirect('/');
