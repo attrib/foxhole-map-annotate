@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
     return;
   }
   const image = getMostRecentFile(__dirname + '/../uploads/');
-  res.render('index', {title: 'BigOof RailMap', image: '/uploads/' + image.file});
+  res.render('index', {title: 'BigOof RailMap', image: '/uploads/' + image.file, websocketUrl: process.env.ORIGIN.replace('http', 'ws')});
 });
 
 router.get('/login', async function(req, res, next) {

@@ -5,7 +5,7 @@ const zoom = d3.zoom();
 const x=-100, y=-150, scale=0.5;
 
 // Create WebSocket connection.
-const socket = new WebSocket('ws://localhost:3000');
+const socket = new WebSocket(websocketUrl);
 
 let dataMarkers = [];
 
