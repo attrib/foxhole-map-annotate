@@ -27,8 +27,9 @@ router.get('/login', async function(req, res, next) {
       })
     }
     else {
-      req.session.destroy();
-      res.render('error', {title: 'BigOof RailMap', error: {status: 'access denied', stack: data}});
+      req.session.destroy(() => {
+        res.render('error', {title: 'BigOof RailMap', error: {status: 'access denied', stack: JSON.stringify(data)}});
+      });
     }
   })
 });
