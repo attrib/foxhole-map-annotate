@@ -1,2 +1,6 @@
 .idea
-images/upload
+uploads
+sessions
+markers.json
+.env
+node_modules

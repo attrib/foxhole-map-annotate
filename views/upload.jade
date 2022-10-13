@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    form(method="POST",action="/upload",enctype="multipart/form-data")
+        if error
+          p= error
+        input(type="file",name="image")
+        input(type="submit",value="Upload")

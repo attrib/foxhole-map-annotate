@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    #map
+    #additional
+        .tooltip
+            span.user
+            span.time
+            .text
+        .form
+            div
+                label Text
+                textarea(name="text")
+            div
+                label Type
+                select(name="type")
+                    option(value="info") Info
+                    option(value="warning") Warning
+                    option(value="danger") Danger
+            div
+                input(type="submit",value="Cancel",name="cancel",class="cancel")
+                input(type="submit",value="Save",name="save",class="submit")
+    script.
+        const imageUrl="#{image}"
+    script(src="https://d3js.org/d3.v6.min.js")
+    script(src="javascripts/index.js")

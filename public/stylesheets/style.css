@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+header h1 {
+  float: left;
+  padding-left: 10px;
+  margin: 10px;
+}
+
+header ul {
+  list-style: none;
+  float: left;
+  font-size: 2em;
+  margin: 10px;
+  padding: 0;
+}
+
+header ul li {
+  float: left;
+  margin: 0 10px;
+}
+
+#main {
+  clear: both;
+  margin: 5px;
+}
+
+#map {
+  width: 100%;
+  height: 90%;
+}
+
+#additional > div {
+  position: absolute;
+  opacity: 0;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  top: -200px;
+  left: -200px;
+}
+
+#additional .tooltip .time {
+  padding-left: 10px;
+}
+
+#additional .tooltip .text {
+  padding-top: 5px;
+}
+
+#additional .form > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px;
+  gap: 10px;
+}

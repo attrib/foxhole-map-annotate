@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title= title || "BigOof RailMap"
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    header
+        h1= title || "BigOof RailMap"
+        ul
+            li
+                a(href='/') Map
+            li
+                a(href='/upload') Upload
+    section#main
+        block content
