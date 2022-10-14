@@ -179,6 +179,8 @@ function connectWebsocket(cb) {
         console.log('Message from server ', event.data);
         const data = JSON.parse(event.data);
         switch (data.type) {
+            case 'pong':
+                break;
             case 'markers':
                 dataMarkers = data.data.map((element) => {
                     element.updated = new Date(element.updated)
@@ -189,9 +191,14 @@ function connectWebsocket(cb) {
         }
     });
 
+    let pingTimeout = setTimeout(() => {
+        socket.send(JSON.stringify({type:'ping'}))
+    }, 45000)
+
     socket.addEventListener('close', () => {
+        clearTimeout(pingTimeout)
         socketClosed = true
-        socketConnectTimeout = setTimeout(connectWebsocket, document.visibilityState === "hidden" ? 300 : 30);
+        socketConnectTimeout = setTimeout(connectWebsocket, document.visibilityState === "hidden" ? 300000 : 30000);
         console.log('Websocket disconnected')
     })
 }

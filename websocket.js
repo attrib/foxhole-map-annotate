@@ -53,6 +53,10 @@ wss.on('connection', function (ws, request) {
           sendMarkersToAll();
           saveMarkers();
           break;
+
+        case 'ping':
+          ws.send(JSON.stringify({type: 'pong'}))
+          break;
       }
     });
 
