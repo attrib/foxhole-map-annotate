@@ -180,6 +180,7 @@ function connectWebsocket(cb) {
         const data = JSON.parse(event.data);
         switch (data.type) {
             case 'pong':
+                pingTimeout = ping()
                 break;
             case 'markers':
                 dataMarkers = data.data.map((element) => {
@@ -191,9 +192,13 @@ function connectWebsocket(cb) {
         }
     });
 
-    let pingTimeout = setTimeout(() => {
-        socket.send(JSON.stringify({type:'ping'}))
-    }, 45000)
+    function ping() {
+        return setTimeout(() => {
+            socket.send(JSON.stringify({type:'ping'}))
+        }, 45000);
+    }
+
+    let pingTimeout = ping()
 
     socket.addEventListener('close', () => {
         clearTimeout(pingTimeout)
