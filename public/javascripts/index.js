@@ -4,8 +4,8 @@ const height = window.innerHeight - 75;
 const zoom = d3.zoom();
 const x=-100, y=-150, scale=0.5;
 
-// Create WebSocket connection.
-const socket = new WebSocket(websocketUrl);
+let socket;
+connectWebsocket();
 
 let dataMarkers = [];
 
@@ -67,7 +67,7 @@ function updateData() {
                 .attr('fill', getColor)
                 .on("contextmenu", function (event, data) {
                     event.preventDefault();
-                    socket.send(JSON.stringify({
+                    socketSend(JSON.stringify({
                         type: 'delete',
                         data: data
                     }))
@@ -106,7 +106,9 @@ function getColor(data) {
 }
 
 function tooltipHide() {
-    Tooltip.style("opacity", 0);
+    Tooltip.style("opacity", 0)
+           .style("left", "-200px")
+           .style("top", "-200px");
 }
 
 function tooltipShow(event, data) {
@@ -124,7 +126,9 @@ function tooltipMove(event) {
 }
 
 function formHide(event, data) {
-    Form.style("opacity", 0);
+    Form.style("opacity", 0)
+        .style("left", "-200px")
+        .style("top", "-200px");
     Form.select('textarea[name=text]').property('value', '');
     Form.select('select[name=type]').property('value', 'warning');
     temporaryMarker = null
@@ -150,29 +154,60 @@ function formMove(event) {
 function formSubmit() {
     temporaryMarker.text = Form.select('textarea[name=text]').property('value')
     temporaryMarker.type = Form.select('select[name=type]').property('value')
-    socket.send(JSON.stringify({
+    socketSend(JSON.stringify({
         type: temporaryMarker.id ? 'update' : 'add',
         data: temporaryMarker
     }))
     formHide();
 }
 
-// Connection opened
-socket.addEventListener('open', (event) => {
+let socketClosed = true;
+let socketConnectTimeout = null
+function connectWebsocket(cb) {
+    socket = new WebSocket(websocketUrl);
+    // Connection opened
+    socket.addEventListener('open', (event) => {
+        socketClosed=false;
+        console.log('Websocket connected');
+        if (cb && typeof cb === 'function') {
+            cb();
+        }
+    });
 
-});
+    // Listen for messages
+    socket.addEventListener('message', (event) => {
+        console.log('Message from server ', event.data);
+        const data = JSON.parse(event.data);
+        switch (data.type) {
+            case 'markers':
+                dataMarkers = data.data.map((element) => {
+                    element.updated = new Date(element.updated)
+                    return element
+                })
+                updateData();
+                break;
+        }
+    });
 
-// Listen for messages
-socket.addEventListener('message', (event) => {
-    console.log('Message from server ', event.data);
-    const data = JSON.parse(event.data);
-    switch (data.type) {
-        case 'markers':
-            dataMarkers = data.data.map((element) => {
-                element.updated = new Date(element.updated)
-                return element
-            })
-            updateData();
-            break;
+    socket.addEventListener('close', () => {
+        socketClosed = true
+        socketConnectTimeout = setTimeout(connectWebsocket, document.visibilityState === "hidden" ? 300 : 30);
+        console.log('Websocket disconnected')
+    })
+}
+
+function socketSend(data) {
+    if (socketClosed) {
+        clearTimeout(socketConnectTimeout)
+        connectWebsocket(() => {
+            socket.send(data)
+        });
     }
-});
+    else {
+        socket.send(data)
+    }
+}
+
+document.addEventListener('visibilitychange', () => {
+    console.log('visibility ' + document.visibilityState);
+})
