@@ -17,6 +17,19 @@ app.set('view engine', 'jade');
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
 }
+else {
+  const webpack = require('webpack');
+  const webpackHotMiddleware = require('webpack-hot-middleware')
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webPackConfig = require('./webpack.config.js');
+  const compiler = webpack(webPackConfig);
+  app.use(
+    webpackDevMiddleware(compiler, {
+      publicPath: webPackConfig.output.publicPath,
+    })
+  );
+  app.use(webpackHotMiddleware(compiler))
+}
 
 app.use(logger('dev'));
 app.use(express.json());
