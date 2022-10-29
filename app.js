@@ -41,7 +41,7 @@ app.use('/uploads', function(req,res,next){
   if (req.session && req.session.user) {
     return express.static(path.join(__dirname, 'uploads'))(req,res,next);
   } else {
-    res.render('login', {title: 'BigOof RailMap'});
+    res.render('login', {title: 'Warden Rail Network'});
   }
 });
 
@@ -56,7 +56,7 @@ app.use(grant({
   "discord": {
     "key": process.env.DISCORD_KEY,
     "secret": process.env.DISCORD_SECRET,
-    "scope": ["guilds.members.read"],
+    "scope": ["identify", "guilds", "guilds.members.read"],
     "callback": "/login",
   }
 }))

@@ -8,14 +8,15 @@ block content
                 #mouse-position-content.debug
                     span Mouse Position
                     #mouse-position
-                #track-info
-                    span.user
-                    span.time
+                #track-info.info-box
+                    div.placementInfo
+                        div.user
+                        div.time
                     div
-                        span Builder:
+                        span Builder:&nbsp;
                         span.clan
                     div.notes
-                #track-form
+                #track-form.form
                     div
                         label Builder
                         input(type="text", name="clan", placeholder="Builder", class="clan")
@@ -28,11 +29,12 @@ block content
                     div
                         input(type="submit", value="Cancel", name="cancel", class="cancel")
                         input(type="submit", value="Save", name="save", class="submit")
-                #icon-info
-                    span.user
-                    span.time
-                    .text
-                #icon-form
+                #icon-info.info-box
+                    div.placementInfo
+                        div.user
+                        div.time
+                    div.notes
+                #icon-form.form
                     div
                         label Notes
                         textarea(name="text", class="notes")

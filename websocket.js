@@ -8,7 +8,7 @@ const uuid = require('uuid')
 let tracks = {};
 const trackFileName = './data/tracks.json';
 if (fs.existsSync(trackFileName)) {
-  tracks = require('./data/tracks.json');
+  tracks = require(trackFileName);
 }
 else {
   tracks = {

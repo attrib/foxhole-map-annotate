@@ -6,17 +6,17 @@ var Discord = require('../lib/discord')
 /* GET home page. */
 router.get('/', function(req, res, next) {
   if (!req.session || !req.session.user) {
-    res.render('login', {title: 'BigOof RailMap'});
+    res.render('login', {title: 'Warden Rail Network'});
     return;
   }
-  res.render('index', {title: 'BigOof RailMap'});
+  res.render('index', {title: 'Warden Rail Network'});
 });
 
 router.get('/login', async function(req, res, next) {
   let discord = new Discord(req.session.grant.response.access_token);
-  discord.getVStatus((data) => {
-    if ((data.nick || data.user.username) && data.roles && data.roles.includes('1003485459676139551')) {
-      req.session.user = data.nick ? data.nick : data.user.username;
+  discord.checkAllowedUser((data, userId, guilds) => {
+    if (data !== false) {
+      req.session.user = data.user;
       req.session.id = uuid.v4();
       req.session.save(() => {
         res.redirect('/');
@@ -24,7 +24,7 @@ router.get('/login', async function(req, res, next) {
     }
     else {
       req.session.destroy(() => {
-        res.render('error', {title: 'BigOof RailMap', error: {status: 'access denied', stack: JSON.stringify(data)}});
+        res.render('access', {title: 'Warden Rail Network', userId, guilds});
       });
     }
   })
