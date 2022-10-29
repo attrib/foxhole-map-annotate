@@ -1,27 +1,43 @@
 extends layout
 
 block content
-    #map
-    #additional
-        .tooltip
-            span.user
-            span.time
-            .text
-        .form
-            div
-                label Text
-                textarea(name="text")
-            div
-                label Type
-                select(name="type")
-                    option(value="info") Info
-                    option(value="warning") Warning
-                    option(value="danger") Danger
-            div
-                input(type="submit",value="Cancel",name="cancel",class="cancel")
-                input(type="submit",value="Save",name="save",class="submit")
-    script.
-        const imageUrl="#{image}"
-        const websocketUrl="#{websocketUrl}"
-    script(src="https://d3js.org/d3.v6.min.js")
+    #map-view
+        #map
+        #info
+            #feature-info
+                #mouse-position-content.debug
+                    span Mouse Position
+                    #mouse-position
+                #track-info
+                    span.user
+                    span.time
+                    div
+                        span Builder:
+                        span.clan
+                    div.notes
+                #track-form
+                    div
+                        label Builder
+                        input(type="text", name="clan", placeholder="Builder", class="clan")
+                    div
+                        label Color
+                        input(type="color", name="color", value="#555555", class="color")
+                    div
+                        label Notes
+                        textarea(name="notes", class="notes")
+                    div
+                        input(type="submit", value="Cancel", name="cancel", class="cancel")
+                        input(type="submit", value="Save", name="save", class="submit")
+                #icon-info
+                    span.user
+                    span.time
+                    .text
+                #icon-form
+                    div
+                        label Notes
+                        textarea(name="text", class="notes")
+                    div
+                        input(type="submit", value="Cancel", name="cancel", class="cancel")
+                        input(type="submit", value="Save", name="save", class="submit")
+
     script(src="javascripts/index.js")

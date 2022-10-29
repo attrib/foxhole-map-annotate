@@ -5,9 +5,16 @@ const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
 
-let markers = {};
-if (fs.existsSync("./markers.json")) {
-  markers = require("./markers.json");
+let tracks = {};
+const trackFileName = './data/tracks.json';
+if (fs.existsSync(trackFileName)) {
+  tracks = require('./data/tracks.json');
+}
+else {
+  tracks = {
+    type: 'FeatureCollection',
+    features: [],
+  }
 }
 
 wss.on('connection', function (ws, request) {
@@ -15,43 +22,44 @@ wss.on('connection', function (ws, request) {
       ws.close();
     }
     let username = request.session.user;
-    sendMarkers(ws);
+    sendTracks(ws);
 
     clients.set(request.session.id, ws);
 
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
       message = JSON.parse(message);
-      let id;
       switch (message.type) {
-        case 'add':
-          id = uuid.v4();
-          markers[id] = {
-            id: id,
-            user: username,
-            updated: (new Date()).toISOString(),
-            text: message.data.text,
-            position: message.data.position,
-            type: message.data.type,
+        case 'trackAdd':
+          for (const feature of message.data.features) {
+            feature.properties.id = uuid.v4()
+            feature.properties.user = username
+            feature.properties.time = (new Date()).toISOString()
+            tracks.features.push(feature)
           }
-          sendMarkersToAll();
-          saveMarkers();
+          sendTracksToAll();
+          saveTracks();
           break;
 
-        case 'update':
-          id = message.data.id;
-          markers[id].user = username;
-          markers[id].updated = (new Date()).toISOString();
-          markers[id].text = message.data.text;
-          markers[id].type = message.data.type;
-          sendMarkersToAll();
-          saveMarkers();
+        case 'trackUpdate':
+          for (const existingTracks of tracks.features) {
+            if (message.data.properties.id === existingTracks.properties.id) {
+              existingTracks.properties = message.data.properties
+              existingTracks.properties.user = username
+              existingTracks.properties.time = (new Date()).toISOString()
+              existingTracks.geometry = message.data.geometry
+            }
+          }
+          sendTracksToAll();
+          saveTracks();
           break;
 
-        case 'delete':
-          delete markers[message.data.id]
-          sendMarkersToAll();
-          saveMarkers();
+        case 'trackDelete':
+          tracks.features = tracks.features.filter((feature) => {
+            return feature.properties.id !== message.data.id
+          })
+          sendTracksToAll();
+          saveTracks();
           break;
 
         case 'ping':
@@ -66,23 +74,23 @@ wss.on('connection', function (ws, request) {
   }
 );
 
-function sendMarkersToAll() {
+function sendTracksToAll() {
   clients.forEach(function each(client) {
     if (client.readyState === webSocket.WebSocket.OPEN) {
-      sendMarkers(client);
+      sendTracks(client);
     }
   });
 }
 
-function sendMarkers(client) {
+function sendTracks(client) {
   client.send(JSON.stringify({
-    type: 'markers',
-    data: Object.values(markers)
+    type: 'tracks',
+    data: tracks
   }));
 }
 
-function saveMarkers() {
-  fs.writeFile('markers.json', JSON.stringify(markers, null, 2), err => {
+function saveTracks() {
+  fs.writeFile(trackFileName, JSON.stringify(tracks, null, 2), err => {
     if (err) {
       console.error(err);
     }

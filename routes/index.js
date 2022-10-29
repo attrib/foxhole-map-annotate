@@ -1,9 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var getMostRecentFile = require('../lib/mostRecentFile');
 var uuid = require('uuid');
-var multer = require("multer")
-var path = require('path');
 var Discord = require('../lib/discord')
 
 /* GET home page. */
@@ -12,8 +9,7 @@ router.get('/', function(req, res, next) {
     res.render('login', {title: 'BigOof RailMap'});
     return;
   }
-  const image = getMostRecentFile(__dirname + '/../uploads/');
-  res.render('index', {title: 'BigOof RailMap', image: '/uploads/' + image.file, websocketUrl: process.env.ORIGIN.replace('http', 'ws')});
+  res.render('index', {title: 'BigOof RailMap'});
 });
 
 router.get('/login', async function(req, res, next) {
@@ -39,61 +35,4 @@ router.get('/logout', function(req, res, next) {
   res.redirect('/');
 });
 
-router.get('/upload', function(req, res, next) {
-  if (!req.session || !req.session.user) {
-    res.render('login', {title: 'BigOof RailMap'});
-    return;
-  }
-  res.render('upload', {title: 'BigOof RailMap Upload'});
-});
-
-router.post('/upload', function(req, res, next) {
-  if (!req.session || !req.session.user) {
-    res.render('login', {title: 'BigOof RailMap'});
-    return;
-  }
-  // Error MiddleWare for multer file upload, so if any
-  // error occurs, the image would not be uploaded!
-  upload.single("image")(req, res, function(err) {
-    console.log(err);
-    if (err) {
-      res.render('upload', {title: 'BigOof RailMap Upload', error: err});
-    }
-    else {
-      // SUCCESS, image successfully uploaded
-      res.redirect('/');
-    }
-  })
-});
-
 module.exports = router;
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // Uploads is the Upload_folder_name
-    cb(null, __dirname + "/../uploads")
-  },
-  filename: function (req, file, cb) {
-    var extname = path.extname(file.originalname).toLowerCase()
-    cb(null, file.originalname + "-" + Date.now() + "." + extname)
-  }
-})
-
-var upload = multer({
-  storage: storage,
-  limits: {fileSize: 32 * 1000 * 1000},
-  fileFilter: function (req, file, cb) {
-    // Set the filetypes, it is optional
-    var filetypes = /jpeg|jpg|png/;
-    var mimetype = filetypes.test(file.mimetype);
-
-    var extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-
-    if (mimetype && extname) {
-      return cb(null, true);
-    }
-
-    cb("Error: File upload only supports the "
-      + "following filetypes - " + filetypes);
-  }
-});

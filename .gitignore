@@ -2,5 +2,6 @@
 uploads
 sessions
 markers.json
+data
 .env
 node_modules
