@@ -1,6 +1,11 @@
 #!/bin/bash
 
-docker build -t born .
+# git fetch
+# git rebase
+
+source .env
+
+docker build --build-arg ORIGIN=$ORIGIN -t born .
 
 docker stop born || true
 docker rm born || true

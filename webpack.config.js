@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack')
-
+require('dotenv').config();
 const isDev = (process.argv.NODE_ENV || 'development') === 'development';
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public', 'javascripts'),
-    publicPath: "/javascripts",
+    publicPath: "/javascripts/",
   },
   module: {
     rules: [

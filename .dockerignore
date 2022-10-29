@@ -1,4 +1,10 @@
 node_modules
 sessions
 uploads
+data
+.git
+.dockerignore
+.gitignore
+.idea
 .env
+start.bash
