@@ -22,6 +22,7 @@
     "ws": "^8.9.0"
   },
   "devDependencies": {
+    "bootstrap-icons": "^1.9.1",
     "css-loader": "^6.7.1",
     "nodemon": "^2.0.20",
     "ol": "^7.1.0",

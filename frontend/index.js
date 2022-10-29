@@ -1,6 +1,7 @@
 import 'ol/ol.css';
 import 'ol-layerswitcher/src/ol-layerswitcher.css';
 import 'ol-popup/src/ol-popup.css'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import TileGrid from "ol/tilegrid/TileGrid";
 import {Map, View, Collection} from "ol";
@@ -11,8 +12,10 @@ import {GeoJSON} from "ol/format";
 import {Style, Stroke, Icon} from "ol/style";
 import {Draw, Snap, Modify, Select} from "ol/interaction";
 import Popup from "ol-popup/src/ol-popup";
-import {addDefaultMapControls, createCustomControl} from "./mapControls"
-import Tools from "./mapTools";
+import {addDefaultMapControls} from "./mapControls"
+import Socket from "./webSocket";
+import {never} from "ol/events/condition";
+const EditTools = require("./mapEditTools")
 
 // Needed for Hot Module Replacement
 if(typeof(module.hot) !== 'undefined') {
@@ -40,7 +43,7 @@ var map = new Map({
               tileSize: [256, 256]
             }),
             tileUrlFunction: function(tileCoord) {
-              return ('/uploads/{z}/{x}/{y}.webp'
+              return ('/uploads/{z}/{x}/{y}.png'
                   .replace('{z}', String(tileCoord[0]))
                   .replace('{x}', String(tileCoord[1]))
                   .replace('{y}', String(- 1 - tileCoord[2])));
@@ -57,6 +60,13 @@ var map = new Map({
 });
 
 addDefaultMapControls(map)
+const select = new Select({
+  multi: false,
+  toggleCondition: never
+});
+map.addInteraction(select)
+
+const tools = new EditTools(map);
 
 const trackInfo = document.getElementById('track-info'),
     iconInfo = document.getElementById('icon-info');
@@ -70,18 +80,22 @@ map.on('pointermove', (evt) => {
   }
   else {
     const [feature, layer] = value;
-    console.log(feature.getGeometry().getType())
+    if (layer === null || layer.get('temp') === true) {
+      trackInfo.style.display = 'none';
+      iconInfo.style.display = 'none';
+      return
+    }
     if (feature.getGeometry().getType() === 'LineString') {
       trackInfo.style.display = 'block';
       trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
       trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-      trackInfo.getElementsByClassName('time')[0].innerHTML = feature.get('time');
+      trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
       trackInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
     }
     else {
       iconInfo.style.display = 'block';
       iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-      iconInfo.getElementsByClassName('time')[0].innerHTML = feature.get('time');
+      iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
       iconInfo.getElementsByClassName('text')[0].innerHTML = feature.get('notes');
     }
   }
@@ -92,94 +106,87 @@ map.on('pointermove', (evt) => {
 //
 
 const geoJson = new GeoJSON();
-let col = geoJson.readFeatures({"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"LineString","coordinates":[[2177.5844952474167,-601.0173296242892],[2291.209410513108,-631.2562183643524],[2357.1851677641553,-724.721874470002],[2416.7466152824613,-830.099820079313],[2408.4996456260806,-987.7085735123692],[2441.487524251604,-1009.7004925960515],[2397.5036860842392,-1043.604701183395],[2334.276918718653,-1160.8949362963672],[2475.3917328389475,-1177.3888756091287],[2497.3836519226297,-1170.9745658763882],[2497.3836519226297,-1204.8787744637316],[2589.016648104639,-1225.954363585594],[2585.3513282573585,-1269.9382017529583],[2562.4430792118565,-1338.6629488894655],[2558.777759364576,-1416.5509956441736],[2589.016648104639,-1439.4592446896759]]},"properties":{clan:'BigOof'}}]})
-const collection = new Collection(col);
+const collection = new Collection();
+const clanCollections = {}
 const clanGroup = new Group({
   title: 'Train Lines',
 });
 map.addLayer(clanGroup);
+const socket = new Socket();
 
-let draw = null, snap = null
+socket.on('tracks', (tracks) => {
+  collection.clear()
+  for (const clan in clanCollections) {
+    clanCollections[clan].clear()
+  }
+  const col = geoJson.readFeatures(tracks)
+  collection.extend(col)
+})
 
 collection.on('add', (e) => {
-  console.log('add', e)
-  e.element.set('clan', 'unknown');
-  console.log(geoJson.writeFeatures(collection.getArray()))
-})
-collection.on('change', (e) => {
-  console.log('change', e)
-  console.log(geoJson.writeFeatures(collection.getArray()))
-})
-
-var sourceLine = new VectorSource({
-  features: collection,
-});
-
-var vectorLine = new Vector({
-  source: sourceLine,
-  title: 'BigOof',
-  style: (feature,zoom) => {
-    return new Style({
-      stroke: new Stroke({
-        color: "#4e6fe5",
-        width: 5,
-      })
-    })
+  const feature = e.element
+  const clan = feature.get('clan')
+  if (!(clan in clanCollections)) {
+    clanCollections[clan] = createClanCollection(clan)
   }
-});
-clanGroup.getLayers().push(vectorLine);
+  clanCollections[clan].push(feature)
+})
+
+function createClanCollection(clan) {
+  const collection = new Collection()
+  const sourceLine = new VectorSource({
+    features: collection,
+  });
+
+  const vectorLine = new Vector({
+    source: sourceLine,
+    title: clan,
+    style: (feature, zoom) => {
+      return new Style({
+        stroke: new Stroke({
+          color: feature.get('color'),
+          width: 5,
+        })
+      })
+    }
+  });
+  clanGroup.getLayers().push(vectorLine);
+  return collection;
+}
+
+tools.on(tools.EVENT_TRACK_ADDED, (track) => {
+  socket.send('trackAdd', geoJson.writeFeaturesObject(track.features))
+})
+
+tools.on(tools.EVENT_TRACK_UPDATED, (track) => {
+  socket.send('trackUpdate', geoJson.writeFeatureObject(track))
+})
+
 
 //
 // controls
 //
 
-const tools = new Tools(map);
+// map.addControl(createCustomControl('train-front', function(e) {
+//   if (draw === null) {
+//     draw = new Draw({
+//       // source: source,
+//       type: 'LineString',
+//       features: collection,
+//       stopClick: true,
+//     });
+//     map.addInteraction(draw);
+//     snap = new Snap({features: collection});
+//     map.addInteraction(snap);
+//   }
+//   else {
+//     map.removeInteraction(draw)
+//     map.removeInteraction(snap)
+//   }
+// }, {
+//   elementClass: 'edit-buttons'
+// }))
 
-map.addControl(createCustomControl('E', function(e, element) {
-  const editButtons = document.getElementsByClassName('edit-buttons');
-  tools.changeMode(element.classList.contains('selected'))
-  for (let button of editButtons) {
-    button.style.display = tools.editMode ? 'block' : 'none'
-  }
-}, {
-  elementClass: 'edit-button'
-}))
-
-
-map.addControl(createCustomControl('L', function(e) {
-  if (draw === null) {
-    draw = new Draw({
-      // source: source,
-      type: 'LineString',
-      features: collection,
-      stopClick: true,
-    });
-    map.addInteraction(draw);
-    snap = new Snap({features: collection});
-    map.addInteraction(snap);
-  }
-  else {
-    map.removeInteraction(draw)
-    map.removeInteraction(snap)
-  }
-}, {
-  elementClass: 'edit-buttons'
-}))
-
-//
-// modify
-//
-
-const select = new Select({
-  wrapX: false,
-});
-
-const modify = new Modify({
-  features: select.getFeatures(),
-});
-
-map.addInteraction(select)
-map.addInteraction(modify)
 
 //
 // Icon Warning
@@ -211,22 +218,22 @@ var iconVectorLine = new Vector({
 });
 map.addLayer(iconVectorLine);
 
-map.addControl(createCustomControl('W', function(e) {
-  if (draw === null) {
-    draw = new Draw({
-      // source: source,
-      type: 'Point',
-      features: iconCollection,
-      // stopClick: true,
-    });
-    map.addInteraction(draw);
-  }
-  else {
-    map.removeInteraction(draw)
-  }
-}, {
-  elementClass: 'edit-buttons'
-}))
+// map.addControl(createCustomControl('exclamation-triangle', function(e) {
+//   if (draw === null) {
+//     draw = new Draw({
+//       // source: source,
+//       type: 'Point',
+//       features: iconCollection,
+//       // stopClick: true,
+//     });
+//     map.addInteraction(draw);
+//   }
+//   else {
+//     map.removeInteraction(draw)
+//   }
+// }, {
+//   elementClass: 'edit-buttons'
+// }))
 
 //
 // Icon Alert
@@ -258,22 +265,22 @@ var iconAlertVectorLine = new Vector({
 });
 map.addLayer(iconAlertVectorLine);
 
-map.addControl(createCustomControl('A', function(e) {
-  if (draw === null) {
-    draw = new Draw({
-      // source: source,
-      type: 'Point',
-      features: iconAlertCollection,
-      // stopClick: true,
-    });
-    map.addInteraction(draw);
-  }
-  else {
-    map.removeInteraction(draw)
-  }
-}, {
-  elementClass: 'edit-buttons'
-}))
+// map.addControl(createCustomControl('exclamation-octagon', function(e) {
+//   if (draw === null) {
+//     draw = new Draw({
+//       // source: source,
+//       type: 'Point',
+//       features: iconAlertCollection,
+//       // stopClick: true,
+//     });
+//     map.addInteraction(draw);
+//   }
+//   else {
+//     map.removeInteraction(draw)
+//   }
+// }, {
+//   elementClass: 'edit-buttons'
+// }))
 
 //
 // overlay

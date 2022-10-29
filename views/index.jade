@@ -18,16 +18,16 @@ block content
                 #track-form
                     div
                         label Builder
-                        input(type="text",name="clan",placeholder="Builder")
+                        input(type="text", name="clan", placeholder="Builder", class="clan")
                     div
                         label Color
-                        input(type="color",name="color")
+                        input(type="color", name="color", value="#555555", class="color")
                     div
                         label Notes
-                        textarea(name="notes")
+                        textarea(name="notes", class="notes")
                     div
-                        input(type="submit",value="Cancel",name="cancel",class="cancel")
-                        input(type="submit",value="Save",name="save",class="submit")
+                        input(type="submit", value="Cancel", name="cancel", class="cancel")
+                        input(type="submit", value="Save", name="save", class="submit")
                 #icon-info
                     span.user
                     span.time
@@ -35,12 +35,9 @@ block content
                 #icon-form
                     div
                         label Notes
-                        textarea(name="text")
+                        textarea(name="text", class="notes")
                     div
-                        input(type="submit",value="Cancel",name="cancel",class="cancel")
-                        input(type="submit",value="Save",name="save",class="submit")
-
-    script.
-        const websocketUrl="#{websocketUrl}"
+                        input(type="submit", value="Cancel", name="cancel", class="cancel")
+                        input(type="submit", value="Save", name="save", class="submit")
 
     script(src="javascripts/index.js")

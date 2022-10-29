@@ -1,11 +1,13 @@
 const path = require('path');
 const webpack = require('webpack')
 
+const isDev = (process.argv.NODE_ENV || 'development') === 'development';
+
 module.exports = {
   entry: {
     index: ['./frontend/index.js'] // 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000'
   },
-  devtool: 'source-map',
+  devtool: isDev ? 'source-map' : false,
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public', 'javascripts'),
@@ -20,8 +22,11 @@ module.exports = {
     ],
   },
   // devtool: 'inline-source-map',
-  mode: process.argv.NODE_ENV || 'development',
+  mode: isDev ? 'development' : 'production',
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      WEBSOCKET_URL: JSON.stringify(process.env.ORIGIN.replace('http', 'ws'))
+    }),
   ]
 };

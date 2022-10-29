@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
     res.render('login', {title: 'BigOof RailMap'});
     return;
   }
-  res.render('index', {title: 'BigOof RailMap', websocketUrl: process.env.ORIGIN.replace('http', 'ws')});
+  res.render('index', {title: 'BigOof RailMap'});
 });
 
 router.get('/login', async function(req, res, next) {
