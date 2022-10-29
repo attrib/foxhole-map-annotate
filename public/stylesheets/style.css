@@ -1,10 +1,17 @@
-body {
+html, body {
   margin: 0;
+  padding: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 100%;
+  width: 100%;
 }
 
 a {
   color: #00B7FF;
+}
+
+header {
+  height: 10%;
 }
 
 header h1 {
@@ -29,36 +36,46 @@ header ul li {
 #main {
   clear: both;
   margin: 5px;
-}
-
-#map {
-  width: 100%;
   height: 90%;
 }
 
-#additional > div {
-  position: absolute;
-  opacity: 0;
-  background-color: white;
-  border: 2px solid black;
+#map-view {
+  height: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+#info {
+  flex-grow: 0;
+  flex-basis: 10vw;
+}
+
+#map {
+  flex-grow: 9;
+  flex-basis: 90vw;
+  height: 100%;
+}
+
+#map .layer-switcher {
+  top: 0;
+}
+
+#feature-info > div {
+  display: none;
+  border: 1px solid #aaa;
   border-radius: 5px;
   padding: 5px;
-  top: -200px;
-  left: -200px;
-}
-
-#additional .tooltip .time {
-  padding-left: 10px;
-}
-
-#additional .tooltip .text {
-  padding-top: 5px;
-}
-
-#additional .form > div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin: 5px;
-  gap: 10px;
+}
+
+.edit-buttons {
+  display: none;
+}
+
+div#mouse-position-content {
+  display: block;
+}
+
+.ol-control.selected button {
+  background-color: #cccccc;
 }

@@ -11,6 +11,14 @@ module.exports = {
     path: path.resolve(__dirname, 'public', 'javascripts'),
     publicPath: "/javascripts",
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+  },
   // devtool: 'inline-source-map',
   mode: process.argv.NODE_ENV || 'development',
   plugins: [
