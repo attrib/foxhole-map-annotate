@@ -12,7 +12,9 @@ class Track extends ADrawTool {
    * @param {import("ol").Map} map
    */
   constructor(tools, map) {
-    super(tools, map, 'track', 'train-front');
+    super(tools, map, 'track', 'train-front', {
+      title: 'TrackMode'
+    });
     this.collection = new Collection([]);
     const sourceLine = new VectorSource({
       features: this.collection,
@@ -74,6 +76,7 @@ class Track extends ADrawTool {
 
     tools.on('track-selected', this.trackSelected)
     tools.on('track-deselected', this.trackDeSelected)
+    tools.on(tools.EVENT_EDIT_MODE_DISABLED, this.trackDeSelected)
   }
 
   clearInput = () => {

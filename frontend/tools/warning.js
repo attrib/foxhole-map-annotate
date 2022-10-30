@@ -1,5 +1,3 @@
-const {createCustomControlElement} = require("../mapControls");
-const {Control} = require("ol/control");
 const ADrawTool = require("./ADrawTool");
 
 class Warning extends ADrawTool {
@@ -9,7 +7,9 @@ class Warning extends ADrawTool {
    * @param {import("ol").Map} map
    */
   constructor(tools, map) {
-    super(tools, map, 'warning', 'exclamation-triangle');
+    super(tools, map, 'warning', 'exclamation-triangle', {
+      title: 'Warnings'
+    });
   }
 
 }

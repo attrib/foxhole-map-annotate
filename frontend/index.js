@@ -55,7 +55,8 @@ var map = new Map({
   ],
   view: new View({
     center: [5625.500000, -6216.000000],
-    resolution: 64.000000,
+    resolution: 10.000000,
+    resolutions: [64,32,16,8,4,2,1],
   })
 });
 
@@ -70,7 +71,12 @@ const tools = new EditTools(map);
 
 const trackInfo = document.getElementById('track-info'),
     iconInfo = document.getElementById('icon-info');
+
+let selectedFeature = null
 map.on('pointermove', (evt) => {
+  if (selectedFeature) {
+    return
+  }
   const value = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
     return [feature, layer];
   });
@@ -85,21 +91,39 @@ map.on('pointermove', (evt) => {
       iconInfo.style.display = 'none';
       return
     }
-    if (feature.getGeometry().getType() === 'LineString') {
-      trackInfo.style.display = 'block';
-      trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
-      trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-      trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
-      trackInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
-    }
-    else {
-      iconInfo.style.display = 'block';
-      iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-      iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
-      iconInfo.getElementsByClassName('text')[0].innerHTML = feature.get('notes');
-    }
+    infoBoxFeature(feature)
   }
 })
+select.on('select', (event) => {
+  if (event.deselected.length > 0) {
+    selectedFeature = null
+    trackInfo.style.display = 'none';
+    iconInfo.style.display = 'none';
+  }
+  if (event.selected.length > 0) {
+    selectedFeature = event.selected[0]
+  }
+  if (selectedFeature) {
+    infoBoxFeature(selectedFeature)
+  }
+})
+
+function infoBoxFeature(feature)
+{
+  if (feature.get('type') === 'track') {
+    trackInfo.style.display = 'block';
+    trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
+    trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
+    trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
+    trackInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
+  }
+  else {
+    iconInfo.style.display = 'block';
+    iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
+    iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
+    iconInfo.getElementsByClassName('text')[0].innerHTML = feature.get('notes');
+  }
+}
 
 //
 // add lines

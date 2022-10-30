@@ -32,6 +32,9 @@ module.exports.createCustomControlElement = function(label, clickHandler, option
     const button = document.createElement('button');
     button.innerHTML = '<i class="bi bi-' + label + '"></i>';
     button.className = options.buttonClass;
+    if (options.title) {
+        button.title = options.title
+    }
 
     button.addEventListener('click', (event) => {
         const selected = element.classList.contains('selected')

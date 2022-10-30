@@ -6,10 +6,11 @@ class ADrawTool {
   /**
    * @param {EditTools} tools
    * @param {import("ol").Map} map
-   * @param toolName
-   * @param iconName
+   * @param {string} toolName
+   * @param {string} iconName
+   * @param {object} options
    */
-  constructor(tools, map, toolName, iconName) {
+  constructor(tools, map, toolName, iconName, options) {
     this.map = map
     this.tools = tools
     this.toolName = toolName;
@@ -18,6 +19,7 @@ class ADrawTool {
       tools.changeTool(selected ? this.toolName : false)
     }, {
       elementClass: 'edit-buttons',
+      ...options
     })
     this.control = new Control({
       element: this.controlElement
