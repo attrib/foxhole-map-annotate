@@ -35,18 +35,18 @@ var map = new Map({
           type: 'base',
           // opacity: 0.7,
           source: new TileImage({
-            attributions: '',
+            attributions: 'Clapfoot',
             tileGrid: new TileGrid({
-              extent: [0,-6217,5645,0],
-              origin: [0,-6217],
-              resolutions: [32,16,8,4,2,1],
+              extent: [0,-12432,11251,0],
+              origin: [0,-12432],
+              resolutions: [64,32,16,8,4,2,1],
               tileSize: [256, 256]
             }),
             tileUrlFunction: function(tileCoord) {
               return ('/uploads/{z}/{x}/{y}.webp'
-                  .replace('{z}', String(tileCoord[0]))
-                  .replace('{x}', String(tileCoord[1]))
-                  .replace('{y}', String(- 1 - tileCoord[2])));
+                .replace('{z}', String(tileCoord[0]))
+                .replace('{x}', String(tileCoord[1]))
+                .replace('{y}', String(- 1 - tileCoord[2])));
             },
           })
         }),
@@ -54,8 +54,8 @@ var map = new Map({
     }),
   ],
   view: new View({
-    center: [2822.500000, -2108.500000],
-    resolution: 4.000000,
+    center: [5625.500000, -6216.000000],
+    resolution: 64.000000,
   })
 });
 
