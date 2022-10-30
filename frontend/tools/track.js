@@ -94,7 +94,18 @@ class Track extends ADrawTool {
       type: 'LineString',
       features: this.collection,
       stopClick: true,
+      condition: (event) => {
+        // Right click remove last point
+        if (event.type === 'pointerdown' && event.originalEvent.button === 2) {
+          this.draw.removeLastPoint()
+          return false
+        }
+        return true
+      }
     });
+    this.draw.on('drawstart', (event) => {
+      event.feature.set('type', this.toolName)
+    })
     this.map.addInteraction(this.draw);
     this.snap = new Snap({features: this.collection});
     this.map.addInteraction(this.snap);

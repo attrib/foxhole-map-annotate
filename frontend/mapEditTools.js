@@ -36,6 +36,9 @@ class EditTools {
     }
 
     changeMode(newMode) {
+        if (newMode === undefined) {
+            newMode = !this.editMode
+        }
         if (this.editMode !== newMode) {
             this.editMode = newMode
             if (this.editMode) {

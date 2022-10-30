@@ -17,10 +17,18 @@ class Edit {
       tools.changeMode(selected)
     }, {
       elementClass: 'edit-button',
-      title: 'Toggle EditMode',
+      title: 'Toggle EditMode (e)',
     })
     this.control = new Control({
       element: this.controlElement
+    })
+    document.addEventListener('keypress', (event) => {
+      if (event.key === 'e') {
+        if (!tools.editMode) {
+          this.controlElement.classList.add('selected')
+          tools.changeMode(true)
+        }
+      }
     })
     this.map.getInteractions().forEach((interaction) => {
       if (interaction instanceof Select) {
