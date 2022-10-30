@@ -5,13 +5,23 @@ const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
 
-let tracks = {};
+let tracks = {}, icons = {};
 const trackFileName = './data/tracks.json';
+const iconFileName = './data/icons.json';
 if (fs.existsSync(trackFileName)) {
   tracks = require(trackFileName);
 }
 else {
   tracks = {
+    type: 'FeatureCollection',
+    features: [],
+  }
+}
+if (fs.existsSync(iconFileName)) {
+  icons = require(iconFileName);
+}
+else {
+  icons = {
     type: 'FeatureCollection',
     features: [],
   }
@@ -23,6 +33,7 @@ wss.on('connection', function (ws, request) {
     }
     let username = request.session.user;
     sendTracks(ws);
+    sendIcons(ws);
 
     clients.set(request.session.id, ws);
 
@@ -62,6 +73,24 @@ wss.on('connection', function (ws, request) {
           saveTracks();
           break;
 
+        case 'iconAdd':
+          const feature = message.data;
+          feature.properties.id = uuid.v4()
+          feature.properties.user = username
+          feature.properties.time = (new Date()).toISOString()
+          icons.features.push(feature)
+          sendIconsToAll()
+          saveIcons()
+          break;
+
+        case 'iconDelete':
+          icons.features = icons.features.filter((feature) => {
+            return feature.properties.id !== message.data.id
+          })
+          sendIconsToAll();
+          saveIcons();
+          break;
+
         case 'ping':
           ws.send(JSON.stringify({type: 'pong'}))
           break;
@@ -82,6 +111,14 @@ function sendTracksToAll() {
   });
 }
 
+function sendIconsToAll() {
+  clients.forEach(function each(client) {
+    if (client.readyState === webSocket.WebSocket.OPEN) {
+      sendIcons(client);
+    }
+  });
+}
+
 function sendTracks(client) {
   client.send(JSON.stringify({
     type: 'tracks',
@@ -89,8 +126,23 @@ function sendTracks(client) {
   }));
 }
 
+function sendIcons(client) {
+  client.send(JSON.stringify({
+    type: 'icons',
+    data: icons
+  }));
+}
+
 function saveTracks() {
   fs.writeFile(trackFileName, JSON.stringify(tracks, null, 2), err => {
+    if (err) {
+      console.error(err);
+    }
+  });
+}
+
+function saveIcons() {
+  fs.writeFile(iconFileName, JSON.stringify(icons, null, 2), err => {
     if (err) {
       console.error(err);
     }

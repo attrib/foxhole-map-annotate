@@ -14,7 +14,7 @@ import {Draw, Snap, Modify, Select} from "ol/interaction";
 import Popup from "ol-popup/src/ol-popup";
 import {addDefaultMapControls} from "./mapControls"
 import Socket from "./webSocket";
-import {never} from "ol/events/condition";
+import {never, singleClick} from "ol/events/condition";
 const EditTools = require("./mapEditTools")
 
 // Needed for Hot Module Replacement
@@ -63,7 +63,13 @@ var map = new Map({
 addDefaultMapControls(map)
 const select = new Select({
   multi: false,
-  toggleCondition: never
+  toggleCondition: never,
+  condition: (event) => {
+    if (['danger', 'warning'].includes(tools.selectedTool)) {
+      return false;
+    }
+    return singleClick(event)
+  }
 });
 map.addInteraction(select)
 
@@ -121,7 +127,7 @@ function infoBoxFeature(feature)
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
     iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
-    iconInfo.getElementsByClassName('text')[0].innerHTML = feature.get('notes');
+    iconInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
   }
 }
 
@@ -193,141 +199,28 @@ tools.on(tools.EVENT_TRACK_DELETE, (track) => {
   }
 })
 
+tools.on(tools.EVENT_ICON_ADDED, (icon) => {
+  socket.send('iconAdd', geoJson.writeFeatureObject(icon))
+})
 
-//
-// controls
-//
+tools.on(tools.EVENT_ICON_DELETED, (icon) => {
+  if (icon && icon.get('id')) {
+    socket.send('iconDelete', {id: icon.get('id')})
+  }
+})
 
-// map.addControl(createCustomControl('train-front', function(e) {
-//   if (draw === null) {
-//     draw = new Draw({
-//       // source: source,
-//       type: 'LineString',
-//       features: collection,
-//       stopClick: true,
-//     });
-//     map.addInteraction(draw);
-//     snap = new Snap({features: collection});
-//     map.addInteraction(snap);
-//   }
-//   else {
-//     map.removeInteraction(draw)
-//     map.removeInteraction(snap)
-//   }
-// }, {
-//   elementClass: 'edit-buttons'
-// }))
-
-
-//
-// Icon Warning
-//
-const iconStyle = new Style({
-  image: new Icon({
-    anchor: [0.5, 46],
-    anchorXUnits: 'fraction',
-    anchorYUnits: 'pixels',
-    src: 'images/warning.png',
-    // size: [32,32],
-    // offset: 10,
-    // scale: [32,32]
-  }),
-});
-const iconCollection = new Collection([]);
-var iconSourceLine = new VectorSource({
-  features: iconCollection,
-});
-
-var iconVectorLine = new Vector({
-  source: iconSourceLine,
-  title: 'Warnings',
-  style: (feat, zoom) => {
-    // iconStyle.scale = Math.min(0.0625 * zoom, 0.0625)
-    console.log(iconStyle)
-    return iconStyle
-  },
-});
-map.addLayer(iconVectorLine);
-
-// map.addControl(createCustomControl('exclamation-triangle', function(e) {
-//   if (draw === null) {
-//     draw = new Draw({
-//       // source: source,
-//       type: 'Point',
-//       features: iconCollection,
-//       // stopClick: true,
-//     });
-//     map.addInteraction(draw);
-//   }
-//   else {
-//     map.removeInteraction(draw)
-//   }
-// }, {
-//   elementClass: 'edit-buttons'
-// }))
-
-//
-// Icon Alert
-//
-const iconAlertStyle = new Style({
-  image: new Icon({
-    anchor: [0.5, 46],
-    anchorXUnits: 'fraction',
-    anchorYUnits: 'pixels',
-    src: 'images/alert.png',
-    // size: [32,32],
-    // offset: 10,
-    // scale: [32,32]
-  }),
-});
-const iconAlertCollection = new Collection([]);
-var iconAlertSourceLine = new VectorSource({
-  features: iconAlertCollection,
-});
-
-var iconAlertVectorLine = new Vector({
-  source: iconAlertSourceLine,
-  title: 'Alert',
-  style: (feat, zoom) => {
-    // iconStyle.scale = Math.min(0.0625 * zoom, 0.0625)
-    console.log(iconAlertStyle)
-    return iconAlertStyle
-  },
-});
-map.addLayer(iconAlertVectorLine);
-
-// map.addControl(createCustomControl('exclamation-octagon', function(e) {
-//   if (draw === null) {
-//     draw = new Draw({
-//       // source: source,
-//       type: 'Point',
-//       features: iconAlertCollection,
-//       // stopClick: true,
-//     });
-//     map.addInteraction(draw);
-//   }
-//   else {
-//     map.removeInteraction(draw)
-//   }
-// }, {
-//   elementClass: 'edit-buttons'
-// }))
-
-//
-// overlay
-//
-
-// var popup = new Popup();
-// map.addOverlay(popup);
-//
-// // display popup on click
-// map.on('click', function (evt) {
-//   const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
-//     return feature;
-//   });
-//   popup.hide();
-//   if (!feature) {
-//     return;
-//   }
-//   popup.show(evt.coordinate, feature.get('clan'));
-// });
+socket.on('icons', (features) => {
+  const col = geoJson.readFeatures(features)
+  tools.warning.clearIcons()
+  tools.danger.clearIcons()
+  col.forEach((feature) => {
+    switch (feature.get('type')) {
+      case 'warning':
+        tools.warning.addIcon(feature)
+        break;
+      case 'danger':
+        tools.danger.addIcon(feature)
+        break;
+    }
+  })
+})

@@ -11,6 +11,8 @@ class EditTools {
     EVENT_TRACK_UPDATED = 'trackUpdated';
     EVENT_TRACK_UPDATE_CANCELED = 'trackUpdateCanceled';
     EVENT_TRACK_DELETE = 'trackDelete';
+    EVENT_ICON_ADDED = 'iconAdded';
+    EVENT_ICON_DELETED = 'iconDeleted';
 
     editMode = false
     selectedTool = false
@@ -23,17 +25,17 @@ class EditTools {
     constructor(map) {
         this.map = map
 
-        const edit = new Edit(this, map)
-        map.addControl(edit.control)
+        this.edit = new Edit(this, map)
+        map.addControl(this.edit.control)
 
-        const track = new Track(this, map)
-        map.addControl(track.control)
+        this.track = new Track(this, map)
+        map.addControl(this.track.control)
 
-        const warning = new Warning(this, map)
-        map.addControl(warning.control)
+        this.warning = new Warning(this, map)
+        map.addControl(this.warning.control)
 
-        const danger = new Danger(this, map)
-        map.addControl(danger.control)
+        this.danger = new Danger(this, map)
+        map.addControl(this.danger.control)
     }
 
     changeMode(newMode) {

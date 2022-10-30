@@ -81,7 +81,12 @@ class Edit {
           const feature = this.select.getFeatures().pop()
           const type = feature.get('type')
           this.tools.emit(type + '-deselected', feature);
-          this.tools.emit(this.tools.EVENT_TRACK_DELETE, feature)
+          if (type === 'track') {
+            this.tools.emit(this.tools.EVENT_TRACK_DELETE, feature)
+          }
+          else if (['danger','warning'].includes(type)) {
+            this.tools.emit(this.tools.EVENT_ICON_DELETED, feature)
+          }
           this.select.changed()
           return false
         }
