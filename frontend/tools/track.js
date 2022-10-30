@@ -95,12 +95,18 @@ class Track extends ADrawTool {
       features: this.collection,
       stopClick: true,
       condition: (event) => {
-        // Right click remove last point
-        if (event.type === 'pointerdown' && event.originalEvent.button === 2) {
-          this.draw.removeLastPoint()
-          return false
+        if (event.type === 'pointerdown') {
+          // Right click remove last point
+          if (event.originalEvent.button === 2) {
+            this.draw.removeLastPoint()
+            return false
+          }
+          // Left click add new point
+          else if (event.originalEvent.button === 0) {
+            return true
+          }
         }
-        return true
+        return false
       }
     });
     this.draw.on('drawstart', (event) => {

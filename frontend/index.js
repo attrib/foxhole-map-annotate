@@ -117,7 +117,7 @@ function infoBoxFeature(feature)
     trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
     trackInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
   }
-  else {
+  else if (['danger', 'warning'].includes(feature.get('type'))) {
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
     iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
@@ -139,6 +139,7 @@ map.addLayer(clanGroup);
 const socket = new Socket();
 
 socket.on('tracks', (tracks) => {
+  selectedFeature = null
   collection.clear()
   for (const clan in clanCollections) {
     clanCollections[clan].clear()
@@ -184,6 +185,12 @@ tools.on(tools.EVENT_TRACK_ADDED, (track) => {
 
 tools.on(tools.EVENT_TRACK_UPDATED, (track) => {
   socket.send('trackUpdate', geoJson.writeFeatureObject(track))
+})
+
+tools.on(tools.EVENT_TRACK_DELETE, (track) => {
+  if (track && track.get('id')) {
+    socket.send('trackDelete', {id: track.get('id')})
+  }
 })
 
 

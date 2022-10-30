@@ -1,6 +1,7 @@
 const {createCustomControlElement} = require("../mapControls");
 const {Control} = require("ol/control");
 const {Modify, Select} = require("ol/interaction");
+const {altKeyOnly, shiftKeyOnly, singleClick} = require("ol/events/condition");
 
 class Edit {
 
@@ -70,6 +71,22 @@ class Edit {
   editModeEnabled = () => {
     this.modify = new Modify({
       features: this.select.getFeatures(),
+      deleteCondition: (event) => {
+        if (altKeyOnly(event) && singleClick(event)) {
+          event.stopPropagation()
+          return true
+        }
+        if (shiftKeyOnly(event) && singleClick(event)) {
+          event.stopPropagation()
+          const feature = this.select.getFeatures().pop()
+          const type = feature.get('type')
+          this.tools.emit(type + '-deselected', feature);
+          this.tools.emit(this.tools.EVENT_TRACK_DELETE, feature)
+          this.select.changed()
+          return false
+        }
+        return false
+      }
     });
     this.map.addInteraction(this.modify)
   }
@@ -82,8 +99,10 @@ class Edit {
 
   deselectAll = () => {
     const feature = this.select.getFeatures().pop()
-    const type = feature.get('type')
-    this.tools.emit(type + '-deselected', feature);
+    if (feature) {
+      const type = feature.get('type')
+      this.tools.emit(type + '-deselected', feature);
+    }
   }
 }
 

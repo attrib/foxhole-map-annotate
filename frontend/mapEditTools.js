@@ -10,6 +10,7 @@ class EditTools {
     EVENT_TRACK_ADDED = 'trackAdded';
     EVENT_TRACK_UPDATED = 'trackUpdated';
     EVENT_TRACK_UPDATE_CANCELED = 'trackUpdateCanceled';
+    EVENT_TRACK_DELETE = 'trackDelete';
 
     editMode = false
     selectedTool = false
