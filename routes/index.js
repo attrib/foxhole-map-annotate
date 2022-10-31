@@ -5,6 +5,9 @@ var Discord = require('../lib/discord')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  if (process.env.NODE_ENV === 'development') {
+    req.session.user = 'develop';
+  }
   if (!req.session || !req.session.user) {
     res.render('login', {title: 'Warden Rail Network'});
     return;

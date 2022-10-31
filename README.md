@@ -1,4 +1,4 @@
-# Foxhole Map Annotater
+# Foxhole Map Annotate
 
 Annotate and draw on the foxhole map and share with your group.
 
@@ -14,14 +14,19 @@ Annotate and draw on the foxhole map and share with your group.
 * When line/sign is 12 hours old, a symbol beside the timestamp shows it is old
 * When line/sign is 24 hours old, a symbol beside the timestamp shows it is very old 
 * When a line is selected, a button is available to confirm the line still exists.
+* Facility Markers (new icons by Bazlow + polygon area with text?)
 * logout button
 * display discord name of user logged in
 * Guide on how to use the map
 
+* planed tracks (dashed lines)
+* add resource fields (+ other stuff) from official warapi
+
 ## DevTodos
 
-* Create a "Auth" free dev mode - without requiring each dev to create a discord app
-* Replace Jade TemplateEngine
+* Create an "Auth" free dev mode - without requiring each dev to create a discord app
+* Replace Jade TemplateEngine (Pug? Nunjucks?)
+* Try to get url in a better way when generating JS (maybe just use `window.location`?)
 * Create and Push Docker Image to dockerhub?
 
 ## Run
@@ -34,7 +39,7 @@ NODE_ENV=development
 ORIGIN=http://localhost:3000
 DISCORD_KEY= # discord OAuth2 App Key 
 DISCORD_SECRET= # discord OAuth2 App Secret
-SECRET=aSecret
+SECRET=secret
 ```
 
 Create the map tiles
@@ -59,4 +64,4 @@ In your env replace NODE_ENV with `production`, ORIGIN with your domain. In Disc
 
 Run `./start.bash` (creates a docker image and runs this image)
 
-Have a apache/nginx proxy teminating SSL and pointing to 127.0.0.1:3033
+Have an apache/nginx proxy terminating SSL and pointing to 127.0.0.1:3033
