@@ -58,3 +58,5 @@ Open http://localhost:3000
 In your env replace NODE_ENV with `production`, ORIGIN with your domain. In Discord add the Callback with your domain
 
 Run `./start.bash` (creates a docker image and runs this image)
+
+Have a apache/nginx proxy teminating SSL and pointing to 127.0.0.1:3033
