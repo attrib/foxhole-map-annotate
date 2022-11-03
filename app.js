@@ -4,16 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var grant = require('grant').express()
-var sessionParser = require('./lib/session');
+const nunjucks = require("nunjucks");
 
+var sessionParser = require('./lib/session');
 var indexRouter = require('./routes/index');
 
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+nunjucks.configure('views', {
+  autoescape: true,
+  express: app,
+  noCache: app.get('env') !== 'production',
+});
+app.set('view engine', 'html');
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
 }

@@ -26,7 +26,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## DevTodos
 
-* Replace Jade TemplateEngine (Pug? Nunjucks?)
 * Create and Push Docker Image to dockerhub?
 
 ## Run Dev

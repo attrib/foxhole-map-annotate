@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block content %}
+    <section id="text">
+        <h2>Access Denied</h2>
+        <p>You are not whitelisted and do not have access.</p>
+        <p>To get access contact attrib#6101</p>
+        <p>Debug Information needed for whitelisting</p>
+        <p>Access only to you, then provide this user ID {{ userId }}</p>
+        <p>Access for all members of a discord server, provide the server id</p>
+        <ul>
+            {% for guild in guilds %}
+                <li>
+                    {{ guild.name }} ({{ guild.id }})
+                </li>
+            {% endfor %}
+        </ul>
+        <p>
+            To only allow specific role, also add the role id, by typing in chat \@role (important \ before @).
+            This will give you the role id.
+        </p>
+    </section>
+{% endblock %}
