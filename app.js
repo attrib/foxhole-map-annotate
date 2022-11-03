@@ -36,21 +36,11 @@ else {
 }
 
 app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(sessionParser)
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', function(req,res,next){
-  if (req.session && req.session.user) {
-    return express.static(path.join(__dirname, 'uploads'))(req,res,next);
-  } else {
-    res.render('login', {title: 'Warden Rail Network'});
-  }
-});
-
-app.use('/', indexRouter);
-
 app.use(grant({
   "defaults": {
     "origin": process.env.ORIGIN,
@@ -64,6 +54,24 @@ app.use(grant({
     "callback": "/login",
   }
 }))
+
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'development') {
+    req.session.user = 'develop';
+  }
+  res.locals.title = 'Warden Rail Network';
+  if (req.session && (req.session.user || req.path === '/login')) {
+    res.locals.user = req.session.user
+    next();
+  }
+  else {
+    res.locals.user = false
+    res.status(403);
+    res.render('login');
+  }
+})
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

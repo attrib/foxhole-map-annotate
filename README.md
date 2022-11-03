@@ -17,8 +17,6 @@ Annotate and draw on the foxhole map and share with your group.
 * When line/sign is 24 hours old, a symbol beside the timestamp shows it is very old 
 * When a line is selected, a button is available to confirm the line still exists.
 * Facility Markers (new icons by Bazlow + polygon area with text?)
-* logout button
-* display discord name of user logged in
 * Guide on how to use the map
 
 * planed tracks (dashed lines)

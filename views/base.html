@@ -12,6 +12,15 @@
             <li>
                 <a href="/">Map</a>
             </li>
+            <li>
+                <a href="/help">Help</a>
+            </li>
+            {% if user %}
+                <li>
+                    <a href="/logout">Logout</a>
+                    {{ user }}
+                </li>
+            {% endif %}
         </ul>
     </header>
     <section id="main">
