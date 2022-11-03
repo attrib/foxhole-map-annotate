@@ -11,7 +11,7 @@ FROM node:19-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
-RUN npm install --production
+RUN npm install --omit=dev
 
 COPY . .
 COPY --from=build /app/public/javascripts /app/public/javascripts

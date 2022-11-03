@@ -3,8 +3,6 @@
 # git fetch
 # git rebase
 
-source .env
-
 docker build -t born .
 
 docker stop born || true
