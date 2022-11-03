@@ -1,4 +1,4 @@
-FROM node AS build
+FROM node:19 AS build
 ENV NODE_ENV=development
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
@@ -7,7 +7,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node
+FROM node:19-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
