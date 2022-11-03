@@ -56,6 +56,8 @@ Copy `.env.dist` to `.env`
 * Set ORIGIN to `https://<yourdomain.tld>/`
 * Set DISCORD_KEY and DISCORD_SECRET as provided by Discord
 
+If not done already, see step how to create the map.
+
 Run `./start.bash` (creates a docker image and runs this image)
 
 Have an apache/nginx proxy terminating SSL and pointing to 127.0.0.1:3033.
