@@ -24,23 +24,13 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## DevTodos
 
-* Create an "Auth" free dev mode - without requiring each dev to create a discord app
 * Replace Jade TemplateEngine (Pug? Nunjucks?)
 * Try to get url in a better way when generating JS (maybe just use `window.location`?)
 * Create and Push Docker Image to dockerhub?
 
-## Run
+## Run Dev
 
-Create a Discord OAuth 2 App (https://discord.com/developers/applications) and add `http://localhost:3000/connect/discord/callback` as redirect URL.
-
-Create a .env file
-```
-NODE_ENV=development
-ORIGIN=http://localhost:3000
-DISCORD_KEY= # discord OAuth2 App Key 
-DISCORD_SECRET= # discord OAuth2 App Secret
-SECRET=secret
-```
+Copy `.env.dist` to `.env`
 
 Create the map tiles
 ```
@@ -58,10 +48,18 @@ npm run dev
 
 Open http://localhost:3000
 
-## Live
+## Run Live
 
-In your env replace NODE_ENV with `production`, ORIGIN with your domain. In Discord add the Callback with your domain
+Create a Discord OAuth 2 App (https://discord.com/developers/applications) and add `https://<yourdomain.tld>/connect/discord/callback` as redirect URL.
+
+Copy `.env.dist` to `.env`
+
+* Set NODE_ENV with `production`
+* Set ORIGIN to `https://<yourdomain.tld>/`
+* Set DISCORD_KEY and DISCORD_SECRET as provided by Discord
 
 Run `./start.bash` (creates a docker image and runs this image)
 
-Have an apache/nginx proxy terminating SSL and pointing to 127.0.0.1:3033
+Have an apache/nginx proxy terminating SSL and pointing to 127.0.0.1:3033.
+
+Make sure it can handle WebSocket upgrades.
