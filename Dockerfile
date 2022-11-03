@@ -5,9 +5,6 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install
 COPY . .
 
-ARG ORIGIN
-ENV ORIGIN=${ORIGIN}
-
 RUN npm run build
 
 FROM node

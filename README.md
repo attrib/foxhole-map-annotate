@@ -4,8 +4,10 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
-* One discord role for signs
-* Another discord role for signs and lines
+* ACL
+  * One discord role for viewing
+  * One discord role for signs
+  * One discord role for signs and lines
 * A delete button to remove selected line/sign
 * A "done" button to stop drawing a line
 * Tooltips on mouseover
@@ -25,7 +27,6 @@ Annotate and draw on the foxhole map and share with your group.
 ## DevTodos
 
 * Replace Jade TemplateEngine (Pug? Nunjucks?)
-* Try to get url in a better way when generating JS (maybe just use `window.location`?)
 * Create and Push Docker Image to dockerhub?
 
 ## Run Dev

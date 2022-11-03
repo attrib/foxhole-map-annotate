@@ -7,7 +7,7 @@ class Socket {
   }
 
   connect = (cb) => {
-    this.socket = new WebSocket(WEBSOCKET_URL);
+    this.socket = new WebSocket(location.protocol.replace('http', 'ws') + '//' + location.host);
     // Connection opened
     this.socket.addEventListener('open', (event) => {
       this.socketClosed=false;

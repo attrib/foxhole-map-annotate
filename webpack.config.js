@@ -24,9 +24,6 @@ module.exports = {
   // devtool: 'inline-source-map',
   mode: isDev ? 'development' : 'production',
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.DefinePlugin({
-      WEBSOCKET_URL: JSON.stringify(process.env.ORIGIN.replace('http', 'ws'))
-    }),
+    new webpack.HotModuleReplacementPlugin()
   ]
 };

@@ -5,7 +5,7 @@
 
 source .env
 
-docker build --build-arg ORIGIN=$ORIGIN -t born .
+docker build -t born .
 
 docker stop born || true
 docker rm born || true
