@@ -5,4 +5,4 @@ markers.json
 data
 .env
 node_modules
-public/javascripts
+public/dist

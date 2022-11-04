@@ -1,8 +1,3 @@
-import 'ol/ol.css';
-import 'ol-layerswitcher/src/ol-layerswitcher.css';
-import 'ol-popup/src/ol-popup.css'
-import 'bootstrap-icons/font/bootstrap-icons.css'
-
 import TileGrid from "ol/tilegrid/TileGrid";
 import {Map, View, Collection} from "ol";
 import {defaults} from "ol/control";

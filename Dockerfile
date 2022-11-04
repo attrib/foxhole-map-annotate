@@ -14,6 +14,6 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --omit=dev
 
 COPY . .
-COPY --from=build /app/public/javascripts /app/public/javascripts
+COPY --from=build /app/public/dist /app/public/dist
 
 CMD [ "node", "bin/www" ]
