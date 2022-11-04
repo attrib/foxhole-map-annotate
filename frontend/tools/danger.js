@@ -30,6 +30,7 @@ class Danger extends ADrawTool {
       source: source,
       title: 'Danger',
       style: this.style,
+      zIndex: 20,
     });
     this.map.addLayer(vector);
   }

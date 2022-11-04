@@ -9,75 +9,70 @@
 {% endblock %}
 
 {% block content %}
-    <div id="map-view">
-        <div id="map">
+    <div id="feature-info">
 
+        <div id="mouse-position-content" class="debug bg-light text-bg-light">
+            <span>Mouse Position</span>
+            <div id="mouse-position"></div>
         </div>
-        <div id="info">
-            <div id="feature-info">
 
-                <div id="mouse-position-content" class="debug">
-                    <span>Mouse Position</span>
-                    <div id="mouse-position"></div>
-                </div>
-
-                <div id="track-info" class="info-box">
-                    <div class="placementInfo">
-                        <div class="user"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div>
-                        <span>Builder </span>
-                        <span class="clan"></span>
-                    </div>
-                    <div class="notes"></div>
-                </div>
-                <div id="track-form" class="form">
-                    <div>
-                        <label for="track-form-clan">Builder</label>
-                        <input id="track-form-clan" type="text" name="clan" placeholder="Builder" class="clan">
-                    </div>
-                    <div>
-                        <label for="track-form-color">Color</label>
-                        <input id="track-form-color" type="color" name="color" class="color" value="#555555">
-                    </div>
-                    <div>
-                        <label for="track-form-notes">Notes</label>
-                        <textarea id="track-form-notes" name="notes" class="notes">
-                        </textarea>
-                    </div>
-                    <div>
-                        <input id="track-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel">
-                        <input id="track-form-submit" type="submit" value="Save" name="save" class="submit">
-                    </div>
-                </div>
-
-                <div id="icon-info" class="info-box">
-                    <div class="placementInfo">
-                        <div class="user"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="notes"></div>
-                </div>
-                <div id="icon-form" class="form">
-                    <div>
-                        <label for="icon-form-sign">Sign</label>
-                        <select name="sign" id="icon-form-sign">
-                            <option value="warning">Warning</option>
-                            <option value="danger">Danger</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="icon-form-notes">Notes</label>
-                        <textarea id="icon-form-notes" name="notes" class="notes">
-                        </textarea>
-                    </div>
-                    <div>
-                        <input id="icon-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel">
-                        <input id="icon-form-submit" type="submit" value="Save" name="save" class="submit">
-                    </div>
-                </div>
+        <div id="track-info" class="info-box bg-light text-bg-light">
+            <div class="placementInfo">
+                <div class="user"></div>
+                <div class="time"></div>
+            </div>
+            <div>
+                <span>Builder </span>
+                <span class="clan"></span>
+            </div>
+            <div class="notes"></div>
+        </div>
+        <div id="track-form" class="form bg-light text-bg-light">
+            <div>
+                <label for="track-form-clan">Builder</label>
+                <input id="track-form-clan" type="text" name="clan" placeholder="Builder" class="clan">
+            </div>
+            <div>
+                <label for="track-form-color">Color</label>
+                <input id="track-form-color" type="color" name="color" class="color" value="#555555">
+            </div>
+            <div>
+                <label for="track-form-notes">Notes</label>
+                <textarea id="track-form-notes" name="notes" class="notes">
+                </textarea>
+            </div>
+            <div>
+                <input id="track-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel">
+                <input id="track-form-submit" type="submit" value="Save" name="save" class="submit">
             </div>
         </div>
+
+        <div id="icon-info" class="info-box bg-light text-bg-light">
+            <div class="placementInfo">
+                <div class="user"></div>
+                <div class="time"></div>
+            </div>
+            <div class="notes"></div>
+        </div>
+        <div id="icon-form" class="form bg-light text-bg-light">
+            <div>
+                <label for="icon-form-sign">Sign</label>
+                <select name="sign" id="icon-form-sign">
+                    <option value="warning">Warning</option>
+                    <option value="danger">Danger</option>
+                </select>
+            </div>
+            <div>
+                <label for="icon-form-notes">Notes</label>
+                <textarea id="icon-form-notes" name="notes" class="notes">
+                </textarea>
+            </div>
+            <div>
+                <input id="icon-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel">
+                <input id="icon-form-submit" type="submit" value="Save" name="save" class="submit">
+            </div>
+        </div>
+    </div>
+    <div id="map" class="h-100 w-100">
     </div>
 {% endblock %}

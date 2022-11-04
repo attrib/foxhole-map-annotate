@@ -4,66 +4,21 @@
 @import "ol-popup/src/ol-popup.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
-html, body {
-  margin: 0;
-  padding: 0;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  height: 100%;
-  width: 100%;
-}
-
-a {
-  color: #00B7FF;
-}
-
-header {
-  height: 10%;
-}
-
-header h1 {
-  float: left;
-  padding-left: 10px;
-  margin: 10px;
-}
-
-header ul {
-  list-style: none;
-  float: left;
-  font-size: 2em;
-  margin: 10px;
-  padding: 0;
-}
-
-header ul li {
-  float: left;
-  margin: 0 10px;
-}
-
-#main {
-  clear: both;
-  margin: 5px;
-  height: 90%;
-}
-
-#map-view {
-  height: 100%;
-  display: flex;
-  gap: 10px;
-}
-
-#info {
-  flex-grow: 0;
-  flex-basis: 10vw;
-}
-
-#map {
-  flex-grow: 9;
-  flex-basis: 90vw;
-  height: 100%;
-}
-
 #map .layer-switcher {
-  top: 0;
+  top: 0.5em;
+  color: $black;
+}
+
+main {
+  position: relative;
+}
+
+#feature-info {
+  position: absolute;
+  width: 10%;
+  float: right;
+  top: 3rem;
+  right: 1rem;
 }
 
 #feature-info > div {
@@ -84,27 +39,4 @@ div#mouse-position-content {
 
 .ol-control.selected button {
   background-color: #cccccc;
-}
-
-section#text {
-  margin: 20px 20px;
-}
-
-.placementInfo {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-content: center;
-  justify-content: space-between;
-}
-
-.info-box > div {
-  margin-top: 3px;
-}
-
-.form > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 5px 0;
 }

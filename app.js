@@ -56,10 +56,11 @@ app.use(grant({
 }))
 
 app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'development') {
-    req.session.user = 'develop';
-  }
-  res.locals.title = 'Warden Rail Network';
+  // if (process.env.NODE_ENV === 'development') {
+  //   req.session.user = 'develop';
+  // }
+  res.locals.title = 'Warden Infrastructure Map';
+  res.locals.path = req.path;
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
     next();

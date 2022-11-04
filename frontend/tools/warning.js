@@ -30,6 +30,7 @@ class Warning extends ADrawTool {
       source: source,
       title: 'Warnings',
       style: this.style,
+      zIndex: 10,
     });
     this.map.addLayer(vector);
   }
