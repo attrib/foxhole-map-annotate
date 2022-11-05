@@ -84,7 +84,7 @@ class Edit {
           if (type === 'track') {
             this.tools.emit(this.tools.EVENT_TRACK_DELETE, feature)
           }
-          else if (['danger','warning'].includes(type)) {
+          else if (['sign'].includes(type)) {
             this.tools.emit(this.tools.EVENT_ICON_DELETED, feature)
           }
           this.select.changed()

@@ -4,17 +4,22 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
+* Facility Markers (new icons by Bazlow + polygon area with text?)
+
 * A delete button to remove selected line/sign
 * A "done" button to stop drawing a line
-* Tooltips on mouseover
-* A button to cut a line in two
 * Selected symbols should not turn into dots when selected
+* When a line is selected, a button is available to confirm the line still exists. 
+
+* Layers popup behind form
+* Tooltips on mouseover
+
 * When line/sign is 12 hours old, a symbol beside the timestamp shows it is old
 * When line/sign is 24 hours old, a symbol beside the timestamp shows it is very old 
-* When a line is selected, a button is available to confirm the line still exists.
-* Facility Markers (new icons by Bazlow + polygon area with text?)
+
 * Guide on how to use the map
-* Layers popup behind form
+
+* A button to cut a line in two
 
 * planed tracks (dashed lines)
 * add resource fields (+ other stuff) from official warapi

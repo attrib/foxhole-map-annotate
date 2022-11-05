@@ -46,6 +46,7 @@ wss.on('connection', function (ws, request) {
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
       message = JSON.parse(message);
+      console.log('Received ' + message.type + ' by user ' + username + ' with ' + acl)
       switch (message.type) {
         case 'trackAdd':
           if (acl !== ACL_FULL) {
@@ -89,7 +90,7 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'iconAdd':
-          if (acl !== ACL_FULL || acl !== ACL_ICONS_ONLY) {
+          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
           }
           const feature = message.data;
@@ -102,7 +103,7 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'iconDelete':
-          if (acl !== ACL_FULL || acl !== ACL_ICONS_ONLY) {
+          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
           }
           icons.features = icons.features.filter((feature) => {

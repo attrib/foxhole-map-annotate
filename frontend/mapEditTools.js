@@ -1,6 +1,6 @@
 const Edit = require("./tools/edit");
 const Track = require("./tools/track");
-const Warning = require("./tools/warning");
+const Signs = require("./tools/signs");
 const Danger = require("./tools/danger");
 const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
 
@@ -28,8 +28,7 @@ class EditTools {
 
         this.edit = new Edit(this, map)
         this.track = new Track(this, map)
-        this.warning = new Warning(this, map)
-        this.danger = new Danger(this, map)
+        this.sign = new Signs(this, map)
     }
 
     initAcl = (acl) => {
@@ -40,8 +39,7 @@ class EditTools {
             this.map.addControl(this.track.control)
         }
         if (acl === ACL_FULL || acl === ACL_ICONS_ONLY) {
-            this.map.addControl(this.warning.control)
-            this.map.addControl(this.danger.control)
+            this.map.addControl(this.sign.control)
         }
     }
 
@@ -72,7 +70,7 @@ class EditTools {
     }
 
     emit = (key, data) => {
-        console.log(key)
+        console.log("tools emit: " + key)
         if (key in this.listeners) {
             for (const listener of this.listeners[key]) {
                 listener(data)

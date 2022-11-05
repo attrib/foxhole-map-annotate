@@ -19,7 +19,6 @@ class Socket {
 
     // Listen for messages
     this.socket.addEventListener('message', (event) => {
-      console.log('Message from server ', event.data);
       const data = JSON.parse(event.data);
       if (data.type === 'pong') {
         pingTimeout = this.ping()
@@ -65,7 +64,7 @@ class Socket {
   }
 
   emit(key, data) {
-    console.log(key)
+    console.log('ws emit: ' + key)
     if (key in this.listeners) {
       for (const listener of this.listeners[key]) {
         listener(data)

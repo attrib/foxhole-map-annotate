@@ -13,65 +13,80 @@
     </div>
     <div id="feature-info">
 
-        <div id="mouse-position-content" class="debug bg-light text-bg-light">
-            <span>Mouse Position</span>
-            <div id="mouse-position"></div>
+        <div id="mouse-position-content" class="debug bg-light text-bg-light container mb-2">
+            <div class="row mb-2 mt-2">
+                <span class="col-sm-3">Mouse</span>
+                <div id="mouse-position" class="col-sm-9"></div>
+            </div>
         </div>
 
-        <div id="track-info" class="info-box bg-light text-bg-light">
-            <div class="placementInfo">
-                <div class="user"></div>
-                <div class="time"></div>
+        <div id="track-info" class="info-box bg-light text-bg-light container mb-2">
+            <div class="placementInfo row align-content-center mb-1 mt-2">
+                <div class="user col-6"></div>
+                <div class="time col-6"></div>
             </div>
-            <div>
-                <span>Builder </span>
-                <span class="clan"></span>
+            <div class="row mb-1">
+                <span class="col-3">Builder </span>
+                <span class="clan col-9"></span>
             </div>
-            <div class="notes"></div>
+            <div class="notes row mb-2"></div>
         </div>
-        <div id="track-form" class="form bg-light text-bg-light">
-            <div>
-                <label for="track-form-clan">Builder</label>
-                <input id="track-form-clan" type="text" name="clan" placeholder="Builder" class="clan">
+        <div id="track-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="track-form-clan" class="col-sm-3 col-form-label">Builder</label>
+                <input id="track-form-clan" type="text" name="clan" placeholder="Builder" class="clan col-sm-9">
             </div>
-            <div>
-                <label for="track-form-color">Color</label>
-                <input id="track-form-color" type="color" name="color" class="color" value="#555555">
+            <div class="row align-items-center mb-1">
+                <label for="track-form-color" class="col-sm-3 col-form-label">Color</label>
+                <input id="track-form-color" type="color" name="color" class="color col-sm-9" value="#555555">
             </div>
-            <div>
-                <label for="track-form-notes">Notes</label>
-                <textarea id="track-form-notes" name="notes" class="notes">
+            <div class="row align-items-center mb-1">
+                <label for="track-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <textarea id="track-form-notes" name="notes" class="notes col-sm-9">
                 </textarea>
             </div>
-            <div>
-                <input id="track-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel">
-                <input id="track-form-submit" type="submit" value="Save" name="save" class="submit">
+            <div class="row justify-content-between mb-2">
+                <input id="track-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel col-sm-4 btn btn-danger">
+                <input id="track-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
             </div>
         </div>
 
-        <div id="icon-info" class="info-box bg-light text-bg-light">
-            <div class="placementInfo">
-                <div class="user"></div>
-                <div class="time"></div>
+        <div id="icon-info" class="info-box bg-light text-bg-light container mb-2">
+            <div class="placementInfo row align-items-center mt-2 mb-1">
+                <div class="user col-6"></div>
+                <div class="time col-6"></div>
             </div>
-            <div class="notes"></div>
+            <div class="notes col-12 mb-2"></div>
         </div>
-        <div id="icon-form" class="form bg-light text-bg-light">
-            <div>
-                <label for="icon-form-sign">Sign</label>
-                <select name="sign" id="icon-form-sign">
-                    <option value="warning">Warning</option>
+        <div id="sign-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="sign-form-sign" class="col-sm-3 col-form-label">Sign</label>
+                <select name="sign" id="sign-form-sign" class="col-sm-9 select2">
+                    <option value="information">Information</option>
+                    <option value="warning" selected>Warning</option>
+                    <option value="caution">Caution</option>
                     <option value="danger">Danger</option>
+                    <option value="dead_end">Dead End</option>
+                    <option value="dual_carriageway_ends_ahead">Dual Carriage Way Ends Ahead</option>
+                    <option value="keep_left">Keep Left</option>
+                    <option value="keep_right">Keep Right</option>
+                    <option value="level_crossing">Level Crossing</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="motorway">Motorway</option>
+                    <option value="motorway_end">Motorway End</option>
+                    <option value="no_entry">No Entry</option>
+                    <option value="no_stopping">No Stopping</option>
+                    <option value="no_waiting">No Waiting</option>
+                    <option value="parking">Parking</option>
                 </select>
             </div>
-            <div>
-                <label for="icon-form-notes">Notes</label>
-                <textarea id="icon-form-notes" name="notes" class="notes">
-                </textarea>
+            <div class="row mb-1 align-items-center">
+                <label for="sign-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <textarea id="sign-form-notes" name="notes" class="notes col-sm-9"></textarea>
             </div>
-            <div>
-                <input id="icon-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel">
-                <input id="icon-form-submit" type="submit" value="Save" name="save" class="submit">
+            <div class="row justify-content-between mb-2">
+                <input id="sign-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel col-sm-4 btn btn-danger">
+                <input id="sign-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
             </div>
         </div>
     </div>

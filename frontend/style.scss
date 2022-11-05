@@ -3,6 +3,7 @@
 @import "ol-layerswitcher/src/ol-layerswitcher.css";
 @import "ol-popup/src/ol-popup.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
+@import "tom-select/src/scss/tom-select.bootstrap5.scss";
 
 #map .layer-switcher {
   top: 0.5em;
@@ -25,8 +26,6 @@ main {
   display: none;
   border: 1px solid #aaa;
   border-radius: 5px;
-  padding: 5px;
-  margin: 5px;
 }
 
 .edit-buttons {
@@ -39,4 +38,8 @@ div#mouse-position-content {
 
 .ol-control.selected button {
   background-color: #cccccc;
+}
+
+.placementInfo .time, #mouse-position {
+  text-align: right;
 }

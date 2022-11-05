@@ -55,17 +55,23 @@ var map = new Map({
 });
 
 addDefaultMapControls(map)
+//@todo: move to tools
 const select = new Select({
   multi: false,
   toggleCondition: never,
   condition: (event) => {
-    if (['danger', 'warning'].includes(tools.selectedTool)) {
+    if (['sign'].includes(tools.selectedTool)) {
       return false;
     }
     return singleClick(event)
   }
 });
 map.addInteraction(select)
+// Prevent context menu on map
+document.getElementById('map').addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  return false;
+})
 
 const tools = new EditTools(map);
 
@@ -117,7 +123,7 @@ function infoBoxFeature(feature)
     trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
     trackInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
   }
-  else if (['danger', 'warning'].includes(feature.get('type'))) {
+  else if (['sign'].includes(feature.get('type'))) {
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
     iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
@@ -209,15 +215,11 @@ tools.on(tools.EVENT_ICON_DELETED, (icon) => {
 
 socket.on('icons', (features) => {
   const col = geoJson.readFeatures(features)
-  tools.warning.clearIcons()
-  tools.danger.clearIcons()
+  tools.sign.clearIcons()
   col.forEach((feature) => {
     switch (feature.get('type')) {
-      case 'warning':
-        tools.warning.addIcon(feature)
-        break;
-      case 'danger':
-        tools.danger.addIcon(feature)
+      case 'sign':
+        tools.sign.addIcon(feature)
         break;
     }
   })
