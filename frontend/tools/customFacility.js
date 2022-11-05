@@ -4,6 +4,7 @@ const {Collection} = require("ol");
 const {Vector: VectorSource} = require("ol/source");
 const {Vector} = require("ol/layer");
 const {Draw} = require("ol/interaction");
+const {createEditingStyle} = require("ol/style/Style");
 
 class CustomFacility extends ADrawTool {
 
@@ -38,6 +39,8 @@ class CustomFacility extends ADrawTool {
     this.cancelButton.addEventListener('click', this.clearInput)
   }
 
+  editingStyles = createEditingStyle();
+
   /**
    *
    * @param {import("ol").Feature} feature
@@ -64,15 +67,7 @@ class CustomFacility extends ADrawTool {
       })
     }
     else {
-      return new Style({
-        stroke: new Stroke({
-          color: 'rgba(85,85,85,0.52)',
-          width: 2,
-        }),
-        fill: new Fill({
-          color: 'rgba(85,85,85,0.52)',
-        }),
-      })
+      return this.editingStyles[feature.getGeometry().getType()]
     }
   }
 

@@ -4,6 +4,9 @@ const {Collection} = require("ol");
 const {Vector: VectorSource} = require("ol/source");
 const {Vector} = require("ol/layer");
 const {Style, Stroke} = require("ol/style");
+const {LineString} = require("ol/geom");
+const {createEditingStyle} = require("ol/style/Style");
+const bezier = require("@turf/bezier-spline").default;
 
 class Track extends ADrawTool {
 
@@ -27,7 +30,8 @@ class Track extends ADrawTool {
           stroke: new Stroke({
             color: this.colorInput.value,
             width: 5,
-          })
+          }),
+          geometry: this.geometryFunction
         })
       },
       properties: {
@@ -89,11 +93,43 @@ class Track extends ADrawTool {
     }
   }
 
+  /**
+   *
+   * @param {import("ol").Feature} feature
+   * @returns {*}
+   */
+  geometryFunction = (feature) => {
+    const geometry = new LineString(feature.getGeometry().getCoordinates());
+
+    const line = {
+      "type": "Feature",
+      "properties": {
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": feature.getGeometry().getCoordinates()
+      }
+    };
+    const curved = bezier(line);
+    geometry.setCoordinates(curved["geometry"]["coordinates"]);
+    return geometry;
+  };
+
+  style = () => {
+    const styles = createEditingStyle();
+    styles['LineString'][0].setGeometry(this.geometryFunction)
+    styles['LineString'][1].setGeometry(this.geometryFunction)
+    return function (feature, resolution) {
+      return styles[feature.getGeometry().getType()];
+    };
+  }
+
   toolSelected = () => {
     this.draw = new Draw({
       type: 'LineString',
       features: this.collection,
       stopClick: true,
+      style: this.style(),
       condition: (event) => {
         if (event.type === 'pointerdown') {
           // Right click remove last point

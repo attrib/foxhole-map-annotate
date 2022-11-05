@@ -186,7 +186,8 @@ function createClanCollection(clan) {
         stroke: new Stroke({
           color: feature.get('color'),
           width: 5,
-        })
+        }),
+        geometry: tools.track.geometryFunction
       })
     }
   });
