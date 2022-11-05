@@ -59,7 +59,7 @@ app.use(grant({
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     req.session.user = 'develop';
-    req.session.acl = ACL_ICONS_ONLY;
+    req.session.acl = ACL_FULL;
   }
   res.locals.title = 'Warden Infrastructure Map';
   res.locals.path = req.path;

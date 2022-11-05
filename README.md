@@ -4,12 +4,11 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
-* Facility Markers (new icons by Bazlow + polygon area with text?)
-
 * A delete button to remove selected line/sign
+* Edit Icons/Facilities
 * A "done" button to stop drawing a line
 * Selected symbols should not turn into dots when selected
-* When a line is selected, a button is available to confirm the line still exists. 
+* When a line is selected, a button is available to confirm the line still exists.
 
 * Layers popup behind form
 * Tooltips on mouseover

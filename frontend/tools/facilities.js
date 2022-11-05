@@ -6,15 +6,15 @@ const {Vector} = require("ol/layer");
 const {Draw} = require("ol/interaction");
 const TomSelect = require("tom-select");
 
-class Signs extends ADrawTool {
+class Facilities extends ADrawTool {
 
   /**
    * @param {EditTools} tools
    * @param {import("ol").Map} map
    */
   constructor(tools, map) {
-    super(tools, map, 'sign', 'exclamation-triangle', {
-      title: 'Signs'
+    super(tools, map, 'facility', 'building', {
+      title: 'Facilities'
     });
 
     this.collection = new Collection([]);
@@ -24,40 +24,40 @@ class Signs extends ADrawTool {
 
     const vector = new Vector({
       source: source,
-      title: 'Signs',
+      title: 'Facilities',
       style: this.style,
       zIndex: 10,
     });
     this.map.addLayer(vector);
 
-    this.form = document.getElementById('sign-form');
-    this.signSelect = new TomSelect('#sign-form-sign', {
+    this.form = document.getElementById('facility-form');
+    this.iconSelect = new TomSelect('#facility-form-icon', {
       render: {
         option: (data, escape) => {
-          return `<div><img src="${this.getSignImageUrl(data.value)}" alt="${data.text}"></div>`;
+          return `<div><img src="${this.getFacilityImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         },
         item: (data, escape) => {
-          return `<div><img src="${this.getSignImageUrl(data.value)}" alt="${data.text}"></div>`;
+          return `<div><img src="${this.getFacilityImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         }
       }
     })
-    this.signSelect.on('change', (a,b,c) => {
+    this.iconSelect.on('change', (a,b,c) => {
       if (this.draw) {
         this.draw.changed()
       }
     })
-    this.notesInput = document.getElementById('sign-form-notes');
-    this.submitButton = document.getElementById('sign-form-submit');
-    this.cancelButton = document.getElementById('sign-form-cancel');
+    this.notesInput = document.getElementById('facility-form-notes');
+    this.submitButton = document.getElementById('facility-form-submit');
+    this.cancelButton = document.getElementById('facility-form-cancel');
 
     this.cancelButton.addEventListener('click', this.clearInput)
   }
 
   style = (feature, zoom) => {
-    const sign = feature.get('sign') || this.signSelect.getValue();
+    const icon = feature.get('icon') || this.iconSelect.getValue();
     return new Style({
       image: new Icon({
-        src: this.getSignImageUrl(sign),
+        src: this.getFacilityImageUrl(icon),
       }),
     })
   }
@@ -84,7 +84,7 @@ class Signs extends ADrawTool {
     this.draw.on('drawend', (event) => {
       const feature = event.feature
       feature.set('type', this.toolName)
-      feature.set('sign', this.signSelect.getValue());
+      feature.set('icon', this.iconSelect.getValue());
       feature.set('notes', this.notesInput.value)
       this.tools.emit(this.tools.EVENT_ICON_ADDED, feature)
     })
@@ -107,31 +107,17 @@ class Signs extends ADrawTool {
   }
 
   clearInput = () => {
-    this.signSelect.setValue('warning')
+    this.iconSelect.setValue('public_cmats')
     this.notesInput.value = ''
   }
 
-  getSignImageUrl = (sign) => {
+  getFacilityImageUrl = (sign) => {
     switch (sign) {
       default:
-        return 'images/' + sign + '_sign.svg'
-
-      case 'dead_end':
-      case 'dual_carriageway_ends_ahead':
-      case 'information':
-      case 'keep_left':
-      case 'keep_right':
-      case 'level_crossing':
-      case 'maintenance':
-      case 'motorway':
-      case 'motorway_end':
-      case 'no_stopping':
-      case 'no_waiting':
-      case 'parking':
         return 'images/' + sign + '.svg'
     }
   }
 
 }
 
-module.exports = Signs
+module.exports = Facilities

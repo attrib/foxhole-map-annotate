@@ -50,8 +50,16 @@ module.exports.createCustomControlElement = function(label, clickHandler, option
     const element = document.createElement('div');
     element.className = 'ol-unselectable ol-control ' + options.elementClass;
     element.appendChild(button);
-    element.style.left = '0.5em';
-    element.style.top = customControlTopPosition + 'em';
+
+    if (options.left) {
+        customControlTopPosition -= 1.5;
+        element.style.left = options.left;
+        element.style.top = customControlTopPosition + 'em';
+    }
+    else {
+        element.style.left = '0.5em';
+        element.style.top = customControlTopPosition + 'em';
+    }
     customControlTopPosition += 1.5;
 
     return element;

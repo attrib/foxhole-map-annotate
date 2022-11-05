@@ -60,7 +60,7 @@ const select = new Select({
   multi: false,
   toggleCondition: never,
   condition: (event) => {
-    if (['sign'].includes(tools.selectedTool)) {
+    if (['sign', 'facility', 'custom-facility'].includes(tools.selectedTool)) {
       return false;
     }
     return singleClick(event)
@@ -121,14 +121,19 @@ function infoBoxFeature(feature)
     trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
     trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
     trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
-    trackInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
+    trackInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature);
   }
-  else if (['sign'].includes(feature.get('type'))) {
+  else if (['sign', 'facility', 'custom_facility'].includes(feature.get('type'))) {
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
     iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
-    iconInfo.getElementsByClassName('notes')[0].innerHTML = feature.get('notes');
+    iconInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature)
   }
+}
+
+function getNotes(feature) {
+  const note = feature.get('notes') || ''
+  return note.replaceAll("\n", '<br>')
 }
 
 //
@@ -216,10 +221,18 @@ tools.on(tools.EVENT_ICON_DELETED, (icon) => {
 socket.on('icons', (features) => {
   const col = geoJson.readFeatures(features)
   tools.sign.clearIcons()
+  tools.facility.clearIcons()
+  tools.customFacility.clearIcons();
   col.forEach((feature) => {
     switch (feature.get('type')) {
       case 'sign':
         tools.sign.addIcon(feature)
+        break;
+      case 'facility':
+        tools.facility.addIcon(feature)
+        break;
+      case 'custom_facility':
+        tools.customFacility.addIcon(feature)
         break;
     }
   })

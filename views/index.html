@@ -89,5 +89,59 @@
                 <input id="sign-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
             </div>
         </div>
+
+        <div id="facility-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="facility-form-icon" class="col-sm-3 col-form-label">Sign</label>
+                <select name="icon" id="facility-form-icon" class="col-sm-9 select2">
+                    <optgroup label="Fields">
+                        <option value="scrap_field">Scrap</option>
+                        <option value="coal_field">Coal</option>
+                        <option value="comp_field">Components</option>
+                        <option value="sulfur_field">Sulfur</option>
+                        <option value="oil_field">Oil</option>
+                    </optgroup>
+                    <optgroup label="Public Facilities">
+                        <option value="generator">Generator</option>
+                        <option value="public_cmats">CMats</option>
+                        <option value="public_pcmats">PC Mats</option>
+                        <option value="public_scmats">Steel</option>
+                        <option value="public_diesel">Diesel</option>
+                        <option value="public_petrol">Petrol</option>
+                        <option value="public_enriched">Enriched Oil</option>
+                        <option value="public_heavy">Heavy Oil</option>
+                        <option value="public_ass_mats_1">AMats 1</option>
+                        <option value="public_ass_mats_2">AMats 2</option>
+                        <option value="public_ass_mats_3">AMats 3</option>
+                        <option value="public_ass_mats_4">AMats 4</option>
+                        <option value="public_ass_mats_5">AMats 5</option>
+                        <option value="public_ammo_facility">Ammo</option>
+                        <option value="public_vehicle_facility">Vehicle</option>
+                        <option value="public_tank_facility">Tank</option>
+                        <option value="public_train_facility">Train</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <label for="facility-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <textarea id="facility-form-notes" name="notes" class="notes col-sm-9"></textarea>
+            </div>
+            <div class="row justify-content-between mb-2">
+                <input id="facility-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel col-sm-4 btn btn-danger">
+                <input id="facility-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+            </div>
+        </div>
+
+        <div id="custom-facility-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2 align-items-center">
+                <label for="custom-facility-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <textarea id="custom-facility-form-notes" name="notes" class="notes col-sm-9"></textarea>
+            </div>
+            <div class="row justify-content-between mb-2">
+                <input id="custom-facility-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel col-sm-4 btn btn-danger">
+                <input id="custom-facility-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+            </div>
+        </div>
+        
     </div>
 {% endblock %}
