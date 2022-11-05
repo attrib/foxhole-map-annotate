@@ -24,6 +24,8 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## DevTodos
 
+* Rework WebSockets to allow partial updates 
+
 ## Run Dev
 
 Copy `.env.dist` to `.env`
