@@ -2,6 +2,7 @@ const Edit = require("./tools/edit");
 const Track = require("./tools/track");
 const Warning = require("./tools/warning");
 const Danger = require("./tools/danger");
+const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -26,19 +27,25 @@ class EditTools {
         this.map = map
 
         this.edit = new Edit(this, map)
-        map.addControl(this.edit.control)
-
         this.track = new Track(this, map)
-        map.addControl(this.track.control)
-
         this.warning = new Warning(this, map)
-        map.addControl(this.warning.control)
-
         this.danger = new Danger(this, map)
-        map.addControl(this.danger.control)
     }
 
-    changeMode(newMode) {
+    initAcl = (acl) => {
+        if (acl === ACL_FULL || acl === ACL_ICONS_ONLY) {
+            this.map.addControl(this.edit.control)
+        }
+        if (acl === ACL_FULL) {
+            this.map.addControl(this.track.control)
+        }
+        if (acl === ACL_FULL || acl === ACL_ICONS_ONLY) {
+            this.map.addControl(this.warning.control)
+            this.map.addControl(this.danger.control)
+        }
+    }
+
+    changeMode = (newMode) => {
         if (newMode === undefined) {
             newMode = !this.editMode
         }
@@ -57,14 +64,14 @@ class EditTools {
         }
     }
 
-    changeTool(newTool) {
+    changeTool = (newTool) => {
         if (this.editMode && this.selectedTool !== newTool) {
             this.selectedTool = newTool
             this.emit(this.EVENT_TOOL_SELECTED, this.selectedTool)
         }
     }
 
-    emit(key, data) {
+    emit = (key, data) => {
         console.log(key)
         if (key in this.listeners) {
             for (const listener of this.listeners[key]) {
@@ -73,7 +80,7 @@ class EditTools {
         }
     }
 
-    on(key, callback) {
+    on = (key, callback) => {
         if (!(key in this.listeners)) {
             this.listeners[key] = [];
         }

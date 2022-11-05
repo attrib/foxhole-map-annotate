@@ -32,6 +32,17 @@
                                     {{ user }}
                                 </a>
                                 <ul class="dropdown-menu">
+                                    <li>
+                                        <span class="dropdown-item-text">
+                                            {% if acl === 'full' %}
+                                                Full access
+                                            {% elseif acl === 'icons' %}
+                                                Icons edit only
+                                            {% else %}
+                                                Read only
+                                            {% endif %}
+                                        </span>
+                                    </li>
                                     <li><a class="dropdown-item" href="/logout">Logout</a></li>
                                 </ul>
                             </li>

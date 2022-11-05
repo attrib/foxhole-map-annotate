@@ -9,10 +9,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login', async function(req, res, next) {
+  if (req.session.grant === undefined) {
+    return res.redirect('/');
+  }
   let discord = new Discord(req.session.grant.response.access_token);
-  discord.checkAllowedUser((data, userId, guilds) => {
-    if (data !== false) {
+  discord.checkAllowedUser().then((data) => {
+    if (data.access === true) {
       req.session.user = data.user;
+      req.session.acl = data.acl;
       req.session.id = uuid.v4();
       req.session.save(() => {
         res.redirect('/');
@@ -20,7 +24,7 @@ router.get('/login', async function(req, res, next) {
     }
     else {
       req.session.destroy(() => {
-        res.render('access', {userId, guilds});
+        res.render('access', data);
       });
     }
   })

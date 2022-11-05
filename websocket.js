@@ -4,6 +4,7 @@ const wss = new webSocket.Server({clientTracking: false, noServer: true});
 const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
+const {ACL_FULL, ACL_ICONS_ONLY} = require("./lib/ACLS");
 
 let tracks = {}, icons = {};
 const trackFileName = './data/tracks.json';
@@ -31,7 +32,12 @@ wss.on('connection', function (ws, request) {
     if (!request.session.user || !request.session.id) {
       ws.close();
     }
-    let username = request.session.user;
+    const username = request.session.user;
+    const acl = request.session.acl;
+    ws.send(JSON.stringify({
+      type: 'acl',
+      data: acl
+    }));
     sendTracks(ws);
     sendIcons(ws);
 
@@ -42,6 +48,9 @@ wss.on('connection', function (ws, request) {
       message = JSON.parse(message);
       switch (message.type) {
         case 'trackAdd':
+          if (acl !== ACL_FULL) {
+            break;
+          }
           for (const feature of message.data.features) {
             feature.properties.id = uuid.v4()
             feature.properties.user = username
@@ -53,6 +62,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'trackUpdate':
+          if (acl !== ACL_FULL) {
+            break;
+          }
           for (const existingTracks of tracks.features) {
             if (message.data.properties.id === existingTracks.properties.id) {
               existingTracks.properties = message.data.properties
@@ -66,6 +78,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'trackDelete':
+          if (acl !== ACL_FULL) {
+            break;
+          }
           tracks.features = tracks.features.filter((feature) => {
             return feature.properties.id !== message.data.id
           })
@@ -74,6 +89,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'iconAdd':
+          if (acl !== ACL_FULL || acl !== ACL_ICONS_ONLY) {
+            break;
+          }
           const feature = message.data;
           feature.properties.id = uuid.v4()
           feature.properties.user = username
@@ -84,6 +102,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'iconDelete':
+          if (acl !== ACL_FULL || acl !== ACL_ICONS_ONLY) {
+            break;
+          }
           icons.features = icons.features.filter((feature) => {
             return feature.properties.id !== message.data.id
           })

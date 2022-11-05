@@ -8,6 +8,7 @@ const nunjucks = require("nunjucks");
 
 var sessionParser = require('./lib/session');
 var indexRouter = require('./routes/index');
+const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
 
 
 var app = express();
@@ -56,13 +57,15 @@ app.use(grant({
 }))
 
 app.use((req, res, next) => {
-  // if (process.env.NODE_ENV === 'development') {
-  //   req.session.user = 'develop';
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    req.session.user = 'develop';
+    req.session.acl = ACL_ICONS_ONLY;
+  }
   res.locals.title = 'Warden Infrastructure Map';
   res.locals.path = req.path;
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
+    res.locals.acl = req.session.acl
     next();
   }
   else {

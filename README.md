@@ -4,10 +4,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
-* ACL
-  * One discord role for viewing
-  * One discord role for signs
-  * One discord role for signs and lines
 * A delete button to remove selected line/sign
 * A "done" button to stop drawing a line
 * Tooltips on mouseover
@@ -18,6 +14,7 @@ Annotate and draw on the foxhole map and share with your group.
 * When a line is selected, a button is available to confirm the line still exists.
 * Facility Markers (new icons by Bazlow + polygon area with text?)
 * Guide on how to use the map
+* Layers popup behind form
 
 * planed tracks (dashed lines)
 * add resource fields (+ other stuff) from official warapi
@@ -63,3 +60,20 @@ If not done already, see step how to create the map.
 Change Host in `docker-compse.yml`
 
 Run `docker compose up -d`
+
+### Access control
+
+After first start it creates a file `./data/allowedUsers.yml`. Using yml so you can add comments!
+
+Edit file and restart server for new permissions to take place. Users probably have to logout/login again.
+
+```yaml
+users:
+  12345678901234567: full # full access for this user
+guilds:
+  12345678901234568: icons # All users on this server can add/edit icons, but can't edit tracks
+roles:
+  12345678901234569: # Server ID
+    12345678901234570: icons # All users with this role, can add/edit icons
+    12345678901234571: read # All users with this role, can only view the map
+```

@@ -4,9 +4,8 @@ import {defaults} from "ol/control";
 import {Group, Vector, Tile} from "ol/layer";
 import {TileImage, Vector as VectorSource} from "ol/source";
 import {GeoJSON} from "ol/format";
-import {Style, Stroke, Icon} from "ol/style";
-import {Draw, Snap, Modify, Select} from "ol/interaction";
-import Popup from "ol-popup/src/ol-popup";
+import {Style, Stroke} from "ol/style";
+import {Select} from "ol/interaction";
 import {addDefaultMapControls} from "./mapControls"
 import Socket from "./webSocket";
 import {never, singleClick} from "ol/events/condition";
@@ -138,6 +137,10 @@ const clanGroup = new Group({
 });
 map.addLayer(clanGroup);
 const socket = new Socket();
+
+socket.on('acl', (acl) => {
+  tools.initAcl(acl)
+})
 
 socket.on('tracks', (tracks) => {
   selectedFeature = null
