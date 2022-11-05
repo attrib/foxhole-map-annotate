@@ -24,8 +24,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## DevTodos
 
-* Create and Push Docker Image to dockerhub?
-
 ## Run Dev
 
 Copy `.env.dist` to `.env`
@@ -50,7 +48,9 @@ Open http://localhost:3000
 
 Create a Discord OAuth 2 App (https://discord.com/developers/applications) and add `https://<yourdomain.tld>/connect/discord/callback` as redirect URL.
 
-Copy `.env.dist` to `.env`
+Copy `docker-compose.yml` to your webserver with docker and a traefik instance.
+
+Copy `.env.dist` to your server as `.env`
 
 * Set NODE_ENV with `production`
 * Set ORIGIN to `https://<yourdomain.tld>/`
@@ -58,8 +58,6 @@ Copy `.env.dist` to `.env`
 
 If not done already, see step how to create the map.
 
-Run `./start.bash` (creates a docker image and runs this image)
+Change Host in `docker-compse.yml`
 
-Have an apache/nginx proxy terminating SSL and pointing to 127.0.0.1:3033.
-
-Make sure it can handle WebSocket upgrades.
+Run `docker compose up -d`

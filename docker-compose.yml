@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+
+  map:
+    image: "attribdd/foxhole-map-annotate:master"
+    restart: always
+    volumes:
+      - ./uploads:/app/uploads
+      - ./sessions:/app/sessions
+      - ./data:/app/data
+    env_file:
+      - .env
+    expose:
+      - 3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.map.rule=Host(`warden.express`)"
+      - "traefik.http.routers.map.entrypoints=websecure"
+      - "traefik.http.routers.map.tls.certresolver=le"
