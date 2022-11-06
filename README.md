@@ -35,7 +35,7 @@ Create the map tiles
 ```
 mkdir uploads
 cd uploads
-wget https://cdn.discordapp.com/attachments/1003485765273145424/1036149790897098772/totalmap.png
+wget https://cdn.discordapp.com/attachments/1003485765273145424/1038611094182314056/totalmap.png
 docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/totalmap.png /tmp/files/
 ```
 

@@ -11,11 +11,6 @@ import Socket from "./webSocket";
 import {never, singleClick} from "ol/events/condition";
 const EditTools = require("./mapEditTools")
 
-// Needed for Hot Module Replacement
-if(typeof(module.hot) !== 'undefined') {
-  module.hot.accept()
-}
-
 var map = new Map({
   controls: defaults(),
   target: 'map',

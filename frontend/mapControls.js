@@ -17,7 +17,7 @@ const layerSwitcher = new LayerSwitcher({
 });
 
 module.exports.addDefaultMapControls = function(map) {
-    map.addControl(mousePositionControl);
+    // map.addControl(mousePositionControl);
     map.addControl(layerSwitcher);
 }
 
