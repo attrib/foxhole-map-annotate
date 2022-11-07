@@ -20,6 +20,7 @@ main {
   float: right;
   top: 3rem;
   right: 1.5rem;
+  min-width: 15rem;
 }
 
 #feature-info > div {
@@ -43,3 +44,11 @@ div#mouse-position-content {
 .placementInfo .time, #mouse-position {
   text-align: right;
 }
+
+.ts-wrapper .ts-control {
+  max-height: 3rem;
+  .item img {
+    margin-right: 5px;
+  }
+}
+

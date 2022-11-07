@@ -94,6 +94,9 @@ wss.on('connection', function (ws, request) {
             break;
           }
           const feature = message.data;
+          if (acl === ACL_ICONS_ONLY && feature.properties.type !== 'information') {
+            break;
+          }
           feature.properties.id = uuid.v4()
           feature.properties.user = username
           feature.properties.time = (new Date()).toISOString()
@@ -108,6 +111,9 @@ wss.on('connection', function (ws, request) {
           }
           for (const existingIcon of icons.features) {
             if (message.data.properties.id === existingIcon.properties.id) {
+              if (acl === ACL_ICONS_ONLY && existingIcon.properties.type !== 'information') {
+                break;
+              }
               existingIcon.properties = message.data.properties
               existingIcon.properties.user = username
               existingIcon.properties.time = (new Date()).toISOString()
@@ -121,6 +127,12 @@ wss.on('connection', function (ws, request) {
         case 'iconDelete':
           if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
+          }
+          if (acl === ACL_ICONS_ONLY) {
+            const feature = icons.features.find((value) => value.properties.id === message.data.id)
+            if (feature && feature.properties.type !== 'information') {
+              break;
+            }
           }
           icons.features = icons.features.filter((feature) => {
             return feature.properties.id !== message.data.id

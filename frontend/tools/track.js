@@ -6,6 +6,7 @@ const {Vector} = require("ol/layer");
 const {Style, Stroke} = require("ol/style");
 const {LineString} = require("ol/geom");
 const {createEditingStyle} = require("ol/style/Style");
+const {ACL_FULL} = require("../../lib/ACLS");
 const bezier = require("@turf/bezier-spline").default;
 
 class Track extends ADrawTool {
@@ -164,6 +165,11 @@ class Track extends ADrawTool {
   }
 
   trackSelected = (feature) => {
+    if (this.tools.acl !== ACL_FULL) {
+      this.form.style.display = 'none'
+      this.deleteButton.style.display = 'none'
+      return;
+    }
     this.editFeature = feature
     this.clanInput.value = feature.get('clan')
     this.colorInput.value = feature.get('color')

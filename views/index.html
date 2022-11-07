@@ -60,14 +60,34 @@
             </div>
             <div class="notes col-12 mb-2"></div>
         </div>
-        <div id="sign-form" class="form bg-light text-bg-light container mb-2">
+
+        <div id="information-form" class="form bg-light text-bg-light container mb-2">
             <div class="row mb-1 mt-2">
-                <label for="sign-form-sign" class="col-sm-3 col-form-label">Sign</label>
-                <select name="sign" id="sign-form-sign" class="col-sm-9 select2">
+                <label for="information-form-sign" class="col-sm-3 col-form-label">Sign</label>
+                <select name="information" id="information-form-sign" class="col-sm-9 select2">
                     <option value="information">Information</option>
                     <option value="warning" selected>Warning</option>
                     <option value="caution">Caution</option>
                     <option value="danger">Danger</option>
+                </select>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <label for="information-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <textarea id="information-form-notes" name="notes" class="notes col-sm-9"></textarea>
+            </div>
+            <div class="row justify-content-between mb-2">
+                <div class="btn-group col-sm-12">
+                    <input id="information-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel col-sm-4 btn btn-secondary">
+                    <input id="information-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
+                    <input id="information-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+                </div>
+            </div>
+        </div>
+
+        <div id="sign-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="sign-form-sign" class="col-sm-3 col-form-label">Sign</label>
+                <select name="sign" id="sign-form-sign" class="col-sm-9 select2">
                     <option value="dead_end">Dead End</option>
                     <option value="dual_carriageway_ends_ahead">Dual Carriage Way Ends Ahead</option>
                     <option value="keep_left">Keep Left</option>

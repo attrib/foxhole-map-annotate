@@ -3,6 +3,7 @@ const {Collection} = require("ol");
 const {Vector: VectorSource} = require("ol/source");
 const {Vector} = require("ol/layer");
 const {Draw} = require("ol/interaction");
+const {ACL_FULL} = require("../../lib/ACLS");
 
 class AIconTool extends ADrawTool {
 
@@ -22,6 +23,7 @@ class AIconTool extends ADrawTool {
     });
 
     this.drawType = options.drawType || 'Point';
+    this.allowEditWithIconsACL = options.allowEditWithIconsACL || false;
 
     const vector = new Vector({
       source: source,
@@ -124,6 +126,11 @@ class AIconTool extends ADrawTool {
   }
 
   _featureSelected = (feature) => {
+    if (!this.allowEditWithIconsACL && this.tools.acl !== ACL_FULL) {
+      this.form.style.display = 'none'
+      this.deleteButton.style.display = 'none'
+      return;
+    }
     this.editFeature = feature
     this.notesInput.value = feature.get('notes')
     this.form.style.display = 'block'

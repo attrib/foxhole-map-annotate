@@ -4,6 +4,7 @@ const Signs = require("./tools/signs");
 const Facilities = require("./tools/facilities");
 const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
 const CustomFacility = require("./tools/customFacility");
+const Information = require("./tools/information");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -31,6 +32,7 @@ class EditTools {
         this.map = map
 
         this.edit = new Edit(this, map)
+        this.information = new Information(this, map)
         this.sign = new Signs(this, map)
         this.facility = new Facilities(this, map)
         this.customFacility = new CustomFacility(this, map)
@@ -38,16 +40,16 @@ class EditTools {
     }
 
     initAcl = (acl) => {
+        this.acl = acl;
         if (acl === ACL_FULL || acl === ACL_ICONS_ONLY) {
             this.map.addControl(this.edit.control)
-            this.map.addControl(this.customFacility.control)
+            this.map.addControl(this.information.control)
         }
         if (acl === ACL_FULL) {
-            this.map.addControl(this.track.control)
-        }
-        if (acl === ACL_FULL || acl === ACL_ICONS_ONLY) {
             this.map.addControl(this.sign.control)
             this.map.addControl(this.facility.control)
+            this.map.addControl(this.customFacility.control)
+            this.map.addControl(this.track.control)
         }
     }
 

@@ -55,7 +55,7 @@ const select = new Select({
   multi: false,
   toggleCondition: never,
   condition: (event) => {
-    if (['sign', 'facility', 'custom-facility'].includes(tools.selectedTool)) {
+    if (['information', 'sign', 'facility', 'custom-facility'].includes(tools.selectedTool)) {
       return false;
     }
     return singleClick(event)
@@ -122,7 +122,7 @@ function infoBoxFeature(feature)
     trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
     trackInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature);
   }
-  else if (['sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
+  else if (['information', 'sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
     iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
@@ -226,11 +226,15 @@ tools.on(tools.EVENT_ICON_DELETED, (icon) => {
 
 socket.on('icons', (features) => {
   const col = geoJson.readFeatures(features)
+  tools.information.clearFeatures()
   tools.sign.clearFeatures()
   tools.facility.clearFeatures()
   tools.customFacility.clearFeatures();
   col.forEach((feature) => {
     switch (feature.get('type')) {
+      case 'information':
+        tools.information.addFeature(feature)
+        break;
       case 'sign':
         tools.sign.addFeature(feature)
         break;

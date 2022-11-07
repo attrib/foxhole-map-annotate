@@ -2,20 +2,20 @@ const {Style, Icon} = require("ol/style");
 const TomSelect = require("tom-select");
 const AIconTool = require("./AIconTool");
 
-class Signs extends AIconTool {
+class Information extends AIconTool {
 
   /**
    * @param {EditTools} tools
    * @param {import("ol").Map} map
    */
   constructor(tools, map) {
-    super(tools, map, 'sign', 'sign-turn-left', {
-      title: 'Signs',
-      zIndex: 10,
-      left: '2em',
+    super(tools, map, 'information', 'exclamation-triangle', {
+      title: 'Informations',
+      zIndex: 50,
+      allowEditWithIconsACL: true,
     });
 
-    this.signSelect = new TomSelect('#sign-form-sign', {
+    this.signSelect = new TomSelect('#information-form-sign', {
       render: {
         option: (data, escape) => {
           return `<div><img src="${this.getSignImageUrl(data.value)}" alt="${data.text}"></div>`;
@@ -80,4 +80,4 @@ class Signs extends AIconTool {
 
 }
 
-module.exports = Signs
+module.exports = Information
