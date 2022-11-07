@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block content %}
+<div class="p-5 m-4 bg-light rounded-3 text-bg-light">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Help</h1>
+        <p>
+            Work in Progress
+        </p>
+        <h2>Read/Edit Mode</h2>
+        <p>Depending on permission you have access to go to the edit mode (<i class="bi bi-gear"></i>)</p>
+        <p>When Clicking edit mode more controls are available to edit the map.</p>
+        <h2 class="mt-4">Track <i class="bi bi-train-front"></i></h2>
+        <div class="row">
+            <p class="col-md-12">First add Points, then fill out Builder and choose a Color. Click Save to save the
+                track.</p>
+            <div class="col-md-1">
+                Left Click
+            </div>
+            <div class="col-md-5">
+                Add a point
+            </div>
+            <div class="col-md-1">
+                Right Click
+            </div>
+            <div class="col-md-5">
+                Remove last point
+            </div>
+            <div class="col-md-1">
+                <i class="bi bi-alt">Alt</i> + Left Click
+            </div>
+            <div class="col-md-5">
+                Remove point on track
+            </div>
+            <div class="col-md-1">
+                <i class="bi bi-shift">Shift</i> + Left Click
+            </div>
+            <div class="col-md-5">
+                Remove complete Track
+            </div>
+        </div>
+        <h2 class="mt-4">Sign <i class="bi bi-exclamation-triangle"></i> / Facility <i class="bi bi-building"></i></h2>
+        <div class="row">
+            <div class="col-md-6 row">
+                <div class="col-md-12">
+                    <h3>Signs</h3>
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/information.svg" alt="Information">
+                </div>
+                <div class="col-md-10">
+                    Information
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/warning_sign.svg" alt="Warning">
+                </div>
+                <div class="col-md-10">
+                    Warning
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/caution_sign.svg" alt="Caution">
+                </div>
+                <div class="col-md-10">
+                    Caution
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/danger_sign.svg" alt="Danger">
+                </div>
+                <div class="col-md-10">
+                    Danger
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/dead_end.svg" alt="Dead End">
+                </div>
+                <div class="col-md-10">
+                    Dead End
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/dual_carriageway_ends_ahead.svg" alt="Dual Carriage Way Ends Ahead">
+                </div>
+                <div class="col-md-10">
+                    Dual Carriage Way Ends Ahead
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/keep_left.svg" alt="Keep Left">
+                </div>
+                <div class="col-md-10">
+                    Keep Left
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/keep_right.svg" alt="Keep Right">
+                </div>
+                <div class="col-md-10">
+                    Keep Right
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/level_crossing.svg" alt="Level Crossing">
+                </div>
+                <div class="col-md-10">
+                    Level Crossing
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/maintenance.svg" alt="Maintenance">
+                </div>
+                <div class="col-md-10">
+                    Maintenance
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/motorway.svg" alt="Motorway">
+                </div>
+                <div class="col-md-10">
+                    Motorway
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/motorway_end.svg" alt="Motorway End">
+                </div>
+                <div class="col-md-10">
+                    Motorway End
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/no_entry_sign.svg" alt="No Entry">
+                </div>
+                <div class="col-md-10">
+                    No Entry
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/no_stopping.svg" alt="No Stopping">
+                </div>
+                <div class="col-md-10">
+                    No Stopping
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/no_waiting.svg" alt="No Waiting">
+                </div>
+                <div class="col-md-10">
+                    No Waiting
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/parking.svg" alt="Parking">
+                </div>
+                <div class="col-md-10">
+                    Parking
+                </div>
+            </div>
+            <div class="col-md-6 row">
+                <div class="col-md-12">
+                    <h3>Facilities</h3>
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/scrap_field.svg" alt="Scrap">
+                </div>
+                <div class="col-md-10">
+                    Scrap Field
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/coal_field.svg" alt="Coal">
+                </div>
+                <div class="col-md-10">
+                    Coal Field
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/comp_field.svg" alt="Components">
+                </div>
+                <div class="col-md-10">
+                    Components Field
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/sulfur_field.svg" alt="Sulfur">
+                </div>
+                <div class="col-md-10">
+                    Sulfur Field
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/oil_field.svg" alt="Oil">
+                </div>
+                <div class="col-md-10">
+                    Oil Field
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/generator.svg" alt="Generator">
+                </div>
+                <div class="col-md-10">
+                    Generator
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_cmats.svg" alt="CMats">
+                </div>
+                <div class="col-md-10">
+                    Public Construction Materials Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_pcmats.svg" alt="PC Mats">
+                </div>
+                <div class="col-md-10">
+                    Public Processed Construction Materials Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_scmats.svg" alt="Steel">
+                </div>
+                <div class="col-md-10">
+                    Public Steel Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_diesel.svg" alt="Diesel">
+                </div>
+                <div class="col-md-10">
+                    Public Diesel
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_petrol.svg" alt="Petrol">
+                </div>
+                <div class="col-md-10">
+                    Public Petrol Refinery
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_enriched.svg" alt="Enriched Oil">
+                </div>
+                <div class="col-md-10">
+                    Public Enriched Oil Refinery
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_heavy.svg" alt="Heavy Oil">
+                </div>
+                <div class="col-md-10">
+                    Public Heavy Oil Refinery
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_ass_mats_1.svg" alt="AMats 1">
+                </div>
+                <div class="col-md-10">
+                    Public Assembly Materials 1 Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_ass_mats_2.svg" alt="AMats 2">
+                </div>
+                <div class="col-md-10">
+                    Public Assembly Materials 2 Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_ass_mats_3.svg" alt="AMats 3">
+                </div>
+                <div class="col-md-10">
+                    Public Assembly Materials 3 Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_ass_mats_4.svg" alt="AMats 4">
+                </div>
+                <div class="col-md-10">
+                    Public Assembly Materials 4 Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_ass_mats_5.svg" alt="AMats 5">
+                </div>
+                <div class="col-md-10">
+                    Public Assembly Materials 5 Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_ammo_facility.svg" alt="Ammo">
+                </div>
+                <div class="col-md-10">
+                    Public Ammunition Facility
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_vehicle_facility.svg" alt="Vehicle">
+                </div>
+                <div class="col-md-10">
+                    Public Vehicle Assembly Station
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_tank_facility.svg" alt="Tank">
+                </div>
+                <div class="col-md-10">
+                    Public Tank Assembly Station
+                </div>
+                <div class="col-md-2">
+                    <img src="/images/public_train_facility.svg" alt="Train">
+                </div>
+                <div class="col-md-10">
+                    Public Train Assembly Station
+                </div>
+            </div>
+        </div>
+        <h2 class="mt-4">Custom Facilities <i class="bi bi-hexagon"></i></h2>
+        <p>
+            Add multiple points to mark a area as facility area. Note will be displayed inside the box.
+        </p>
+    </div>
+</div>
+{% endblock %}

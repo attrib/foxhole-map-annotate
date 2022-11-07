@@ -8,6 +8,10 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
+router.get('/help', function(req, res, next) {
+  res.render('help');
+});
+
 router.get('/login', async function(req, res, next) {
   if (req.session.grant === undefined) {
     return res.redirect('/');
