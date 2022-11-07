@@ -11,10 +11,13 @@ class EditTools {
     EVENT_TOOL_SELECTED = 'toolSelected';
     EVENT_TRACK_ADDED = 'trackAdded';
     EVENT_TRACK_UPDATED = 'trackUpdated';
-    EVENT_TRACK_UPDATE_CANCELED = 'trackUpdateCanceled';
+    EVENT_UPDATE_CANCELED = 'updateCanceled';
     EVENT_TRACK_DELETE = 'trackDelete';
     EVENT_ICON_ADDED = 'iconAdded';
     EVENT_ICON_DELETED = 'iconDeleted';
+    EVENT_ICON_UPDATED = 'iconUpdated';
+    EVENT_FEATURE_SELECTED = (type) => type + '-selected'
+    EVENT_FEATURE_DESELECTED = (type) => type + '-deselected'
 
     editMode = false
     selectedTool = false

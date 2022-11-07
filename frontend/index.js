@@ -107,6 +107,10 @@ select.on('select', (event) => {
   if (selectedFeature) {
     infoBoxFeature(selectedFeature)
   }
+  else {
+    trackInfo.style.display = 'none';
+    iconInfo.style.display = 'none';
+  }
 })
 
 function infoBoxFeature(feature)
@@ -118,7 +122,7 @@ function infoBoxFeature(feature)
     trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
     trackInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature);
   }
-  else if (['sign', 'facility', 'custom_facility'].includes(feature.get('type'))) {
+  else if (['sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
     iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
@@ -208,6 +212,12 @@ tools.on(tools.EVENT_ICON_ADDED, (icon) => {
   socket.send('iconAdd', geoJson.writeFeatureObject(icon))
 })
 
+tools.on(tools.EVENT_ICON_UPDATED, (icon) => {
+  if (icon && icon.get('id')) {
+    socket.send('iconUpdate', geoJson.writeFeatureObject(icon))
+  }
+})
+
 tools.on(tools.EVENT_ICON_DELETED, (icon) => {
   if (icon && icon.get('id')) {
     socket.send('iconDelete', {id: icon.get('id')})
@@ -216,19 +226,19 @@ tools.on(tools.EVENT_ICON_DELETED, (icon) => {
 
 socket.on('icons', (features) => {
   const col = geoJson.readFeatures(features)
-  tools.sign.clearIcons()
-  tools.facility.clearIcons()
-  tools.customFacility.clearIcons();
+  tools.sign.clearFeatures()
+  tools.facility.clearFeatures()
+  tools.customFacility.clearFeatures();
   col.forEach((feature) => {
     switch (feature.get('type')) {
       case 'sign':
-        tools.sign.addIcon(feature)
+        tools.sign.addFeature(feature)
         break;
       case 'facility':
-        tools.facility.addIcon(feature)
+        tools.facility.addFeature(feature)
         break;
-      case 'custom_facility':
-        tools.customFacility.addIcon(feature)
+      case 'custom-facility':
+        tools.customFacility.addFeature(feature)
         break;
     }
   })

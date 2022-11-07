@@ -4,7 +4,7 @@ const {Control} = require("ol/control");
 class ADrawTool {
 
   /**
-   * @param {EditTools} tools
+   * @param {import("../mapEditTools")} tools
    * @param {import("ol").Map} map
    * @param {string} toolName
    * @param {string} iconName

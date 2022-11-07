@@ -4,8 +4,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
-* A delete button to remove selected line/sign
-* Edit Icons/Facilities
 * A "done" button to stop drawing a line
 * Selected symbols should not turn into dots when selected
 * When a line is selected, a button is available to confirm the line still exists.

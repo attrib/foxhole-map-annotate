@@ -40,13 +40,16 @@ class Track extends ADrawTool {
     });
     this.map.addLayer(vectorLine);
     this.form = document.getElementById('track-form');
-    this.clanInput = this.form.getElementsByClassName('clan')[0]
-    this.colorInput = this.form.getElementsByClassName('color')[0]
-    this.notesInput = this.form.getElementsByClassName('notes')[0]
-    this.submitButton = this.form.getElementsByClassName('submit')[0]
-    this.cancelButton = this.form.getElementsByClassName('cancel')[0]
+    this.clanInput = document.getElementById('track-form-clan')
+    this.colorInput = document.getElementById('track-form-color')
+    this.notesInput = document.getElementById('track-form-notes')
+    this.submitButton = document.getElementById('track-form-submit')
+    this.deleteButton = document.getElementById('track-form-delete')
+    this.cancelButton = document.getElementById('track-form-cancel')
 
     this.cancelButton.addEventListener('click', this.clearInput)
+    this.deleteButton.style.display = 'none'
+    this.deleteButton.addEventListener('click', this.deleteTrack)
 
     this.colorInput.addEventListener('input', () => {
       vectorLine.changed()
@@ -78,8 +81,8 @@ class Track extends ADrawTool {
       }
     })
 
-    tools.on('track-selected', this.trackSelected)
-    tools.on('track-deselected', this.trackDeSelected)
+    tools.on(tools.EVENT_FEATURE_SELECTED(this.toolName), this.trackSelected)
+    tools.on(tools.EVENT_FEATURE_DESELECTED(this.toolName), this.trackDeSelected)
     tools.on(tools.EVENT_EDIT_MODE_DISABLED, this.trackDeSelected)
   }
 
@@ -89,7 +92,7 @@ class Track extends ADrawTool {
     this.notesInput.value = ''
     this.collection.clear()
     if (this.editFeature) {
-      this.tools.emit(this.tools.EVENT_TRACK_UPDATE_CANCELED, this.editFeature)
+      this.tools.emit(this.tools.EVENT_UPDATE_CANCELED, this.editFeature)
     }
   }
 
@@ -166,11 +169,19 @@ class Track extends ADrawTool {
     this.colorInput.value = feature.get('color')
     this.notesInput.value = feature.get('notes')
     this.form.style.display = 'block'
+    this.deleteButton.style.display = 'block'
   }
 
   trackDeSelected = (feature) => {
     this.editFeature = null
     this.form.style.display = 'none'
+    this.deleteButton.style.display = 'none'
+  }
+
+  deleteTrack = () => {
+    if (this.editFeature) {
+      this.tools.emit(this.tools.EVENT_TRACK_DELETE, this.editFeature)
+    }
   }
 
 }

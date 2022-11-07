@@ -102,6 +102,22 @@ wss.on('connection', function (ws, request) {
           saveIcons()
           break;
 
+        case 'iconUpdate':
+          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
+            break;
+          }
+          for (const existingIcon of icons.features) {
+            if (message.data.properties.id === existingIcon.properties.id) {
+              existingIcon.properties = message.data.properties
+              existingIcon.properties.user = username
+              existingIcon.properties.time = (new Date()).toISOString()
+              existingIcon.geometry = message.data.geometry
+            }
+          }
+          sendIconsToAll();
+          saveIcons();
+          break;
+
         case 'iconDelete':
           if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;

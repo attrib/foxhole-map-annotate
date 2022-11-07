@@ -1,12 +1,8 @@
-const ADrawTool = require("./ADrawTool");
+const AIconTool = require("./AIconTool");
 const {Style, Icon} = require("ol/style");
-const {Collection} = require("ol");
-const {Vector: VectorSource} = require("ol/source");
-const {Vector} = require("ol/layer");
-const {Draw} = require("ol/interaction");
 const TomSelect = require("tom-select");
 
-class Facilities extends ADrawTool {
+class Facilities extends AIconTool {
 
   /**
    * @param {EditTools} tools
@@ -14,23 +10,10 @@ class Facilities extends ADrawTool {
    */
   constructor(tools, map) {
     super(tools, map, 'facility', 'building', {
-      title: 'Facilities'
-    });
-
-    this.collection = new Collection([]);
-    const source = new VectorSource({
-      features: this.collection,
-    });
-
-    const vector = new Vector({
-      source: source,
       title: 'Facilities',
-      style: this.style,
-      zIndex: 10,
+      zIndex: 15,
     });
-    this.map.addLayer(vector);
 
-    this.form = document.getElementById('facility-form');
     this.iconSelect = new TomSelect('#facility-form-icon', {
       render: {
         option: (data, escape) => {
@@ -41,16 +24,11 @@ class Facilities extends ADrawTool {
         }
       }
     })
-    this.iconSelect.on('change', (a,b,c) => {
+    this.iconSelect.on('change', () => {
       if (this.draw) {
         this.draw.changed()
       }
     })
-    this.notesInput = document.getElementById('facility-form-notes');
-    this.submitButton = document.getElementById('facility-form-submit');
-    this.cancelButton = document.getElementById('facility-form-cancel');
-
-    this.cancelButton.addEventListener('click', this.clearInput)
   }
 
   style = (feature, zoom) => {
@@ -62,53 +40,16 @@ class Facilities extends ADrawTool {
     })
   }
 
-  toolSelected = () => {
-    this.draw = new Draw({
-      type: 'Point',
-      style: this.style,
-      condition: (event) => {
-        if (event.type === 'pointerdown') {
-          // Right click cancels tool selection
-          if (event.originalEvent.button === 2) {
-            this.tools.changeTool(false);
-            return false
-          }
-          // Left click add new point
-          else if (event.originalEvent.button === 0) {
-            return true
-          }
-        }
-        return false
-      },
-    });
-    this.draw.on('drawend', (event) => {
-      const feature = event.feature
-      feature.set('type', this.toolName)
-      feature.set('icon', this.iconSelect.getValue());
-      feature.set('notes', this.notesInput.value)
-      this.tools.emit(this.tools.EVENT_ICON_ADDED, feature)
-    })
-    this.map.addInteraction(this.draw);
-    this.form.style.display = 'block';
+  toolRightClick = () => {
+    this.tools.changeTool(false);
   }
 
-  toolDeSelected = () => {
-    this.map.removeInteraction(this.draw)
-    this.clearInput()
-    this.form.style.display = 'none';
+  setFeatureProperties = (feature) => {
+    feature.set('icon', this.iconSelect.getValue());
   }
 
-  clearIcons = () => {
-    this.collection.clear()
-  }
-
-  addIcon = (icon) => {
-    this.collection.push(icon)
-  }
-
-  clearInput = () => {
+  clearInput() {
     this.iconSelect.setValue('public_cmats')
-    this.notesInput.value = ''
   }
 
   getFacilityImageUrl = (sign) => {
@@ -116,6 +57,10 @@ class Facilities extends ADrawTool {
       default:
         return 'images/' + sign + '.svg'
     }
+  }
+
+  featureSelected = (feature) => {
+    this.iconSelect.setValue(feature.get('icon'))
   }
 
 }

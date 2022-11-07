@@ -1,12 +1,8 @@
-const ADrawTool = require("./ADrawTool");
 const {Style, Icon} = require("ol/style");
-const {Collection} = require("ol");
-const {Vector: VectorSource} = require("ol/source");
-const {Vector} = require("ol/layer");
-const {Draw} = require("ol/interaction");
 const TomSelect = require("tom-select");
+const AIconTool = require("./AIconTool");
 
-class Signs extends ADrawTool {
+class Signs extends AIconTool {
 
   /**
    * @param {EditTools} tools
@@ -14,23 +10,10 @@ class Signs extends ADrawTool {
    */
   constructor(tools, map) {
     super(tools, map, 'sign', 'exclamation-triangle', {
-      title: 'Signs'
-    });
-
-    this.collection = new Collection([]);
-    const source = new VectorSource({
-      features: this.collection,
-    });
-
-    const vector = new Vector({
-      source: source,
       title: 'Signs',
-      style: this.style,
       zIndex: 10,
     });
-    this.map.addLayer(vector);
 
-    this.form = document.getElementById('sign-form');
     this.signSelect = new TomSelect('#sign-form-sign', {
       render: {
         option: (data, escape) => {
@@ -41,16 +24,11 @@ class Signs extends ADrawTool {
         }
       }
     })
-    this.signSelect.on('change', (a,b,c) => {
+    this.signSelect.on('change', () => {
       if (this.draw) {
         this.draw.changed()
       }
     })
-    this.notesInput = document.getElementById('sign-form-notes');
-    this.submitButton = document.getElementById('sign-form-submit');
-    this.cancelButton = document.getElementById('sign-form-cancel');
-
-    this.cancelButton.addEventListener('click', this.clearInput)
   }
 
   style = (feature, zoom) => {
@@ -62,53 +40,16 @@ class Signs extends ADrawTool {
     })
   }
 
-  toolSelected = () => {
-    this.draw = new Draw({
-      type: 'Point',
-      style: this.style,
-      condition: (event) => {
-        if (event.type === 'pointerdown') {
-          // Right click cancels tool selection
-          if (event.originalEvent.button === 2) {
-            this.tools.changeTool(false);
-            return false
-          }
-          // Left click add new point
-          else if (event.originalEvent.button === 0) {
-            return true
-          }
-        }
-        return false
-      },
-    });
-    this.draw.on('drawend', (event) => {
-      const feature = event.feature
-      feature.set('type', this.toolName)
-      feature.set('sign', this.signSelect.getValue());
-      feature.set('notes', this.notesInput.value)
-      this.tools.emit(this.tools.EVENT_ICON_ADDED, feature)
-    })
-    this.map.addInteraction(this.draw);
-    this.form.style.display = 'block';
+  toolRightClick = () => {
+    this.tools.changeTool(false);
   }
 
-  toolDeSelected = () => {
-    this.map.removeInteraction(this.draw)
-    this.clearInput()
-    this.form.style.display = 'none';
-  }
+  setFeatureProperties = (feature) => {
+    feature.set('sign', this.signSelect.getValue());
+  };
 
-  clearIcons = () => {
-    this.collection.clear()
-  }
-
-  addIcon = (icon) => {
-    this.collection.push(icon)
-  }
-
-  clearInput = () => {
-    this.signSelect.setValue('warning')
-    this.notesInput.value = ''
+  clearInput() {
+    this.signSelect.setValue('warning');
   }
 
   getSignImageUrl = (sign) => {
@@ -130,6 +71,10 @@ class Signs extends ADrawTool {
       case 'parking':
         return 'images/' + sign + '.svg'
     }
+  }
+
+  featureSelected = (feature) => {
+    this.signSelect.setValue(feature.get('sign'))
   }
 
 }

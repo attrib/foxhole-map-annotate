@@ -2,6 +2,7 @@ const {createCustomControlElement} = require("../mapControls");
 const {Control} = require("ol/control");
 const {Modify, Select} = require("ol/interaction");
 const {altKeyOnly, shiftKeyOnly, singleClick} = require("ol/events/condition");
+const {SelectEvent} = require("ol/interaction/Select");
 
 class Edit {
 
@@ -50,22 +51,23 @@ class Edit {
       }
       if (event.deselected.length > 0) {
         const type = event.deselected[0].get('type')
-        tools.emit(type + '-deselected', event.deselected[0]);
+        tools.emit(tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
       }
       if (event.selected.length > 0) {
         const type = event.selected[0].get('type')
-        tools.emit(type + '-selected', event.selected[0]);
+        tools.emit(tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
       }
     })
     tools.on(tools.EVENT_EDIT_MODE_ENABLED, () => {
       if (this.selectedFeature !== null) {
         const type = this.selectedFeature.get('type')
-        tools.emit(type + '-selected', this.selectedFeature);
+        tools.emit(tools.EVENT_FEATURE_SELECTED(type), this.selectedFeature);
         this.selectedFeature = null;
       }
     })
     tools.on(tools.EVENT_TRACK_UPDATED, this.deselectAll)
-    tools.on(tools.EVENT_TRACK_UPDATE_CANCELED, this.deselectAll)
+    tools.on(tools.EVENT_ICON_UPDATED, this.deselectAll)
+    tools.on(tools.EVENT_UPDATE_CANCELED, this.deselectAll)
   }
 
   editModeEnabled = () => {
@@ -84,7 +86,7 @@ class Edit {
           if (type === 'track') {
             this.tools.emit(this.tools.EVENT_TRACK_DELETE, feature)
           }
-          else if (['sign'].includes(type)) {
+          else if (['sign', 'facility', 'custom-facility'].includes(type)) {
             this.tools.emit(this.tools.EVENT_ICON_DELETED, feature)
           }
           this.select.changed()
@@ -108,6 +110,7 @@ class Edit {
       const type = feature.get('type')
       this.tools.emit(type + '-deselected', feature);
     }
+    this.select.dispatchEvent(new SelectEvent('select', [], [feature], null))
   }
 }
 
