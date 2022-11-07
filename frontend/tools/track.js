@@ -153,7 +153,11 @@ class Track extends ADrawTool {
       event.feature.set('type', this.toolName)
     })
     this.map.addInteraction(this.draw);
-    this.snap = new Snap({features: this.collection});
+    const snapCollection = new Collection(this.collection.getArray()).extend(this.tools.allTracksCollection.getArray())
+    this.snap = new Snap({features: snapCollection});
+    this.collection.on('add', (e) => {
+      snapCollection.push(e.element)
+    })
     this.map.addInteraction(this.snap);
     this.form.style.display = 'block'
   }

@@ -152,6 +152,8 @@ socket.on('acl', (acl) => {
   tools.initAcl(acl)
 })
 
+tools.allTracksCollection = collection
+
 socket.on('tracks', (tracks) => {
   selectedFeature = null
   collection.clear()
