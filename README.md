@@ -26,6 +26,8 @@ Annotate and draw on the foxhole map and share with your group.
 ## DevTodos
 
 * Rework WebSockets to allow partial updates 
+* Add reload Map data/ACL route for super admin
+* move attribution and admin user (see access denied page) to `.env`
 
 ## Run Dev
 

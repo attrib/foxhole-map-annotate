@@ -10,7 +10,6 @@
         <p>You are not whitelisted and do not have access.</p>
         <p>To get access contact <a href="https://discordapp.com/users/285113857326710784">attrib#6101</a></p>
         <p>Debug Information needed for whitelisting</p>
-        <p>Access only to you, then provide this user ID {{ userId }}</p>
         <p>Access for all members of a discord server, provide the server id</p>
         <ul>
             {% for guild in guilds %}
@@ -23,6 +22,7 @@
             To only allow specific role, also add the role id, by typing in chat \@role (important \ before @).
             This will give you the role id.
         </p>
+        <p>Only for very special cases. Normally only access with specific Discord Roles is done. Specific access for a single user with ID {{ userId }}</p>
     </div>
 </div>
 {% endblock %}
