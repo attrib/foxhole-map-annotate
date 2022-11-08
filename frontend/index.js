@@ -26,7 +26,7 @@ var map = new Map({
           source: new TileImage({
             attributions: '<a href="https://sentsu.itch.io/foxhole-better-map-mod" target="_blank">Sentsu</a> + <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
             tileGrid: new TileGrid({
-              extent: [0,-12432,11251,0],
+              extent: [0,-12432,11279,0],
               origin: [0,-12432],
               resolutions: [64,32,16,8,4,2,1],
               tileSize: [256, 256]
@@ -197,7 +197,7 @@ function createClanCollection(clan) {
 }
 
 tools.on(tools.EVENT_TRACK_ADDED, (track) => {
-  socket.send('trackAdd', geoJson.writeFeaturesObject(track.features))
+  socket.send('trackAdd', geoJson.writeFeatureObject(track.feature))
 })
 
 tools.on(tools.EVENT_TRACK_UPDATED, (track) => {

@@ -4,7 +4,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
-* A "done" button to stop drawing a line
 * Selected symbols should not turn into dots when selected
 * When a line is selected, a button is available to confirm the line still exists.
 
@@ -14,7 +13,7 @@ Annotate and draw on the foxhole map and share with your group.
 * When line/sign is 12 hours old, a symbol beside the timestamp shows it is old
 * When line/sign is 24 hours old, a symbol beside the timestamp shows it is very old 
 
-* Guide on how to use the map
+* Guide on how to use the map (partially done)
 
 * A button to cut a line in two
 
@@ -22,6 +21,9 @@ Annotate and draw on the foxhole map and share with your group.
 * add resource fields (+ other stuff) from official warapi
 
 * warning/error when websocket disconnected / reconnect mechanic / disable websocket when not active
+
+* favicon + opengraph for discord preview
+* use browser parameters for linking a specific point on the map
 
 ## DevTodos
 
@@ -37,8 +39,8 @@ Create the map tiles
 ```
 mkdir uploads
 cd uploads
-wget https://cdn.discordapp.com/attachments/1003485765273145424/1038611094182314056/totalmap.png
-docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/totalmap.png /tmp/files/
+wget https://cdn.discordapp.com/attachments/1003485765273145424/1039646692095574046/entiremap.png
+docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
 ```
 
 Install dependencies and run dev mode

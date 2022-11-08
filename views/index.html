@@ -34,19 +34,24 @@
         <div id="track-form" class="form bg-light text-bg-light container mb-2">
             <div class="row mb-1 mt-2">
                 <label for="track-form-clan" class="col-sm-3 col-form-label">Builder</label>
-                <input id="track-form-clan" type="text" name="clan" placeholder="Builder" class="clan col-sm-9">
+                <div class="col-sm-9">
+                    <input id="track-form-clan" type="text" name="clan" placeholder="Builder" class="clan form-control">
+                </div>
             </div>
             <div class="row align-items-center mb-1">
                 <label for="track-form-color" class="col-sm-3 col-form-label">Color</label>
-                <input id="track-form-color" type="color" name="color" class="color col-sm-9" value="#555555">
+                <div class="col-sm-9">
+                    <input id="track-form-color" type="color" name="color" class="color form-control" value="#555555">
+                </div>
             </div>
             <div class="row align-items-center mb-1">
                 <label for="track-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <textarea id="track-form-notes" name="notes" class="notes col-sm-9"></textarea>
+                <div class="col-sm-9">
+                    <textarea id="track-form-notes" name="notes" class="notes form-control"></textarea>
+                </div>
             </div>
-            <div class="row mb-2">
+            <div class="row mb-2" id="track-form-buttons">
                 <div class="btn-group col-sm-12">
-                    <input id="track-form-cancel" type="submit" value="Cancel" name="cancel" class="cancel col-sm-4 btn btn-secondary">
                     <input id="track-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
                     <input id="track-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
                 </div>

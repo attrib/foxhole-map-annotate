@@ -52,12 +52,11 @@ wss.on('connection', function (ws, request) {
           if (acl !== ACL_FULL) {
             break;
           }
-          for (const feature of message.data.features) {
-            feature.properties.id = uuid.v4()
-            feature.properties.user = username
-            feature.properties.time = (new Date()).toISOString()
-            tracks.features.push(feature)
-          }
+          message.data.properties.id = uuid.v4()
+          message.data.properties.user = username
+          message.data.properties.time = (new Date()).toISOString()
+          tracks.features.push(message.data)
+          console.log('add track', tracks.features.length)
           sendTracksToAll();
           saveTracks();
           break;
@@ -82,9 +81,11 @@ wss.on('connection', function (ws, request) {
           if (acl !== ACL_FULL) {
             break;
           }
+          console.log('delete', message.data.id, tracks.features.length)
           tracks.features = tracks.features.filter((feature) => {
             return feature.properties.id !== message.data.id
           })
+          console.log('deleted', tracks.features.length)
           sendTracksToAll();
           saveTracks();
           break;
@@ -134,9 +135,11 @@ wss.on('connection', function (ws, request) {
               break;
             }
           }
+          console.log('delete', message.data.id, icons.features.length)
           icons.features = icons.features.filter((feature) => {
             return feature.properties.id !== message.data.id
           })
+          console.log('deleted', icons.features.length)
           sendIconsToAll();
           saveIcons();
           break;
