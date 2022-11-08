@@ -24,7 +24,7 @@ var map = new Map({
           type: 'base',
           // opacity: 0.7,
           source: new TileImage({
-            attributions: 'Clapfoot',
+            attributions: '<a href="https://sentsu.itch.io/foxhole-better-map-mod" target="_blank">Sentsu</a> + <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
             tileGrid: new TileGrid({
               extent: [0,-12432,11251,0],
               origin: [0,-12432],
