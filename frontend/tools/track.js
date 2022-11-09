@@ -150,7 +150,7 @@ class Track extends ADrawTool {
     })
     return function (feature, resolution) {
       if (feature.getGeometry().getType() === 'LineString') {
-        styles['LineString'].getStroke().setColor(colorInput.value)
+        styles['LineString'].getStroke().setColor(feature.get('color') || colorInput.value)
       }
       return styles[feature.getGeometry().getType()];
     };

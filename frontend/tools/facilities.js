@@ -17,10 +17,10 @@ class Facilities extends AIconTool {
     this.iconSelect = new TomSelect('#facility-form-icon', {
       render: {
         option: (data, escape) => {
-          return `<div><img src="${this.getFacilityImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
+          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         },
         item: (data, escape) => {
-          return `<div><img src="${this.getFacilityImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
+          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         }
       }
     })
@@ -35,7 +35,7 @@ class Facilities extends AIconTool {
     const icon = feature.get('icon') || this.iconSelect.getValue();
     return new Style({
       image: new Icon({
-        src: this.getFacilityImageUrl(icon),
+        src: this.getImageUrl(icon),
       }),
     })
   }
@@ -50,13 +50,6 @@ class Facilities extends AIconTool {
 
   clearInput() {
     this.iconSelect.setValue('public_cmats')
-  }
-
-  getFacilityImageUrl = (sign) => {
-    switch (sign) {
-      default:
-        return 'images/' + sign + '.svg'
-    }
   }
 
   featureSelected = (feature) => {

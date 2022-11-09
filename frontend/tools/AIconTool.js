@@ -153,6 +153,19 @@ class AIconTool extends ADrawTool {
     }
   }
 
+  getImageUrl = (name) => {
+    switch (name) {
+      case 'caution':
+      case 'danger':
+      case 'no_entry':
+      case 'warning':
+        return 'images/' + name + '_sign.svg'
+
+      default:
+        return 'images/' + name + '.svg'
+    }
+  }
+
 }
 
 module.exports = AIconTool

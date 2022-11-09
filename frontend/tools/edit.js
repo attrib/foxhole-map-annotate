@@ -32,32 +32,8 @@ class Edit {
         }
       }
     })
-    this.map.getInteractions().forEach((interaction) => {
-      if (interaction instanceof Select) {
-        this.select = interaction
-      }
-    })
     tools.on(tools.EVENT_EDIT_MODE_ENABLED, this.editModeEnabled)
     tools.on(tools.EVENT_EDIT_MODE_DISABLED, this.editModeDisabled)
-    this.select.on('select', (event) => {
-      if (!tools.editMode) {
-        if (event.deselected.length > 0) {
-          this.selectedFeature = null
-        }
-        if (event.selected.length > 0) {
-          this.selectedFeature = event.selected[0]
-        }
-        return
-      }
-      if (event.deselected.length > 0) {
-        const type = event.deselected[0].get('type')
-        tools.emit(tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
-      }
-      if (event.selected.length > 0) {
-        const type = event.selected[0].get('type')
-        tools.emit(tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
-      }
-    })
     tools.on(tools.EVENT_EDIT_MODE_ENABLED, () => {
       if (this.selectedFeature !== null) {
         const type = this.selectedFeature.get('type')
@@ -68,6 +44,30 @@ class Edit {
     tools.on(tools.EVENT_TRACK_UPDATED, this.deselectAll)
     tools.on(tools.EVENT_ICON_UPDATED, this.deselectAll)
     tools.on(tools.EVENT_UPDATE_CANCELED, this.deselectAll)
+  }
+
+  setSelect = (select) => {
+    this.select = select
+    this.select.on('select', (event) => {
+      if (!this.tools.editMode) {
+        if (event.deselected.length > 0) {
+          this.selectedFeature = null
+        }
+        if (event.selected.length > 0) {
+          this.selectedFeature = event.selected[0]
+        }
+        return
+      }
+      if (event.deselected.length > 0) {
+        const type = event.deselected[0].get('type')
+        this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
+      }
+      if (event.selected.length > 0) {
+        const type = event.selected[0].get('type')
+        this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
+      }
+    })
+
   }
 
   editModeEnabled = () => {

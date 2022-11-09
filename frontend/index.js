@@ -4,7 +4,7 @@ import {defaults} from "ol/control";
 import {Group, Vector, Tile} from "ol/layer";
 import {TileImage, Vector as VectorSource} from "ol/source";
 import {GeoJSON} from "ol/format";
-import {Style, Stroke} from "ol/style";
+import {Style, Stroke, Circle} from "ol/style";
 import {Select} from "ol/interaction";
 import {addDefaultMapControls} from "./mapControls"
 import Socket from "./webSocket";
@@ -50,7 +50,89 @@ var map = new Map({
 });
 
 addDefaultMapControls(map)
+// Prevent context menu on map
+document.getElementById('map').addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  return false;
+})
+
+const tools = new EditTools(map);
+
 //@todo: move to tools
+const selectStyle = () => {
+  const trackStyle = tools.track.style();
+  const white = [255, 255, 255, 1];
+  const blue = [0, 153, 255, 1];
+  return (feature, zoom) => {
+    const type = feature.get('type')
+    const circleStyle = [
+      new Style({
+        image: new Circle({
+          stroke: new Stroke({
+            width: 6,
+            color: white,
+          }),
+          radius: 18,
+        })
+      }),
+      new Style({
+        image: new Circle({
+          stroke: new Stroke({
+            width: 2,
+            color: blue,
+          }),
+          radius: 18,
+        })
+      })
+    ]
+    const lineStyle = [new Style({
+      stroke: new Stroke({
+        width: 6,
+        color: white,
+      })
+    }),
+      new Style({
+        stroke: new Stroke({
+          width: 3,
+          color: blue,
+        })
+      })]
+    const trackStyleHighlight = [new Style({
+      stroke: new Stroke({
+        width: 10,
+        color: white,
+      }),
+      geometry: tools.track.geometryFunction
+    }),
+      new Style({
+        stroke: new Stroke({
+          width: 7,
+          color: blue,
+        }),
+        geometry: tools.track.geometryFunction
+      })
+    ]
+    let style
+    switch (type) {
+      case 'track':
+        return [...trackStyleHighlight, trackStyle(feature, zoom)]
+
+      case 'information':
+        return tools.information.style(feature, zoom)
+
+      case 'sign':
+        return [...circleStyle, tools.sign.style(feature, zoom)]
+
+      case 'facility':
+        return [...circleStyle, tools.facility.style(feature, zoom)]
+
+      case 'custom-facility':
+        return [tools.customFacility.style(feature, zoom), ...lineStyle]
+
+    }
+  }
+}
+
 const select = new Select({
   multi: false,
   toggleCondition: never,
@@ -59,16 +141,11 @@ const select = new Select({
       return false;
     }
     return singleClick(event)
-  }
+  },
+  style: selectStyle()
 });
+tools.edit.setSelect(select)
 map.addInteraction(select)
-// Prevent context menu on map
-document.getElementById('map').addEventListener('contextmenu', (e) => {
-  e.preventDefault();
-  return false;
-})
-
-const tools = new EditTools(map);
 
 const trackInfo = document.getElementById('track-info'),
     iconInfo = document.getElementById('icon-info');
