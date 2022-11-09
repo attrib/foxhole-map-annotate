@@ -9,9 +9,6 @@ Annotate and draw on the foxhole map and share with your group.
 * Layers popup behind form
 * Tooltips on mouseover
 
-* When line/sign is 12 hours old, a symbol beside the timestamp shows it is old
-* When line/sign is 24 hours old, a symbol beside the timestamp shows it is very old 
-
 * Guide on how to use the map (partially done)
 
 * A button to cut a line in two

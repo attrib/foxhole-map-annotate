@@ -196,14 +196,39 @@ function infoBoxFeature(feature)
     trackInfo.style.display = 'block';
     trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
     trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    trackInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
+    const t = new Date(feature.get('time'))
+    trackInfo.getElementsByClassName('time')[0].innerHTML = t.toLocaleString();
+    trackInfo.getElementsByClassName('icon')[0].innerHTML = infoBoxIcon(t)
     trackInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature);
   }
   else if (['information', 'sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    iconInfo.getElementsByClassName('time')[0].innerHTML = new Date(feature.get('time')).toLocaleString();
+    const t = new Date(feature.get('time'))
+    iconInfo.getElementsByClassName('time')[0].innerHTML = t.toLocaleString();
+    iconInfo.getElementsByClassName('icon')[0].innerHTML = infoBoxIcon(t)
     iconInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature)
+  }
+}
+
+function infoBoxIcon(time) {
+  const timeN = (new Date()).getTime()
+  if (timeN-time.getTime() > 43200000) {
+    const d = document.createElement('div')
+    const i = document.createElement('i')
+    if (timeN-time.getTime() > 86400000) {
+      i.className = 'bi bi-exclamation-circle-fill fs-2'
+      i.style.color = 'red'
+    }
+    else {
+      i.className = 'bi bi-exclamation-triangle-fill fs-3'
+      i.style.color = '#ffc107'
+    }
+    d.appendChild(i)
+    return d.innerHTML
+  }
+  else {
+    return ''
   }
 }
 
