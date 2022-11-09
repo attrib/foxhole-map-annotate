@@ -51,7 +51,7 @@ app.use(grant({
   "discord": {
     "key": process.env.DISCORD_KEY,
     "secret": process.env.DISCORD_SECRET,
-    "scope": ["identify", "guilds", "guilds.members.read"],
+    "scope": ["identify", "guilds.members.read"],
     "callback": "/login",
   }
 }))

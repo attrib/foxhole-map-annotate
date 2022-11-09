@@ -27,9 +27,10 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## DevTodos
 
+* Changelog?
 * Rework WebSockets to allow partial updates 
 * Add reload Map data/ACL route for super admin
-* move attribution and admin user (see access denied page) to `.env`
+* investigate about rate limits for discord api
 
 ## Run Dev
 
@@ -78,8 +79,6 @@ Edit file and restart server for new permissions to take place. Users probably h
 ```yaml
 users:
   12345678901234567: full # full access for this user
-guilds:
-  12345678901234568: icons # All users on this server can add/edit icons, but can't edit tracks
 roles:
   12345678901234569: # Server ID
     12345678901234570: icons # All users with this role, can add/edit icons
