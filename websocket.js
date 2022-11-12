@@ -147,6 +147,23 @@ wss.on('connection', function (ws, request) {
         case 'ping':
           ws.send(JSON.stringify({type: 'pong'}))
           break;
+
+        case 'decayUpdate':
+          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
+            break;
+          }
+          let features = message.data.type === 'track' ? tracks : icons
+          for (const feature of features.features) {
+            if (feature.properties.id === message.data.id) {
+              feature.properties.time = (new Date()).toISOString()
+              sendDataToAll('decayUpdate', {
+                id: feature.properties.id,
+                type: feature.properties.type,
+                time: feature.properties.time,
+              })
+            }
+          }
+          break;
       }
     });
 
@@ -156,34 +173,36 @@ wss.on('connection', function (ws, request) {
   }
 );
 
-function sendTracksToAll() {
+function sendDataToAll(type, data) {
   clients.forEach(function each(client) {
     if (client.readyState === webSocket.WebSocket.OPEN) {
-      sendTracks(client);
+      sendData(client, type, data);
     }
   });
+}
+
+function sendData(client, type, data) {
+  client.send(JSON.stringify({
+    type: type,
+    data: data
+  }));
+}
+
+
+function sendTracksToAll() {
+  sendDataToAll('tracks', tracks)
 }
 
 function sendIconsToAll() {
-  clients.forEach(function each(client) {
-    if (client.readyState === webSocket.WebSocket.OPEN) {
-      sendIcons(client);
-    }
-  });
+  sendDataToAll('icons', icons)
 }
 
 function sendTracks(client) {
-  client.send(JSON.stringify({
-    type: 'tracks',
-    data: tracks
-  }));
+  sendData(client, 'tracks', tracks)
 }
 
 function sendIcons(client) {
-  client.send(JSON.stringify({
-    type: 'icons',
-    data: icons
-  }));
+  sendData(client, 'icons', icons)
 }
 
 function saveTracks() {

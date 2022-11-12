@@ -112,13 +112,12 @@ const selectStyle = () => {
         geometry: tools.track.geometryFunction
       })
     ]
-    let style
     switch (type) {
       case 'track':
         return [...trackStyleHighlight, trackStyle(feature, zoom)]
 
       case 'information':
-        return tools.information.style(feature, zoom)
+        return [...circleStyle, tools.information.style(feature, zoom)]
 
       case 'sign':
         return [...circleStyle, tools.sign.style(feature, zoom)]
@@ -190,46 +189,50 @@ select.on('select', (event) => {
   }
 })
 
+const trackClock = document.getElementById('track-clock')
+const iconClock = document.getElementById('icon-clock')
+
+trackClock.addEventListener('click', updateDecay)
+iconClock.addEventListener('click', updateDecay)
+
+function updateDecay(event) {
+  if (event.currentTarget && event.currentTarget.dataset.id) {
+    socket.send('decayUpdate', {
+      type: event.currentTarget.dataset.type,
+      id: event.currentTarget.dataset.id
+    })
+  }
+}
+
 function infoBoxFeature(feature)
 {
   if (feature.get('type') === 'track') {
     trackInfo.style.display = 'block';
     trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
     trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    const t = new Date(feature.get('time'))
-    trackInfo.getElementsByClassName('time')[0].innerHTML = t.toLocaleString();
-    trackInfo.getElementsByClassName('icon')[0].innerHTML = infoBoxIcon(t)
+    clockColor(trackClock, feature)
     trackInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature);
   }
   else if (['information', 'sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
     iconInfo.style.display = 'block';
     iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    const t = new Date(feature.get('time'))
-    iconInfo.getElementsByClassName('time')[0].innerHTML = t.toLocaleString();
-    iconInfo.getElementsByClassName('icon')[0].innerHTML = infoBoxIcon(t)
+    clockColor(iconClock, feature)
     iconInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature)
   }
 }
 
-function infoBoxIcon(time) {
-  const timeN = (new Date()).getTime()
-  if (timeN-time.getTime() > 43200000) {
-    const d = document.createElement('div')
-    const i = document.createElement('i')
-    if (timeN-time.getTime() > 86400000) {
-      i.className = 'bi bi-exclamation-circle-fill fs-2'
-      i.style.color = 'red'
-    }
-    else {
-      i.className = 'bi bi-exclamation-triangle-fill fs-3'
-      i.style.color = '#ffc107'
-    }
-    d.appendChild(i)
-    return d.innerHTML
-  }
-  else {
-    return ''
-  }
+function clockColor(clock, feature) {
+  const time = new Date(feature.get('time'))
+  clock.dataset.id = feature.get('id') || null
+  clock.dataset.type = feature.get('type') || null
+  setClockColor(clock, time)
+}
+
+function setClockColor(clock, time) {
+  const diff = new Date().getTime() - time.getTime()
+  const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
+  clock.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
+  clock.title = time.toLocaleString();
 }
 
 function getNotes(feature) {
@@ -350,4 +353,36 @@ socket.on('icons', (features) => {
         break;
     }
   })
+})
+
+socket.on('decayUpdate', (data) => {
+  switch (data.type) {
+    case 'track':
+      collection.forEach((feat) => {
+        if (feat.get('id') === data.id) {
+          feat.set('time', data.time)
+        }
+      })
+      if (trackClock.dataset.id === data.id) {
+        setClockColor(trackClock, new Date(data.time))
+      }
+      break;
+    case 'information':
+      tools.information.setFeatureTime(data.id, data.time)
+      break;
+    case 'sign':
+      tools.sign.setFeatureTime(data.id, data.time)
+      break;
+    case 'facility':
+      tools.facility.setFeatureTime(data.id, data.time)
+      break;
+    case 'custom-facility':
+      tools.customFacility.setFeatureTime(data.id, data.time)
+      break;
+  }
+  if (['information', 'sign', 'facility', 'custom-facility'].includes(data.type)) {
+    if (iconClock.dataset.id === data.id) {
+      setClockColor(iconClock, new Date(data.time))
+    }
+  }
 })

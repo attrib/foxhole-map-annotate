@@ -1,6 +1,41 @@
 {% extends "base.html" %}
 
 {% block javascript %}
+<script>
+    const clock = document.getElementById('clock')
+    let time = new Date(), timeout, timerRunning = false;
+
+    function timer() {
+      timerRunning = true
+      timeout = setTimeout(() => {
+        time.setTime(time.getTime() - 3600000)
+        timerRunning = displayColor();
+        if (timerRunning) {
+          timer()
+        }
+      }, 500)
+    }
+
+    function displayColor() {
+      const diff = new Date().getTime() - time.getTime()
+      console.log(time.toLocaleString(), 1 - diff/86400000 < 0)
+      const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
+      clock.title = time.toLocaleString();
+      clock.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
+      return 1 - diff / 86400000 >= 0;
+    }
+
+    clock.addEventListener('click', () => {
+      if (timerRunning) {
+        clearTimeout(timeout)
+      }
+      time = new Date()
+      timer()
+    })
+
+    displayColor()
+    timer()
+</script>
 {% endblock %}
 
 {% block content %}
@@ -10,6 +45,11 @@
         <p>
             Work in Progress
         </p>
+        <h2>Decay Information</h2>
+        <p>Inside Info boxes there is a Decay notification (<span id="clock" class="clock">{% include 'clock.svg' %}</span>).</p>
+        <p>This goes from green (just placed) over yellow (updated 12h ago) to red (updated 24h ago).</p>
+        <p>Hovering over the element will show the exact time (select an element before to be able to hover).</p>
+        <p>Clicking on it will reset the timer.</p>
         <h2>Read/Edit Mode</h2>
         <p>Depending on permission you have access to go to the edit mode (<i class="bi bi-gear"></i>)</p>
         <p>When Clicking edit mode more controls are available to edit the map.</p>

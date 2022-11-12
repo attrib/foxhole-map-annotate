@@ -115,6 +115,14 @@ class AIconTool extends ADrawTool {
     this.collection.push(feature)
   }
 
+  setFeatureTime = (id, time) => {
+    this.collection.forEach((feat) => {
+      if (feat.get('id') === id) {
+        feat.set('time', time)
+      }
+    })
+  }
+
   _clearInput = () => {
     this.notesInput.value = ''
     if (this.editFeature) {

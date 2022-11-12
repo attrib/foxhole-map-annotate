@@ -4,8 +4,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
-* When a line is selected, a button is available to confirm the line still exists.
-
 * Layers popup behind form
 * Tooltips on mouseover
 
@@ -23,7 +21,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## DevTodos
 
-* Changelog?
 * Rework WebSockets to allow partial updates 
 * Add reload Map data/ACL route for super admin
 * investigate about rate limits for discord api
