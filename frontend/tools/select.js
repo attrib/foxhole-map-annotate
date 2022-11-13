@@ -259,6 +259,11 @@ class Select {
   }
 
   clockColor = (clock, feature) => {
+    if ((feature.get('icon') && feature.get('icon').endsWith('_field')) || feature.get('type') === 'sign') {
+      clock.style.display = 'none'
+      return
+    }
+    clock.style.display = 'block'
     const time = new Date(feature.get('time'))
     clock.dataset.id = feature.get('id') || null
     clock.dataset.type = feature.get('type') || null
