@@ -166,7 +166,7 @@ class Select {
         stroke: new Stroke({
           width: 10,
           color: white,
-          lineDash: lineType === 'planned' ? [15, 15] : undefined
+          lineDash: this.tools.track.getDashedOption(feature)
         }),
         geometry: this.tools.track.geometryFunction
       }),
@@ -174,7 +174,7 @@ class Select {
           stroke: new Stroke({
             width: 7,
             color: blue,
-            lineDash: lineType === 'planned' ? [15, 15] : undefined
+            lineDash: this.tools.track.getDashedOption(feature)
           }),
           geometry: this.tools.track.geometryFunction
         })

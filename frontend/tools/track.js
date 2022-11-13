@@ -153,6 +153,7 @@ class Track extends ADrawTool {
     const styles = createEditingStyle();
     const colorInput = this.colorInput
     const lineTypeInput = this.lineType
+    const getDashedOption = this.getDashedOption
     styles['LineString'] = new Style({
       stroke: new Stroke({
         color: this.colorInput.value,
@@ -163,13 +164,7 @@ class Track extends ADrawTool {
     return function (feature, resolution) {
       if (feature.getGeometry().getType() === 'LineString') {
         styles['LineString'].getStroke().setColor(feature.get('color') || colorInput.value)
-        const lineType = feature.get('lineType') || lineTypeInput.value;
-        if (lineType === 'planned') {
-          styles['LineString'].getStroke().setLineDash([15, 15])
-        }
-        else {
-          styles['LineString'].getStroke().setLineDash(undefined)
-        }
+        styles['LineString'].getStroke().setLineDash(getDashedOption(feature, lineTypeInput.value))
       }
       return styles[feature.getGeometry().getType()];
     };
@@ -272,6 +267,21 @@ class Track extends ADrawTool {
       this.tools.emit(this.tools.EVENT_TRACK_DELETE, this.editFeature)
       this.map.removeControl(this.formControl)
       this.buttons.style.display = 'none'
+    }
+  }
+
+  getDashedOption = (feature, defaultValue = 'single') => {
+    const lineType = feature.get('lineType') || defaultValue;
+    switch (lineType) {
+      default:
+      case 'single':
+        return undefined;
+
+      case 'water':
+        return [30, 15];
+
+      case 'planned':
+        return [15, 15]
     }
   }
 
