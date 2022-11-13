@@ -2,6 +2,7 @@ const {never, singleClick} = require("ol/events/condition");
 const {Style, Circle, Stroke} = require("ol/style");
 const {SelectEvent} = require("ol/interaction/Select");
 const {Select: OlSelect} = require("ol/interaction")
+const {Overlay} = require("ol");
 
 class Select {
 
@@ -13,6 +14,8 @@ class Select {
     this.tools = tools
     this.map = map
 
+    this.selectOverlays = {}
+    this.clocks = {}
     this.select = new OlSelect({
       multi: false,
       toggleCondition: never,
@@ -36,11 +39,33 @@ class Select {
           this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
         }
       }
-      if (this.hasSelected()) {
-        this.infoBoxFeature(this.getSelectedFeature())
-      }
       else {
-        this.hideInfoBoxes()
+        if (event.deselected.length) {
+          for (const feature of event.deselected) {
+            this.map.removeOverlay(this.selectOverlays[feature.get('id')])
+          }
+        }
+        if (event.selected.length > 0) {
+          const feature = event.selected[0];
+          const id = feature.get('id')
+          const infoBox = feature.get('type') === 'track' ? this.trackInfo.cloneNode(true) : this.iconInfo.cloneNode(true)
+          if (feature.get('type') === 'track') {
+            this.showTrackInfoBox(infoBox, feature)
+          }
+          else {
+            this.showIconInfoBox(infoBox, feature)
+          }
+          this.clocks[id] = infoBox.getElementsByClassName('clock')[0]
+          this.clocks[id].addEventListener('click', this.updateDecay)
+          infoBox.id = 'selected-' + id
+          const overlay = new Overlay({
+            element: infoBox,
+            offset: [10, 10],
+            position:  event.mapBrowserEvent.coordinate
+          })
+          this.selectOverlays[id] = overlay
+          this.map.addOverlay(overlay)
+        }
       }
     })
 
@@ -59,16 +84,20 @@ class Select {
 
     this.trackInfo = document.getElementById('track-info')
     this.iconInfo = document.getElementById('icon-info');
-    this.trackClock = document.getElementById('track-clock')
-    this.iconClock = document.getElementById('icon-clock')
 
-    this.trackClock.addEventListener('click', this.updateDecay)
-    this.iconClock.addEventListener('click', this.updateDecay)
+    this.trackInfoOverlay = new Overlay({
+      element: this.trackInfo,
+      offset: [10, 10]
+    })
+    this.map.addOverlay(this.trackInfoOverlay)
+    this.iconInfoOverlay = new Overlay({
+      element: this.iconInfo,
+      positioning: 'top-right',
+      offset: [-10, 10]
+    })
+    this.map.addOverlay(this.iconInfoOverlay)
 
     map.on('pointermove', (evt) => {
-      if (this.hasSelected()) {
-        return
-      }
       const value = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
         return [feature, layer];
       });
@@ -81,20 +110,13 @@ class Select {
           this.hideInfoBoxes()
           return
         }
-        this.infoBoxFeature(feature)
+        this.infoBoxFeature(feature, evt.coordinate)
       }
     })
 
     tools.on(tools.EVENT_DECAY_UPDATED, (data) => {
-      if (['information', 'sign', 'facility', 'custom-facility'].includes(data.type)) {
-        if (this.iconClock.dataset.id === data.id) {
-          this.setClockColor(this.iconClock, new Date(data.time))
-        }
-      }
-      else {
-        if (this.trackClock.dataset.id === data.id) {
-          this.setClockColor(this.trackClock, new Date(data.time))
-        }
+      if (data.id in this.clocks) {
+        this.setClockColor(this.clocks[data.id], new Date(data.time))
       }
     })
   }
@@ -172,12 +194,22 @@ class Select {
     }
   }
 
-  infoBoxFeature = (feature) => {
+  infoBoxFeature = (feature, coords) => {
     if (feature.get('type') === 'track') {
-      this.showTrackInfoBox(feature)
+      this.trackInfoOverlay.setPosition(coords)
+      this.showTrackInfoBox(this.trackInfo, feature)
     }
     else if (['information', 'sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
-      this.showIconInfoBox(feature)
+      if (this.trackInfoOverlay.getPosition() === undefined) {
+        this.iconInfoOverlay.setPositioning('top-left')
+        this.iconInfoOverlay.setOffset([10, 10])
+      }
+      else {
+        this.iconInfoOverlay.setPositioning('top-right')
+        this.iconInfoOverlay.setOffset([-10, 10])
+      }
+      this.iconInfoOverlay.setPosition(coords)
+      this.showIconInfoBox(this.iconInfo, feature)
     }
   }
 
@@ -209,23 +241,21 @@ class Select {
   }
 
   hideInfoBoxes = () => {
-    this.iconInfo.style.display = 'none'
-    this.trackInfo.style.display = 'none'
+    this.trackInfoOverlay.setPosition(undefined)
+    this.iconInfoOverlay.setPosition(undefined)
   }
 
-  showTrackInfoBox = (feature) => {
-    this.trackInfo.style.display = 'block'
-    this.trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
-    this.trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    this.clockColor(this.trackClock, feature)
-    this.trackInfo.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature);
+  showTrackInfoBox = (node, feature) => {
+    node.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
+    node.getElementsByClassName('user')[0].innerHTML = feature.get('user');
+    this.clockColor(node.getElementsByClassName('clock')[0], feature)
+    node.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature);
   }
 
-  showIconInfoBox = (feature) => {
-    this.iconInfo.style.display = 'block';
-    this.iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    this.clockColor(this.iconClock, feature)
-    this.iconInfo.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature)
+  showIconInfoBox = (node, feature) => {
+    node.getElementsByClassName('user')[0].innerHTML = feature.get('user');
+    this.clockColor(node.getElementsByClassName('clock')[0], feature)
+    node.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature)
   }
 
   clockColor = (clock, feature) => {

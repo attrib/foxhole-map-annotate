@@ -5,7 +5,7 @@ Annotate and draw on the foxhole map and share with your group.
 ## Todos
 
 * Layers popup behind form
-* Tooltips on mouseover
+* use form similar to track for icons
 
 * disable decay timer for some types
 
