@@ -21,7 +21,7 @@ nunjucks.configure('views', {
 });
 app.set('view engine', 'html');
 if (app.get('env') === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
+  app.set('trust proxy', 2) // trust first two proxys (nginx, cloudflare)
 }
 else {
   const webpack = require('webpack');
