@@ -8,8 +8,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 * A button to cut a line in two
 
-* planed tracks (dashed lines) / double lines
- 
 * add resource fields (+ other stuff) from official warapi
 
 * warning/error when websocket disconnected / reconnect mechanic / disable websocket when not active

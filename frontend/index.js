@@ -114,10 +114,12 @@ function createClanCollection(clan) {
     source: sourceLine,
     title: clan,
     style: (feature, zoom) => {
+      const lineType = feature.get('lineType') || 'single'
       return new Style({
         stroke: new Stroke({
           color: feature.get('color'),
           width: 5,
+          lineDash: lineType === 'planned' ? [15, 15] : undefined
         }),
         geometry: tools.track.geometryFunction
       })

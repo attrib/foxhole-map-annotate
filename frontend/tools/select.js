@@ -159,10 +159,12 @@ class Select {
             color: blue,
           })
         })]
+      const lineType = feature.get('lineType') || 'single';
       const trackStyleHighlight = [new Style({
         stroke: new Stroke({
           width: 10,
           color: white,
+          lineDash: lineType === 'planned' ? [15, 15] : undefined
         }),
         geometry: this.tools.track.geometryFunction
       }),
@@ -170,6 +172,7 @@ class Select {
           stroke: new Stroke({
             width: 7,
             color: blue,
+            lineDash: lineType === 'planned' ? [15, 15] : undefined
           }),
           geometry: this.tools.track.geometryFunction
         })

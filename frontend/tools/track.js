@@ -22,6 +22,7 @@ class Track extends ADrawTool {
     this.buttons = document.getElementById('track-form-buttons');
     this.clanInput = document.getElementById('track-form-clan')
     this.colorInput = document.getElementById('track-form-color')
+    this.lineType = document.getElementById('track-form-type')
     this.notesInput = document.getElementById('track-form-notes')
     this.submitButton = document.getElementById('track-form-submit')
     this.deleteButton = document.getElementById('track-form-delete')
@@ -37,12 +38,21 @@ class Track extends ADrawTool {
         this.draw.changed();
       }
     })
+    this.lineType.addEventListener('change', () => {
+      if (this.editFeature) {
+        this.editFeature.set('lineType', this.lineType.value)
+      }
+      else {
+        this.draw.changed();
+      }
+    })
 
     this.submitButton.addEventListener('click', () => {
       if (this.editFeature) {
         this.editFeature.set('clan', this.clanInput.value);
         this.editFeature.set('color', this.colorInput.value);
         this.editFeature.set('notes', this.notesInput.value);
+        this.editFeature.set('lineType', this.lineType.value);
         tools.emit(tools.EVENT_TRACK_UPDATED, this.editFeature)
       }
       else {
@@ -100,6 +110,7 @@ class Track extends ADrawTool {
     feature.set('color', this.colorInput.value);
     feature.set('notes', this.notesInput.value);
     feature.set('type', this.toolName);
+    feature.set('lineType', this.lineType.value)
     this.tools.emit(this.tools.EVENT_TRACK_ADDED, {
       clan: this.clanInput.value,
       color: this.colorInput.value,
@@ -141,6 +152,7 @@ class Track extends ADrawTool {
   style = () => {
     const styles = createEditingStyle();
     const colorInput = this.colorInput
+    const lineTypeInput = this.lineType
     styles['LineString'] = new Style({
       stroke: new Stroke({
         color: this.colorInput.value,
@@ -151,6 +163,13 @@ class Track extends ADrawTool {
     return function (feature, resolution) {
       if (feature.getGeometry().getType() === 'LineString') {
         styles['LineString'].getStroke().setColor(feature.get('color') || colorInput.value)
+        const lineType = feature.get('lineType') || lineTypeInput.value;
+        if (lineType === 'planned') {
+          styles['LineString'].getStroke().setLineDash([15, 15])
+        }
+        else {
+          styles['LineString'].getStroke().setLineDash(undefined)
+        }
       }
       return styles[feature.getGeometry().getType()];
     };
@@ -237,6 +256,7 @@ class Track extends ADrawTool {
     this.clanInput.value = feature.get('clan')
     this.colorInput.value = feature.get('color')
     this.notesInput.value = feature.get('notes')
+    this.lineType.value = feature.get('lineType') || 'single'
     this.map.addControl(this.formControl)
     this.buttons.style.display = 'block'
   }
