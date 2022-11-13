@@ -1,7 +1,6 @@
 .idea
-uploads
+public/map
 sessions
-markers.json
 data
 .env
 node_modules

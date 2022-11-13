@@ -6,7 +6,7 @@ services:
     image: "attribdd/foxhole-map-annotate:master"
     restart: always
     volumes:
-      - ./uploads:/app/uploads
+      - ./uploads:/app/public/map
       - ./sessions:/app/sessions
       - ./data:/app/data
     env_file:

@@ -36,7 +36,7 @@ else {
   app.use(webpackHotMiddleware(compiler))
 }
 
-app.use(logger('dev'));
+app.use(logger(process.env.NODE_ENV === 'development' ? 'dev' : 'tiny'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -71,11 +71,10 @@ app.use((req, res, next) => {
   }
   else {
     res.locals.user = false
-    res.status(403);
+    res.status(req.path === '/' ? 200 : 403);
     res.render('login');
   }
 })
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

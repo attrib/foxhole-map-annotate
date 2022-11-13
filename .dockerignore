@@ -1,6 +1,6 @@
 node_modules
 sessions
-uploads
+public/map
 data
 .git
 .dockerignore

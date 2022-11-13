@@ -32,7 +32,7 @@ var map = new Map({
               tileSize: [256, 256]
             }),
             tileUrlFunction: function(tileCoord) {
-              return ('/uploads/{z}/{x}/{y}.webp'
+              return ('/map/{z}/{x}/{y}.webp'
                 .replace('{z}', String(tileCoord[0]))
                 .replace('{x}', String(tileCoord[1]))
                 .replace('{y}', String(- 1 - tileCoord[2])));
