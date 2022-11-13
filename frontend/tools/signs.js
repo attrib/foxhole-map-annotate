@@ -50,7 +50,7 @@ class Signs extends AIconTool {
   };
 
   clearInput() {
-    this.signSelect.setValue('dead_end');
+    this.signSelect.setValue('Rail_Yard');
   }
 
   featureSelected = (feature) => {
