@@ -6,6 +6,7 @@ const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
 const CustomFacility = require("./tools/customFacility");
 const Information = require("./tools/information");
 const Select = require("./tools/select");
+const TrackSplit = require("./tools/trackSplit");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -40,6 +41,7 @@ class EditTools {
         this.facility = new Facilities(this, map)
         this.customFacility = new CustomFacility(this, map)
         this.track = new Track(this, map)
+        this.trackSplit = new TrackSplit(this, map)
         this.select = new Select(this, map)
     }
 
@@ -54,6 +56,7 @@ class EditTools {
             this.map.addControl(this.facility.control)
             this.map.addControl(this.customFacility.control)
             this.map.addControl(this.track.control)
+            this.map.addControl(this.trackSplit.control)
         }
     }
 

@@ -31,15 +31,17 @@ class Select {
     this.select.on('select', (event) => {
       if (this.tools.editMode) {
         if (event.deselected.length > 0) {
-          const type = event.deselected[0].get('type')
-          this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
+          if (event.deselected[0]) {
+            const type = event.deselected[0].get('type')
+            this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
+          }
         }
         if (event.selected.length > 0) {
           const type = event.selected[0].get('type')
           this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
         }
       }
-      if (event.deselected.length) {
+      if (event.deselected.length > 0) {
         for (const feature of event.deselected) {
           this.deleteSelectOverlay(feature)
         }
@@ -295,6 +297,9 @@ class Select {
   }
 
   deleteSelectOverlay = (feature) => {
+    if (feature === undefined) {
+      return
+    }
     if (feature.get('id') in this.selectOverlays) {
       this.map.removeOverlay(this.selectOverlays[feature.get('id')])
     }
