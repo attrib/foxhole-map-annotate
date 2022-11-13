@@ -4,6 +4,7 @@ const {Vector: VectorSource} = require("ol/source");
 const {Vector} = require("ol/layer");
 const {Draw} = require("ol/interaction");
 const {ACL_FULL} = require("../../lib/ACLS");
+const {Control} = require("ol/control");
 
 class AIconTool extends ADrawTool {
 
@@ -35,12 +36,10 @@ class AIconTool extends ADrawTool {
 
     this.form = document.getElementById(this.toolName + '-form');
     this.notesInput = document.getElementById(this.toolName + '-form-notes');
-    this.submitButton = document.getElementById(this.toolName + '-form-submit');
+    this.formButtons = document.getElementById(this.toolName + '-form-buttons')
+    this.formButtons.style.display = 'none'
+    this.submitButton = document.getElementById(this.toolName + '-form-submit')
     this.deleteButton = document.getElementById(this.toolName + '-form-delete')
-    this.cancelButton = document.getElementById(this.toolName + '-form-cancel');
-
-    this.cancelButton.addEventListener('click', this._clearInput)
-    this.deleteButton.style.display = 'none'
     this.deleteButton.addEventListener('click', this.deleteFeature)
 
     this.tools.on(this.tools.EVENT_FEATURE_SELECTED(this.toolName), this._featureSelected)
@@ -66,6 +65,10 @@ class AIconTool extends ADrawTool {
         })
       }
     })
+
+    this.formControl = new Control({
+      element: this.form
+    })
   }
 
   _style = (feature, zoom) => {
@@ -79,6 +82,11 @@ class AIconTool extends ADrawTool {
   }
 
   toolSelected = () => {
+    if (this.editFeature) {
+      this.buttons.style.display = 'none'
+      this.tools.emit(this.tools.EVENT_UPDATE_CANCELED, this.editFeature)
+      this.editFeature = null;
+    }
     this.draw = new Draw({
       type: this.drawType,
       style: this.style,
@@ -108,13 +116,13 @@ class AIconTool extends ADrawTool {
       this.tools.emit(this.tools.EVENT_ICON_ADDED, feature)
     })
     this.map.addInteraction(this.draw);
-    this.form.style.display = 'block';
+    this.map.addControl(this.formControl)
   }
 
   toolDeSelected = () => {
     this.map.removeInteraction(this.draw)
     this._clearInput()
-    this.form.style.display = 'none';
+    this.map.removeControl(this.formControl)
   }
 
   clearFeatures = () => {
@@ -137,14 +145,14 @@ class AIconTool extends ADrawTool {
 
   _featureSelected = (feature) => {
     if (!this.allowEditWithIconsACL && this.tools.acl !== ACL_FULL) {
-      this.form.style.display = 'none'
-      this.deleteButton.style.display = 'none'
+      this.formButtons.style.display = 'none'
+      this.map.removeControl(this.formControl)
       return;
     }
     this.editFeature = feature
     this.notesInput.value = feature.get('notes')
-    this.form.style.display = 'block'
-    this.deleteButton.style.display = 'block'
+    this.map.addControl(this.formControl)
+    this.formButtons.style.display = 'block'
     if (this.featureSelected) {
       this.featureSelected(feature)
     }
@@ -152,14 +160,16 @@ class AIconTool extends ADrawTool {
 
   _featureDeSelected = (feature) => {
     this.editFeature = null
-    this.form.style.display = 'none'
-    this.deleteButton.style.display = 'none'
+    this.formButtons.style.display = 'none'
+    this.map.removeControl(this.formControl)
   }
 
   deleteFeature = () => {
     if (this.editFeature) {
       this.collection.remove(this.editFeature)
       this.tools.emit(this.tools.EVENT_ICON_DELETED, this.editFeature)
+      this.formButtons.style.display = 'none'
+      this.map.removeControl(this.formControl)
     }
   }
 

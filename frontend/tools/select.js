@@ -39,33 +39,31 @@ class Select {
           this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
         }
       }
-      else {
-        if (event.deselected.length) {
-          for (const feature of event.deselected) {
-            this.map.removeOverlay(this.selectOverlays[feature.get('id')])
-          }
+      if (event.deselected.length) {
+        for (const feature of event.deselected) {
+          this.deleteSelectOverlay(feature)
         }
-        if (event.selected.length > 0) {
-          const feature = event.selected[0];
-          const id = feature.get('id')
-          const infoBox = feature.get('type') === 'track' ? this.trackInfo.cloneNode(true) : this.iconInfo.cloneNode(true)
-          if (feature.get('type') === 'track') {
-            this.showTrackInfoBox(infoBox, feature)
-          }
-          else {
-            this.showIconInfoBox(infoBox, feature)
-          }
-          this.clocks[id] = infoBox.getElementsByClassName('clock')[0]
-          this.clocks[id].addEventListener('click', this.updateDecay)
-          infoBox.id = 'selected-' + id
-          const overlay = new Overlay({
-            element: infoBox,
-            offset: [10, 10],
-            position:  event.mapBrowserEvent.coordinate
-          })
-          this.selectOverlays[id] = overlay
-          this.map.addOverlay(overlay)
+      }
+      if (event.selected.length > 0) {
+        const feature = event.selected[0];
+        const id = feature.get('id')
+        const infoBox = feature.get('type') === 'track' ? this.trackInfo.cloneNode(true) : this.iconInfo.cloneNode(true)
+        if (feature.get('type') === 'track') {
+          this.showTrackInfoBox(infoBox, feature)
         }
+        else {
+          this.showIconInfoBox(infoBox, feature)
+        }
+        this.clocks[id] = infoBox.getElementsByClassName('clock')[0]
+        this.clocks[id].addEventListener('click', this.updateDecay)
+        infoBox.id = 'selected-' + id
+        const overlay = new Overlay({
+          element: infoBox,
+          offset: [10, 10],
+          position:  event.mapBrowserEvent.coordinate
+        })
+        this.selectOverlays[id] = overlay
+        this.map.addOverlay(overlay)
       }
     })
 
@@ -79,6 +77,8 @@ class Select {
     tools.on(tools.EVENT_TRACK_UPDATED, this.deselectAll)
     tools.on(tools.EVENT_ICON_UPDATED, this.deselectAll)
     tools.on(tools.EVENT_UPDATE_CANCELED, this.deselectAll)
+    tools.on(tools.EVENT_TRACK_DELETE, this.deleteSelectOverlay)
+    tools.on(tools.EVENT_ICON_DELETED, this.deleteSelectOverlay)
 
     map.addInteraction(this.select)
 
@@ -283,6 +283,12 @@ class Select {
         type: event.currentTarget.dataset.type,
         id: event.currentTarget.dataset.id
       })
+    }
+  }
+
+  deleteSelectOverlay = (feature) => {
+    if (feature.get('id') in this.selectOverlays) {
+      this.map.removeOverlay(this.selectOverlays[feature.get('id')])
     }
   }
 
