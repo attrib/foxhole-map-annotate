@@ -9,6 +9,8 @@ import {addDefaultMapControls} from "./mapControls"
 import Socket from "./webSocket";
 const EditTools = require("./mapEditTools")
 
+const url = new URL(window.location);
+
 var map = new Map({
   controls: defaults(),
   target: 'map',
@@ -41,11 +43,20 @@ var map = new Map({
     }),
   ],
   view: new View({
-    center: [5625.500000, -6216.000000],
-    resolution: 10.000000,
+    center: [url.searchParams.get('cx') ? parseFloat(url.searchParams.get('cx')) : 5625.500000, url.searchParams.get('cy') ? parseFloat(url.searchParams.get('cy')) : -6216.000000],
+    resolution: url.searchParams.get('r') ? parseFloat(url.searchParams.get('r')) : 10.000000,
     resolutions: [64,32,16,8,4,2,1],
   })
 });
+
+map.on('moveend', (event) => {
+  const center = event.map.getView().getCenter()
+  const url = new URL(window.location);
+  url.searchParams.set('cx', center[0].toFixed(5));
+  url.searchParams.set('cy', center[1].toFixed(5));
+  url.searchParams.set('r', event.map.getView().getResolution().toFixed(5));
+  window.history.replaceState({}, '', url);
+})
 
 addDefaultMapControls(map)
 // Prevent context menu on map

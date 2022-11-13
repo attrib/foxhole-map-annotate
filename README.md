@@ -16,8 +16,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 * warning/error when websocket disconnected / reconnect mechanic / disable websocket when not active
 
-* use browser parameters for linking a specific point on the map
-
 * Partisan Icons/Rail (new Role, new Icons, Green Rail)
 
 ## DevTodos
