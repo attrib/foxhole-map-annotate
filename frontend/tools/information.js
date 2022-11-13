@@ -18,10 +18,10 @@ class Information extends AIconTool {
     this.signSelect = new TomSelect('#information-form-sign', {
       render: {
         option: (data, escape) => {
-          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"></div>`;
+          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         },
         item: (data, escape) => {
-          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"></div>`;
+          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         }
       }
     })

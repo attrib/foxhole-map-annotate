@@ -18,10 +18,10 @@ class Signs extends AIconTool {
     this.signSelect = new TomSelect('#sign-form-sign', {
       render: {
         option: (data, escape) => {
-          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"></div>`;
+          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         },
         item: (data, escape) => {
-          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"></div>`;
+          return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
         }
       }
     })
@@ -50,7 +50,7 @@ class Signs extends AIconTool {
   };
 
   clearInput() {
-    this.signSelect.setValue('Rail_Yard');
+    this.signSelect.setValue('dead_end');
   }
 
   featureSelected = (feature) => {
