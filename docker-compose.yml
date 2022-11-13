@@ -9,6 +9,7 @@ services:
       - ./uploads:/app/public/map
       - ./sessions:/app/sessions
       - ./data:/app/data
+      - ./logs:/app/logs
     env_file:
       - .env
     expose:

@@ -2,6 +2,7 @@
 public/map
 sessions
 data
+logs
 .env
 node_modules
 public/dist

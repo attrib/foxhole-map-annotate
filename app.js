@@ -9,6 +9,7 @@ const nunjucks = require("nunjucks");
 var sessionParser = require('./lib/session');
 var indexRouter = require('./routes/index');
 const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
+const fs = require("fs");
 
 
 var app = express();
@@ -36,7 +37,9 @@ else {
   app.use(webpackHotMiddleware(compiler))
 }
 
-app.use(logger(process.env.NODE_ENV === 'development' ? 'dev' : 'tiny'));
+const date = new Date()
+const accessLogStream = fs.createWriteStream(path.join(__dirname, `logs/access-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}.log`), { flags: 'a' })
+app.use(logger('combined', {stream: accessLogStream}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

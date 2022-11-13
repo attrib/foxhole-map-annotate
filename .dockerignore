@@ -2,6 +2,7 @@ node_modules
 sessions
 public/map
 data
+logs
 .git
 .dockerignore
 .gitignore
