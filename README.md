@@ -7,6 +7,8 @@ Annotate and draw on the foxhole map and share with your group.
 * Layers popup behind form
 * Tooltips on mouseover
 
+* disable decay timer for some types
+
 * Guide on how to use the map (partially done)
 
 * A button to cut a line in two

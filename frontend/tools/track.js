@@ -217,12 +217,14 @@ class Track extends ADrawTool {
   }
 
   toolDeSelected = () => {
-    if (this.draw.getActive()) {
-      this.draw.finishDrawing()
+    if (this.draw) {
+      if (this.draw.getActive()) {
+        this.draw.finishDrawing()
+      }
+      this.map.removeInteraction(this.draw)
+      this.map.removeInteraction(this.snap)
+      this.map.removeControl(this.formControl)
     }
-    this.map.removeInteraction(this.draw)
-    this.map.removeInteraction(this.snap)
-    this.map.removeControl(this.formControl)
   }
 
   trackSelected = (feature) => {

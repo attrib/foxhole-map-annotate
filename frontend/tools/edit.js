@@ -1,12 +1,9 @@
 const {createCustomControlElement} = require("../mapControls");
 const {Control} = require("ol/control");
-const {Modify, Select} = require("ol/interaction");
+const {Modify} = require("ol/interaction");
 const {altKeyOnly, shiftKeyOnly, singleClick} = require("ol/events/condition");
-const {SelectEvent} = require("ol/interaction/Select");
 
 class Edit {
-
-  selectedFeature = null
 
   /**
    * @param {EditTools} tools
@@ -24,55 +21,27 @@ class Edit {
     this.control = new Control({
       element: this.controlElement
     })
-    document.addEventListener('keypress', (event) => {
+    document.addEventListener('keydown', (event) => {
       if (event.key === 'e') {
         if (!tools.editMode) {
           this.controlElement.classList.add('selected')
           tools.changeMode(true)
         }
       }
+      if (event.key === 'Escape') {
+        if (tools.editMode) {
+          this.controlElement.classList.remove('selected')
+          tools.changeMode(false)
+        }
+      }
     })
     tools.on(tools.EVENT_EDIT_MODE_ENABLED, this.editModeEnabled)
     tools.on(tools.EVENT_EDIT_MODE_DISABLED, this.editModeDisabled)
-    tools.on(tools.EVENT_EDIT_MODE_ENABLED, () => {
-      if (this.selectedFeature !== null) {
-        const type = this.selectedFeature.get('type')
-        tools.emit(tools.EVENT_FEATURE_SELECTED(type), this.selectedFeature);
-        this.selectedFeature = null;
-      }
-    })
-    tools.on(tools.EVENT_TRACK_UPDATED, this.deselectAll)
-    tools.on(tools.EVENT_ICON_UPDATED, this.deselectAll)
-    tools.on(tools.EVENT_UPDATE_CANCELED, this.deselectAll)
-  }
-
-  setSelect = (select) => {
-    this.select = select
-    this.select.on('select', (event) => {
-      if (!this.tools.editMode) {
-        if (event.deselected.length > 0) {
-          this.selectedFeature = null
-        }
-        if (event.selected.length > 0) {
-          this.selectedFeature = event.selected[0]
-        }
-        return
-      }
-      if (event.deselected.length > 0) {
-        const type = event.deselected[0].get('type')
-        this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
-      }
-      if (event.selected.length > 0) {
-        const type = event.selected[0].get('type')
-        this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
-      }
-    })
-
   }
 
   editModeEnabled = () => {
     this.modify = new Modify({
-      features: this.select.getFeatures(),
+      features: this.tools.select.getFeatures(),
       deleteCondition: (event) => {
         if (altKeyOnly(event) && singleClick(event)) {
           event.stopPropagation()
@@ -80,7 +49,7 @@ class Edit {
         }
         if (shiftKeyOnly(event) && singleClick(event)) {
           event.stopPropagation()
-          const feature = this.select.getFeatures().pop()
+          const feature = this.tools.select.getFeatures().pop()
           const type = feature.get('type')
           this.tools.emit(type + '-deselected', feature);
           if (type === 'track') {
@@ -89,7 +58,7 @@ class Edit {
           else if (['information', 'sign', 'facility', 'custom-facility'].includes(type)) {
             this.tools.emit(this.tools.EVENT_ICON_DELETED, feature)
           }
-          this.select.changed()
+          this.tools.select.changed()
           return false
         }
         return false
@@ -102,15 +71,6 @@ class Edit {
   editModeDisabled = () => {
     this.map.removeInteraction(this.modify)
     this.modify = null
-  }
-
-  deselectAll = () => {
-    const feature = this.select.getFeatures().pop()
-    if (feature) {
-      const type = feature.get('type')
-      this.tools.emit(type + '-deselected', feature);
-    }
-    this.select.dispatchEvent(new SelectEvent('select', [], [feature], null))
   }
 }
 

@@ -56,6 +56,16 @@ class AIconTool extends ADrawTool {
         this.draw.finishDrawing()
       }
     })
+
+    this.tools.on(this.tools.EVENT_DECAY_UPDATED, (data) => {
+      if (data.type === this.toolName) {
+        this.collection.forEach((feat) => {
+          if (feat.get('id') === data.id) {
+            feat.set('time', data.time)
+          }
+        })
+      }
+    })
   }
 
   _style = (feature, zoom) => {
@@ -113,14 +123,6 @@ class AIconTool extends ADrawTool {
 
   addFeature = (feature) => {
     this.collection.push(feature)
-  }
-
-  setFeatureTime = (id, time) => {
-    this.collection.forEach((feat) => {
-      if (feat.get('id') === id) {
-        feat.set('time', time)
-      }
-    })
   }
 
   _clearInput = () => {

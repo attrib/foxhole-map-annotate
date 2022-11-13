@@ -5,6 +5,7 @@ const Facilities = require("./tools/facilities");
 const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
 const CustomFacility = require("./tools/customFacility");
 const Information = require("./tools/information");
+const Select = require("./tools/select");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -19,6 +20,8 @@ class EditTools {
     EVENT_ICON_UPDATED = 'iconUpdated';
     EVENT_FEATURE_SELECTED = (type) => type + '-selected'
     EVENT_FEATURE_DESELECTED = (type) => type + '-deselected'
+    EVENT_DECAY_UPDATE = 'decayUpdate'
+    EVENT_DECAY_UPDATED = 'decayUpdated'
 
     editMode = false
     selectedTool = false
@@ -37,6 +40,7 @@ class EditTools {
         this.facility = new Facilities(this, map)
         this.customFacility = new CustomFacility(this, map)
         this.track = new Track(this, map)
+        this.select = new Select(this, map)
     }
 
     initAcl = (acl) => {

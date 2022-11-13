@@ -156,7 +156,7 @@ wss.on('connection', function (ws, request) {
           for (const feature of features.features) {
             if (feature.properties.id === message.data.id) {
               feature.properties.time = (new Date()).toISOString()
-              sendDataToAll('decayUpdate', {
+              sendDataToAll('decayUpdated', {
                 id: feature.properties.id,
                 type: feature.properties.type,
                 time: feature.properties.time,

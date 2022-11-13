@@ -4,11 +4,9 @@ import {defaults} from "ol/control";
 import {Group, Vector, Tile} from "ol/layer";
 import {TileImage, Vector as VectorSource} from "ol/source";
 import {GeoJSON} from "ol/format";
-import {Style, Stroke, Circle} from "ol/style";
-import {Select} from "ol/interaction";
+import {Style, Stroke} from "ol/style";
 import {addDefaultMapControls} from "./mapControls"
 import Socket from "./webSocket";
-import {never, singleClick} from "ol/events/condition";
 const EditTools = require("./mapEditTools")
 
 var map = new Map({
@@ -58,188 +56,6 @@ document.getElementById('map').addEventListener('contextmenu', (e) => {
 
 const tools = new EditTools(map);
 
-//@todo: move to tools
-const selectStyle = () => {
-  const trackStyle = tools.track.style();
-  const white = [255, 255, 255, 1];
-  const blue = [0, 153, 255, 1];
-  return (feature, zoom) => {
-    const type = feature.get('type')
-    const circleStyle = [
-      new Style({
-        image: new Circle({
-          stroke: new Stroke({
-            width: 6,
-            color: white,
-          }),
-          radius: 18,
-        })
-      }),
-      new Style({
-        image: new Circle({
-          stroke: new Stroke({
-            width: 2,
-            color: blue,
-          }),
-          radius: 18,
-        })
-      })
-    ]
-    const lineStyle = [new Style({
-      stroke: new Stroke({
-        width: 6,
-        color: white,
-      })
-    }),
-      new Style({
-        stroke: new Stroke({
-          width: 3,
-          color: blue,
-        })
-      })]
-    const trackStyleHighlight = [new Style({
-      stroke: new Stroke({
-        width: 10,
-        color: white,
-      }),
-      geometry: tools.track.geometryFunction
-    }),
-      new Style({
-        stroke: new Stroke({
-          width: 7,
-          color: blue,
-        }),
-        geometry: tools.track.geometryFunction
-      })
-    ]
-    switch (type) {
-      case 'track':
-        return [...trackStyleHighlight, trackStyle(feature, zoom)]
-
-      case 'information':
-        return [...circleStyle, tools.information.style(feature, zoom)]
-
-      case 'sign':
-        return [...circleStyle, tools.sign.style(feature, zoom)]
-
-      case 'facility':
-        return [...circleStyle, tools.facility.style(feature, zoom)]
-
-      case 'custom-facility':
-        return [tools.customFacility.style(feature, zoom), ...lineStyle]
-
-    }
-  }
-}
-
-const select = new Select({
-  multi: false,
-  toggleCondition: never,
-  condition: (event) => {
-    if (['information', 'sign', 'facility', 'custom-facility'].includes(tools.selectedTool)) {
-      return false;
-    }
-    return singleClick(event)
-  },
-  style: selectStyle()
-});
-tools.edit.setSelect(select)
-map.addInteraction(select)
-
-const trackInfo = document.getElementById('track-info'),
-    iconInfo = document.getElementById('icon-info');
-
-let selectedFeature = null
-map.on('pointermove', (evt) => {
-  if (selectedFeature) {
-    return
-  }
-  const value = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-    return [feature, layer];
-  });
-  if (!value) {
-    trackInfo.style.display = 'none';
-    iconInfo.style.display = 'none';
-  }
-  else {
-    const [feature, layer] = value;
-    if (layer === null || layer.get('temp') === true) {
-      trackInfo.style.display = 'none';
-      iconInfo.style.display = 'none';
-      return
-    }
-    infoBoxFeature(feature)
-  }
-})
-select.on('select', (event) => {
-  if (event.deselected.length > 0) {
-    selectedFeature = null
-    trackInfo.style.display = 'none';
-    iconInfo.style.display = 'none';
-  }
-  if (event.selected.length > 0) {
-    selectedFeature = event.selected[0]
-  }
-  if (selectedFeature) {
-    infoBoxFeature(selectedFeature)
-  }
-  else {
-    trackInfo.style.display = 'none';
-    iconInfo.style.display = 'none';
-  }
-})
-
-const trackClock = document.getElementById('track-clock')
-const iconClock = document.getElementById('icon-clock')
-
-trackClock.addEventListener('click', updateDecay)
-iconClock.addEventListener('click', updateDecay)
-
-function updateDecay(event) {
-  if (event.currentTarget && event.currentTarget.dataset.id) {
-    socket.send('decayUpdate', {
-      type: event.currentTarget.dataset.type,
-      id: event.currentTarget.dataset.id
-    })
-  }
-}
-
-function infoBoxFeature(feature)
-{
-  if (feature.get('type') === 'track') {
-    trackInfo.style.display = 'block';
-    trackInfo.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
-    trackInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    clockColor(trackClock, feature)
-    trackInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature);
-  }
-  else if (['information', 'sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
-    iconInfo.style.display = 'block';
-    iconInfo.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    clockColor(iconClock, feature)
-    iconInfo.getElementsByClassName('notes')[0].innerHTML = getNotes(feature)
-  }
-}
-
-function clockColor(clock, feature) {
-  const time = new Date(feature.get('time'))
-  clock.dataset.id = feature.get('id') || null
-  clock.dataset.type = feature.get('type') || null
-  setClockColor(clock, time)
-}
-
-function setClockColor(clock, time) {
-  const diff = new Date().getTime() - time.getTime()
-  const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
-  clock.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
-  clock.title = time.toLocaleString();
-}
-
-function getNotes(feature) {
-  const note = feature.get('notes') || ''
-  return note.replaceAll("\n", '<br>')
-}
-
 //
 // add lines
 //
@@ -260,7 +76,6 @@ socket.on('acl', (acl) => {
 tools.allTracksCollection = collection
 
 socket.on('tracks', (tracks) => {
-  selectedFeature = null
   collection.clear()
   for (const clan in clanCollections) {
     clanCollections[clan].clear()
@@ -355,34 +170,17 @@ socket.on('icons', (features) => {
   })
 })
 
-socket.on('decayUpdate', (data) => {
-  switch (data.type) {
-    case 'track':
-      collection.forEach((feat) => {
-        if (feat.get('id') === data.id) {
-          feat.set('time', data.time)
-        }
-      })
-      if (trackClock.dataset.id === data.id) {
-        setClockColor(trackClock, new Date(data.time))
+tools.on(tools.EVENT_DECAY_UPDATE, (data) => {
+  socket.send('decayUpdate', data)
+})
+
+socket.on('decayUpdated', (data) => {
+  tools.emit(tools.EVENT_DECAY_UPDATED, data)
+  if (data.type === 'track') {
+    collection.forEach((feat) => {
+      if (feat.get('id') === data.id) {
+        feat.set('time', data.time)
       }
-      break;
-    case 'information':
-      tools.information.setFeatureTime(data.id, data.time)
-      break;
-    case 'sign':
-      tools.sign.setFeatureTime(data.id, data.time)
-      break;
-    case 'facility':
-      tools.facility.setFeatureTime(data.id, data.time)
-      break;
-    case 'custom-facility':
-      tools.customFacility.setFeatureTime(data.id, data.time)
-      break;
-  }
-  if (['information', 'sign', 'facility', 'custom-facility'].includes(data.type)) {
-    if (iconClock.dataset.id === data.id) {
-      setClockColor(iconClock, new Date(data.time))
-    }
+    })
   }
 })
