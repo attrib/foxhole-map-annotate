@@ -2,16 +2,16 @@ const AIconTool = require("./AIconTool");
 const {Style, Stroke, Fill, Text} = require("ol/style");
 const {createEditingStyle} = require("ol/style/Style");
 
-class CustomFacility extends AIconTool {
+class FacilitiesCustom extends AIconTool {
 
   /**
    * @param {EditTools} tools
    * @param {import("ol").Map} map
    */
   constructor(tools, map) {
-    super(tools, map, 'custom-facility', 'hexagon', {
+    super(tools, map, 'facility-custom', 'hexagon', {
       title: 'Custom Facilities',
-      left: '2em',
+      left: '3.5em',
       zIndex: 5,
       drawType: 'Polygon',
     });
@@ -55,4 +55,4 @@ class CustomFacility extends AIconTool {
   }
 }
 
-module.exports = CustomFacility
+module.exports = FacilitiesCustom

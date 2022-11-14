@@ -82,9 +82,9 @@
 
         <div id="information-form" class="form bg-light text-bg-light container mb-2">
             <div class="row mb-1 mt-2">
-                <label for="information-form-sign" class="col-sm-3 col-form-label">Sign</label>
+                <label for="information-form-icon" class="col-sm-3 col-form-label">Icon</label>
                 <div class="col-sm-9">
-                    <select name="information" id="information-form-sign" class="form-control select2">
+                    <select name="information" id="information-form-icon" class="form-control select2">
                         <option value="information">Information</option>
                         <option value="warning" selected>Warning</option>
                         <option value="caution">Caution</option>
@@ -108,9 +108,9 @@
 
         <div id="sign-form" class="form bg-light text-bg-light container mb-2">
             <div class="row mb-1 mt-2">
-                <label for="sign-form-sign" class="col-sm-3 col-form-label">Sign</label>
+                <label for="sign-form-icon" class="col-sm-3 col-form-label">Sign</label>
                 <div class="col-sm-9">
-                    <select name="sign" id="sign-form-sign" class="form-control select2">
+                    <select name="sign" id="sign-form-icon" class="form-control select2">
                         <option value="dead_end">Dead End</option>
                         <option value="dual_carriageway_ends_ahead">Dual Carriage Way Ends Ahead</option>
                         <option value="keep_left">Keep Left</option>
@@ -119,7 +119,7 @@
                         <option value="maintenance">Maintenance</option>
                         <option value="motorway">Motorway</option>
                         <option value="motorway_end">Motorway End</option>
-                        <option value="no_entry">No Entry</option>
+                        <option value="no_entry_sign">No Entry</option>
                         <option value="no_stopping">No Stopping</option>
                         <option value="no_waiting">No Waiting</option>
                         <option value="parking">Parking</option>
@@ -145,39 +145,61 @@
             </div>
         </div>
 
+        <div id="field-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="field-form-icon" class="col-sm-3 col-form-label">Icon</label>
+                <div class="col-sm-9">
+                    <select name="icon" id="field-form-icon" class="form-control select2">
+                        <option value="scrap_field">Salvage</option>
+                        <option value="scrap_mine">Salvage Mine</option>
+                        <option value="coal_field">Coal</option>
+                        <option value="comp_field">Components</option>
+                        <option value="comp_mine">Components Mine</option>
+                        <option value="sulfur_field">Sulfur</option>
+                        <option value="sulfur_mine">Sulfur Mine</option>
+                        <option value="oil_field">Oil</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <label for="field-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <div class="col-sm-9">
+                    <textarea id="field-form-notes" name="notes" class="notes form-control"></textarea>
+                </div>
+            </div>
+            <div class="row justify-content-between mb-2" id="field-form-buttons">
+                <div class="btn-group col-sm-12">
+                    <input id="field-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
+                    <input id="field-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+                </div>
+            </div>
+        </div>
+
         <div id="facility-form" class="form bg-light text-bg-light container mb-2">
             <div class="row mb-1 mt-2">
-                <label for="facility-form-icon" class="col-sm-3 col-form-label">Sign</label>
+                <label for="facility-form-icon" class="col-sm-3 col-form-label">Icon</label>
                 <div class="col-sm-9">
                     <select name="icon" id="facility-form-icon" class="form-control select2">
-                        <optgroup label="Fields">
-                            <option value="scrap_field">Scrap</option>
-                            <option value="coal_field">Coal</option>
-                            <option value="comp_field">Components</option>
-                            <option value="sulfur_field">Sulfur</option>
-                            <option value="oil_field">Oil</option>
-                        </optgroup>
-                        <optgroup label="Public Facilities">
-                            <option value="generator">Generator</option>
-                            <option value="port">Port</option>
-                            <option value="Rail_Yard">Rail Yard</option>
-                            <option value="public_cmats">CMats</option>
-                            <option value="public_pcmats">PC Mats</option>
-                            <option value="public_scmats">Steel</option>
-                            <option value="public_diesel">Diesel</option>
-                            <option value="public_petrol">Petrol</option>
-                            <option value="public_enriched">Enriched Oil</option>
-                            <option value="public_heavy">Heavy Oil</option>
-                            <option value="public_ass_mats_1">AMats 1</option>
-                            <option value="public_ass_mats_2">AMats 2</option>
-                            <option value="public_ass_mats_3">AMats 3</option>
-                            <option value="public_ass_mats_4">AMats 4</option>
-                            <option value="public_ass_mats_5">AMats 5</option>
-                            <option value="public_ammo_facility">Ammo</option>
-                            <option value="public_vehicle_facility">Vehicle</option>
-                            <option value="public_tank_facility">Tank</option>
-                            <option value="public_train_facility">Train</option>
-                        </optgroup>
+                        <option value="generator">Generator</option>
+                        <option value="port" selected>Sea Port</option>
+                        <option value="Rail_Yard">Rail Yard</option>
+                        <option value="seaport_inland_port">Sea Port & Rail Yard</option>
+                        <option value="public_cmats">CMats</option>
+                        <option value="public_pcmats">PC Mats</option>
+                        <option value="public_scmats">Steel</option>
+                        <option value="public_diesel">Diesel</option>
+                        <option value="public_petrol">Petrol</option>
+                        <option value="public_heavy">Heavy Oil</option>
+                        <option value="public_enriched">Enriched Oil</option>
+                        <option value="public_ass_mats_1">AMats 1</option>
+                        <option value="public_ass_mats_2">AMats 2</option>
+                        <option value="public_ass_mats_3">AMats 3</option>
+                        <option value="public_ass_mats_4">AMats 4</option>
+                        <option value="public_ass_mats_5">AMats 5</option>
+                        <option value="public_ammo_facility">Ammo</option>
+                        <option value="public_vehicle_facility">Vehicle</option>
+                        <option value="public_tank_facility">Tank</option>
+                        <option value="public_train_facility">Train</option>
                     </select>
                 </div>
             </div>
@@ -195,17 +217,93 @@
             </div>
         </div>
 
-        <div id="custom-facility-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2 align-items-center">
-                <label for="custom-facility-form-notes" class="col-sm-3 col-form-label">Notes</label>
+        <div id="facility-private-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="facility-private-form-icon" class="col-sm-3 col-form-label">Icon</label>
                 <div class="col-sm-9">
-                    <textarea id="custom-facility-form-notes" name="notes" class="notes form-control"></textarea>
+                    <select name="icon" id="facility-private-form-icon" class="form-control select2">
+                        <option value="private_cmats">CMats</option>
+                        <option value="private_pcmats">PC Mats</option>
+                        <option value="private_scmats">Steel</option>
+                        <option value="private_diesel">Diesel</option>
+                        <option value="private_petrol">Petrol</option>
+                        <option value="private_heavy">Heavy Oil</option>
+                        <option value="private_enriched">Enriched Oil</option>
+                        <option value="private_ass_mats_1">AMats 1</option>
+                        <option value="private_ass_mats_2">AMats 2</option>
+                        <option value="private_ass_mats_3">AMats 3</option>
+                        <option value="private_ass_mats_4">AMats 4</option>
+                        <option value="private_ass_mats_5">AMats 5</option>
+                        <option value="private_ammo_facility">Ammo</option>
+                        <option value="private_vehicle_facility">Vehicle</option>
+                        <option value="private_tank_facility">Tank</option>
+                        <option value="private_train_facility">Train</option>
+                    </select>
                 </div>
             </div>
-            <div class="row justify-content-between mb-2" id="custom-facility-form-buttons">
+            <div class="row mb-1 align-items-center">
+                <label for="facility-private-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <div class="col-sm-9">
+                    <textarea id="facility-private-form-notes" name="notes" class="notes form-control"></textarea>
+                </div>
+            </div>
+            <div class="row justify-content-between mb-2" id="facility-private-form-buttons">
                 <div class="btn-group col-sm-12">
-                    <input id="custom-facility-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="custom-facility-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+                    <input id="facility-private-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
+                    <input id="facility-private-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+                </div>
+            </div>
+        </div>
+
+        <div id="facility-enemy-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="facility-enemy-form-icon" class="col-sm-3 col-form-label">Icon</label>
+                <div class="col-sm-9">
+                    <select name="icon" id="facility-enemy-form-icon" class="form-control select2">
+                        <option value="enemy_cmats">CMats</option>
+                        <option value="enemy_pcmats">PC Mats</option>
+                        <option value="enemy_scmats">Steel</option>
+                        <option value="enemy_diesel">Diesel</option>
+                        <option value="enemy_petrol">Petrol</option>
+                        <option value="enemy_heavy">Heavy Oil</option>
+                        <option value="enemy_enriched">Enriched Oil</option>
+                        <option value="enemy_ass_mats_1">AMats 1</option>
+                        <option value="enemy_ass_mats_2">AMats 2</option>
+                        <option value="enemy_ass_mats_3">AMats 3</option>
+                        <option value="enemy_ass_mats_4">AMats 4</option>
+                        <option value="enemy_ass_mats_5">AMats 5</option>
+                        <option value="enemy_ammo_facility">Ammo</option>
+                        <option value="enemy_vehicle_facility">Vehicle</option>
+                        <option value="enemy_tank_facility">Tank</option>
+                        <option value="enemy_train_facility">Train</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <label for="facility-enemy-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <div class="col-sm-9">
+                    <textarea id="facility-enemy-form-notes" name="notes" class="notes form-control"></textarea>
+                </div>
+            </div>
+            <div class="row justify-content-between mb-2" id="facility-enemy-form-buttons">
+                <div class="btn-group col-sm-12">
+                    <input id="facility-enemy-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
+                    <input id="facility-enemy-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+                </div>
+            </div>
+        </div>
+
+        <div id="facility-custom-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2 align-items-center">
+                <label for="facility-custom-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <div class="col-sm-9">
+                    <textarea id="facility-custom-form-notes" name="notes" class="notes form-control"></textarea>
+                </div>
+            </div>
+            <div class="row justify-content-between mb-2" id="facility-custom-form-buttons">
+                <div class="btn-group col-sm-12">
+                    <input id="facility-custom-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
+                    <input id="facility-custom-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
                 </div>
             </div>
         </div>

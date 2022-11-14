@@ -5,6 +5,8 @@ const {Vector} = require("ol/layer");
 const {Draw} = require("ol/interaction");
 const {ACL_FULL} = require("../../lib/ACLS");
 const {Control} = require("ol/control");
+const {Style, Icon} = require("ol/style");
+const TomSelect = require("tom-select");
 
 class AIconTool extends ADrawTool {
 
@@ -31,6 +33,7 @@ class AIconTool extends ADrawTool {
       title: options.title || this.toolName,
       style: this._style,
       zIndex: options.zIndex,
+      maxResolution: options.maxResolution || undefined
     });
     this.map.addLayer(vector);
 
@@ -69,16 +72,52 @@ class AIconTool extends ADrawTool {
     this.formControl = new Control({
       element: this.form
     })
+
+    this.iconSelectEnabled = options.iconSelect || false
+    this.iconDefault = options.iconDefault || ''
+
+    if (this.iconSelectEnabled) {
+      this.iconSelect = new TomSelect(`#${this.toolName}-form-icon`, {
+        render: {
+          option: (data, escape) => {
+            return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
+          },
+          item: (data, escape) => {
+            return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
+          }
+        }
+      })
+      this.iconSelect.on('change', () => {
+        if (this.draw) {
+          this.draw.changed()
+        }
+      })
+    }
+    tools.iconTools.push(this.toolName)
   }
 
   _style = (feature, zoom) => {
-    return this.style(feature, zoom)
+    if (this.style) {
+      return this.style(feature, zoom)
+    }
+    if (this.iconSelectEnabled) {
+      const icon = feature.get('icon') || this.iconSelect.getValue();
+      return new Style({
+        image: new Icon({
+          src: this.getImageUrl(icon),
+        }),
+      })
+    }
   }
 
   toolRightClick = () => {
+    this.tools.changeTool(false);
   }
 
   setFeatureProperties = (feature) => {
+    if (this.iconSelectEnabled) {
+      feature.set('icon', this.iconSelect.getValue());
+    }
   }
 
   toolSelected = () => {
@@ -89,7 +128,7 @@ class AIconTool extends ADrawTool {
     }
     this.draw = new Draw({
       type: this.drawType,
-      style: this.style,
+      style: this._style,
       condition: (event) => {
         if (event.type === 'pointerdown') {
           // Right click cancels tool selection
@@ -138,6 +177,9 @@ class AIconTool extends ADrawTool {
     if (this.editFeature) {
       this.tools.emit(this.tools.EVENT_UPDATE_CANCELED, this.editFeature)
     }
+    if (this.iconSelectEnabled) {
+      this.iconSelect.setValue(this.iconDefault);
+    }
     if (this.clearInput) {
       this.clearInput();
     }
@@ -153,6 +195,9 @@ class AIconTool extends ADrawTool {
     this.notesInput.value = feature.get('notes')
     this.map.addControl(this.formControl)
     this.formButtons.style.display = 'block'
+    if (this.iconSelectEnabled) {
+      this.iconSelect.setValue(feature.get('icon'))
+    }
     if (this.featureSelected) {
       this.featureSelected(feature)
     }
@@ -174,16 +219,7 @@ class AIconTool extends ADrawTool {
   }
 
   getImageUrl = (name) => {
-    switch (name) {
-      case 'caution':
-      case 'danger':
-      case 'no_entry':
-      case 'warning':
-        return 'images/' + name + '_sign.svg'
-
-      default:
-        return 'images/' + name + '.svg'
-    }
+    return `/images/${this.toolName}/${name}.svg`;
   }
 
 }

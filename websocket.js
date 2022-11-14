@@ -5,12 +5,14 @@ const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
 const {ACL_FULL, ACL_ICONS_ONLY} = require("./lib/ACLS");
+const {trackUpdater, iconUpdater} = require("./lib/updater");
 
 let tracks = {}, icons = {};
 const trackFileName = './data/tracks.json';
 const iconFileName = './data/icons.json';
 if (fs.existsSync(trackFileName)) {
   tracks = require(trackFileName);
+  tracks = trackUpdater(tracks)
 }
 else {
   tracks = {
@@ -20,6 +22,7 @@ else {
 }
 if (fs.existsSync(iconFileName)) {
   icons = require(iconFileName);
+  icons = iconUpdater(icons)
 }
 else {
   icons = {

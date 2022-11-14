@@ -20,7 +20,7 @@ class Select {
       multi: false,
       toggleCondition: never,
       condition: (event) => {
-        if (['information', 'sign', 'facility', 'custom-facility'].includes(this.tools.selectedTool)) {
+        if (this.tools.iconTools.includes(this.tools.selectedTool)) {
           return false;
         }
         return singleClick(event)
@@ -184,16 +184,25 @@ class Select {
           return [...trackStyleHighlight, trackStyle(feature, zoom)]
 
         case 'information':
-          return [...circleStyle, this.tools.information.style(feature, zoom)]
+          return [...circleStyle, this.tools.information._style(feature, zoom)]
 
         case 'sign':
-          return [...circleStyle, this.tools.sign.style(feature, zoom)]
+          return [...circleStyle, this.tools.sign._style(feature, zoom)]
+
+        case 'field':
+          return [...circleStyle, this.tools.field._style(feature, zoom)]
 
         case 'facility':
-          return [...circleStyle, this.tools.facility.style(feature, zoom)]
+          return [...circleStyle, this.tools.facility._style(feature, zoom)]
 
-        case 'custom-facility':
-          return [this.tools.customFacility.style(feature, zoom), ...lineStyle]
+        case 'facility-private':
+          return [...circleStyle, this.tools.facilityPrivate._style(feature, zoom)]
+
+        case 'facility-enemy':
+          return [...circleStyle, this.tools.facilityEnemy._style(feature, zoom)]
+
+        case 'facility-custom':
+          return [this.tools.facilityCustom.style(feature, zoom), ...lineStyle]
 
       }
     }
@@ -204,7 +213,7 @@ class Select {
       this.trackInfoOverlay.setPosition(coords)
       this.showTrackInfoBox(this.trackInfo, feature)
     }
-    else if (['information', 'sign', 'facility', 'custom-facility'].includes(feature.get('type'))) {
+    else if (this.tools.iconTools.includes(feature.get('type'))) {
       if (this.trackInfoOverlay.getPosition() === undefined) {
         this.iconInfoOverlay.setPositioning('top-left')
         this.iconInfoOverlay.setOffset([10, 10])
@@ -264,7 +273,7 @@ class Select {
   }
 
   clockColor = (clock, feature) => {
-    if ((feature.get('icon') && feature.get('icon').endsWith('_field')) || feature.get('type') === 'sign') {
+    if (feature.get('type') === 'field' || feature.get('type') === 'sign') {
       clock.style.display = 'none'
       return
     }

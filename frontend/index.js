@@ -162,8 +162,11 @@ socket.on('icons', (features) => {
   const col = geoJson.readFeatures(features)
   tools.information.clearFeatures()
   tools.sign.clearFeatures()
+  tools.field.clearFeatures()
   tools.facility.clearFeatures()
-  tools.customFacility.clearFeatures();
+  tools.facilityPrivate.clearFeatures()
+  tools.facilityEnemy.clearFeatures()
+  tools.facilityCustom.clearFeatures();
   col.forEach((feature) => {
     switch (feature.get('type')) {
       case 'information':
@@ -172,11 +175,20 @@ socket.on('icons', (features) => {
       case 'sign':
         tools.sign.addFeature(feature)
         break;
+      case 'field':
+        tools.field.addFeature(feature)
+        break;
       case 'facility':
         tools.facility.addFeature(feature)
         break;
-      case 'custom-facility':
-        tools.customFacility.addFeature(feature)
+      case 'facility-private':
+        tools.facilityPrivate.addFeature(feature)
+        break;
+      case 'facility-enemy':
+        tools.facilityEnemy.addFeature(feature)
+        break;
+      case 'facility-custom':
+        tools.facilityCustom.addFeature(feature)
         break;
     }
   })

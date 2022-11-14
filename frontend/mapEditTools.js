@@ -3,10 +3,13 @@ const Track = require("./tools/track");
 const Signs = require("./tools/signs");
 const Facilities = require("./tools/facilities");
 const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
-const CustomFacility = require("./tools/customFacility");
 const Information = require("./tools/information");
 const Select = require("./tools/select");
 const TrackSplit = require("./tools/trackSplit");
+const Field = require("./tools/field");
+const FacilitiesPrivate = require("./tools/facilitiesPrivate");
+const FacilitiesEnemy = require("./tools/facilitiesEnemy");
+const FacilitiesCustom = require("./tools/facilitiesCustom");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -27,7 +30,7 @@ class EditTools {
     editMode = false
     selectedTool = false
     listeners = {}
-
+    iconTools = []
 
     /**
      * @param {import("ol").Map} map
@@ -38,8 +41,11 @@ class EditTools {
         this.edit = new Edit(this, map)
         this.information = new Information(this, map)
         this.sign = new Signs(this, map)
+        this.field = new Field(this, map)
         this.facility = new Facilities(this, map)
-        this.customFacility = new CustomFacility(this, map)
+        this.facilityPrivate = new FacilitiesPrivate(this, map)
+        this.facilityEnemy = new FacilitiesEnemy(this, map)
+        this.facilityCustom = new FacilitiesCustom(this, map)
         this.track = new Track(this, map)
         this.trackSplit = new TrackSplit(this, map)
         this.select = new Select(this, map)
@@ -53,8 +59,11 @@ class EditTools {
         }
         if (acl === ACL_FULL) {
             this.map.addControl(this.sign.control)
+            this.map.addControl(this.field.control)
             this.map.addControl(this.facility.control)
-            this.map.addControl(this.customFacility.control)
+            this.map.addControl(this.facilityPrivate.control)
+            this.map.addControl(this.facilityEnemy.control)
+            this.map.addControl(this.facilityCustom.control)
             this.map.addControl(this.track.control)
             this.map.addControl(this.trackSplit.control)
         }
