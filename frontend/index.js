@@ -80,8 +80,16 @@ const clanGroup = new Group({
 map.addLayer(clanGroup);
 const socket = new Socket();
 
-socket.on('acl', (acl) => {
-  tools.initAcl(acl)
+let lastVersion = null
+socket.on('init', (data) => {
+  tools.initAcl(data.acl)
+  if (lastVersion === null) {
+    lastVersion = data.version
+  }
+  else if (lastVersion !== data.version) {
+    console.log('Version change detected, reloading page')
+    window.location = '/'
+  }
 })
 
 tools.allTracksCollection = collection
@@ -207,4 +215,12 @@ socket.on('decayUpdated', (data) => {
       }
     })
   }
+})
+
+const disconnectedWarning = document.getElementById('disconnected')
+socket.on('open', () => {
+  disconnectedWarning.style.display = 'none'
+})
+socket.on('close', () => {
+  disconnectedWarning.style.display = 'block'
 })

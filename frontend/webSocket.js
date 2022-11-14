@@ -4,6 +4,37 @@ class Socket {
     this.socketClosed = true
     this.listeners = {}
     this.connect()
+    this.forceFullDisconnect = false
+    this.disconnectTimer = null
+    this.socketConnectTimeout = null
+
+    document.addEventListener('visibilitychange', (event) => {
+      if (document.visibilityState === 'hidden') {
+        if (this.disconnectTimer === null) {
+          this.disconnectTimer = setTimeout(this.disconnect, 30000)
+        }
+      }
+      else {
+        if (this.disconnectTimer !== null) {
+          clearTimeout(this.disconnectTimer)
+          this.disconnectTimer = null
+        }
+        if (this.socketClosed) {
+          if (this.socketConnectTimeout !== null) {
+            clearTimeout(this.socketConnectTimeout)
+            this.socketConnectTimeout = null
+          }
+          this.forceFullDisconnect = false
+          this.connect()
+        }
+      }
+    })
+  }
+
+  disconnect = () => {
+    this.forceFullDisconnect = true
+    this.disconnectTimer = null
+    this.socket.close(3010, 'Idle connection.')
   }
 
   connect = (cb) => {
@@ -12,6 +43,7 @@ class Socket {
     this.socket.addEventListener('open', (event) => {
       this.socketClosed=false;
       console.log('Websocket connected');
+      this.emit('open', this.socket)
       if (cb && typeof cb === 'function') {
         cb();
       }
@@ -33,10 +65,12 @@ class Socket {
     this.socket.addEventListener('close', () => {
       clearTimeout(pingTimeout)
       this.socketClosed = true
-      this.socketConnectTimeout = setTimeout(this.connect, document.visibilityState === "hidden" ? 300000 : 30000);
-      console.log('Websocket disconnected')
+      if (!this.forceFullDisconnect) {
+        this.socketConnectTimeout = setTimeout(this.connect, 10000);
+        console.log('Websocket disconnected, retying in 10s')
+        this.emit('close')
+      }
     })
-    this.emit('open', this.socket)
   }
 
   ping = () => {
@@ -48,6 +82,7 @@ class Socket {
   send = (type, data) => {
     if (this.socketClosed) {
       clearTimeout(this.socketConnectTimeout)
+      this.socketConnectTimeout = null
       this.connect(() => {
         this.send(type, data)
       });

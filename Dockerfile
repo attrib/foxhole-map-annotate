@@ -16,4 +16,7 @@ RUN npm install --omit=dev
 COPY . .
 COPY --from=build /app/public/dist /app/public/dist
 
+ARG COMMIT_HASH
+ENV COMMIT_HASH=${COMMIT_HASH}
+
 CMD [ "node", "bin/www" ]

@@ -4,13 +4,9 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
-* cache buster
-
 * Guide on how to use the map (partially done)
 
 * add resource fields (+ other stuff) from official warapi
-
-* warning/error when websocket disconnected / reconnect mechanic / disable websocket when not active
 
 * Partisan Rail (new Role, Green Rail)
 

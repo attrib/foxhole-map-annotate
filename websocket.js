@@ -38,8 +38,11 @@ wss.on('connection', function (ws, request) {
     const username = request.session.user;
     const acl = request.session.acl;
     ws.send(JSON.stringify({
-      type: 'acl',
-      data: acl
+      type: 'init',
+      data: {
+        acl,
+        version: process.env.COMMIT_HASH
+      }
     }));
     sendTracks(ws);
     sendIcons(ws);
@@ -170,7 +173,8 @@ wss.on('connection', function (ws, request) {
       }
     });
 
-    ws.on('close', function () {
+    ws.on('close', function (code) {
+      console.log(`Client ${request.session.user} disconnected with ${code}`)
       clients.delete(request.session.id);
     });
   }

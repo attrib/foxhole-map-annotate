@@ -5,12 +5,13 @@
 {% endblock %}
 
 {% block javascript %}
-  <script src="/dist/index.js"></script>
+  <script src="/dist/index.js?{{ cacheBuster }}"></script>
 {% endblock %}
 
 {% block content %}
     <div id="map" class="h-100 w-100">
     </div>
+    <div id="disconnected" class="alert alert-danger m-auto">Connection to server lost. Auto-reconnect in 10s. Map doesn't update automatically. Editing not possible. Refresh page if message doesn't disappear.</div>
     <div id="feature-info">
 
 {#        <div id="mouse-position-content" class="debug bg-light text-bg-light container mb-2">#}

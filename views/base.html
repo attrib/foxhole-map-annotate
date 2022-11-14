@@ -26,7 +26,7 @@
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="/dist/main.css">
+    <link rel="stylesheet" href="/dist/main.css?{{ cacheBuster }}">
     {% block css %}{% endblock %}
 </head>
 <body class="d-flex h-100 text-bg-dark">
@@ -80,7 +80,7 @@
         </main>
     </div>
 
-    <script src="/dist/main.js"></script>
+    <script src="/dist/main.js?{{ cacheBuster }}"></script>
     {% block javascript %}{% endblock %}
 </body>
 </html>

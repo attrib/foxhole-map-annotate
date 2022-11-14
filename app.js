@@ -67,6 +67,7 @@ app.use((req, res, next) => {
   res.locals.title = 'Warden Infrastructure Map';
   res.locals.path = req.path;
   res.locals.origin = process.env.ORIGIN
+  res.locals.cacheBuster = process.env.COMMIT_HASH
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
     res.locals.acl = req.session.acl
