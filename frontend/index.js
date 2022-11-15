@@ -46,7 +46,9 @@ var map = new Map({
   view: new View({
     center: [url.searchParams.get('cx') ? parseFloat(url.searchParams.get('cx')) : 5625.500000, url.searchParams.get('cy') ? parseFloat(url.searchParams.get('cy')) : -6216.000000],
     resolution: url.searchParams.get('r') ? parseFloat(url.searchParams.get('r')) : 10.000000,
-    resolutions: [64,32,16,8,4,2,1],
+    //resolutions: [64,32,16,8,4,2,1],
+    minResolution: 0.5,
+    maxResolution: 16,
   })
 });
 
