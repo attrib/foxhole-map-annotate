@@ -12,7 +12,7 @@ class Field extends AIconTool {
       zIndex: 25,
       iconSelect: true,
       iconDefault: 'scrap_field',
-      maxResolution: 5,
+      maxResolution: 4,
     });
   }
 }

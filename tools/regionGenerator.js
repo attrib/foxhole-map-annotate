@@ -1,6 +1,7 @@
 const region = require('./deadland.json');
 const fs = require('fs');
 const http = require("https");
+const warapi = require("../lib/warapi")
 
 const coordsDeadland = region.features[0].geometry.coordinates[0]
 
@@ -77,7 +78,7 @@ console.log('extend', extend)
 
 const promises = []
 for (const reg of region.features) {
-    promises.push(fetchHex(reg.id).then((data) => {
+    promises.push(warapi.staticMap(reg.id).then((data) => {
         for (const item of data.mapTextItems) {
             region.features.push({
                 type: "Feature",
@@ -170,40 +171,4 @@ function rightUp(coords) {
     lastCoords[4][0] = lastCoords[0][0]
     lastCoords[2][0] = lastCoords[1][0] - diffX2
     return lastCoords;
-}
-
-function fetchHex(hexId) {
-    return new Promise((resolve, reject) => {
-        const errorCallback = (error) => {
-            reject(error)
-        }
-        /**
-         * @param {Response} response
-         */
-        const callback = (response) => {
-            let str = '';
-
-            //another chunk of data has been received, so append it to `str`
-            response.on('data', (chunk) => {
-                str += chunk;
-            });
-
-            //the whole response has been received, so we just print it out here
-            response.on('end', () => {
-                resolve(JSON.parse(str));
-            });
-
-            response.on('error', errorCallback)
-        }
-
-        const req = http.request({
-            host: 'war-service-live.foxholeservices.com',
-            headers: {
-                authorization: 'Bearer ' + this.token,
-                'Content-Type': 'application/json',
-            },
-            path: '/api/worldconquest/maps/' + hexId + '/static'
-        }, callback).end();
-        req.on('error', errorCallback)
-    })
 }

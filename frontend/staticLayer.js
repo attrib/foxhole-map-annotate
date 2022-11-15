@@ -79,7 +79,6 @@ class StaticLayers {
       if (xhr.status == 200) {
         const features = geoJson.readFeatures(xhr.responseText);
         features.forEach((feature) => {
-          console.log(feature.get('type'))
           switch (feature.get('type')) {
             case 'Region':
               this.regionCollection.push(feature)
