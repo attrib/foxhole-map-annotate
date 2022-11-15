@@ -223,6 +223,7 @@ socket.on('icons', (features) => {
   const col = geoJson.readFeatures(features)
   tools.information.clearFeatures()
   tools.sign.clearFeatures()
+  tools.base.clearFeatures()
   tools.field.clearFeatures()
   tools.facility.clearFeatures()
   tools.facilityPrivate.clearFeatures()
@@ -235,6 +236,9 @@ socket.on('icons', (features) => {
         break;
       case 'sign':
         tools.sign.addFeature(feature)
+        break;
+      case 'base':
+        tools.base.addFeature(feature)
         break;
       case 'field':
         tools.field.addFeature(feature)

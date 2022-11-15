@@ -10,6 +10,7 @@ const Field = require("./tools/field");
 const FacilitiesPrivate = require("./tools/facilitiesPrivate");
 const FacilitiesEnemy = require("./tools/facilitiesEnemy");
 const FacilitiesCustom = require("./tools/facilitiesCustom");
+const Base = require("./tools/base");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -41,6 +42,7 @@ class EditTools {
         this.edit = new Edit(this, map)
         this.information = new Information(this, map)
         this.sign = new Signs(this, map)
+        this.base = new Base(this, map)
         this.field = new Field(this, map)
         this.facility = new Facilities(this, map)
         this.facilityPrivate = new FacilitiesPrivate(this, map)
@@ -59,6 +61,7 @@ class EditTools {
         }
         if (acl === ACL_FULL) {
             this.map.addControl(this.sign.control)
+            this.map.addControl(this.base.control)
             this.map.addControl(this.field.control)
             this.map.addControl(this.facility.control)
             this.map.addControl(this.facilityPrivate.control)

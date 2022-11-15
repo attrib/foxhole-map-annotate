@@ -90,6 +90,10 @@
                         <option value="warning" selected>Warning</option>
                         <option value="caution">Caution</option>
                         <option value="danger">Danger</option>
+                        <option value="friendly_bridge_destroyed">Bridge Destroyed</option>
+                        <option value="friendly_freighter_blockade">Freighter Blockade</option>
+                        <option value="enemy_bridge_destroyed">Enemy Bridge Destroyed</option>
+                        <option value="enemy_freighter_blockade">Enemy Freighter Blockade</option>
                     </select>
                 </div>
             </div>
@@ -107,6 +111,36 @@
             </div>
         </div>
 
+        <div id="base-form" class="form bg-light text-bg-light container mb-2">
+            <div class="row mb-1 mt-2">
+                <label for="base-form-icon" class="col-sm-3 col-form-label">Icon</label>
+                <div class="col-sm-9">
+                    <select name="base" id="base-form-icon" class="form-control select2">
+                        <option value="base" selected>Base</option>
+                        <option value="base_frontline">Frontline Base</option>
+                        <option value="base_obs">Obs Base</option>
+                        <option value="base_sleep">Base Sleep</option>
+                        <option value="enemy_base">Enemy Base</option>
+                        <option value="enemy_base_frontline">Enemy Frontline Base</option>
+                        <option value="enemy_base_obs">Enemy Obs Base</option>
+                        <option value="enemy_base_sleep">Enemy Base Sleep</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <label for="base-form-notes" class="col-sm-3 col-form-label">Notes</label>
+                <div class="col-sm-9">
+                    <textarea id="base-form-notes" name="notes" class="notes form-control"></textarea>
+                </div>
+            </div>
+            <div class="row justify-content-between mb-2" id="base-form-buttons">
+                <div class="btn-group col-sm-12">
+                    <input id="base-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
+                    <input id="base-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+                </div>
+            </div>
+        </div>
+
         <div id="sign-form" class="form bg-light text-bg-light container mb-2">
             <div class="row mb-1 mt-2">
                 <label for="sign-form-icon" class="col-sm-3 col-form-label">Sign</label>
@@ -118,8 +152,8 @@
                         <option value="keep_right">Keep Right</option>
                         <option value="level_crossing">Level Crossing</option>
                         <option value="maintenance">Maintenance</option>
-                        <option value="motorway">Motorway</option>
-                        <option value="motorway_end">Motorway End</option>
+{#                        <option value="motorway">Motorway</option>#}
+{#                        <option value="motorway_end">Motorway End</option>#}
                         <option value="no_entry_sign">No Entry</option>
                         <option value="no_stopping">No Stopping</option>
                         <option value="no_waiting">No Waiting</option>
@@ -185,6 +219,7 @@
                         <option value="port" selected>Sea Port</option>
                         <option value="Rail_Yard">Rail Yard</option>
                         <option value="seaport_inland_port">Sea Port & Rail Yard</option>
+                        <option value="public_facility_generic">Generic Facility</option>
                         <option value="public_cmats">CMats</option>
                         <option value="public_pcmats">PC Mats</option>
                         <option value="public_scmats">Steel</option>
@@ -223,6 +258,7 @@
                 <label for="facility-private-form-icon" class="col-sm-3 col-form-label">Icon</label>
                 <div class="col-sm-9">
                     <select name="icon" id="facility-private-form-icon" class="form-control select2">
+                        <option value="private_facility_generic">Generic Facility</option>
                         <option value="private_cmats">CMats</option>
                         <option value="private_pcmats">PC Mats</option>
                         <option value="private_scmats">Steel</option>
@@ -261,6 +297,7 @@
                 <label for="facility-enemy-form-icon" class="col-sm-3 col-form-label">Icon</label>
                 <div class="col-sm-9">
                     <select name="icon" id="facility-enemy-form-icon" class="form-control select2">
+                        <option value="enemy_facility_generic">Enemy Generic Facility</option>
                         <option value="enemy_cmats">CMats</option>
                         <option value="enemy_pcmats">PC Mats</option>
                         <option value="enemy_scmats">Steel</option>

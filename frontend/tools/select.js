@@ -189,6 +189,9 @@ class Select {
         case 'sign':
           return [...circleStyle, this.tools.sign._style(feature, zoom)]
 
+        case 'base':
+          return [...circleStyle, this.tools.base._style(feature, zoom)]
+
         case 'field':
           return [...circleStyle, this.tools.field._style(feature, zoom)]
 
