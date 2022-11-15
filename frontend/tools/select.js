@@ -27,7 +27,7 @@ class Select {
       },
       style: this.selectStyle(),
       filter: (feature) => {
-        return !(feature.get('type') && feature.get('type') === 'region');
+        return !(feature.get('type') && ['Region', 'Major', 'Minor'].includes(feature.get('type')));
       }
     })
 

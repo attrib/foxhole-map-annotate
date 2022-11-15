@@ -7,6 +7,7 @@ import {GeoJSON} from "ol/format";
 import {Style, Stroke, Fill, Text} from "ol/style";
 import {addDefaultMapControls} from "./mapControls"
 import Socket from "./webSocket";
+import StaticLayers from "./staticLayer";
 const EditTools = require("./mapEditTools")
 
 const url = new URL(window.location);
@@ -80,60 +81,7 @@ const clanGroup = new Group({
 map.addLayer(clanGroup);
 const socket = new Socket();
 
-const regionLine = new VectorSource({
-  format: geoJson,
-  loader: function(extent, resolution, projection, success, failure) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/regions.json');
-    const onError = function() {
-      regionLine.removeLoadedExtent(extent);
-      failure();
-    }
-    xhr.onerror = onError;
-    xhr.onload = function() {
-      if (xhr.status == 200) {
-        const features = regionLine.getFormat().readFeatures(xhr.responseText);
-        regionLine.addFeatures(features);
-        success(features);
-      } else {
-        onError();
-      }
-    }
-    xhr.send();
-  },
-});
-
-const regionStyle = new Style({
-  // stroke: new Stroke({
-  //   color: 'rgba(0,0,0,0.8)',
-  //   width: 2,
-  // }),
-  // fill: new Fill({
-  //   color: 'rgba(85,85,85,0.1)',
-  // }),
-  text: new Text({
-    font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-    text: '',
-    overflow: true,
-    fill: new Fill({
-      color: '#000',
-    })
-  })
-})
-
-
-const regionLayer = new Vector({
-  source: regionLine,
-  title: 'Regions',
-  zIndex: 0,
-  minResolution: 4,
-  style: (feature) => {
-    regionStyle.getText().setText(feature.get('notes'))
-    return regionStyle
-  }
-});
-
-map.addLayer(regionLayer)
+new StaticLayers(map)
 
 let lastVersion = null
 socket.on('init', (data) => {

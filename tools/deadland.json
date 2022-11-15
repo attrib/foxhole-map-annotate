@@ -2,7 +2,7 @@
   "type": "FeatureCollection",
   "features": [
     {
-      "id": "DeadlandsHex",
+      "id": "DeadLandsHex",
       "type": "Feature",
       "geometry": {
         "type": "Polygon",
@@ -36,9 +36,9 @@
         ]
       },
       "properties": {
-        "type": "region",
+        "type": "Region",
         "notes": "Deadlands",
-        "id": "3"
+        "id": "DeadLandsHex"
       }
     }
   ]
