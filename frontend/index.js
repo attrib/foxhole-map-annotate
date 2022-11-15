@@ -104,16 +104,17 @@ const regionLine = new VectorSource({
 });
 
 const regionStyle = new Style({
-  stroke: new Stroke({
-    color: 'rgba(0,0,0,0.8)',
-    width: 2,
-  }),
-  fill: new Fill({
-    color: 'rgba(85,85,85,0.1)',
-  }),
+  // stroke: new Stroke({
+  //   color: 'rgba(0,0,0,0.8)',
+  //   width: 2,
+  // }),
+  // fill: new Fill({
+  //   color: 'rgba(85,85,85,0.1)',
+  // }),
   text: new Text({
     font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
     text: '',
+    overflow: true,
     fill: new Fill({
       color: '#000',
     })
@@ -124,7 +125,8 @@ const regionStyle = new Style({
 const regionLayer = new Vector({
   source: regionLine,
   title: 'Regions',
-  zIndex: 50,
+  zIndex: 0,
+  minResolution: 4,
   style: (feature) => {
     regionStyle.getText().setText(feature.get('notes'))
     return regionStyle

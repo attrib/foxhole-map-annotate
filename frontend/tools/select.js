@@ -25,7 +25,10 @@ class Select {
         }
         return singleClick(event)
       },
-      style: this.selectStyle()
+      style: this.selectStyle(),
+      filter: (feature) => {
+        return !(feature.get('type') && feature.get('type') === 'region');
+      }
     })
 
     this.select.on('select', (event) => {

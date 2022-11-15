@@ -73,7 +73,7 @@ goDown(names, lastCoords)
 
 console.log('extend', diffX + 2*diffX2, diffY)
 
-fs.writeFile('../public/regions.json', JSON.stringify(region, null, 2), err => {
+fs.writeFile(__dirname + '/../public/regions.json', JSON.stringify(region, null, 2), err => {
     if (err) {
         console.error(err);
     }
