@@ -1,0 +1,45 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "id": "DeadlandsHex",
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              -5325
+            ],
+            [
+              6120,
+              -5325
+            ],
+            [
+              6630,
+              -6220
+            ],
+            [
+              6120,
+              -7105
+            ],
+            [
+              5095,
+              -7105
+            ],
+            [
+              4585,
+              -6220
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Deadlands",
+        "id": "3"
+      }
+    }
+  ]
+}

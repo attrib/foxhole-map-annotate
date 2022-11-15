@@ -1,0 +1,1597 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "id": "DeadlandsHex",
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              -5325
+            ],
+            [
+              6120,
+              -5325
+            ],
+            [
+              6630,
+              -6220
+            ],
+            [
+              6120,
+              -7105
+            ],
+            [
+              5095,
+              -7105
+            ],
+            [
+              4585,
+              -6220
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Deadlands",
+        "id": "3",
+        "box": [
+          4585,
+          -5325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              -3545
+            ],
+            [
+              6120,
+              -3545
+            ],
+            [
+              6630,
+              -4440
+            ],
+            [
+              6120,
+              -5325
+            ],
+            [
+              5095,
+              -5325
+            ],
+            [
+              4585,
+              -4440
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Callahans Passage",
+        "id": "",
+        "box": [
+          4585,
+          -3545
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              -1765
+            ],
+            [
+              6120,
+              -1765
+            ],
+            [
+              6630,
+              -2660
+            ],
+            [
+              6120,
+              -3545
+            ],
+            [
+              5095,
+              -3545
+            ],
+            [
+              4585,
+              -2660
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Reaching Trail",
+        "id": "",
+        "box": [
+          4585,
+          -1765
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              15
+            ],
+            [
+              6120,
+              15
+            ],
+            [
+              6630,
+              -880
+            ],
+            [
+              6120,
+              -1765
+            ],
+            [
+              5095,
+              -1765
+            ],
+            [
+              4585,
+              -880
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Basin Sionnach",
+        "id": "",
+        "box": [
+          4585,
+          15
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              -7105
+            ],
+            [
+              6120,
+              -7105
+            ],
+            [
+              6630,
+              -8000
+            ],
+            [
+              6120,
+              -8885
+            ],
+            [
+              5095,
+              -8885
+            ],
+            [
+              4585,
+              -8000
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Umbral Wildwood",
+        "id": "",
+        "box": [
+          4585,
+          -7105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              -8885
+            ],
+            [
+              6120,
+              -8885
+            ],
+            [
+              6630,
+              -9780
+            ],
+            [
+              6120,
+              -10665
+            ],
+            [
+              5095,
+              -10665
+            ],
+            [
+              4585,
+              -9780
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Great March",
+        "id": "",
+        "box": [
+          4585,
+          -8885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5095,
+              -10665
+            ],
+            [
+              6120,
+              -10665
+            ],
+            [
+              6630,
+              -11560
+            ],
+            [
+              6120,
+              -12445
+            ],
+            [
+              5095,
+              -12445
+            ],
+            [
+              4585,
+              -11560
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Kalokai",
+        "id": "",
+        "box": [
+          4585,
+          -10665
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3560,
+              -880
+            ],
+            [
+              4585,
+              -880
+            ],
+            [
+              5095,
+              -1765
+            ],
+            [
+              4585,
+              -2660
+            ],
+            [
+              3560,
+              -2660
+            ],
+            [
+              3050,
+              -1765
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Speaking Woods",
+        "id": "",
+        "box": [
+          3050,
+          -880
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3560,
+              -2660
+            ],
+            [
+              4585,
+              -2660
+            ],
+            [
+              5095,
+              -3545
+            ],
+            [
+              4585,
+              -4440
+            ],
+            [
+              3560,
+              -4440
+            ],
+            [
+              3050,
+              -3545
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "The Moors",
+        "id": "",
+        "box": [
+          3050,
+          -2660
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3560,
+              -4440
+            ],
+            [
+              4585,
+              -4440
+            ],
+            [
+              5095,
+              -5325
+            ],
+            [
+              4585,
+              -6220
+            ],
+            [
+              3560,
+              -6220
+            ],
+            [
+              3050,
+              -5325
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "The Linn of Mercy",
+        "id": "",
+        "box": [
+          3050,
+          -4440
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3560,
+              -6220
+            ],
+            [
+              4585,
+              -6220
+            ],
+            [
+              5095,
+              -7105
+            ],
+            [
+              4585,
+              -8000
+            ],
+            [
+              3560,
+              -8000
+            ],
+            [
+              3050,
+              -7105
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Loch Mor",
+        "id": "",
+        "box": [
+          3050,
+          -6220
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3560,
+              -8000
+            ],
+            [
+              4585,
+              -8000
+            ],
+            [
+              5095,
+              -8885
+            ],
+            [
+              4585,
+              -9780
+            ],
+            [
+              3560,
+              -9780
+            ],
+            [
+              3050,
+              -8885
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "The Heartlands",
+        "id": "",
+        "box": [
+          3050,
+          -8000
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3560,
+              -9780
+            ],
+            [
+              4585,
+              -9780
+            ],
+            [
+              5095,
+              -10665
+            ],
+            [
+              4585,
+              -11560
+            ],
+            [
+              3560,
+              -11560
+            ],
+            [
+              3050,
+              -10665
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Red River",
+        "id": "",
+        "box": [
+          3050,
+          -9780
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2025,
+              -1765
+            ],
+            [
+              3050,
+              -1765
+            ],
+            [
+              3560,
+              -2660
+            ],
+            [
+              3050,
+              -3545
+            ],
+            [
+              2025,
+              -3545
+            ],
+            [
+              1515,
+              -2660
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Callums Cape",
+        "id": "",
+        "box": [
+          1515,
+          -1765
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2025,
+              -3545
+            ],
+            [
+              3050,
+              -3545
+            ],
+            [
+              3560,
+              -4440
+            ],
+            [
+              3050,
+              -5325
+            ],
+            [
+              2025,
+              -5325
+            ],
+            [
+              1515,
+              -4440
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Stonecradle",
+        "id": "",
+        "box": [
+          1515,
+          -3545
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2025,
+              -5325
+            ],
+            [
+              3050,
+              -5325
+            ],
+            [
+              3560,
+              -6220
+            ],
+            [
+              3050,
+              -7105
+            ],
+            [
+              2025,
+              -7105
+            ],
+            [
+              1515,
+              -6220
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Farranac Coast",
+        "id": "",
+        "box": [
+          1515,
+          -5325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2025,
+              -7105
+            ],
+            [
+              3050,
+              -7105
+            ],
+            [
+              3560,
+              -8000
+            ],
+            [
+              3050,
+              -8885
+            ],
+            [
+              2025,
+              -8885
+            ],
+            [
+              1515,
+              -8000
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Westgate",
+        "id": "",
+        "box": [
+          1515,
+          -7105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2025,
+              -8885
+            ],
+            [
+              3050,
+              -8885
+            ],
+            [
+              3560,
+              -9780
+            ],
+            [
+              3050,
+              -10665
+            ],
+            [
+              2025,
+              -10665
+            ],
+            [
+              1515,
+              -9780
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Ash Fields",
+        "id": "",
+        "box": [
+          1515,
+          -8885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              490,
+              -2660
+            ],
+            [
+              1515,
+              -2660
+            ],
+            [
+              2025,
+              -3545
+            ],
+            [
+              1515,
+              -4440
+            ],
+            [
+              490,
+              -4440
+            ],
+            [
+              -20,
+              -3545
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Nevish Line",
+        "id": "",
+        "box": [
+          -20,
+          -2660
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              490,
+              -4440
+            ],
+            [
+              1515,
+              -4440
+            ],
+            [
+              2025,
+              -5325
+            ],
+            [
+              1515,
+              -6220
+            ],
+            [
+              490,
+              -6220
+            ],
+            [
+              -20,
+              -5325
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "The Oarbreaker Isles",
+        "id": "",
+        "box": [
+          -20,
+          -4440
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              490,
+              -6220
+            ],
+            [
+              1515,
+              -6220
+            ],
+            [
+              2025,
+              -7105
+            ],
+            [
+              1515,
+              -8000
+            ],
+            [
+              490,
+              -8000
+            ],
+            [
+              -20,
+              -7105
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Fishermans Row",
+        "id": "",
+        "box": [
+          -20,
+          -6220
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              490,
+              -8000
+            ],
+            [
+              1515,
+              -8000
+            ],
+            [
+              2025,
+              -8885
+            ],
+            [
+              1515,
+              -9780
+            ],
+            [
+              490,
+              -9780
+            ],
+            [
+              -20,
+              -8885
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Origin",
+        "id": "",
+        "box": [
+          -20,
+          -8000
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6630,
+              -880
+            ],
+            [
+              7655,
+              -880
+            ],
+            [
+              8165,
+              -1765
+            ],
+            [
+              7655,
+              -2660
+            ],
+            [
+              6630,
+              -2660
+            ],
+            [
+              6120,
+              -1765
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Howl Country",
+        "id": "",
+        "box": [
+          6120,
+          -880
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6630,
+              -2660
+            ],
+            [
+              7655,
+              -2660
+            ],
+            [
+              8165,
+              -3545
+            ],
+            [
+              7655,
+              -4440
+            ],
+            [
+              6630,
+              -4440
+            ],
+            [
+              6120,
+              -3545
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Viper Pit",
+        "id": "",
+        "box": [
+          6120,
+          -2660
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6630,
+              -4440
+            ],
+            [
+              7655,
+              -4440
+            ],
+            [
+              8165,
+              -5325
+            ],
+            [
+              7655,
+              -6220
+            ],
+            [
+              6630,
+              -6220
+            ],
+            [
+              6120,
+              -5325
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Marban Hollow",
+        "id": "",
+        "box": [
+          6120,
+          -4440
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6630,
+              -6220
+            ],
+            [
+              7655,
+              -6220
+            ],
+            [
+              8165,
+              -7105
+            ],
+            [
+              7655,
+              -8000
+            ],
+            [
+              6630,
+              -8000
+            ],
+            [
+              6120,
+              -7105
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "The Drowned Vale",
+        "id": "",
+        "box": [
+          6120,
+          -6220
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6630,
+              -8000
+            ],
+            [
+              7655,
+              -8000
+            ],
+            [
+              8165,
+              -8885
+            ],
+            [
+              7655,
+              -9780
+            ],
+            [
+              6630,
+              -9780
+            ],
+            [
+              6120,
+              -8885
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Shackled Chasm",
+        "id": "",
+        "box": [
+          6120,
+          -8000
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6630,
+              -9780
+            ],
+            [
+              7655,
+              -9780
+            ],
+            [
+              8165,
+              -10665
+            ],
+            [
+              7655,
+              -11560
+            ],
+            [
+              6630,
+              -11560
+            ],
+            [
+              6120,
+              -10665
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Arcithia",
+        "id": "",
+        "box": [
+          6120,
+          -9780
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8165,
+              -1765
+            ],
+            [
+              9190,
+              -1765
+            ],
+            [
+              9700,
+              -2660
+            ],
+            [
+              9190,
+              -3545
+            ],
+            [
+              8165,
+              -3545
+            ],
+            [
+              7655,
+              -2660
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Clanshead Valley",
+        "id": "",
+        "box": [
+          7655,
+          -1765
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8165,
+              -3545
+            ],
+            [
+              9190,
+              -3545
+            ],
+            [
+              9700,
+              -4440
+            ],
+            [
+              9190,
+              -5325
+            ],
+            [
+              8165,
+              -5325
+            ],
+            [
+              7655,
+              -4440
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Weathered Expanse",
+        "id": "",
+        "box": [
+          7655,
+          -3545
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8165,
+              -5325
+            ],
+            [
+              9190,
+              -5325
+            ],
+            [
+              9700,
+              -6220
+            ],
+            [
+              9190,
+              -7105
+            ],
+            [
+              8165,
+              -7105
+            ],
+            [
+              7655,
+              -6220
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Endless Shore",
+        "id": "",
+        "box": [
+          7655,
+          -5325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8165,
+              -7105
+            ],
+            [
+              9190,
+              -7105
+            ],
+            [
+              9700,
+              -8000
+            ],
+            [
+              9190,
+              -8885
+            ],
+            [
+              8165,
+              -8885
+            ],
+            [
+              7655,
+              -8000
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Allods Bright",
+        "id": "",
+        "box": [
+          7655,
+          -7105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8165,
+              -8885
+            ],
+            [
+              9190,
+              -8885
+            ],
+            [
+              9700,
+              -9780
+            ],
+            [
+              9190,
+              -10665
+            ],
+            [
+              8165,
+              -10665
+            ],
+            [
+              7655,
+              -9780
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Terminus",
+        "id": "",
+        "box": [
+          7655,
+          -8885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              9700,
+              -2660
+            ],
+            [
+              10725,
+              -2660
+            ],
+            [
+              11235,
+              -3545
+            ],
+            [
+              10725,
+              -4440
+            ],
+            [
+              9700,
+              -4440
+            ],
+            [
+              9190,
+              -3545
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Morgans Crossing",
+        "id": "",
+        "box": [
+          9190,
+          -2660
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              9700,
+              -4440
+            ],
+            [
+              10725,
+              -4440
+            ],
+            [
+              11235,
+              -5325
+            ],
+            [
+              10725,
+              -6220
+            ],
+            [
+              9700,
+              -6220
+            ],
+            [
+              9190,
+              -5325
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Godscraft",
+        "id": "",
+        "box": [
+          9190,
+          -4440
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              9700,
+              -6220
+            ],
+            [
+              10725,
+              -6220
+            ],
+            [
+              11235,
+              -7105
+            ],
+            [
+              10725,
+              -8000
+            ],
+            [
+              9700,
+              -8000
+            ],
+            [
+              9190,
+              -7105
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "Tempest Island",
+        "id": "",
+        "box": [
+          9190,
+          -6220
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              9700,
+              -8000
+            ],
+            [
+              10725,
+              -8000
+            ],
+            [
+              11235,
+              -8885
+            ],
+            [
+              10725,
+              -9780
+            ],
+            [
+              9700,
+              -9780
+            ],
+            [
+              9190,
+              -8885
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "region",
+        "notes": "The Fingers",
+        "id": "",
+        "box": [
+          9190,
+          -8000
+        ]
+      }
+    }
+  ]
+}
