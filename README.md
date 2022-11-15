@@ -6,7 +6,8 @@ Annotate and draw on the foxhole map and share with your group.
 
 * Guide on how to use the map (partially done)
 
-* add resource fields (+ other stuff) from official warapi
+* show town hall?
+* show current war number / shard
 
 * Partisan Rail (new Role, Green Rail)
 
