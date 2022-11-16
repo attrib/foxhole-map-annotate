@@ -1,5 +1,5 @@
 import {Vector as VectorSource} from "ol/source";
-import {Fill, Style, Text} from "ol/style";
+import {Fill, Stroke, Style, Text} from "ol/style";
 import {Group, Vector} from "ol/layer";
 import {GeoJSON} from "ol/format";
 import {Collection} from "ol";
@@ -15,23 +15,29 @@ class StaticLayers {
     this.majorCollection = new Collection()
     this.minorCollection = new Collection()
 
-    const regionStyle = new Style({
-      // stroke: new Stroke({
-      //   color: 'rgba(0,0,0,0.8)',
-      //   width: 2,
-      // }),
-      // fill: new Fill({
-      //   color: 'rgba(85,85,85,0.1)',
-      // }),
+    this.regionStyle = [
+      new Style({
+      text: new Text({
+        font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        text: '',
+        overflow: true,
+        fill: new Fill({
+          color: 'rgba(255,255,255,.8)',
+        }),
+        offsetX: 1,
+        offsetY: 1,
+      })
+    }), new Style({
       text: new Text({
         font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         text: '',
         overflow: true,
         fill: new Fill({
           color: '#000',
-        })
+        }),
       })
     })
+    ]
 
     regionGroup.getLayers().push(new Vector({
       source: new VectorSource({
@@ -39,10 +45,7 @@ class StaticLayers {
       }),
       zIndex: 0,
       minResolution: 4,
-      style: (feature) => {
-        regionStyle.getText().setText(feature.get('notes'))
-        return regionStyle
-      }
+      style: this.style
     }))
     regionGroup.getLayers().push(new Vector({
       source: new VectorSource({
@@ -50,10 +53,7 @@ class StaticLayers {
       }),
       zIndex: 0,
       maxResolution: 4,
-      style: (feature) => {
-        regionStyle.getText().setText(feature.get('notes'))
-        return regionStyle
-      }
+      style: this.style
     }))
     regionGroup.getLayers().push(new Vector({
       source: new VectorSource({
@@ -61,14 +61,17 @@ class StaticLayers {
       }),
       zIndex: 0,
       maxResolution: 1.5,
-      style: (feature) => {
-        regionStyle.getText().setText(feature.get('notes'))
-        return regionStyle
-      }
+      style: this.style
     }))
     map.addLayer(regionGroup)
 
     this.loadRegion()
+  }
+
+  style = (feature) => {
+    this.regionStyle[0].getText().setText(feature.get('notes'))
+    this.regionStyle[1].getText().setText(feature.get('notes'))
+    return this.regionStyle
   }
 
   loadRegion = () => {
