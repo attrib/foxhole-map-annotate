@@ -11,6 +11,8 @@ var indexRouter = require('./routes/index');
 const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const fs = require("fs");
 
+const wardata = fs.existsSync('./data/wardata.json') ? require('./data/wardata.json') : {shard: 'Abel', warNumber: 1};
+
 
 var app = express();
 
@@ -68,6 +70,8 @@ app.use((req, res, next) => {
   res.locals.path = req.path;
   res.locals.origin = process.env.ORIGIN
   res.locals.cacheBuster = process.env.COMMIT_HASH
+  res.locals.shard = wardata.shard
+  res.locals.war = wardata.warNumber
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
     res.locals.acl = req.session.acl

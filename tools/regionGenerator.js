@@ -1,6 +1,5 @@
 const region = require('./deadland.json');
 const fs = require('fs');
-const http = require("https");
 const warapi = require("../lib/warapi")
 
 const coordsDeadland = region.features[0].geometry.coordinates[0]
@@ -93,7 +92,35 @@ for (const reg of region.features) {
             })
         }
     }))
+    promises.push(warapi.dynamicMap(reg.id).then((data) => {
+        for (const item of data.mapItems) {
+            if (item.iconType in warapi.iconTypes) {
+                region.features.push({
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [reg.properties.box[0] - item.x * extend[0], reg.properties.box[1] - item.y * extend[1]]
+                    },
+                    properties: {
+                        type: warapi.iconTypes[item.iconType].type,
+                        icon: warapi.iconTypes[item.iconType].icon,
+                        notes: warapi.iconTypes[item.iconType].notes,
+                        team: 'none',
+                    }
+                })
+            }
+        }
+    }))
 }
+
+promises.push(warapi.war().then((data) => {
+    data.shard = 'Able'
+    fs.writeFile(__dirname + '/../data/wardata.json', JSON.stringify(data, null, 2), err => {
+        if (err) {
+            console.error(err);
+        }
+    });
+}))
 
 Promise.all(promises).then(() => {
     fs.writeFile(__dirname + '/../public/regions.json', JSON.stringify(region), err => {
