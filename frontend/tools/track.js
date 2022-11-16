@@ -133,7 +133,12 @@ class Track extends ADrawTool {
    * @returns {*}
    */
   geometryFunction = (feature) => {
-    const geometry = new LineString(feature.getGeometry().getCoordinates());
+    const coordinates = feature.getGeometry().getCoordinates()
+    // Skip if not enough points
+    if (coordinates.length < 2) {
+      return feature.getGeometry()
+    }
+    const geometry = new LineString(coordinates);
 
     const line = {
       "type": "Feature",
@@ -141,7 +146,7 @@ class Track extends ADrawTool {
       },
       "geometry": {
         "type": "LineString",
-        "coordinates": feature.getGeometry().getCoordinates()
+        "coordinates": coordinates
       }
     };
     const curved = bezier(line);
@@ -182,6 +187,7 @@ class Track extends ADrawTool {
       features: null,
       stopClick: true,
       style: this.style(),
+      minPoints: 2,
       condition: (event) => {
         if (event.type === 'pointerdown') {
           // Right click remove last point
