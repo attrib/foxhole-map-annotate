@@ -15,6 +15,22 @@ class FacilitiesCustom extends AIconTool {
       zIndex: 5,
       drawType: 'Polygon',
     });
+    this.polygonStyle = new Style({
+      stroke: new Stroke({
+        color: 'rgba(85,85,85,0.52)',
+        width: 2,
+      }),
+      fill: new Fill({
+        color: 'rgba(85,85,85,0.52)',
+      }),
+      text: new Text({
+        font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        text: '',
+        fill: new Fill({
+          color: '#FFFFFF',
+        })
+      })
+    })
   }
 
   editingStyles = createEditingStyle();
@@ -22,28 +38,13 @@ class FacilitiesCustom extends AIconTool {
   /**
    *
    * @param {import("ol").Feature} feature
-   * @param zoom
    * @returns {Style}
    */
-  style = (feature, zoom) => {
+  style = (feature) => {
     if (feature.getGeometry().getType() === 'Polygon') {
       const notes = feature.get('notes') === undefined ? this.notesInput.value : feature.get('notes')
-      return new Style({
-        stroke: new Stroke({
-          color: 'rgba(85,85,85,0.52)',
-          width: 2,
-        }),
-        fill: new Fill({
-          color: 'rgba(85,85,85,0.52)',
-        }),
-        text: new Text({
-          font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-          text: notes,
-          fill: new Fill({
-            color: '#FFFFFF',
-          })
-        })
-      })
+      this.polygonStyle.getText().setText(notes)
+      return this.polygonStyle
     }
     else {
       return this.editingStyles[feature.getGeometry().getType()]

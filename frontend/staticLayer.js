@@ -19,26 +19,26 @@ class StaticLayers {
 
     this.labelStyle = [
       new Style({
-      text: new Text({
-        font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-        text: '',
-        overflow: true,
-        fill: new Fill({
-          color: 'rgba(255,255,255,.8)',
-        }),
-        offsetX: 1,
-        offsetY: 1,
+        text: new Text({
+          font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+          text: '',
+          overflow: true,
+          fill: new Fill({
+            color: 'rgba(255,255,255,.8)',
+          }),
+          offsetX: 1,
+          offsetY: 1,
+        })
+      }), new Style({
+        text: new Text({
+          font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+          text: '',
+          overflow: true,
+          fill: new Fill({
+            color: '#000',
+          }),
+        })
       })
-    }), new Style({
-      text: new Text({
-        font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-        text: '',
-        overflow: true,
-        fill: new Fill({
-          color: '#000',
-        }),
-      })
-    })
     ]
 
     regionGroup.getLayers().push(new Vector({
@@ -85,6 +85,7 @@ class StaticLayers {
       style: this.iconStyle
     }))
 
+    this.cachedIconStyle = {}
     this.loadRegion()
   }
 
@@ -95,12 +96,15 @@ class StaticLayers {
   }
 
   iconStyle = (feature) => {
-    return new Style({
-      image: new Icon({
-        src: `/images/${feature.get('type')}/${feature.get('icon')}.png`
-      }),
-    })
-
+    const icon = feature.get('icon')
+    if (!(icon in this.cachedIconStyle)) {
+      this.cachedIconStyle[icon] = new Style({
+        image: new Icon({
+          src: `/images/${feature.get('type')}/${feature.get('icon')}.png`
+        }),
+      });
+    }
+    return this.cachedIconStyle[icon]
   }
 
   loadRegion = () => {
@@ -108,7 +112,7 @@ class StaticLayers {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', '/regions.json');
     xhr.onload = () => {
-      if (xhr.status == 200) {
+      if (xhr.status === 200) {
         const features = geoJson.readFeatures(xhr.responseText);
         features.forEach((feature) => {
           switch (feature.get('type')) {
@@ -122,7 +126,6 @@ class StaticLayers {
               this.minorCollection.push(feature)
               break;
             case 'town':
-              console.log(feature)
               this.townCollection.push(feature)
               break;
             case 'industry':

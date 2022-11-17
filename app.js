@@ -1,20 +1,20 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var grant = require('grant').express()
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const grant = require('grant').express()
 const nunjucks = require("nunjucks");
 
-var sessionParser = require('./lib/session');
-var indexRouter = require('./routes/index');
+const sessionParser = require('./lib/session');
+const indexRouter = require('./routes/index');
 const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const fs = require("fs");
 
 const wardata = fs.existsSync('./data/wardata.json') ? require('./data/wardata.json') : {shard: 'Abel', warNumber: 1};
 
 
-var app = express();
+const app = express();
 
 nunjucks.configure('views', {
   autoescape: true,
@@ -42,7 +42,10 @@ else {
 const date = new Date()
 const accessLogStream = fs.createWriteStream(path.join(__dirname, `logs/access-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}.log`), { flags: 'a' })
 app.use(logger('combined', {stream: accessLogStream}));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  immutable: true,
+  maxAge: 3600000, // cache one hour
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

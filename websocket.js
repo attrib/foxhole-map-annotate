@@ -58,7 +58,8 @@ wss.on('connection', function (ws, request) {
           if (acl !== ACL_FULL) {
             break;
           }
-          message.data.properties.id = uuid.v4()
+          message.data.id = uuid.v4()
+          message.data.properties.id = message.data.id
           message.data.properties.user = username
           message.data.properties.time = (new Date()).toISOString()
           tracks.features.push(message.data)
@@ -104,7 +105,8 @@ wss.on('connection', function (ws, request) {
           if (acl === ACL_ICONS_ONLY && feature.properties.type !== 'information') {
             break;
           }
-          feature.properties.id = uuid.v4()
+          feature.id = uuid.v4()
+          feature.properties.id = feature.id
           feature.properties.user = username
           feature.properties.time = (new Date()).toISOString()
           icons.features.push(feature)

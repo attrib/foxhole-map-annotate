@@ -27,8 +27,10 @@ for (const region of regions.features) {
   promises.push(warapi.dynamicMap(region.id).then((data) => {
     for (const item of data.mapItems) {
       if (item.iconType in warapi.iconTypes && warapi.iconTypes[item.iconType].type === 'field') {
+        const id = uuid.v4()
         icons.features.push({
           "type": "Feature",
+          "id": id,
           "geometry": {
             "type": "Point",
             "coordinates": [
@@ -40,7 +42,7 @@ for (const region of regions.features) {
             "type": warapi.iconTypes[item.iconType].type,
             "icon": warapi.iconTypes[item.iconType].icon,
             "notes": warapi.iconTypes[item.iconType].notes,
-            "id": uuid.v4(),
+            "id": id,
             "user": "World",
             "time": ""
           }

@@ -4,6 +4,8 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Todos
 
+* Add Discord Link to CTA / Mention Bug Channel on Help page
+
 * Guide on how to use the map (partially done)
 
 * Partisan Rail (new Role, Green Rail)
@@ -13,6 +15,7 @@ Annotate and draw on the foxhole map and share with your group.
 * Rework WebSockets to allow partial updates 
 * Add reload Map data/ACL route for super admin
 * investigate about rate limits for discord api
+* Admin Routes (new war start - reload icons/tracks - reload/edit allowed users)
 
 ## Run Dev
 

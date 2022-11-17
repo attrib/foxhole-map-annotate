@@ -4,7 +4,7 @@ import {defaults} from "ol/control";
 import {Group, Vector, Tile} from "ol/layer";
 import {TileImage, Vector as VectorSource} from "ol/source";
 import {GeoJSON} from "ol/format";
-import {Style, Stroke, Fill, Text} from "ol/style";
+import {Style, Stroke} from "ol/style";
 import {addDefaultMapControls} from "./mapControls"
 import Socket from "./webSocket";
 import StaticLayers from "./staticLayer";
@@ -23,6 +23,7 @@ var map = new Map({
         new Tile({
           title: 'Map',
           type: 'base',
+          preload: Infinity,
           // opacity: 0.7,
           source: new TileImage({
             attributions: '<a href="https://sentsu.itch.io/foxhole-better-map-mod" target="_blank">Sentsu</a> + <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
@@ -125,7 +126,7 @@ function createClanCollection(clan) {
   const vectorLine = new Vector({
     source: sourceLine,
     title: clan,
-    style: (feature, zoom) => {
+    style: (feature) => {
       return new Style({
         stroke: new Stroke({
           color: feature.get('color'),

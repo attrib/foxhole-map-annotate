@@ -130,60 +130,59 @@ class Select {
     const trackStyle = this.tools.track.style();
     const white = [255, 255, 255, 1];
     const blue = [0, 153, 255, 1];
-    return (feature, zoom) => {
-      const type = feature.get('type')
-      const circleStyle = [
-        new Style({
-          image: new Circle({
-            stroke: new Stroke({
-              width: 6,
-              color: white,
-            }),
-            radius: 18,
-          })
-        }),
-        new Style({
-          image: new Circle({
-            stroke: new Stroke({
-              width: 2,
-              color: blue,
-            }),
-            radius: 18,
-          })
-        })
-      ]
-      const lineStyle = [new Style({
-        stroke: new Stroke({
-          width: 6,
-          color: white,
+    const circleStyle = [
+      new Style({
+        image: new Circle({
+          stroke: new Stroke({
+            width: 6,
+            color: white,
+          }),
+          radius: 18,
         })
       }),
-        new Style({
+      new Style({
+        image: new Circle({
           stroke: new Stroke({
-            width: 3,
+            width: 2,
             color: blue,
-          })
-        })]
-      const lineType = feature.get('lineType') || 'single';
-      const trackStyleHighlight = [new Style({
+          }),
+          radius: 18,
+        })
+      })
+    ]
+    const lineStyle = [new Style({
+      stroke: new Stroke({
+        width: 6,
+        color: white,
+      })
+    }),
+      new Style({
         stroke: new Stroke({
-          width: 10,
-          color: white,
-          lineDash: this.tools.track.getDashedOption(feature)
+          width: 3,
+          color: blue,
+        })
+      })]
+    const trackStyleHighlight = [new Style({
+      stroke: new Stroke({
+        width: 10,
+        color: white,
+      }),
+      geometry: this.tools.track.geometryFunction
+    }),
+      new Style({
+        stroke: new Stroke({
+          width: 7,
+          color: blue,
         }),
         geometry: this.tools.track.geometryFunction
-      }),
-        new Style({
-          stroke: new Stroke({
-            width: 7,
-            color: blue,
-            lineDash: this.tools.track.getDashedOption(feature)
-          }),
-          geometry: this.tools.track.geometryFunction
-        })
-      ]
+      })
+    ]
+    return (feature, zoom) => {
+      const type = feature.get('type')
       switch (type) {
         case 'track':
+          trackStyleHighlight[0].getStroke().setLineDash(this.tools.track.getDashedOption(feature))
+          trackStyleHighlight[1].getStroke().setLineDash(this.tools.track.getDashedOption(feature))
           return [...trackStyleHighlight, trackStyle(feature, zoom)]
 
         case 'information':

@@ -79,10 +79,10 @@ class AIconTool extends ADrawTool {
     if (this.iconSelectEnabled) {
       this.iconSelect = new TomSelect(`#${this.toolName}-form-icon`, {
         render: {
-          option: (data, escape) => {
+          option: (data) => {
             return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
           },
-          item: (data, escape) => {
+          item: (data) => {
             return `<div><img src="${this.getImageUrl(data.value)}" alt="${data.text}"> ${data.text}</div>`;
           }
         }
@@ -94,6 +94,7 @@ class AIconTool extends ADrawTool {
       })
     }
     tools.iconTools.push(this.toolName)
+    this.iconStyleCache = {}
   }
 
   _style = (feature, zoom) => {
@@ -102,11 +103,7 @@ class AIconTool extends ADrawTool {
     }
     if (this.iconSelectEnabled) {
       const icon = feature.get('icon') || this.iconSelect.getValue();
-      return new Style({
-        image: new Icon({
-          src: this.getImageUrl(icon),
-        }),
-      })
+      return this.getIconStyleCached(icon)
     }
   }
 
@@ -203,7 +200,7 @@ class AIconTool extends ADrawTool {
     }
   }
 
-  _featureDeSelected = (feature) => {
+  _featureDeSelected = () => {
     this.editFeature = null
     this.formButtons.style.display = 'none'
     this.map.removeControl(this.formControl)
@@ -220,6 +217,17 @@ class AIconTool extends ADrawTool {
 
   getImageUrl = (name) => {
     return `/images/${this.toolName}/${name}.svg`;
+  }
+
+  getIconStyleCached = (icon) => {
+    if (!(icon in this.iconStyleCache)) {
+      this.iconStyleCache[icon] = new Style({
+        image: new Icon({
+          src: this.getImageUrl(icon),
+        }),
+      })
+    }
+    return this.iconStyleCache[icon]
   }
 
 }

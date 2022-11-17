@@ -1,6 +1,7 @@
 const region = require('./deadland.json');
 const fs = require('fs');
 const warapi = require("../lib/warapi")
+const uuid = require("uuid");
 
 const coordsDeadland = region.features[0].geometry.coordinates[0]
 
@@ -79,13 +80,16 @@ const promises = []
 for (const reg of region.features) {
     promises.push(warapi.staticMap(reg.id).then((data) => {
         for (const item of data.mapTextItems) {
+            const id = uuid.v4()
             region.features.push({
                 type: "Feature",
+                id: id,
                 geometry: {
                     type: "Point",
                     coordinates: [reg.properties.box[0] - item.x * extend[0], reg.properties.box[1] - item.y * extend[1]]
                 },
                 properties: {
+                    id: id,
                     type: item.mapMarkerType,
                     notes: item.text,
                 }
@@ -95,13 +99,16 @@ for (const reg of region.features) {
     promises.push(warapi.dynamicMap(reg.id).then((data) => {
         for (const item of data.mapItems) {
             if (item.iconType in warapi.iconTypes) {
+                const id = uuid.v4()
                 region.features.push({
+                    id: id,
                     type: "Feature",
                     geometry: {
                         type: "Point",
                         coordinates: [reg.properties.box[0] - item.x * extend[0], reg.properties.box[1] - item.y * extend[1]]
                     },
                     properties: {
+                        id: id,
                         type: warapi.iconTypes[item.iconType].type,
                         icon: warapi.iconTypes[item.iconType].icon,
                         notes: warapi.iconTypes[item.iconType].notes,
