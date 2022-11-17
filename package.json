@@ -1,21 +1,22 @@
 {
   "name": "foxhole-map-annotate",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "build": "webpack --config ./webpack.config.js"
+    "build": "webpack --config ./webpack.prod.js",
+    "build.dev": "webpack --config ./webpack.dev.js"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
+    "cookie-parser": "^1.4.4",
+    "debug": "^2.6.9",
     "dotenv": "^16.0.3",
-    "express": "~4.16.1",
+    "express": "^4.16.1",
     "express-session": "^1.17.3",
     "grant": "^5.4.21",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
+    "http-errors": "^1.6.3",
+    "morgan": "^1.9.1",
     "nunjucks": "^3.2.3",
     "session-file-store": "^1.5.0",
     "uuid": "^9.0.0",
@@ -29,12 +30,12 @@
     "bootstrap": "^5.2.2",
     "bootstrap-icons": "^1.9.1",
     "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^4.2.2",
     "mini-css-extract-plugin": "^2.6.1",
     "nodemon": "^2.0.20",
     "ol": "^7.1.0",
     "ol-ext": "^4.0.3",
     "ol-layerswitcher": "^4.1.0",
-    "ol-popup": "^5.0.0",
     "postcss-loader": "^7.0.1",
     "sass": "^1.56.0",
     "sass-loader": "^13.1.0",
@@ -43,6 +44,6 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-middleware": "^5.3.3",
-    "webpack-hot-middleware": "^2.25.2"
+    "webpack-merge": "^5.8.0"
   }
 }
