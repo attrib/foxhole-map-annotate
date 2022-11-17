@@ -43,7 +43,6 @@ const date = new Date()
 const accessLogStream = fs.createWriteStream(path.join(__dirname, `logs/access-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}.log`), { flags: 'a' })
 app.use(logger('combined', {stream: accessLogStream}));
 app.use(express.static(path.join(__dirname, 'public'), {
-  immutable: true,
   maxAge: 3600000, // cache one hour
 }));
 app.use(express.json());
