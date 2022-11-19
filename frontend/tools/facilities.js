@@ -9,7 +9,7 @@ class Facilities extends AIconTool {
   constructor(tools, map) {
     super(tools, map, 'facility', 'building', {
       title: 'Facilities',
-      zIndex: 20,
+      zIndex: 25,
       iconSelect: true,
       iconDefault: 'port',
       layerGroup: tools.facilitiesGroup,

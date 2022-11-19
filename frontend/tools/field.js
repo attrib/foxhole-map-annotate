@@ -15,7 +15,7 @@ class Field extends AIconTool {
     })
     super(tools, map, 'field', 'hammer', {
       title: 'Fields',
-      zIndex: 25,
+      zIndex: 20,
       iconSelect: true,
       iconDefault: 'scrap_field',
       maxResolution: 4,
