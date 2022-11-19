@@ -33,7 +33,8 @@ class AIconTool extends ADrawTool {
       title: options.title || this.toolName,
       style: this._style,
       zIndex: options.zIndex,
-      maxResolution: options.maxResolution || undefined
+      maxResolution: options.maxResolution || undefined,
+      searchable: 'searchable' in options ? options.searchable : true,
     });
     if (options.layerGroup) {
       options.layerGroup.getLayers().push(vector)

@@ -5,7 +5,6 @@ Annotate and draw on the foxhole map and share with your group.
 ## Ideas
 
 * Partisan Rails? (new Role, Green Rail)
-* [Search](https://viglino.github.io/ol-ext/examples/search/map.control.searchfeature.html)
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html)
 * Popup rework?
   * [Hover](https://viglino.github.io/ol-ext/examples/interaction/map.interaction.hover.html)

@@ -1,5 +1,6 @@
 const {MousePosition} = require("ol/control");
 const LayerSwitcher = require("ol-layerswitcher");
+const Search = require("./Search");
 
 const mousePositionControl = new MousePosition({
     className: 'custom-mouse-position',
@@ -19,6 +20,7 @@ const layerSwitcher = new LayerSwitcher({
 module.exports.addDefaultMapControls = function(map) {
     // map.addControl(mousePositionControl);
     map.addControl(layerSwitcher);
+    map.addControl(new Search.default());
 }
 
 module.exports.enableLayerMemory = function enableLayerMemory(map) {

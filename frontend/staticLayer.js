@@ -87,7 +87,8 @@ class StaticLayers {
       zIndex: 0,
       title: 'Towns/Relics',
       maxResolution: 5,
-      style: this.iconStyle
+      style: this.iconStyle,
+      searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
       source: new VectorSource({
@@ -96,7 +97,8 @@ class StaticLayers {
       title: 'Industry',
       zIndex: 1,
       maxResolution: 4,
-      style: this.iconStyle
+      style: this.iconStyle,
+      searchable: false,
     }))
     map.addLayer(staticGroup)
 

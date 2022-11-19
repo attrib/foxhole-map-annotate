@@ -1,6 +1,7 @@
 @import "~bootstrap/scss/bootstrap";
 @import "ol/ol.css";
 @import "ol-layerswitcher/src/ol-layerswitcher.css";
+@import "ol-ext/control/Search.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 @import "tom-select/src/scss/tom-select.bootstrap5.scss";
 
@@ -90,5 +91,12 @@ button.overlay-button {
 .layer-switcher  {
   li input, .group button {
     height: 1.5em;
+  }
+}
+
+.feature-search {
+  z-index: 10;
+  ul {
+    border-radius: 4px;
   }
 }

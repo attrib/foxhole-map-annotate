@@ -22,6 +22,9 @@ class Edit {
       element: this.controlElement
     })
     document.addEventListener('keydown', (event) => {
+      if (event.target.nodeName.toLowerCase() === 'input') {
+        return
+      }
       if (event.key === 'e') {
         if (!tools.editMode) {
           this.controlElement.classList.add('selected')

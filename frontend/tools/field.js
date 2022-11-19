@@ -20,6 +20,7 @@ class Field extends AIconTool {
       iconDefault: 'scrap_field',
       maxResolution: 4,
       layerGroup: regionGroup,
+      searchable: false,
     });
   }
 }
