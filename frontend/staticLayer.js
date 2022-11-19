@@ -27,6 +27,7 @@ class StaticLayers {
     this.minorCollection = new Collection()
     this.townCollection = new Collection()
     this.industryCollection = new Collection()
+    this.fieldCollection = new Collection()
 
     this.labelStyle = [
       new Style({
@@ -79,12 +80,22 @@ class StaticLayers {
       maxResolution: 1.5,
       style: this.regionStyle
     }))
+    regionGroup.getLayers().push(new Vector({
+      source: new VectorSource({
+        features: this.fieldCollection
+      }),
+      title: 'Fields',
+      zIndex: 1,
+      maxResolution: 4,
+      style: this.iconStyle,
+      searchable: false,
+    }))
     staticGroup.getLayers().push(regionGroup)
     staticGroup.getLayers().push(new Vector({
       source: new VectorSource({
         features: this.townCollection
       }),
-      zIndex: 0,
+      zIndex: 1,
       title: 'Towns/Relics',
       maxResolution: 5,
       style: this.iconStyle,
@@ -132,7 +143,7 @@ class StaticLayers {
       this.cachedIconStyle[cacheKey] = new Style({
         image: new Icon({
           src: `/images/${feature.get('type')}/${feature.get('icon')}${team}.png`,
-          scale: feature.get('type') === 'town' ? 2/3 : 1,
+          scale: (feature.get('type') === 'town' || feature.get('type') === 'field') ? 2/3 : 1,
         }),
       });
     }
@@ -224,6 +235,9 @@ class StaticLayers {
               break;
             case 'industry':
               this.industryCollection.push(feature)
+              break;
+            case 'field':
+              this.fieldCollection.push(feature)
               break;
           }
         })

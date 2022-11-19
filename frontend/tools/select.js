@@ -194,8 +194,8 @@ class Select {
         case 'base':
           return [...circleStyle, this.tools.base._style(feature, zoom)]
 
-        case 'field':
-          return [...circleStyle, this.tools.field._style(feature, zoom)]
+        // case 'field':
+        //   return [...circleStyle, this.tools.field._style(feature, zoom)]
 
         case 'facility':
           return [...circleStyle, this.tools.facility._style(feature, zoom)]

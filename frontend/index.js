@@ -178,7 +178,7 @@ socket.on('icons', (features) => {
   tools.information.clearFeatures()
   tools.sign.clearFeatures()
   tools.base.clearFeatures()
-  tools.field.clearFeatures()
+  //tools.field.clearFeatures()
   tools.facility.clearFeatures()
   tools.facilityPrivate.clearFeatures()
   tools.facilityEnemy.clearFeatures()
@@ -194,9 +194,9 @@ socket.on('icons', (features) => {
       case 'base':
         tools.base.addFeature(feature)
         break;
-      case 'field':
-        tools.field.addFeature(feature)
-        break;
+      // case 'field':
+      //   tools.field.addFeature(feature)
+      //   break;
       case 'facility':
         tools.facility.addFeature(feature)
         break;

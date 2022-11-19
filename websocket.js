@@ -127,6 +127,9 @@ wss.on('connection', function (ws, request) {
           if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
           }
+          if (message.data.properties.type === 'field') {
+            break;
+          }
           for (const existingIcon of icons.features) {
             if (message.data.properties.id === existingIcon.properties.id) {
               if (acl === ACL_ICONS_ONLY && existingIcon.properties.type !== 'information') {

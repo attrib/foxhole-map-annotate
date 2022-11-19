@@ -6,7 +6,6 @@ const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
 const Information = require("./tools/information");
 const Select = require("./tools/select");
 const TrackSplit = require("./tools/trackSplit");
-const Field = require("./tools/field");
 const FacilitiesPrivate = require("./tools/facilitiesPrivate");
 const FacilitiesEnemy = require("./tools/facilitiesEnemy");
 const FacilitiesCustom = require("./tools/facilitiesCustom");
@@ -56,7 +55,7 @@ class EditTools {
         this.facilityCustom = new FacilitiesCustom(this, map)
         this.track = new Track(this, map)
         this.trackSplit = new TrackSplit(this, map)
-        this.field = new Field(this, map)
+        //this.field = new Field(this, map)
         this.select = new Select(this, map)
     }
 
