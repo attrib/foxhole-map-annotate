@@ -27,7 +27,7 @@ class Select {
       },
       style: this.selectStyle(),
       filter: (feature) => {
-        return !(feature.get('type') && ['Region', 'Major', 'Minor', 'town', 'industry'].includes(feature.get('type')));
+        return !(feature.get('type') && ['Region', 'Major', 'Minor', 'town', 'industry', 'field'].includes(feature.get('type')));
       }
     })
 

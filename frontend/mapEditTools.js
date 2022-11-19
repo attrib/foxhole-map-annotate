@@ -50,13 +50,13 @@ class EditTools {
         this.information = new Information(this, map)
         this.sign = new Signs(this, map)
         this.base = new Base(this, map)
-        this.field = new Field(this, map)
         this.facility = new Facilities(this, map)
         this.facilityPrivate = new FacilitiesPrivate(this, map)
         this.facilityEnemy = new FacilitiesEnemy(this, map)
         this.facilityCustom = new FacilitiesCustom(this, map)
         this.track = new Track(this, map)
         this.trackSplit = new TrackSplit(this, map)
+        this.field = new Field(this, map)
         this.select = new Select(this, map)
     }
 
@@ -69,7 +69,7 @@ class EditTools {
         if (acl === ACL_FULL) {
             this.map.addControl(this.sign.control)
             this.map.addControl(this.base.control)
-            this.map.addControl(this.field.control)
+            //this.map.addControl(this.field.control) // Maybe later for a admin role
             this.map.addControl(this.facility.control)
             this.map.addControl(this.facilityPrivate.control)
             this.map.addControl(this.facilityEnemy.control)
