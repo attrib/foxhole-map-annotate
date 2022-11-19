@@ -112,7 +112,7 @@ for (const reg of region.features) {
                         type: warapi.iconTypes[item.iconType].type,
                         icon: warapi.iconTypes[item.iconType].icon,
                         notes: warapi.iconTypes[item.iconType].notes,
-                        team: 'none',
+                        team: '',
                     }
                 })
             }

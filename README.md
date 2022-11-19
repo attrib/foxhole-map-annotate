@@ -4,7 +4,7 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
-* Display faction of town halls/relics/obs
+* z-index for fields
 * Partisan Rails? (new Role, Green Rail)
 * [Search](https://viglino.github.io/ol-ext/examples/search/map.control.searchfeature.html)
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html)

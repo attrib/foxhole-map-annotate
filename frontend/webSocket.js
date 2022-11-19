@@ -11,7 +11,7 @@ class Socket {
     document.addEventListener('visibilitychange', (event) => {
       if (document.visibilityState === 'hidden') {
         if (this.disconnectTimer === null) {
-          this.disconnectTimer = setTimeout(this.disconnect, 30000)
+          this.disconnectTimer = setTimeout(this.disconnect, 1800000) // Disconnect after 30min idle
         }
       }
       else {

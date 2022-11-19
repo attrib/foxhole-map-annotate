@@ -6,6 +6,9 @@ const fs = require('fs');
 const uuid = require('uuid')
 const {ACL_FULL, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const {trackUpdater, iconUpdater} = require("./lib/updater");
+const {getConquerStatus, updateMap, getConquerStatusVersion} = require("./lib/conquerUpdater");
+
+setTimeout(conquerUpdater, 10000)
 
 let tracks = {}, icons = {};
 const trackFileName = './data/tracks.json';
@@ -54,6 +57,12 @@ wss.on('connection', function (ws, request) {
       message = JSON.parse(message);
       console.log('Received ' + message.type + ' by user ' + username + ' with ' + acl)
       switch (message.type) {
+        case 'init':
+          if (message.data.conquerStatus !== getConquerStatusVersion()) {
+            sendData(ws, 'conquer', getConquerStatus())
+          }
+          break;
+
         case 'trackAdd':
           if (acl !== ACL_FULL) {
             break;
@@ -228,6 +237,15 @@ function saveIcons() {
       console.error(err);
     }
   });
+}
+
+function conquerUpdater() {
+  updateMap().then((data) => {
+    if (data) {
+      sendDataToAll('conquer', data)
+    }
+  })
+  setTimeout(conquerUpdater, 60000)
 }
 
 module.exports = function (server) {

@@ -1,12 +1,18 @@
 import {Vector as VectorSource} from "ol/source";
-import {Fill, Icon, Style, Text} from "ol/style";
+import {Fill, Icon, Stroke, Style, Text} from "ol/style";
 import {Group, Vector} from "ol/layer";
 import {GeoJSON} from "ol/format";
 import {Collection} from "ol";
+import CircleStyle from "ol/style/Circle";
+import {easeOut} from "ol/easing";
+import {getVectorContext} from "ol/render";
+import {unByKey} from "ol/Observable";
 
 class StaticLayers {
 
-  constructor(map) {
+  constructor(map, conquerStatus) {
+    this.map = map
+    this.conquerStatus = conquerStatus
     const regionGroup = new Group({
       title: 'Labels',
       combine: true,
@@ -94,6 +100,15 @@ class StaticLayers {
     }))
     map.addLayer(staticGroup)
 
+    this.notificationLayer = new Vector({
+      zIndex: 100,
+      source: new VectorSource({
+        features: new Collection()
+      }),
+      style: this.iconStyle,
+    })
+    map.addLayer(this.notificationLayer)
+
     this.cachedIconStyle = {}
     this.loadRegion()
   }
@@ -106,14 +121,78 @@ class StaticLayers {
 
   iconStyle = (feature) => {
     const icon = feature.get('icon')
-    if (!(icon in this.cachedIconStyle)) {
-      this.cachedIconStyle[icon] = new Style({
+    let team = feature.get('team') || ''
+    if (team === 'none') {
+      team = ''
+    }
+    const cacheKey = `${icon}${team}`
+    if (!(cacheKey in this.cachedIconStyle)) {
+      this.cachedIconStyle[cacheKey] = new Style({
         image: new Icon({
-          src: `/images/${feature.get('type')}/${feature.get('icon')}.png`
+          src: `/images/${feature.get('type')}/${feature.get('icon')}${team}.png`,
+          scale: feature.get('type') === 'town' ? 2/3 : 1,
         }),
       });
     }
-    return this.cachedIconStyle[icon]
+    return this.cachedIconStyle[cacheKey]
+  }
+
+  conquerUpdate = (features, flash = true) => {
+    this.townCollection.forEach((feature) => {
+      if (feature.getId() in features) {
+        if (flash) {
+          this.flash(feature)
+        }
+        const data = features[feature.getId()]
+        feature.set('team', data.team)
+        feature.set('icon', data.icon)
+      }
+    })
+  }
+
+  flash = (feature) => {
+    feature = feature.clone()
+    const duration = 5000;
+    const start = Date.now()
+    const flashGeom = feature.getGeometry().clone();
+    const listenerKey = this.notificationLayer.on('postrender', animate);
+    const map = this.map
+    const flashStyle = new Style({
+      zIndex: 100,
+      image: new CircleStyle({
+        radius: 0,
+        stroke: new Stroke({
+          color: 'rgba(255, 0, 0, 1)',
+          width: 0.25,
+        }),
+      }),
+    })
+    const source = this.notificationLayer.getSource()
+    source.addFeature(feature)
+
+    function animate(event) {
+      const frameState = event.frameState;
+      const elapsed = frameState.time - start;
+      if (elapsed >= duration) {
+        unByKey(listenerKey);
+        source.removeFeature(feature)
+        return;
+      }
+      const vectorContext = getVectorContext(event);
+      const elapsedRatio = elapsed / duration;
+      // radius will be 5 at start and 30 at end.
+      const radius = easeOut(elapsedRatio) * 30 + 5;
+      const opacity = easeOut(1 - elapsedRatio);
+
+      flashStyle.getImage().setRadius(radius)
+      flashStyle.getImage().getStroke().setColor('rgba(255, 0, 0, ' + opacity + ')')
+      flashStyle.getImage().getStroke().setWidth(0.25 + opacity)
+
+      vectorContext.setStyle(flashStyle);
+      vectorContext.drawGeometry(flashGeom);
+      // tell OpenLayers to continue postrender animation
+      map.render();
+    }
   }
 
   loadRegion = () => {
@@ -135,6 +214,10 @@ class StaticLayers {
               this.minorCollection.push(feature)
               break;
             case 'town':
+              if (feature.get('id') in this.conquerStatus.features) {
+                feature.set('icon', this.conquerStatus.features[feature.get('id')].icon)
+                feature.set('team', this.conquerStatus.features[feature.get('id')].team)
+              }
               this.townCollection.push(feature)
               break;
             case 'industry':

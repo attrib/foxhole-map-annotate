@@ -68,7 +68,8 @@ document.getElementById('map').addEventListener('contextmenu', (e) => {
   return false;
 })
 
-new StaticLayers(map)
+const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {version: 0, features: {}}
+const staticLayer = new StaticLayers(map, conquerStatus)
 const clanGroup = new Group({
   title: 'Train Lines',
   fold: 'close',
@@ -227,9 +228,22 @@ socket.on('decayUpdated', (data) => {
   }
 })
 
+socket.on('conquer', (data) => {
+  if (conquerStatus.version === data.version) {
+    return
+  }
+  staticLayer.conquerUpdate(data.features, !data.full)
+  conquerStatus.version = data.version
+  conquerStatus.features = data.full ? data.features : {...conquerStatus.features, ...data.features}
+  localStorage.setItem('conquerStatus', JSON.stringify(conquerStatus))
+})
+
 const disconnectedWarning = document.getElementById('disconnected')
 socket.on('open', () => {
   disconnectedWarning.style.display = 'none'
+  socket.send('init', {
+    conquerStatus: conquerStatus.version,
+  })
 })
 socket.on('close', () => {
   disconnectedWarning.style.display = 'block'
