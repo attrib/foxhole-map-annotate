@@ -11,6 +11,7 @@ const FacilitiesPrivate = require("./tools/facilitiesPrivate");
 const FacilitiesEnemy = require("./tools/facilitiesEnemy");
 const FacilitiesCustom = require("./tools/facilitiesCustom");
 const Base = require("./tools/base");
+const {Group} = require("ol/layer");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -38,6 +39,12 @@ class EditTools {
      */
     constructor(map) {
         this.map = map
+
+        this.facilitiesGroup = new Group({
+            title: 'All Facilities',
+            fold: 'close',
+        })
+        this.map.addLayer(this.facilitiesGroup)
 
         this.edit = new Edit(this, map)
         this.information = new Information(this, map)

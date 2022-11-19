@@ -86,3 +86,9 @@ button.overlay-button {
   top: 10px;
   left: 5em;
 }
+
+.layer-switcher  {
+  li input, .group button {
+    height: 1.5em;
+  }
+}

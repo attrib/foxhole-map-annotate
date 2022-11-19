@@ -13,6 +13,7 @@ class FacilitiesPrivate extends AIconTool {
       left: '2em',
       iconSelect: true,
       iconDefault: 'private_cmats',
+      layerGroup: tools.facilitiesGroup,
     });
   }
 }

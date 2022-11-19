@@ -12,6 +12,7 @@ class Facilities extends AIconTool {
       zIndex: 20,
       iconSelect: true,
       iconDefault: 'port',
+      layerGroup: tools.facilitiesGroup,
     });
   }
 }

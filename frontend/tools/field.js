@@ -7,12 +7,19 @@ class Field extends AIconTool {
    * @param {import("ol").Map} map
    */
   constructor(tools, map) {
+    let regionGroup = null
+    map.getLayers().forEach((layer) => {
+      if (layer.get('title') === 'Region') {
+        regionGroup = layer
+      }
+    })
     super(tools, map, 'field', 'hammer', {
       title: 'Fields',
       zIndex: 25,
       iconSelect: true,
       iconDefault: 'scrap_field',
       maxResolution: 4,
+      layerGroup: regionGroup,
     });
   }
 }

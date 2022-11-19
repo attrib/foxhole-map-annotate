@@ -35,7 +35,12 @@ class AIconTool extends ADrawTool {
       zIndex: options.zIndex,
       maxResolution: options.maxResolution || undefined
     });
-    this.map.addLayer(vector);
+    if (options.layerGroup) {
+      options.layerGroup.getLayers().push(vector)
+    }
+    else {
+      this.map.addLayer(vector);
+    }
 
     this.form = document.getElementById(this.toolName + '-form');
     this.notesInput = document.getElementById(this.toolName + '-form-notes');

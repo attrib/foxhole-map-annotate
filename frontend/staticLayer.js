@@ -8,7 +8,12 @@ class StaticLayers {
 
   constructor(map) {
     const regionGroup = new Group({
-      title: 'Regions',
+      title: 'Labels',
+      combine: true,
+    })
+    const staticGroup = new Group({
+      title: 'Region',
+      fold: 'close',
     })
 
     this.regionCollection = new Collection()
@@ -42,6 +47,7 @@ class StaticLayers {
     ]
 
     regionGroup.getLayers().push(new Vector({
+      title: 'Regions',
       source: new VectorSource({
         features: this.regionCollection
       }),
@@ -50,6 +56,7 @@ class StaticLayers {
       style: this.regionStyle
     }))
     regionGroup.getLayers().push(new Vector({
+      title: 'Major Labels',
       source: new VectorSource({
         features: this.majorCollection
       }),
@@ -58,6 +65,7 @@ class StaticLayers {
       style: this.regionStyle
     }))
     regionGroup.getLayers().push(new Vector({
+      title: 'Minor Labels',
       source: new VectorSource({
         features: this.minorCollection
       }),
@@ -65,8 +73,8 @@ class StaticLayers {
       maxResolution: 1.5,
       style: this.regionStyle
     }))
-    map.addLayer(regionGroup)
-    map.addLayer(new Vector({
+    staticGroup.getLayers().push(regionGroup)
+    staticGroup.getLayers().push(new Vector({
       source: new VectorSource({
         features: this.townCollection
       }),
@@ -75,7 +83,7 @@ class StaticLayers {
       maxResolution: 5,
       style: this.iconStyle
     }))
-    map.addLayer(new Vector({
+    staticGroup.getLayers().push(new Vector({
       source: new VectorSource({
         features: this.industryCollection
       }),
@@ -84,6 +92,7 @@ class StaticLayers {
       maxResolution: 4,
       style: this.iconStyle
     }))
+    map.addLayer(staticGroup)
 
     this.cachedIconStyle = {}
     this.loadRegion()

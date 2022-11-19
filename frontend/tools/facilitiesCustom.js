@@ -14,6 +14,7 @@ class FacilitiesCustom extends AIconTool {
       left: '3.5em',
       zIndex: 5,
       drawType: 'Polygon',
+      layerGroup: tools.facilitiesGroup,
     });
     this.polygonStyle = new Style({
       stroke: new Stroke({

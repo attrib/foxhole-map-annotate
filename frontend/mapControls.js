@@ -12,13 +12,42 @@ const mousePositionControl = new MousePosition({
 });
 
 const layerSwitcher = new LayerSwitcher({
-    reverse: true,
+    reverse: false,
     groupSelectStyle: 'group'
 });
 
 module.exports.addDefaultMapControls = function(map) {
     // map.addControl(mousePositionControl);
     map.addControl(layerSwitcher);
+}
+
+module.exports.enableLayerMemory = function enableLayerMemory(map) {
+    // Load saved layer visibility state from localStorage.
+    LayerSwitcher.forEachRecursive(map, (layer) => {
+        const title = layer.get('title');
+        if (title) {
+            const itemName = `map.layers.${title}.visible`;
+            const savedValue = localStorage.getItem(itemName);
+            if (savedValue) {
+                const visible = (localStorage.getItem(itemName) === 'true');
+                layer.setVisible(visible);
+            }
+        }
+    });
+
+    // When layer visibility changes, save the layer's visibility state to
+    // localStorage.
+    LayerSwitcher.forEachRecursive(map, (layer) => {
+        layer.on('change:visible', (e) => {
+            const layer = e.target;
+            const title = layer.get('title');
+            if (title) {
+                const visible = layer.get('visible');
+                const itemName = `map.layers.${title}.visible`;
+                localStorage.setItem(itemName, visible);
+            }
+        });
+    });
 }
 
 let customControlTopPosition = 3.5;

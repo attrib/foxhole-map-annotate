@@ -4,11 +4,19 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
+* Display faction of town halls/relics/obs
 * Partisan Rails? (new Role, Green Rail)
+* [Search](https://viglino.github.io/ol-ext/examples/search/map.control.searchfeature.html)
+* [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html)
+* Popup rework?
+  * [Hover](https://viglino.github.io/ol-ext/examples/interaction/map.interaction.hover.html)
+  * [Popup](http://viglino.github.io/ol-ext/examples/popup/map.popup.html)
+  * [Animated Popup](http://viglino.github.io/ol-ext/examples/popup/map.popup.anim.html)
+  * [Popup Feature](https://viglino.github.io/ol-ext/examples/popup/map.popup.feature.html)
 
 ## DevTodos
 
-* Rework WebSockets to allow partial updates 
+* Rework WebSockets to allow partial updates (localStorage?) 
 * investigate about rate limits for discord api
 * Admin Routes (new war start - reload icons/tracks - reload/edit allowed users)
 

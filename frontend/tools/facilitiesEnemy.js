@@ -13,6 +13,7 @@ class FacilitiesEnemy extends AIconTool {
       left: '5em',
       iconSelect: true,
       iconDefault: 'enemy_cmats',
+      layerGroup: tools.facilitiesGroup,
     });
   }
 }

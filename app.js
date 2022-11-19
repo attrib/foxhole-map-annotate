@@ -28,7 +28,7 @@ if (app.get('env') === 'production') {
 else {
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
-  const webPackConfig = require('./webpack.config.js');
+  const webPackConfig = require('./webpack.dev.js');
   const compiler = webpack(webPackConfig);
   app.use(
     webpackDevMiddleware(compiler, {

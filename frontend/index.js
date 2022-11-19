@@ -5,7 +5,7 @@ import {Group, Vector, Tile} from "ol/layer";
 import {TileImage, Vector as VectorSource} from "ol/source";
 import {GeoJSON} from "ol/format";
 import {Style, Stroke} from "ol/style";
-import {addDefaultMapControls} from "./mapControls"
+import {addDefaultMapControls, enableLayerMemory} from "./mapControls"
 import Socket from "./webSocket";
 import StaticLayers from "./staticLayer";
 const EditTools = require("./mapEditTools")
@@ -68,7 +68,14 @@ document.getElementById('map').addEventListener('contextmenu', (e) => {
   return false;
 })
 
+new StaticLayers(map)
+const clanGroup = new Group({
+  title: 'Train Lines',
+  fold: 'close',
+});
+map.addLayer(clanGroup);
 const tools = new EditTools(map);
+enableLayerMemory(map)
 
 //
 // add lines
@@ -77,13 +84,7 @@ const tools = new EditTools(map);
 const geoJson = new GeoJSON();
 const collection = new Collection();
 const clanCollections = {}
-const clanGroup = new Group({
-  title: 'Train Lines',
-});
-map.addLayer(clanGroup);
 const socket = new Socket();
-
-new StaticLayers(map)
 
 let lastVersion = null
 socket.on('init', (data) => {
