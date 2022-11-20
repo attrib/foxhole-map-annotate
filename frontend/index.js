@@ -238,6 +238,13 @@ socket.on('conquer', (data) => {
   localStorage.setItem('conquerStatus', JSON.stringify(conquerStatus))
 })
 
+socket.on('warChange', (data) => {
+  conquerStatus.version = 0
+  conquerStatus.features = {}
+  document.getElementById('warNumber').innerHTML = `${data.shard} #${data.warNumber}`
+  staticLayer.loadRegion(true)
+})
+
 const disconnectedWarning = document.getElementById('disconnected')
 socket.on('open', () => {
   disconnectedWarning.style.display = 'none'

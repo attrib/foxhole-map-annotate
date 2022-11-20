@@ -123,7 +123,7 @@ class StaticLayers {
     map.addLayer(this.notificationLayer)
 
     this.cachedIconStyle = {}
-    this.loadRegion()
+    this.loadRegion(false)
   }
 
   regionStyle = (feature) => {
@@ -208,10 +208,21 @@ class StaticLayers {
     }
   }
 
-  loadRegion = () => {
+  loadRegion = (avoidCache = false) => {
+    this.regionCollection.clear()
+    this.majorCollection.clear()
+    this.minorCollection.clear()
+    this.townCollection.clear()
+    this.industryCollection.clear()
+    this.fieldCollection.clear()
+
     const geoJson = new GeoJSON();
     const xhr = new XMLHttpRequest();
     xhr.open('GET', '/regions.json');
+    if (avoidCache) {
+      xhr.setRequestHeader("If-Modified-Since", '');
+      xhr.setRequestHeader("If-None-Match", '');
+    }
     xhr.onload = () => {
       if (xhr.status === 200) {
         const features = geoJson.readFeatures(xhr.responseText);

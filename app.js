@@ -11,10 +11,14 @@ const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const fs = require("fs");
 const {middleware} = require("./lib/influxDB");
 
-const wardata = fs.existsSync('./data/wardata.json') ? require('./data/wardata.json') : {shard: 'Abel', warNumber: 1};
-
+const warapi = require('./lib/warapi')
 
 const app = express();
+
+// bad hack to copy a region.json from data to public
+if (fs.existsSync('./data/region.json')) {
+  fs.copyFileSync('./data/region.json', './public/region.json')
+}
 
 nunjucks.configure('views', {
   autoescape: true,
@@ -68,8 +72,8 @@ app.use((req, res, next) => {
   res.locals.path = req.path;
   res.locals.origin = process.env.ORIGIN
   res.locals.cacheBuster = process.env.COMMIT_HASH
-  res.locals.shard = wardata.shard
-  res.locals.war = wardata.warNumber
+  res.locals.shard = warapi.warData.shard
+  res.locals.war = warapi.warData.warNumber
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
     res.locals.acl = req.session.acl
