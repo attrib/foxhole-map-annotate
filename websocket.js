@@ -7,6 +7,8 @@ const uuid = require('uuid')
 const {ACL_FULL, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const {trackUpdater, iconUpdater} = require("./lib/updater");
 const {getConquerStatus, updateMap, getConquerStatusVersion} = require("./lib/conquerUpdater");
+const {Point} = require("@influxdata/influxdb-client");
+const {writePoint} = require("./lib/influxDB");
 
 setTimeout(conquerUpdater, 10000)
 
@@ -51,11 +53,12 @@ wss.on('connection', function (ws, request) {
     sendIcons(ws);
 
     clients.set(request.session.id, ws);
+    writeInflux('connect', 0)
 
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
+      const dataLength = message.length
       message = JSON.parse(message);
-      console.log('Received ' + message.type + ' by user ' + username + ' with ' + acl)
       switch (message.type) {
         case 'init':
           if (message.data.conquerStatus !== getConquerStatusVersion()) {
@@ -72,7 +75,6 @@ wss.on('connection', function (ws, request) {
           message.data.properties.user = username
           message.data.properties.time = (new Date()).toISOString()
           tracks.features.push(message.data)
-          console.log('add track', tracks.features.length)
           sendTracksToAll();
           saveTracks();
           break;
@@ -101,7 +103,6 @@ wss.on('connection', function (ws, request) {
           tracks.features = tracks.features.filter((feature) => {
             return feature.properties.id !== message.data.id
           })
-          console.log('deleted', tracks.features.length)
           sendTracksToAll();
           saveTracks();
           break;
@@ -155,11 +156,9 @@ wss.on('connection', function (ws, request) {
               break;
             }
           }
-          console.log('delete', message.data.id, icons.features.length)
           icons.features = icons.features.filter((feature) => {
             return feature.properties.id !== message.data.id
           })
-          console.log('deleted', icons.features.length)
           sendIconsToAll();
           saveIcons();
           break;
@@ -185,11 +184,12 @@ wss.on('connection', function (ws, request) {
           }
           break;
       }
+      writeInflux(message.type, dataLength)
     });
 
-    ws.on('close', function (code) {
-      console.log(`Client ${request.session.user} disconnected with ${code}`)
+    ws.on('close', function () {
       clients.delete(request.session.id);
+      writeInflux('close', 0)
     });
   }
 );
@@ -203,10 +203,12 @@ function sendDataToAll(type, data) {
 }
 
 function sendData(client, type, data) {
-  client.send(JSON.stringify({
+  const json = JSON.stringify({
     type: type,
     data: data
-  }));
+  })
+  writeInflux(type, json.length, true)
+  client.send();
 }
 
 
@@ -249,6 +251,18 @@ function conquerUpdater() {
     }
   })
   setTimeout(conquerUpdater, 60000)
+}
+
+function writeInflux(method, dataLength, out = false) {
+  const point = new Point('websocket')
+    .intField('trackLength', tracks.features.length)
+    .intField('iconLength', icons.features.length)
+    .intField('clientCount', clients.size)
+    .intField('length', dataLength)
+    .tag('method', method)
+    .tag('direction', out ? 'out' : 'in')
+
+  writePoint(point)
 }
 
 module.exports = function (server) {

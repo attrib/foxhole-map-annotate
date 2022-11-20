@@ -2,7 +2,6 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const grant = require('grant').express()
 const nunjucks = require("nunjucks");
 
@@ -10,6 +9,7 @@ const sessionParser = require('./lib/session');
 const indexRouter = require('./routes/index');
 const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const fs = require("fs");
+const {middleware} = require("./lib/influxDB");
 
 const wardata = fs.existsSync('./data/wardata.json') ? require('./data/wardata.json') : {shard: 'Abel', warNumber: 1};
 
@@ -37,9 +37,7 @@ else {
   );
 }
 
-const date = new Date()
-const accessLogStream = fs.createWriteStream(path.join(__dirname, `logs/access-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}.log`), { flags: 'a' })
-app.use(logger('combined', {stream: accessLogStream}));
+app.use(middleware);
 app.use(express.static(path.join(__dirname, 'public'), {
   maxAge: 3600000, // cache one hour
 }));
