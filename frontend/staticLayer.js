@@ -151,6 +151,11 @@ class StaticLayers {
   }
 
   conquerUpdate = (features, flash = true) => {
+    // More than 40 changes, do not flash to not kill client
+    // Should only happen when war map changes
+    if (flash && Object.keys(features).length > 40) {
+      flash = false
+    }
     this.townCollection.forEach((feature) => {
       if (feature.getId() in features) {
         if (flash) {
