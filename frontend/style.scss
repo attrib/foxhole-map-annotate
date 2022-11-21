@@ -82,10 +82,11 @@ button.overlay-button {
   height: 1.5em;
 }
 
-#disconnected {
+#global-alerts {
   position: absolute;
   top: 10px;
-  left: 5em;
+  left: 25%;
+  width: 50%;
 }
 
 .layer-switcher  {

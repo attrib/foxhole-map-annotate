@@ -6,7 +6,7 @@ const fs = require('fs');
 const uuid = require('uuid')
 const {ACL_FULL, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const {trackUpdater, iconUpdater} = require("./lib/updater");
-const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions} = require("./lib/conquerUpdater");
+const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions} = require("./lib/conquerUpdater");
 const {Point} = require("@influxdata/influxdb-client");
 const {writePoint} = require("./lib/influxDB");
 const warapi = require('./lib/warapi')
@@ -47,7 +47,8 @@ wss.on('connection', function (ws, request) {
       type: 'init',
       data: {
         acl,
-        version: process.env.COMMIT_HASH
+        version: process.env.COMMIT_HASH,
+        warStatus: warapi.warData.status,
       }
     }));
     sendTracks(ws);
@@ -68,6 +69,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'trackAdd':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
           if (acl !== ACL_FULL) {
             break;
           }
@@ -81,6 +85,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'trackUpdate':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
           if (acl !== ACL_FULL) {
             break;
           }
@@ -97,6 +104,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'trackDelete':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
           if (acl !== ACL_FULL) {
             break;
           }
@@ -109,6 +119,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'iconAdd':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
           if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
           }
@@ -126,6 +139,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'iconUpdate':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
           if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
           }
@@ -148,6 +164,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'iconDelete':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
           if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
           }
@@ -169,6 +188,9 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'decayUpdate':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
           if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
             break;
           }
@@ -246,12 +268,18 @@ function saveIcons() {
 }
 
 function conquerUpdater() {
-  updateMap().then((data) => {
-    if (data) {
-      sendDataToAll('conquer', data)
-    }
-  })
-  setTimeout(conquerUpdater, 60000)
+  warapi.warDataUpdate()
+    .then(() => {
+      return updateMap()
+    })
+    .then((data) => {
+      if (data) {
+        sendDataToAll('conquer', data)
+      }
+    })
+    .finally(() => {
+      setTimeout(conquerUpdater, 60000)
+    })
 }
 
 function writeInflux(method, dataLength, out = false) {
@@ -266,7 +294,11 @@ function writeInflux(method, dataLength, out = false) {
   writePoint(point)
 }
 
-warapi.on(warapi.EVENT_WAR_UPDATED, ({oldData, newData}) => {
+warapi.on(warapi.EVENT_WAR_ENDED, ({newData}) => {
+  sendDataToAll('warEnded', newData)
+})
+
+warapi.on(warapi.EVENT_WAR_PREPARE, ({oldData, newData}) => {
   const oldWarDir = `./data/war${oldData.warNumber}`
   // backup old data
   fs.mkdirSync(oldWarDir)
@@ -280,6 +312,14 @@ warapi.on(warapi.EVENT_WAR_UPDATED, ({oldData, newData}) => {
   tracks.features = tracks.features.filter((track) => track.properties.clan === 'World')
   saveIcons()
   saveTracks()
+  clearRegions()
+  sendDataToAll('warPrepare', newData)
+  sendDataToAll('conquer', getConquerStatus())
+  sendTracksToAll()
+  sendIconsToAll()
+})
+
+warapi.on(warapi.EVENT_WAR_UPDATED, ({newData}) => {
   regenRegions().then(() => {
     sendDataToAll('warChange', newData)
     sendDataToAll('conquer', getConquerStatus())

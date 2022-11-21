@@ -4,6 +4,11 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
+* missing fields layer
+* z-indexs labels
+* size townhall?
+* victory townhalls?
+* Consolidate enemy stuff into a menu called "enemy structures" (by Spannbeton)
 * Partisan Rails? (new Role, Green Rail)
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html)
 * Popup rework?

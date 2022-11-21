@@ -2,7 +2,7 @@ const Edit = require("./tools/edit");
 const Track = require("./tools/track");
 const Signs = require("./tools/signs");
 const Facilities = require("./tools/facilities");
-const {ACL_FULL, ACL_ICONS_ONLY} = require("../lib/ACLS");
+const {ACL_FULL, ACL_ICONS_ONLY, ACL_READ} = require("../lib/ACLS");
 const Information = require("./tools/information");
 const Select = require("./tools/select");
 const TrackSplit = require("./tools/trackSplit");
@@ -57,6 +57,21 @@ class EditTools {
         this.trackSplit = new TrackSplit(this, map)
         //this.field = new Field(this, map)
         this.select = new Select(this, map)
+    }
+
+    resetAcl = () => {
+        this.acl = ACL_READ;
+        this.map.removeControl(this.edit.control)
+        this.map.removeControl(this.information.control)
+        this.map.removeControl(this.sign.control)
+        this.map.removeControl(this.base.control)
+        //this.map.removeControl(this.field.control) // Maybe later for a admin role
+        this.map.removeControl(this.facility.control)
+        this.map.removeControl(this.facilityPrivate.control)
+        this.map.removeControl(this.facilityEnemy.control)
+        this.map.removeControl(this.facilityCustom.control)
+        this.map.removeControl(this.track.control)
+        this.map.removeControl(this.trackSplit.control)
     }
 
     initAcl = (acl) => {

@@ -49,7 +49,7 @@
                             </ul>
                         </div>
                         <div class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end" id="warNumber">
-                            {{ shard }} #{{ war }}
+                            {{ shard }} #{{ war }}{% if warStatus === 'prepare' %} (Preparing){% elseif warStatus === 'resistance' %} (Resistance){% endif %}
                         </div>
                         {% if user %}
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">

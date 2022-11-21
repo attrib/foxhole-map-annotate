@@ -42,9 +42,7 @@ else {
 }
 
 app.use(middleware);
-app.use(express.static(path.join(__dirname, 'public'), {
-  maxAge: 3600000, // cache one hour
-}));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -74,6 +72,9 @@ app.use((req, res, next) => {
   res.locals.cacheBuster = process.env.COMMIT_HASH
   res.locals.shard = warapi.warData.shard
   res.locals.war = warapi.warData.warNumber
+  res.locals.warStatus = warapi.warData.status
+  res.locals.warWinner = warapi.getTeam(warapi.warData.winner)
+  res.locals.warConquestEndTime = warapi.warData.conquestEndTime || ''
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
     res.locals.acl = req.session.acl

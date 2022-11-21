@@ -88,7 +88,12 @@ const clanCollections = {}
 const socket = new Socket();
 
 let lastVersion = null
+let realACL = null
 socket.on('init', (data) => {
+  realACL = data.acl
+  if (data.warStatus === 'resistance') {
+    data.acl = 'read'
+  }
   tools.initAcl(data.acl)
   if (lastVersion === null) {
     lastVersion = data.version
@@ -238,6 +243,31 @@ socket.on('conquer', (data) => {
   localStorage.setItem('conquerStatus', JSON.stringify(conquerStatus))
 })
 
+const prepareWarTimerElement = document.getElementById('resistance-timer')
+let prepareWarTimerTimoutId = null
+socket.on('warEnded', (data) => {
+  document.getElementById('warNumber').innerHTML = `${data.shard} #${data.warNumber} (Resistance)`
+  tools.resetAcl()
+  document.getElementById('resistance').classList.add(data.winner === 'WARDENS' ? 'alert-success' : 'alert-warning')
+  document.getElementById('resistance-winner').innerHTML = data.winner === 'WARDENS' ? 'Warden' : 'Colonial'
+  document.getElementById('resistance-' + data.winner).style.display = ''
+  prepareWarTimerElement.dataset.conquestEndTime = data.conquestEndTime
+  document.getElementById('resistance').style.display = ''
+  prepareWarTimer()
+})
+
+socket.on('warPrepare', (data) => {
+  conquerStatus.version = 0
+  conquerStatus.features = {}
+  document.getElementById('warNumber').innerHTML = `${data.shard} #${data.warNumber} (Preparing)`
+  staticLayer.loadRegion(true)
+  clearTimeout(prepareWarTimerTimoutId)
+  document.getElementById('resistance').style.display = 'none'
+  if (realACL) {
+    tools.initAcl(realACL)
+  }
+})
+
 socket.on('warChange', (data) => {
   conquerStatus.version = 0
   conquerStatus.features = {}
@@ -255,3 +285,18 @@ socket.on('open', () => {
 socket.on('close', () => {
   disconnectedWarning.style.display = 'block'
 })
+
+const rtf = new Intl.RelativeTimeFormat('en', { style: 'long' })
+function prepareWarTimer() {
+  if (!prepareWarTimerElement.dataset.conquestEndTime) {
+    return
+  }
+  const hours = (parseInt(prepareWarTimerElement.dataset.conquestEndTime) + 43200000 - Date.now()) / 3600000
+  const minutes = (hours - Math.floor(hours)) * 60
+  const formattedMinutes = rtf.formatToParts(Math.floor(minutes),'minute')
+  prepareWarTimerElement.innerHTML = rtf.format(Math.floor(hours),'hour') + ' ' + formattedMinutes[1].value + ' ' + formattedMinutes[2].value
+  prepareWarTimerTimoutId = setTimeout(prepareWarTimer, 30000)
+}
+if (document.getElementById('resistance').style.display === '') {
+  prepareWarTimer()
+}
