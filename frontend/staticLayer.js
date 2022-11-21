@@ -58,7 +58,7 @@ class StaticLayers {
       source: new VectorSource({
         features: this.regionCollection
       }),
-      zIndex: 0,
+      zIndex: 100,
       minResolution: 4,
       style: this.regionStyle
     }))
@@ -67,7 +67,7 @@ class StaticLayers {
       source: new VectorSource({
         features: this.majorCollection
       }),
-      zIndex: 1,
+      zIndex: 100,
       maxResolution: 4,
       style: this.regionStyle
     }))
@@ -76,19 +76,9 @@ class StaticLayers {
       source: new VectorSource({
         features: this.minorCollection
       }),
-      zIndex: 1,
+      zIndex: 99,
       maxResolution: 1.5,
       style: this.regionStyle
-    }))
-    regionGroup.getLayers().push(new Vector({
-      source: new VectorSource({
-        features: this.fieldCollection
-      }),
-      title: 'Fields',
-      zIndex: 1,
-      maxResolution: 4,
-      style: this.iconStyle,
-      searchable: false,
     }))
     staticGroup.getLayers().push(regionGroup)
     staticGroup.getLayers().push(new Vector({
@@ -106,6 +96,16 @@ class StaticLayers {
         features: this.industryCollection
       }),
       title: 'Industry',
+      zIndex: 1,
+      maxResolution: 4,
+      style: this.iconStyle,
+      searchable: false,
+    }))
+    staticGroup.getLayers().push(new Vector({
+      title: 'Fields',
+      source: new VectorSource({
+        features: this.fieldCollection
+      }),
       zIndex: 1,
       maxResolution: 4,
       style: this.iconStyle,

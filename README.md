@@ -4,8 +4,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
-* missing fields layer
-* z-indexs labels
 * size townhall?
 * victory townhalls?
 * Consolidate enemy stuff into a menu called "enemy structures" (by Spannbeton)
