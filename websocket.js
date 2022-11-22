@@ -302,10 +302,18 @@ warapi.on(warapi.EVENT_WAR_PREPARE, ({oldData, newData}) => {
   const oldWarDir = `./data/war${oldData.warNumber}`
   // backup old data
   fs.mkdirSync(oldWarDir)
-  fs.cpSync('./data/conquer.json', oldWarDir + '/conquer.json')
-  fs.cpSync('./data/icons.json', oldWarDir + '/icons.json')
-  fs.cpSync('./data/tracks.json', oldWarDir + '/tracks.json')
-  fs.cpSync('./data/wardata.json', oldWarDir + '/wardata.json')
+  if (fs.existsSync('./data/conquer.json')) {
+    fs.cpSync('./data/conquer.json', oldWarDir + '/conquer.json')
+  }
+  if (fs.existsSync('./data/icons.json')) {
+    fs.cpSync('./data/icons.json', oldWarDir + '/icons.json')
+  }
+  if (fs.existsSync('./data/tracks.json')) {
+    fs.cpSync('./data/tracks.json', oldWarDir + '/tracks.json')
+  }
+  if (fs.existsSync('./data/wardata.json')) {
+    fs.cpSync('./data/wardata.json', oldWarDir + '/wardata.json')
+  }
   fs.cpSync('./public/regions.json', oldWarDir + '/regions.json')
   // clear data
   icons.features = []

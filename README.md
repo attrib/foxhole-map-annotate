@@ -4,11 +4,10 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
-* size townhall?
 * victory townhalls?
 * Consolidate enemy stuff into a menu called "enemy structures" (by Spannbeton)
+* [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe)
 * Partisan Rails? (new Role, Green Rail)
-* [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html)
 * Popup rework?
   * [Hover](https://viglino.github.io/ol-ext/examples/interaction/map.interaction.hover.html)
   * [Popup](http://viglino.github.io/ol-ext/examples/popup/map.popup.html)
@@ -17,6 +16,7 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## DevTodos
 
+* demo?
 * Rework WebSockets to allow partial updates (localStorage?) 
 * investigate about rate limits for discord api
 * Admin Routes (new war start - reload icons/tracks - reload/edit allowed users)
