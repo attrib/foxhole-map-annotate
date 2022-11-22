@@ -502,13 +502,12 @@
             </div>
         </div>
         <h2 class="mt-4">Bugs/Issues/Feedback</h2>
-        <p>If you have Feedback please contact us via <a href="https://discord.com/channels/895735519231762432/1042389218363707452">CTAs Discord</a>.</p>
-        <p>If you want more access, please also checkout the Discord from CTA.</p>
-        <p>Bugs can be reported at <a href="https://discord.com/channels/895735519231762432/1042389158334844948">#wardenexpress-bugreports on CTAs Discord</a> or at <a href="https://github.com/attrib/foxhole-map-annotate/issues">github</a></p>
+        {{ config.text.feedback | safe }}
         <p>The code is open source, if you want to contribute, checkout the <a href="https://github.com/attrib/foxhole-map-annotate">github</a> page.</p>
         <h2 class="mt-4">Contributors</h2>
+        {{ config.text.contributors | safe }}
         <p>Idea, Icons, Map work: Bazlow</p>
-        <p>Idea, Coding, <a href="https://warden.express">Hosting</a>: attrib</p>
+        <p>Idea, Coding: attrib</p>
         <p>Map from <a href="https://sentsu.itch.io/foxhole-better-map-mod?">Sentsu Better Map Mod</a></p>
     </div>
 </div>

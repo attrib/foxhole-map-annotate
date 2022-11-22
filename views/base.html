@@ -3,31 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Foxhole {{ shard }} Warden infrastructure Map">
+    <meta name="description" content="Foxhole {{ config.shard }} {{ config.basic.title }}">
     <meta name="author" content="attrib, Bazlow">
     <!-- Facebook/Discord Meta Tags -->
-    <meta property="og:url" content="{{ origin }}">
+    <meta property="og:url" content="{{ config.basic.url }}">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Warden Express">
-    <meta property="og:description" content="Foxhole {{ shard }} Warden infrastructure Map">
-    <meta property="og:image" content="{{ origin }}/images/og.png">
-    <meta property="og:image:alt" content="Warden Express Logo - combined W&E">
+    <meta property="og:title" content="{{ config.basic.title }}">
+    <meta property="og:description" content="Foxhole {{ shard }} {{ config.basic.title }}">
+    <meta property="og:image" content="{{ origin }}{{ config.images.opengraph }}">
+    <meta property="og:image:alt" content="{{ config.basic.title }} Logo">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary">
-    <meta property="twitter:domain" content="warden.express">
-    <meta property="twitter:url" content="{{ origin }}">
-    <meta name="twitter:title" content="Warden Express">
-    <meta name="twitter:description" content="Foxhole {{ shard }} Warden infrastructure Map">
-    <meta name="twitter:image" content="{{ origin }}/images/og.png">
-    <meta name="twitter:image:alt" content="Warden Express Logo - combined W&E">
-    <meta name="theme-color" content="#245682">
+    <meta property="twitter:url" content="{{ config.basic.url }}">
+    <meta name="twitter:title" content="{{ config.basic.title }}">
+    <meta name="twitter:description" content="Foxhole {{ shard }} {{ config.basic.title }}">
+    <meta name="twitter:image" content="{{ config.basic.url }}{{ config.images.opengraph }}">
+    <meta name="twitter:image:alt" content="{{ config.basic.title }} Logo">
+    <meta name="theme-color" content="{{ config.basic.color }}">
 
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
-    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="{{ config.images.favicon }}">
+    <link rel="icon" type="image/png" href="{{config.images.faviconPng }}">
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/dist/main.css?{{ cacheBuster }}">
     {% block css %}{% endblock %}
+    <style>
+        nav.navbar {
+            background-color: {{ config.basic.color }} !important;
+        }
+    </style>
 </head>
 <body class="d-flex h-100 text-bg-dark">
     <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
@@ -36,7 +40,7 @@
                 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                     <div class="container-fluid">
                         <a class="navbar-brand" href="/">
-                            <img src="/images/favicon.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+                            <img src="{{ config.images.logo }}" width="30" height="30" class="d-inline-block align-top" alt="">
                             {{ title }}
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

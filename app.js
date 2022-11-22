@@ -9,6 +9,7 @@ const sessionParser = require('./lib/session');
 const indexRouter = require('./routes/index');
 const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const fs = require("fs");
+const config = require('./lib/config')
 const {middleware} = require("./lib/influxDB");
 
 const warapi = require('./lib/warapi')
@@ -49,13 +50,13 @@ app.use(cookieParser());
 app.use(sessionParser)
 app.use(grant({
   "defaults": {
-    "origin": process.env.ORIGIN,
+    "origin": config.config.basic.url,
     "transport": "session",
     "state": true
   },
   "discord": {
-    "key": process.env.DISCORD_KEY,
-    "secret": process.env.DISCORD_SECRET,
+    "key": config.config.discord.key,
+    "secret": config.config.discord.secret,
     "scope": ["identify", "guilds.members.read"],
     "callback": "/login",
   }
@@ -66,9 +67,9 @@ app.use((req, res, next) => {
     req.session.user = 'develop';
     req.session.acl = ACL_FULL;
   }
-  res.locals.title = 'Warden Infrastructure Map';
+  res.locals.config = config.config
+  res.locals.title = config.config.basic.title;
   res.locals.path = req.path;
-  res.locals.origin = process.env.ORIGIN
   res.locals.cacheBuster = process.env.COMMIT_HASH
   res.locals.shard = warapi.warData.shard
   res.locals.war = warapi.warData.warNumber

@@ -6,12 +6,11 @@ services:
     image: "attribdd/foxhole-map-annotate:master"
     restart: always
     volumes:
-      - ./uploads:/app/public/map
+      - ./map:/app/public/map
       - ./sessions:/app/sessions
       - ./data:/app/data
-      - ./logs:/app/logs
-    env_file:
-      - .env
+    environment:
+      SECRET: sessionStorageSecret
     expose:
       - 3000
     labels:

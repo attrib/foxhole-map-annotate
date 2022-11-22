@@ -4,11 +4,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
-* fields are on warden able shard
-* able to change at least the name at the top left and color of that bar
-* able to change the favicon + logo
-* able to change text on login screen, to not point to able warden discords
-* similar info is at the help page
 * implement deactivated hexes
 * increase button sizes (by [RDRT] A Devil Chicken)
 * gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
@@ -32,6 +27,7 @@ Annotate and draw on the foxhole map and share with your group.
 * Rework WebSockets to allow partial updates (localStorage?) 
 * investigate about rate limits for discord api
 * Admin Routes (new war start - reload icons/tracks - reload/edit allowed users)
+* Config file watcher
 
 ## Run Dev
 
@@ -59,17 +55,13 @@ Create a Discord OAuth 2 App (https://discord.com/developers/applications) and a
 
 Copy `docker-compose.yml` to your webserver with docker and a traefik instance.
 
-Copy `.env.dist` to your server as `.env`
-
-* Set NODE_ENV with `production`
-* Set ORIGIN to `https://<yourdomain.tld>/`
-* Set DISCORD_KEY and DISCORD_SECRET as provided by Discord
-
 If not done already, see step how to create the map.
 
 Change Host in `docker-compse.yml`
 
 Run `docker compose up -d`
+
+It will create a `data/config.yml`, please change all values there and then restart the app. 
 
 ### Access control
 

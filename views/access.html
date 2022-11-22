@@ -7,7 +7,7 @@
 <div class="p-5 m-4 bg-light rounded-3 text-bg-light">
     <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">Access Denied</h1>
-        <p>You need to be a verified Warden in WUH or CTA.</p>
+        {{ config.text.accessDenied | safe }}
     </div>
 </div>
 {% endblock %}
