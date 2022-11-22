@@ -4,6 +4,16 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
+* fields are on warden able shard
+* able to change at least the name at the top left and color of that bar
+* able to change the favicon + logo
+* able to change text on login screen, to not point to able warden discords
+* similar info is at the help page
+* implement deactivated hexes
+* search should include username (by [RDRT] A Devil Chicken)
+* increase button sizes (by [RDRT] A Devil Chicken)
+* gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
+* one facility button for all, switch on the edit if public/private (by [RDRT] A Devil Chicken)
 * victory townhalls?
 * Consolidate enemy stuff into a menu called "enemy structures" (by Spannbeton)
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe)
@@ -13,6 +23,9 @@ Annotate and draw on the foxhole map and share with your group.
   * [Popup](http://viglino.github.io/ol-ext/examples/popup/map.popup.html)
   * [Animated Popup](http://viglino.github.io/ol-ext/examples/popup/map.popup.anim.html)
   * [Popup Feature](https://viglino.github.io/ol-ext/examples/popup/map.popup.feature.html)
+* move with middle mouse if in rail laying mode (by [✚RMC✚] EllieTau (QM))
+* paste text and create icons from it (FarranacCoastG11k2, (iconType), (note)) (by [SOS] Yabba)
+* move help section into main page with layers you can open (by [RDRT] A Devil Chicken)
 
 ## DevTodos
 

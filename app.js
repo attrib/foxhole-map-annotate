@@ -16,8 +16,8 @@ const warapi = require('./lib/warapi')
 const app = express();
 
 // bad hack to copy a region.json from data to public
-if (fs.existsSync('./data/region.json')) {
-  fs.copyFileSync('./data/region.json', './public/region.json')
+if (fs.existsSync('./data/regions.json')) {
+  fs.copyFileSync('./data/regions.json', './public/regions.json')
 }
 
 nunjucks.configure('views', {
