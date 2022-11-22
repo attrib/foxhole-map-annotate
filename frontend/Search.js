@@ -34,13 +34,33 @@ class Search extends SearchFeature {
       }
       const searchableLayer = layer.get('searchable') !== undefined ? layer.get('searchable') : true
       if (layer.getSource && layer.getSource().getFeatures && searchableLayer) {
+        // search by notes
         const features = layer.getSource().getFeatures()
         for (const feature of features) {
           const att = this.getSearchString(feature);
           if (att !== undefined && rex.test(att)) {
             result.push(feature);
-            if ((--max) <= 0)
+            if ((--max) <= 0) {
               break;
+            }
+            continue;
+          }
+          // search by username
+          const user = feature.get('user');
+          if (user !== undefined && rex.test(user)) {
+            result.push(feature);
+            if ((--max) <= 0) {
+              break;
+            }
+            continue;
+          }
+          // search by clan
+          const clan = feature.get('clan');
+          if (clan !== undefined && rex.test(clan)) {
+            result.push(feature);
+            if ((--max) <= 0) {
+              break;
+            }
           }
         }
       }

@@ -10,7 +10,6 @@ Annotate and draw on the foxhole map and share with your group.
 * able to change text on login screen, to not point to able warden discords
 * similar info is at the help page
 * implement deactivated hexes
-* search should include username (by [RDRT] A Devil Chicken)
 * increase button sizes (by [RDRT] A Devil Chicken)
 * gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
 * one facility button for all, switch on the edit if public/private (by [RDRT] A Devil Chicken)
