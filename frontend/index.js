@@ -8,6 +8,9 @@ import {Style, Stroke} from "ol/style";
 import {addDefaultMapControls, enableLayerMemory} from "./mapControls"
 import Socket from "./webSocket";
 import StaticLayers from "./staticLayer";
+import {DragPan} from "ol/interaction";
+import {all, noModifierKeys} from "ol/events/condition";
+import {assert} from "ol/asserts";
 const EditTools = require("./mapEditTools")
 
 const url = new URL(window.location);
@@ -77,6 +80,21 @@ const clanGroup = new Group({
 map.addLayer(clanGroup);
 const tools = new EditTools(map);
 enableLayerMemory(map)
+
+// Allow panning with middle mouse
+const primaryPrimaryOrMiddle = function (mapBrowserEvent) {
+  const pointerEvent = /** @type {import("../MapBrowserEvent").default} */ (
+    mapBrowserEvent
+  ).originalEvent;
+  assert(pointerEvent !== undefined, 56); // mapBrowserEvent must originate from a pointer event
+  console.log(pointerEvent.button)
+  return pointerEvent.isPrimary && (pointerEvent.button === 0 || pointerEvent.button === 1);
+}
+map.getInteractions().forEach((interaction) => {
+  if (interaction instanceof DragPan) {
+    interaction.condition_ = all(noModifierKeys, primaryPrimaryOrMiddle)
+  }
+})
 
 //
 // add lines

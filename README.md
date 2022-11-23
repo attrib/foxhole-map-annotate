@@ -16,7 +16,6 @@ Annotate and draw on the foxhole map and share with your group.
   * [Popup](http://viglino.github.io/ol-ext/examples/popup/map.popup.html)
   * [Animated Popup](http://viglino.github.io/ol-ext/examples/popup/map.popup.anim.html)
   * [Popup Feature](https://viglino.github.io/ol-ext/examples/popup/map.popup.feature.html)
-* move with middle mouse if in rail laying mode (by [✚RMC✚] EllieTau (QM))
 * paste text and create icons from it (FarranacCoastG11k2, (iconType), (note)) (by [SOS] Yabba)
 * move help section into main page with layers you can open (by [RDRT] A Devil Chicken)
 
