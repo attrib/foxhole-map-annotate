@@ -9,7 +9,6 @@ Annotate and draw on the foxhole map and share with your group.
 * gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
 * one facility button for all, switch on the edit if public/private (by [RDRT] A Devil Chicken)
 * victory townhalls?
-* Consolidate enemy stuff into a menu called "enemy structures" (by Spannbeton)
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe)
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?

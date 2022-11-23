@@ -8,11 +8,11 @@ class FacilitiesEnemy extends AIconTool {
    */
   constructor(tools, map) {
     super(tools, map, 'facility-enemy', 'emoji-angry', {
-      title: 'Enemy Facilities',
+      title: 'Enemy Structures',
       zIndex: 10,
       left: '5em',
       iconSelect: true,
-      iconDefault: 'enemy_cmats',
+      iconDefault: 'enemy_base',
       layerGroup: tools.facilitiesGroup,
     });
   }
