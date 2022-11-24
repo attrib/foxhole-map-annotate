@@ -10,7 +10,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ config.basic.title }}">
     <meta property="og:description" content="Foxhole {{ shard }} {{ config.basic.title }}">
-    <meta property="og:image" content="{{ origin }}{{ config.images.opengraph }}">
+    <meta property="og:image" content="{{ config.basic.url }}{{ config.images.opengraph }}">
     <meta property="og:image:alt" content="{{ config.basic.title }} Logo">
 
     <!-- Twitter Meta Tags -->
@@ -22,7 +22,9 @@
     <meta name="twitter:image:alt" content="{{ config.basic.title }} Logo">
     <meta name="theme-color" content="{{ config.basic.color }}">
 
+    {% if config.images.favicon %}
     <link rel="icon" type="image/svg+xml" href="{{ config.images.favicon }}">
+    {% endif %}
     <link rel="icon" type="image/png" href="{{config.images.faviconPng }}">
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/dist/main.css?{{ cacheBuster }}">
