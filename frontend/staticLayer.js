@@ -142,7 +142,8 @@ class StaticLayers {
     if (!(cacheKey in this.cachedIconStyle)) {
       this.cachedIconStyle[cacheKey] = new Style({
         image: new Icon({
-          src: `/images/${feature.get('type')}/${feature.get('icon')}${team}.png`,
+          src: `/images/${feature.get('type')}/${feature.get('icon')}.png`,
+          color: team === '' ? undefined : team === 'Warden' ? '#245682' : '#516C4B',
           scale: (feature.get('type') === 'town' || feature.get('type') === 'field') ? 2/3 : 1,
         }),
       });
@@ -164,6 +165,15 @@ class StaticLayers {
         const data = features[feature.getId()]
         feature.set('team', data.team)
         feature.set('icon', data.icon)
+      }
+    })
+    this.industryCollection.forEach((feature) => {
+      if (feature.getId() in features) {
+        if (flash) {
+          this.flash(feature)
+        }
+        const data = features[feature.getId()]
+        feature.set('team', data.team)
       }
     })
   }
@@ -250,6 +260,10 @@ class StaticLayers {
               this.townCollection.push(feature)
               break;
             case 'industry':
+              if (feature.get('id') in this.conquerStatus.features) {
+                feature.set('icon', this.conquerStatus.features[feature.get('id')].icon)
+                feature.set('team', this.conquerStatus.features[feature.get('id')].team)
+              }
               this.industryCollection.push(feature)
               break;
             case 'field':
