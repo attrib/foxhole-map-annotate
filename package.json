@@ -9,7 +9,6 @@
     "build.dev": "webpack --config ./webpack.dev.js"
   },
   "dependencies": {
-    "@influxdata/influxdb-client": "^1.32.0",
     "cookie-parser": "^1.4.4",
     "debug": "^2.6.9",
     "dotenv": "^16.0.3",
@@ -18,7 +17,6 @@
     "grant": "^5.4.21",
     "http-errors": "^1.6.3",
     "nunjucks": "^3.2.3",
-    "on-finished": "^2.4.1",
     "session-file-store": "^1.5.0",
     "uuid": "^9.0.0",
     "ws": "^8.9.0",

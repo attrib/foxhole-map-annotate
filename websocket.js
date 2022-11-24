@@ -7,8 +7,6 @@ const uuid = require('uuid')
 const {ACL_FULL, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const {trackUpdater, iconUpdater} = require("./lib/updater");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions} = require("./lib/conquerUpdater");
-const {Point} = require("@influxdata/influxdb-client");
-const {writePoint} = require("./lib/influxDB");
 const warapi = require('./lib/warapi')
 
 setTimeout(conquerUpdater, 10000)
@@ -55,11 +53,9 @@ wss.on('connection', function (ws, request) {
     sendIcons(ws);
 
     clients.set(request.session.id, ws);
-    writeInflux('connect', 0)
 
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
-      const dataLength = message.length
       message = JSON.parse(message);
       switch (message.type) {
         case 'init':
@@ -207,12 +203,10 @@ wss.on('connection', function (ws, request) {
           }
           break;
       }
-      writeInflux(message.type, dataLength)
     });
 
     ws.on('close', function () {
       clients.delete(request.session.id);
-      writeInflux('close', 0)
     });
   }
 );
@@ -230,7 +224,6 @@ function sendData(client, type, data) {
     type: type,
     data: data
   })
-  writeInflux(type, json.length, true)
   client.send(json);
 }
 
@@ -280,18 +273,6 @@ function conquerUpdater() {
     .finally(() => {
       setTimeout(conquerUpdater, 60000)
     })
-}
-
-function writeInflux(method, dataLength, out = false) {
-  const point = new Point('websocket')
-    .intField('trackLength', tracks.features.length)
-    .intField('iconLength', icons.features.length)
-    .intField('clientCount', clients.size)
-    .intField('length', dataLength)
-    .tag('method', method)
-    .tag('direction', out ? 'out' : 'in')
-
-  writePoint(point)
 }
 
 warapi.on(warapi.EVENT_WAR_ENDED, ({newData}) => {

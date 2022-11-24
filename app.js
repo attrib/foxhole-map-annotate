@@ -10,7 +10,6 @@ const indexRouter = require('./routes/index');
 const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY} = require("./lib/ACLS");
 const fs = require("fs");
 const config = require('./lib/config')
-const {middleware} = require("./lib/influxDB");
 
 const warapi = require('./lib/warapi')
 
@@ -42,7 +41,6 @@ else {
   );
 }
 
-app.use(middleware);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -10,11 +10,6 @@ discord:
   key: ''
   secret: ''
 
-influxdb:
-  url: ''
-  token: ''
-  org: ''
-
 basic:
   url: http://localhost:3000
   title: Warden Express
