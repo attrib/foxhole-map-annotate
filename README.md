@@ -4,9 +4,7 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Bugs
 
-Please create a Ticket in GitHub. Or of any the discord where you maybe heared about this.
-
-* Custom facility editing is bit shaky
+Please create a Ticket in GitHub. Or of any the discord where you maybe heard about this tool.
 
 ## Ideas
 

@@ -10,7 +10,6 @@ class Information extends AIconTool {
     super(tools, map, 'information', 'exclamation-triangle', {
       title: 'Informations',
       zIndex: 50,
-      allowEditWithIconsACL: true,
       iconSelect: true,
       iconDefault: 'warning',
     });

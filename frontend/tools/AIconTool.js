@@ -26,7 +26,6 @@ class AIconTool extends ADrawTool {
     });
 
     this.drawType = options.drawType || 'Point';
-    this.allowEditWithIconsACL = options.allowEditWithIconsACL || false;
 
     const vector = new Vector({
       source: source,
@@ -189,7 +188,7 @@ class AIconTool extends ADrawTool {
   }
 
   _featureSelected = (feature) => {
-    if (!this.allowEditWithIconsACL && this.tools.acl !== ACL_FULL) {
+    if (!this.tools.hasAccess('icon.edit', feature)) {
       this.formButtons.style.display = 'none'
       this.map.removeControl(this.formControl)
       return;

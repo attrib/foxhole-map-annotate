@@ -248,7 +248,7 @@ class Track extends ADrawTool {
   }
 
   trackSelected = (feature) => {
-    if (this.tools.acl !== ACL_FULL) {
+    if (!this.tools.hasAccess('track.edit', feature)) {
       this.map.removeControl(this.formControl)
       this.buttons.style.display = 'none'
       return;
