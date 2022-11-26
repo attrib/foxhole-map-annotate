@@ -15,6 +15,7 @@ basic:
   title: Warden Express
   color: '#245682'
   faction: Warden
+  links: []
 
 images:
   favicon: /images/favicon.svg

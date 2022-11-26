@@ -2,6 +2,12 @@
 
 Annotate and draw on the foxhole map and share with your group.
 
+## Bugs
+
+Please create a Ticket in GitHub. Or of any the discord where you maybe heared about this.
+
+* Custom facility editing is bit shaky
+
 ## Ideas
 
 * increase button sizes (by [RDRT] A Devil Chicken)
@@ -20,16 +26,15 @@ Annotate and draw on the foxhole map and share with your group.
 * move help section into main page with layers you can open (by [RDRT] A Devil Chicken)
 * background pattern custom facility
 * more line options (Enemy logi route, partisan route, planned piepline, pipeline) (by Bazlow, [TSAR]orb)
-* discord bot? for better ACL?
 * checkpoint marker (by [HAULR] Barteng)
 * public oil marker (by [HAULR] Barteng)
 * public water marker  (by [HAULR] Barteng)
+* Dedicated text box on the map (by [✚RMC✚] EllieTau (QM))
 
 ## DevTodos
 
 * Rework WebSockets to allow partial updates (localStorage?) 
-* investigate about rate limits for discord api
-* Admin Routes (new war start - reload icons/tracks - reload/edit allowed users)
+* discord bot? for better ACL?
 
 ## Run Dev
 

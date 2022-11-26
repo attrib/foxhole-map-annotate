@@ -7,7 +7,7 @@ const nunjucks = require("nunjucks");
 
 const sessionParser = require('./lib/session');
 const indexRouter = require('./routes/index');
-const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY, ACL_MOD} = require("./lib/ACLS");
+const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY, ACL_MOD, ACL_ADMIN} = require("./lib/ACLS");
 const fs = require("fs");
 const config = require('./lib/config')
 
@@ -64,7 +64,7 @@ app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     req.session.user = 'develop';
     req.session.userId = '1234567895';
-    req.session.acl = ACL_FULL;
+    req.session.acl = ACL_ADMIN;
   }
   res.locals.config = config.config
   res.locals.title = config.config.basic.title;
