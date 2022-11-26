@@ -4,12 +4,14 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
+* event log
+* improve role system
 * implement deactivated hexes
 * increase button sizes (by [RDRT] A Devil Chicken)
 * gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
 * one facility button for all, switch on the edit if public/private (by [RDRT] A Devil Chicken)
-* victory townhalls?
-* [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe)
+* victory townhalls? storm cannons
+* [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - length 1.89km, width 2.184km
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?
   * [Hover](https://viglino.github.io/ol-ext/examples/interaction/map.interaction.hover.html)
@@ -18,10 +20,15 @@ Annotate and draw on the foxhole map and share with your group.
   * [Popup Feature](https://viglino.github.io/ol-ext/examples/popup/map.popup.feature.html)
 * paste text and create icons from it (FarranacCoastG11k2, (iconType), (note)) (by [SOS] Yabba)
 * move help section into main page with layers you can open (by [RDRT] A Devil Chicken)
+* background pattern custom facility
+* more line options (Enemy logi route, partisan route, planned piepline, pipeline) (by Bazlow, [TSAR]orb)
+* discord bot? for better ACL?
+* checkpoint marker (by [HAULR] Barteng)
+* public oil marker (by [HAULR] Barteng)
+* public water marker  (by [HAULR] Barteng)
 
 ## DevTodos
 
-* demo?
 * Rework WebSockets to allow partial updates (localStorage?) 
 * investigate about rate limits for discord api
 * Admin Routes (new war start - reload icons/tracks - reload/edit allowed users)
