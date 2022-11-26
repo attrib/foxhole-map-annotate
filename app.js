@@ -7,7 +7,7 @@ const nunjucks = require("nunjucks");
 
 const sessionParser = require('./lib/session');
 const indexRouter = require('./routes/index');
-const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY, ACL_MOD, ACL_ADMIN} = require("./lib/ACLS");
+const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY, ACL_MOD, ACL_ADMIN, ACL_BLOCKED} = require("./lib/ACLS");
 const fs = require("fs");
 const config = require('./lib/config')
 
@@ -79,7 +79,17 @@ app.use((req, res, next) => {
     res.locals.user = req.session.user
     res.locals.userId = req.session.userId
     res.locals.acl = req.session.acl
-    next();
+
+    // quick check if somebody is blocked
+    if (req.session.userId in config.config.access.users && config.config.access.users[req.session.userId] === ACL_BLOCKED) {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid')
+        res.redirect('/');
+      })
+    }
+    else {
+      next();
+    }
   }
   else {
     res.locals.user = false

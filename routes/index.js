@@ -5,6 +5,7 @@ const eventLog = require('../lib/eventLog')
 const {ACL_ADMIN, ACL_MOD} = require("../lib/ACLS");
 const config = require('../lib/config')
 const sanitizeHtml = require('sanitize-html')
+const eventlog = require('../lib/eventLog');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -27,6 +28,7 @@ router.post('/admin', function(req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN)) {
     return res.redirect('/');
   }
+  eventlog.logEvent({type: 'configChange', user: req.session.user, userId: req.session.userId, data: config.config})
   if (req.body.title.match(/^[\w ]+$/)) {
     config.config.basic.title = req.body.title
   }
@@ -122,16 +124,16 @@ router.get('/login', async function(req, res, next) {
       })
     }
     else {
-      req.session.destroy(() => {
-        res.render('access', data);
-      });
+      res.render('access', data);
     }
   })
 });
 
 router.get('/logout', function(req, res, next) {
-  req.session.destroy()
-  res.redirect('/');
+  req.session.destroy(() => {
+    res.clearCookie('connect.sid')
+    res.redirect('/');
+  })
 });
 
 module.exports = router;
