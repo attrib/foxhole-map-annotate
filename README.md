@@ -4,11 +4,10 @@ Annotate and draw on the foxhole map and share with your group.
 
 ## Ideas
 
-* event log
-* implement deactivated hexes
 * increase button sizes (by [RDRT] A Devil Chicken)
 * gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
 * one facility button for all, switch on the edit if public/private (by [RDRT] A Devil Chicken)
+* implement deactivated hexes
 * victory townhalls? storm cannons
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - length 1.89km, width 2.184km
 * Partisan Rails? (new Role, Green Rail)

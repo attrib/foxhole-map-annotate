@@ -8,6 +8,7 @@ const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
 const {trackUpdater, iconUpdater} = require("./lib/updater");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions} = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
+const eventLog = require('./lib/eventLog')
 
 setTimeout(conquerUpdater, 10000)
 
@@ -79,6 +80,7 @@ wss.on('connection', function (ws, request) {
           message.data.properties.userId = userId
           message.data.properties.time = (new Date()).toISOString()
           tracks.features.push(message.data)
+          eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
           sendTracksToAll();
           saveTracks();
           break;
@@ -97,6 +99,7 @@ wss.on('connection', function (ws, request) {
               existingTracks.properties.muserId = userId
               existingTracks.properties.time = (new Date()).toISOString()
               existingTracks.geometry = message.data.geometry
+              eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
             }
           }
           sendTracksToAll();
@@ -115,6 +118,9 @@ wss.on('connection', function (ws, request) {
             }
           }
           tracks.features = tracks.features.filter((feature) => {
+            if (feature.properties.id === message.data.id) {
+              eventLog.logEvent({type: message.type, user: username, userId, data: feature})
+            }
             return feature.properties.id !== message.data.id
           })
           sendTracksToAll();
@@ -135,6 +141,7 @@ wss.on('connection', function (ws, request) {
           feature.properties.userId = userId
           feature.properties.time = (new Date()).toISOString()
           icons.features.push(feature)
+          eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
           sendIconsToAll()
           saveIcons()
           break;
@@ -156,6 +163,7 @@ wss.on('connection', function (ws, request) {
               existingIcon.properties.muserId = userId
               existingIcon.properties.time = (new Date()).toISOString()
               existingIcon.geometry = message.data.geometry
+              eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
             }
           }
           sendIconsToAll();
@@ -171,6 +179,9 @@ wss.on('connection', function (ws, request) {
             return;
           }
           icons.features = icons.features.filter((feature) => {
+            if (feature.properties.id === message.data.id) {
+              eventLog.logEvent({type: message.type, user: username, userId, data: feature})
+            }
             return feature.properties.id !== message.data.id
           })
           sendIconsToAll();
@@ -194,6 +205,7 @@ wss.on('connection', function (ws, request) {
               feature.properties.time = (new Date()).toISOString()
               feature.properties.muser = username
               feature.properties.muserId = userId
+              eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
               sendDataToAll('decayUpdated', {
                 id: feature.properties.id,
                 type: feature.properties.type,
@@ -282,7 +294,9 @@ warapi.on(warapi.EVENT_WAR_ENDED, ({newData}) => {
 warapi.on(warapi.EVENT_WAR_PREPARE, ({oldData, newData}) => {
   const oldWarDir = `./data/war${oldData.warNumber}`
   // backup old data
-  fs.mkdirSync(oldWarDir)
+  if (!fs.existsSync(oldWarDir)) {
+    fs.mkdirSync(oldWarDir)
+  }
   if (fs.existsSync('./data/conquer.json')) {
     fs.cpSync('./data/conquer.json', oldWarDir + '/conquer.json')
   }
