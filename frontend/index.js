@@ -87,7 +87,6 @@ const primaryPrimaryOrMiddle = function (mapBrowserEvent) {
     mapBrowserEvent
   ).originalEvent;
   assert(pointerEvent !== undefined, 56); // mapBrowserEvent must originate from a pointer event
-  console.log(pointerEvent.button)
   return pointerEvent.isPrimary && (pointerEvent.button === 0 || pointerEvent.button === 1);
 }
 map.getInteractions().forEach((interaction) => {

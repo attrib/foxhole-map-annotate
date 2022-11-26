@@ -1,7 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var uuid = require('uuid');
-var Discord = require('../lib/discord')
+const express = require('express');
+const router = express.Router();
+const Discord = require('../lib/discord')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -20,8 +19,8 @@ router.get('/login', async function(req, res, next) {
   discord.checkAllowedUser().then((data) => {
     if (data.access === true) {
       req.session.user = data.user;
+      req.session.userId = data.userId;
       req.session.acl = data.acl;
-      req.session.id = uuid.v4();
       req.session.save(() => {
         res.redirect('/');
       })

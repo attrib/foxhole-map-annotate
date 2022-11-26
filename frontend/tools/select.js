@@ -1,4 +1,4 @@
-const {never, singleClick} = require("ol/events/condition");
+const {never} = require("ol/events/condition");
 const {Style, Circle, Stroke} = require("ol/style");
 const {SelectEvent} = require("ol/interaction/Select");
 const {Select: OlSelect} = require("ol/interaction")
@@ -19,12 +19,6 @@ class Select {
     this.select = new OlSelect({
       multi: false,
       toggleCondition: never,
-      condition: (event) => {
-        if (this.tools.iconTools.includes(this.tools.selectedTool)) {
-          return false;
-        }
-        return singleClick(event)
-      },
       style: this.selectStyle(),
       filter: (feature) => {
         return !(feature.get('type') && ['Region', 'Major', 'Minor', 'town', 'industry', 'field'].includes(feature.get('type')));
@@ -41,7 +35,9 @@ class Select {
         }
         if (event.selected.length > 0) {
           const type = event.selected[0].get('type')
-          this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
+          if (tools.hasAccess(type + '.edit', event.selected[0])) {
+            this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
+          }
         }
       }
       if (event.deselected.length > 0) {

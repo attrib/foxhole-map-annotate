@@ -5,7 +5,6 @@ Annotate and draw on the foxhole map and share with your group.
 ## Ideas
 
 * event log
-* improve role system
 * implement deactivated hexes
 * increase button sizes (by [RDRT] A Devil Chicken)
 * gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
@@ -32,7 +31,6 @@ Annotate and draw on the foxhole map and share with your group.
 * Rework WebSockets to allow partial updates (localStorage?) 
 * investigate about rate limits for discord api
 * Admin Routes (new war start - reload icons/tracks - reload/edit allowed users)
-* Config file watcher
 
 ## Run Dev
 

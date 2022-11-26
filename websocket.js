@@ -4,7 +4,7 @@ const wss = new webSocket.Server({clientTracking: false, noServer: true});
 const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
-const {ACL_FULL, ACL_ICONS_ONLY} = require("./lib/ACLS");
+const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
 const {trackUpdater, iconUpdater} = require("./lib/updater");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions} = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
@@ -36,11 +36,15 @@ else {
 }
 
 wss.on('connection', function (ws, request) {
-    if (!request.session.user || !request.session.id) {
+    if (!request.session.user || !request.session.userId) {
       ws.close();
     }
     const username = request.session.user;
+    const userId = request.session.userId;
     const acl = request.session.acl;
+    const wsId = uuid.v4();
+    clients.set(wsId, ws);
+
     ws.send(JSON.stringify({
       type: 'init',
       data: {
@@ -51,8 +55,6 @@ wss.on('connection', function (ws, request) {
     }));
     sendTracks(ws);
     sendIcons(ws);
-
-    clients.set(request.session.id, ws);
 
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
@@ -68,12 +70,13 @@ wss.on('connection', function (ws, request) {
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (acl !== ACL_FULL) {
+          if (!hasAccess(userId, acl, ACL_ACTIONS.TRACK_ADD, message.data)) {
             break;
           }
           message.data.id = uuid.v4()
           message.data.properties.id = message.data.id
           message.data.properties.user = username
+          message.data.properties.userId = userId
           message.data.properties.time = (new Date()).toISOString()
           tracks.features.push(message.data)
           sendTracksToAll();
@@ -84,13 +87,14 @@ wss.on('connection', function (ws, request) {
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (acl !== ACL_FULL) {
-            break;
-          }
           for (const existingTracks of tracks.features) {
             if (message.data.properties.id === existingTracks.properties.id) {
+              if (!hasAccess(userId, acl, ACL_ACTIONS.TRACK_EDIT, message.data)) {
+                return;
+              }
               existingTracks.properties = message.data.properties
-              existingTracks.properties.user = username
+              existingTracks.properties.muser = username
+              existingTracks.properties.muserId = userId
               existingTracks.properties.time = (new Date()).toISOString()
               existingTracks.geometry = message.data.geometry
             }
@@ -103,10 +107,13 @@ wss.on('connection', function (ws, request) {
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (acl !== ACL_FULL) {
-            break;
+          for (const existingTrack of tracks.features) {
+            if (message.data.id === existingTrack.properties.id) {
+              if (!hasAccess(userId, acl, ACL_ACTIONS.TRACK_DELETE, existingTrack)) {
+                return;
+              }
+            }
           }
-          console.log('delete', message.data.id, tracks.features.length)
           tracks.features = tracks.features.filter((feature) => {
             return feature.properties.id !== message.data.id
           })
@@ -118,16 +125,14 @@ wss.on('connection', function (ws, request) {
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
-            break;
-          }
           const feature = message.data;
-          if (acl === ACL_ICONS_ONLY && feature.properties.type !== 'information') {
-            break;
+          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_ADD, feature)) {
+            return;
           }
           feature.id = uuid.v4()
           feature.properties.id = feature.id
           feature.properties.user = username
+          feature.properties.userId = userId
           feature.properties.time = (new Date()).toISOString()
           icons.features.push(feature)
           sendIconsToAll()
@@ -138,19 +143,17 @@ wss.on('connection', function (ws, request) {
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
-            break;
-          }
           if (message.data.properties.type === 'field') {
             break;
           }
           for (const existingIcon of icons.features) {
             if (message.data.properties.id === existingIcon.properties.id) {
-              if (acl === ACL_ICONS_ONLY && existingIcon.properties.type !== 'information') {
-                break;
+              if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_EDIT, existingIcon)) {
+                return;
               }
               existingIcon.properties = message.data.properties
-              existingIcon.properties.user = username
+              existingIcon.properties.muser = username
+              existingIcon.properties.muserId = userId
               existingIcon.properties.time = (new Date()).toISOString()
               existingIcon.geometry = message.data.geometry
             }
@@ -163,14 +166,9 @@ wss.on('connection', function (ws, request) {
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
-            break;
-          }
-          if (acl === ACL_ICONS_ONLY) {
-            const feature = icons.features.find((value) => value.properties.id === message.data.id)
-            if (feature && feature.properties.type !== 'information') {
-              break;
-            }
+          const featureIconDelete = icons.features.find((value) => value.properties.id === message.data.id)
+          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_DELETE, featureIconDelete)) {
+            return;
           }
           icons.features = icons.features.filter((feature) => {
             return feature.properties.id !== message.data.id
@@ -187,13 +185,15 @@ wss.on('connection', function (ws, request) {
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (acl !== ACL_FULL && acl !== ACL_ICONS_ONLY) {
-            break;
+          if (!hasAccess(userId, acl, ACL_ACTIONS.DECAY_UPDATE)) {
+            return;
           }
           let features = message.data.type === 'track' ? tracks : icons
           for (const feature of features.features) {
             if (feature.properties.id === message.data.id) {
               feature.properties.time = (new Date()).toISOString()
+              feature.properties.muser = username
+              feature.properties.muserId = userId
               sendDataToAll('decayUpdated', {
                 id: feature.properties.id,
                 type: feature.properties.type,
@@ -206,7 +206,7 @@ wss.on('connection', function (ws, request) {
     });
 
     ws.on('close', function () {
-      clients.delete(request.session.id);
+      clients.delete(wsId);
     });
   }
 );

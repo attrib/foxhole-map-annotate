@@ -2,7 +2,7 @@ const Edit = require("./tools/edit");
 const Track = require("./tools/track");
 const Signs = require("./tools/signs");
 const Facilities = require("./tools/facilities");
-const {ACL_FULL, ACL_ICONS_ONLY, ACL_READ} = require("../lib/ACLS");
+const {ACL_FULL, ACL_READ, ACL_MOD, ACL_ADMIN, hasAccess} = require("../lib/ACLS");
 const Information = require("./tools/information");
 const Select = require("./tools/select");
 const TrackSplit = require("./tools/trackSplit");
@@ -11,6 +11,7 @@ const FacilitiesEnemy = require("./tools/facilitiesEnemy");
 const FacilitiesCustom = require("./tools/facilitiesCustom");
 const Base = require("./tools/base");
 const {Group} = require("ol/layer");
+const {GeoJSON} = require("ol/format");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -38,6 +39,9 @@ class EditTools {
      */
     constructor(map) {
         this.map = map
+
+        this.userId = document.getElementById('discord-username').dataset.userId;
+        this.geoJson = new GeoJSON();
 
         this.facilitiesGroup = new Group({
             title: 'All Facilities',
@@ -76,11 +80,11 @@ class EditTools {
 
     initAcl = (acl) => {
         this.acl = acl;
-        if (acl === ACL_FULL || acl === ACL_ICONS_ONLY) {
+        if (acl !== ACL_READ) {
             this.map.addControl(this.edit.control)
             this.map.addControl(this.information.control)
         }
-        if (acl === ACL_FULL) {
+        if (acl === ACL_FULL || acl === ACL_MOD || acl === ACL_ADMIN) {
             this.map.addControl(this.sign.control)
             this.map.addControl(this.base.control)
             //this.map.addControl(this.field.control) // Maybe later for a admin role
@@ -91,6 +95,10 @@ class EditTools {
             this.map.addControl(this.track.control)
             this.map.addControl(this.trackSplit.control)
         }
+    }
+
+    hasAccess = (action, feature = null) => {
+        return hasAccess(this.userId, this.acl, action, this.geoJson.writeFeatureObject(feature))
     }
 
     changeMode = (newMode) => {
