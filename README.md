@@ -28,6 +28,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * public oil marker (by [HAULR] Barteng)
 * public water marker  (by [HAULR] Barteng)
 * Dedicated text box on the map (by [✚RMC✚] EllieTau (QM))
+* auto expiring icons (by [CHI] Arctifire) 
 
 ## DevTodos
 

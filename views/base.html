@@ -51,8 +51,16 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item"><a class="nav-link {% if path == '/' %}active{% endif %}" href="/">Map</a></li>
-                                {% if acl === 'moderator' or acl === 'admin' %}
-                                    <li class="nav-item"><a class="nav-link {% if path == '/admin' %}active{% endif %}" href="/admin">Admin</a></li>
+                                {% if acl === 'admin' %}
+                                    <li class="nav-item dropdown">
+                                        <span class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</span>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item {% if path == '/admin/eventlog' %}active{% endif %}" href="/admin/eventlog">Eventlog</a></li>
+                                            <li><a class="dropdown-item {% if path == '/admin/config' %}active{% endif %}" href="/admin/config">Config</a></li>
+                                        </ul>
+                                    </li>
+                                {% elseif acl === 'moderator' %}
+                                    <li class="nav-item"><a class="nav-link {% if path == '/admin/eventlog' %}active{% endif %}" href="/admin/eventlog">Admin</a></li>
                                 {% endif %}
                                 <li class="nav-item flex-grow-1"><a class="nav-link {% if path == '/help' %}active{% endif %}" href="/help">Help</a></li>
                             </ul>

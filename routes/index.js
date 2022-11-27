@@ -20,11 +20,25 @@ router.get('/admin', async function (req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN && req.session.acl !== ACL_MOD)) {
     return res.redirect('/');
   }
-  res.locals.events = await eventLog.getLastLines()
-  res.render('admin');
+  return res.redirect('/admin/eventlog');
 })
 
-router.post('/admin', function(req, res, next) {
+router.get('/admin/eventlog', async function (req, res, next) {
+  if (!req.session || (req.session.acl !== ACL_ADMIN && req.session.acl !== ACL_MOD)) {
+    return res.redirect('/');
+  }
+  res.locals.events = await eventLog.getLastLines()
+  res.render('admin.eventlog.html');
+})
+
+router.get('/admin/config', async function (req, res, next) {
+  if (!req.session || req.session.acl !== ACL_ADMIN) {
+    return res.redirect('/');
+  }
+  res.render('admin.config.html');
+})
+
+router.post('/admin/config', function(req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN)) {
     return res.redirect('/');
   }
