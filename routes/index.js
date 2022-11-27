@@ -120,7 +120,7 @@ router.post('/admin/config', function(req, res, next) {
     }
   }
   config.save()
-  return res.redirect('/admin');
+  return res.redirect('/admin/config');
 })
 
 router.get('/login', async function(req, res, next) {
