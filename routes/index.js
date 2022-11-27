@@ -127,6 +127,9 @@ router.get('/login', async function(req, res, next) {
   if (req.session.grant === undefined) {
     return res.redirect('/');
   }
+  if (req.session.grant.error) {
+    throw new Error(req.session.grant.error)
+  }
   let discord = new Discord(req.session.grant.response.access_token);
   discord.checkAllowedUser().then((data) => {
     if (data.access === true) {
