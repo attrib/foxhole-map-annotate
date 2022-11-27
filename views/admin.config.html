@@ -146,7 +146,6 @@
                     </div>
                 </div>
             {% endfor %}
-            {% if config.access.roles|length < 4 %}
             <div class="mb-3 row">
                 <div class="col-sm-4">
                     <input type="text" class="form-control" name="accessDiscord" placeholder="Discord ID" value="">
@@ -155,12 +154,6 @@
                     <input type="text" class="form-control" name="accessDiscordComment" placeholder="Comment" value="">
                 </div>
             </div>
-            {% else %}
-            <div class="mb-3 row">
-                Reached max amount of discords to check. To workaround this a discord bots needs to be implemented.
-                This is a limitation of the discord API.
-            </div>
-            {% endif %}
             <div class="mb-3 row">
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary mb-3">Save</button>

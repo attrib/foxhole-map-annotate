@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 
+{% set showSelect = config.access.roles|length > 1  %}
+
 {% block javascript %}
+{% if showSelect %}
+<script>
+    const preferredDiscordServer = localStorage.getItem('preferredDiscordServer')
+    const serverSelect = document.getElementById('server')
+    const loginButton = document.getElementById('loginButton')
+
+    if (preferredDiscordServer) {
+        serverSelect.value = preferredDiscordServer
+    }
+
+    setServer()
+
+    serverSelect.addEventListener('change', setServer)
+
+    function setServer() {
+      loginButton.href = '/connect/discord?discordServerId=' + serverSelect.value
+      localStorage.setItem('preferredDiscordServer', serverSelect.value)
+    }
+</script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -8,9 +30,23 @@
     <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">Login required</h1>
         {{ config.text.login | safe }}
-        <p>
-            <a href="/connect/discord" class="btn btn-primary btn-lg">Login</a>
-        </p>
+        <div class="row">
+            {% if showSelect %}
+            <div class="col-auto row">
+                <label for="server" class="col-form-label col-auto">Login via</label>
+                <div class="col-auto">
+                <select id="server" class="form-select form-control">
+                    {% for server, roles in config.access.roles %}
+                        <option value="{{ server }}">{{ config.accessComments.roles[server].name|default(server) }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+            </div>
+            {% endif %}
+            <div class="col-auto">
+                <a href="/connect/discord" class="btn btn-primary" id="loginButton">Login</a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

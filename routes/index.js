@@ -131,6 +131,9 @@ router.get('/login', async function(req, res, next) {
     throw new Error(req.session.grant.error)
   }
   let discord = new Discord(req.session.grant.response.access_token);
+  if (req.session.grant.dynamic && req.session.grant.dynamic.discordServerId) {
+    discord.preferredDiscordServer = req.session.grant.dynamic.discordServerId
+  }
   discord.checkAllowedUser().then((data) => {
     if (data.access === true) {
       req.session.user = data.user;
