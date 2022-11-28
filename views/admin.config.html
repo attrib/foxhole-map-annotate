@@ -1,165 +1,190 @@
 {% extends "base.html" %}
 
+{% block javascript %}
+<script src="/dist/admin.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="p-5 m-4 bg-light rounded-3 text-bg-light">
     <div class="container-fluid py-5">
         <h2>Configuration</h2>
         <form action="/admin/config" method="post">
-            <div class="mb-3 row">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="title" name="title" value="{{ config.basic.title }}">
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="color" class="col-sm-2 col-form-label">Navbar Color</label>
-                <div class="col-sm-10">
-                    <input type="color" class="form-control" id="color" name="color" value="{{ config.basic.color }}">
-                </div>
-            </div>
-            <h4>Links</h4>
-            <p>Links are shown as a drop down menu under the shard name/war number</p>
-            {% for link in config.basic.links %}
-                <div class="mb-3 row">
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" name="linkTitle" value="{{ link.title }}" placeholder="Link Title">
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" name="linkHref" value="{{ link.href }}" placeholder="Link destination">
-                    </div>
-                </div>
-            {% endfor %}
-            <div class="mb-3 row">
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="linkTitle" placeholder="Link Title">
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="linkHref" placeholder="Link destination">
-                </div>
-            </div>
-            <h4>Texts</h4>
-            <div class="mb-3 row">
-                <label for="text-login" class="form-label">Login Page Text</label>
-                <textarea class="form-control" id="text-login" rows="3" name="textLogin">{{ config.text.login }}</textarea>
-            </div>
-            <div class="mb-3 row">
-                <label for="text-accessDenied" class="form-label">Access Denied</label>
-                <textarea class="form-control" id="text-accessDenied" rows="3" name="textAccessDenied">{{ config.text.accessDenied }}</textarea>
-            </div>
-            <div class="mb-3 row">
-                <label for="text-feedback" class="form-label">Feedback</label>
-                <textarea class="form-control" id="text-feedback" rows="3" name="textFeedback">{{ config.text.feedback }}</textarea>
-            </div>
-            <div class="mb-3 row">
-                <label for="text-contributors" class="form-label">Contributors</label>
-                <textarea class="form-control" id="text-contributors" rows="3" name="textContributors">{{ config.text.contributors }}</textarea>
-            </div>
-            <h4>Role Assigment</h4>
-            <h6>Specific User Roles</h6>
-            <p>
-                If a user has a specific user role, it will ignore all server roles. Also Discord username is used in the case and not the Discord server username.<br>
-                Therefor should be used only of admins or blocked.
-            </p>
-            {% for user, role in config.access.users %}
-                <div class="mb-3 row">
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="accessUser" placeholder="User ID" value="{{ user }}">
-                    </div>
-                    <div class="col-sm-4">
-                        <select name="accessUserRole" class="form-select">
-                            <option value="read" {% if role === 'read' %}selected{% endif %}>Read</option>
-                            <option value="icons" {% if role === 'icons' %}selected{% endif %}>Icons</option>
-                            <option value="full" {% if role === 'full' %}selected{% endif %}>Full</option>
-                            <option value="moderator" {% if role === 'moderator' %}selected{% endif %}>Moderator</option>
-                            <option value="admin" {% if role === 'admin' %}selected{% endif %}>Admin</option>
-                            <option value="blocked" {% if role === 'blocked' %}selected{% endif %}>Blocked</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="accessUserComment" placeholder="Comment" value="{{ config.accessComments.users[user]|default('') }}">
-                    </div>
-                </div>
-            {% endfor %}
-            <div class="mb-3 row">
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="accessUser" placeholder="User ID" value="">
-                </div>
-                <div class="col-sm-4">
-                    <select name="accessUserRole" class="form-select">
-                        <option value="read">Read</option>
-                        <option value="icons">Icons</option>
-                        <option value="full">Full</option>
-                        <option value="moderator">Moderator</option>
-                        <option value="admin">Admin</option>
-                        <option value="blocked">Blocked</option>
-                    </select>
-                </div>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="accessUserComment" placeholder="Comment" value="">
-                </div>
-            </div>
-            <h6>Assign roles to discord roles</h6>
-            {% for discordId, roles in config.access.roles %}
-                <div class="mb-3 row">
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="accessDiscord" placeholder="Discord ID" value="{{ discordId }}">
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="accessDiscordComment" placeholder="Comment" value="{{ config.accessComments.roles[discordId].name|default('') }}">
-                    </div>
-                    {% for discordRoleId, role in roles %}
-                    <div class="row px-5 m-1">
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" name="accessDiscordRole[{{ discordId }}]" placeholder="User ID" value="{{ discordRoleId }}">
-                        </div>
-                        <div class="col-sm-4">
-                            <select name="accessDiscordRoleAssigment[{{ discordId }}]" class="form-select">
-                                <option value="read" {% if role === 'read' %}selected{% endif %}>Read</option>
-                                <option value="icons" {% if role === 'icons' %}selected{% endif %}>Icons</option>
-                                <option value="full" {% if role === 'full' %}selected{% endif %}>Full</option>
-                                <option value="moderator" {% if role === 'moderator' %}selected{% endif %}>Moderator</option>
-                                <option value="blocked" {% if role === 'blocked' %}selected{% endif %}>Blocked</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" name="accessDiscordRoleComment[{{ discordId }}]" placeholder="Comment" value="{{ config.accessComments.roles[discordId][discordRoleId]|default('') }}">
+            <ul class="nav nav-tabs mb-3" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Basic</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="discord-tab" data-bs-toggle="tab" data-bs-target="#discord-tab-pane" type="button" role="tab" aria-controls="discord-tab-pane" aria-selected="false">Discord Permissions</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="texts-tab" data-bs-toggle="tab" data-bs-target="#texts-tab-pane" type="button" role="tab" aria-controls="texts-tab-pane" aria-selected="false">Texts</button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="basic-tab-pane" role="tabpanel" aria-labelledby="basic-tab" tabindex="0">
+                    <div class="mb-3 row">
+                        <label for="title" class="col-sm-2 col-form-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="title" name="title" value="{{ config.basic.title }}">
                         </div>
                     </div>
+                    <div class="mb-3 row">
+                        <label for="color" class="col-sm-2 col-form-label">Navbar Color</label>
+                        <div class="col-sm-10">
+                            <input type="color" class="form-control" id="color" name="color" value="{{ config.basic.color }}">
+                        </div>
+                    </div>
+                    <h4>Links</h4>
+                    <p>Links are shown as a drop down menu under the shard name/war number</p>
+                    {% for link in config.basic.links %}
+                    {{ linkRow(link) }}
                     {% endfor %}
-                    <div class="row px-5 m-1">
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" name="accessDiscordRole[{{ discordId }}]" placeholder="User ID">
-                        </div>
-                        <div class="col-sm-4">
-                            <select name="accessDiscordRoleAssigment[{{ discordId }}]" class="form-select">
-                                <option value="read">Read</option>
-                                <option value="icons">Icons</option>
-                                <option value="full">Full</option>
-                                <option value="moderator">Moderator</option>
-                                <option value="admin">Admin</option>
-                                <option value="blocked">Blocked</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" name="accessDiscordRoleComment[{{ discordId }}]" placeholder="Comment">
-                        </div>
+                    <template id="link-add">
+                        {{ linkRow({title:'',href:''}) }}
+                    </template>
+                    <div class="mb-3 row">
+                        <button data-template-id="link-add" class="btn btn-primary col-1 offset-11 addRow">+</button>
                     </div>
                 </div>
-            {% endfor %}
-            <div class="mb-3 row">
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="accessDiscord" placeholder="Discord ID" value="">
+
+                <div class="tab-pane fade" id="texts-tab-pane" role="tabpanel" aria-labelledby="texts-tab" tabindex="0">
+                    <div class="mb-3 row">
+                        <label for="text-login" class="form-label">Login Page Text</label>
+                        <textarea class="form-control" id="text-login" rows="3" name="textLogin">{{ config.text.login }}</textarea>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="text-accessDenied" class="form-label">Access Denied</label>
+                        <textarea class="form-control" id="text-accessDenied" rows="3" name="textAccessDenied">{{ config.text.accessDenied }}</textarea>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="text-feedback" class="form-label">Feedback</label>
+                        <textarea class="form-control" id="text-feedback" rows="3" name="textFeedback">{{ config.text.feedback }}</textarea>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="text-contributors" class="form-label">Contributors</label>
+                        <textarea class="form-control" id="text-contributors" rows="3" name="textContributors">{{ config.text.contributors }}</textarea>
+                    </div>
                 </div>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="accessDiscordComment" placeholder="Comment" value="">
+
+                <div class="tab-pane fade" id="discord-tab-pane" role="tabpanel" aria-labelledby="discord-tab" tabindex="0">
+                    <h6>Specific User Roles</h6>
+                    <p>
+                        If a user has a specific user role, it will ignore all server roles. Also Discord username is used in the case and not the Discord server username.<br>
+                        Therefor should be used only of admins or blocked.
+                    </p>
+                    {% for userId, user in config.access.users %}
+                    {{ userRow(userId, user) }}
+                    {% endfor %}
+                    <template id="user-add">
+                        {{ userRow('', {name:'',acl:''}) }}
+                    </template>
+                    <div class="mb-3 row">
+                        <div class="col-11 text-end btn">Add new User</div>
+                        <button data-template-id="user-add" class="btn btn-primary col-1 addRow">+</button>
+                    </div>
+
+                    <h6>Assign roles to discord roles</h6>
+                    {% for discordId, discord in config.access.discords %}
+                    {{ discordRow(discordId, discord) }}
+                    {% endfor %}
+                    <template id="discord-add">
+                        {{ discordRow('', {}) }}
+                    </template>
+                    <div class="mb-3 row">
+                        <div class="col-11 text-end btn">Add new Discord Server</div>
+                        <button data-template-id="discord-add" class="btn btn-primary col-1 addRow">+</button>
+                    </div>
                 </div>
             </div>
+
+
             <div class="mb-3 row">
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary mb-3">Save</button>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
 {% endblock %}
+
+{% macro linkRow(link) %}
+<div class="mb-3 row">
+    <div class="col-sm-5">
+        <input type="text" class="form-control" name="link[title][]" value="{{ link.title }}" placeholder="Link Title">
+    </div>
+    <div class="col-sm-6">
+        <input type="text" class="form-control" name="link[href][]" value="{{ link.href }}" placeholder="Link destination">
+    </div>
+    <button class="btn btn-danger col-sm-1 deleteRow">-</button>
+</div>
+{% endmacro %}
+
+{% macro userRow(userId, user) %}
+<div class="mb-3 row">
+    <div class="col-sm-3">
+        <input type="text" class="form-control" name="access[users][id][]" placeholder="User ID" value="{{ userId }}">
+    </div>
+    <div class="col-sm-4">
+        <select name="access[users][acl][]" class="form-select">
+            <option value="read" {% if user.acl === 'read' %}selected{% endif %}>Read</option>
+            <option value="icons" {% if user.acl === 'icons' %}selected{% endif %}>Icons</option>
+            <option value="full" {% if user.acl === 'full' %}selected{% endif %}>Full</option>
+            <option value="moderator" {% if user.acl === 'moderator' %}selected{% endif %}>Moderator</option>
+            <option value="admin" {% if user.acl === 'admin' %}selected{% endif %}>Admin</option>
+            <option value="blocked" {% if user.acl === 'blocked' %}selected{% endif %}>Blocked</option>
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" name="access[users][name][]" placeholder="User Name / Comment" value="{{ user.name }}">
+    </div>
+    <button class="btn btn-danger col-sm-1 deleteRow">-</button>
+</div>
+{% endmacro %}
+
+{% macro roleRow(discordId, discordRoleId, role) %}
+<div class="row px-5 m-1">
+    <div class="col-sm-3">
+        <input type="text" class="form-control discordIdChange" name="access[discords][{{discordId}}][roles][id][]" placeholder="Role ID" value="{{ discordRoleId }}">
+    </div>
+    <div class="col-sm-4">
+        <select name="access[discords][{{discordId}}][roles][acl][]" class="form-select discordIdChange">
+            <option value="read" {% if role.acl === 'read' %}selected{% endif %}>Read</option>
+            <option value="icons" {% if role.acl === 'icons' %}selected{% endif %}>Icons</option>
+            <option value="full" {% if role.acl === 'full' %}selected{% endif %}>Full</option>
+            <option value="moderator" {% if role.acl === 'moderator' %}selected{% endif %}>Moderator</option>
+            <option value="blocked" {% if role.acl === 'blocked' %}selected{% endif %}>Blocked</option>
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <input type="text" class="form-control discordIdChange" name="access[discords][{{discordId}}][roles][name][]" placeholder="Role Name" value="{{ role.name }}">
+    </div>
+    <button class="btn btn-danger col-sm-1 deleteRow">-</button>
+</div>
+{% endmacro %}
+
+{% macro discordRow(discordId, discord) %}
+<div class="mb-3 row">
+    <div class="col-sm-3">
+        <input type="text" class="form-control discordId" name="access[discords][id][]" placeholder="Discord ID" value="{{ discordId }}">
+    </div>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" name="access[discords][name][]" placeholder="Discord Server Name" value="{{ discord.name }}">
+    </div>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" name="access[discords][hidden][]" placeholder="Hidden Code" value="{{ discord.hiddenCode }}">
+    </div>
+    <button class="btn btn-danger col-sm-1 deleteRow">-</button>
+    {% for discordRoleId, role in discord.roles %}
+        {{ roleRow(discordId, discordRoleId, role) }}
+    {% endfor %}
+    <template id="discord-role-add{{discordId}}">
+    {{ roleRow(discordId, '', {name:'',acl:''}) }}
+    </template>
+    <div class="row px-5 m-1">
+        <div class="col-11 text-end btn">Add new Discord Role</div>
+        <button data-template-id="discord-role-add{{discordId}}" class="btn btn-primary col-1 addRow">+</button>
+    </div>
+</div>
+{% endmacro %}

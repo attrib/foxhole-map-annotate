@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% set showSelect = config.access.roles|length > 1  %}
+{% set showSelect = config.access.discords|length > 1  %}
 
 {% block javascript %}
 {% if showSelect %}
@@ -8,9 +8,24 @@
     const preferredDiscordServer = localStorage.getItem('preferredDiscordServer')
     const serverSelect = document.getElementById('server')
     const loginButton = document.getElementById('loginButton')
+    const params = new URLSearchParams(location.search);
 
-    if (preferredDiscordServer) {
-        serverSelect.value = preferredDiscordServer
+    if (preferredDiscordServer && !params.has('hiddenCode')) {
+      const options = document.getElementsByTagName('option')
+      let found = false
+      for (const option of options) {
+        if (option.value === preferredDiscordServer) {
+          found = true
+        }
+      }
+      if (!found) {
+        const newOption = document.createElement('option')
+        newOption.value = preferredDiscordServer
+        newOption.text = 'Hidden Server (previously selected)'
+        serverSelect.append(newOption)
+      }
+      serverSelect.value = preferredDiscordServer
+      console.log('selected', preferredDiscordServer, params)
     }
 
     setServer()
@@ -36,8 +51,10 @@
                 <label for="server" class="col-form-label col-auto">Login via</label>
                 <div class="col-auto">
                 <select id="server" class="form-select form-control">
-                    {% for server, roles in config.access.roles %}
-                        <option value="{{ server }}">{{ config.accessComments.roles[server].name|default(server) }}</option>
+                    {% for discordId, discord in config.access.discords %}
+                        {% if not discord.hiddenCode or discord.hiddenCode === hiddenCode %}
+                        <option value="{{ discordId }}" {% if discord.hiddenCode === hiddenCode %}selected{% endif %}>{{ discord.name }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 </div>

@@ -43,7 +43,7 @@ else {
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionParser)
 app.use(grant({
@@ -92,6 +92,7 @@ app.use((req, res, next) => {
     }
   }
   else {
+    res.locals.hiddenCode = req.query.hiddenCode || false
     res.locals.user = false
     res.status(req.path === '/' ? 200 : 403);
     res.render('login');
