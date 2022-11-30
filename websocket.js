@@ -9,6 +9,7 @@ const {trackUpdater, iconUpdater} = require("./lib/updater");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions} = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
+const sanitizeHtml = require("sanitize-html");
 
 setTimeout(conquerUpdater, 10000)
 
@@ -35,6 +36,20 @@ else {
     features: [],
   }
 }
+
+const sanitizeOptions = {
+  allowedTags: [ 'b', 'i', 'em', 'strong', 'a', 'p', 'img', 'video', 'source' ],
+  allowedAttributes: {
+    'a': [ 'href', 'title' ],
+    'img': [ 'src', 'alt', 'title', 'width', 'height' ],
+    'video': [ 'width', 'height' ],
+    'source': [ 'src', 'type' ],
+  },
+};
+const sanitizeOptionsClan = {
+  allowedTags: [ ],
+  allowedAttributes: { },
+};
 
 wss.on('connection', function (ws, request) {
     if (!request.session.user || !request.session.userId) {
@@ -79,6 +94,9 @@ wss.on('connection', function (ws, request) {
           message.data.properties.user = username
           message.data.properties.userId = userId
           message.data.properties.time = (new Date()).toISOString()
+          message.data.properties.color = sanitizeHtml(message.data.properties.color, sanitizeOptionsClan)
+          message.data.properties.clan = sanitizeHtml(message.data.properties.clan, sanitizeOptionsClan)
+          message.data.properties.notes = sanitizeHtml(message.data.properties.notes, sanitizeOptions)
           tracks.features.push(message.data)
           eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
           sendTracksToAll();
@@ -98,6 +116,9 @@ wss.on('connection', function (ws, request) {
               existingTracks.properties.muser = username
               existingTracks.properties.muserId = userId
               existingTracks.properties.time = (new Date()).toISOString()
+              existingTracks.properties.color = sanitizeHtml(message.data.properties.color, sanitizeOptionsClan)
+              existingTracks.properties.clan = sanitizeHtml(message.data.properties.clan, sanitizeOptionsClan)
+              existingTracks.properties.notes = sanitizeHtml(message.data.properties.notes, sanitizeOptions)
               existingTracks.geometry = message.data.geometry
               eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
             }
@@ -140,6 +161,7 @@ wss.on('connection', function (ws, request) {
           feature.properties.user = username
           feature.properties.userId = userId
           feature.properties.time = (new Date()).toISOString()
+          feature.properties.notes = sanitizeHtml(feature.properties.notes, sanitizeOptions)
           icons.features.push(feature)
           eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
           sendIconsToAll()
@@ -162,6 +184,7 @@ wss.on('connection', function (ws, request) {
               existingIcon.properties.muser = username
               existingIcon.properties.muserId = userId
               existingIcon.properties.time = (new Date()).toISOString()
+              existingIcon.properties.notes = sanitizeHtml(existingIcon.properties.notes, sanitizeOptions)
               existingIcon.geometry = message.data.geometry
               eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
             }
