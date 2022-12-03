@@ -40,9 +40,7 @@ class Edit {
     })
     tools.on(tools.EVENT_EDIT_MODE_ENABLED, this.editModeEnabled)
     tools.on(tools.EVENT_EDIT_MODE_DISABLED, this.editModeDisabled)
-  }
 
-  editModeEnabled = () => {
     this.modify = new Modify({
       features: this.tools.select.getFeatures(),
       deleteCondition: (event) => {
@@ -54,11 +52,8 @@ class Edit {
           event.stopPropagation()
           const feature = this.tools.select.getFeatures().pop()
           const type = feature.get('type')
-          this.tools.emit(type + '-deselected', feature);
-          if (type === 'track') {
-            this.tools.emit(this.tools.EVENT_TRACK_DELETE, feature)
-          }
-          else if (this.tools.iconTools.includes(type)) {
+          this.tools.emit(type + '-deselected', feature)
+          if (Object.keys(this.tools.iconTools).includes(type)) {
             this.tools.emit(this.tools.EVENT_ICON_DELETED, feature)
           }
           this.tools.select.changed()
@@ -67,13 +62,17 @@ class Edit {
         return false
       }
     });
+  }
+
+  editModeEnabled = () => {
     this.map.addInteraction(this.modify)
+    this.map.addInteraction(this.tools.line.snap)
   }
 
 
   editModeDisabled = () => {
     this.map.removeInteraction(this.modify)
-    this.modify = null
+    this.map.removeInteraction(this.tools.line.snap)
   }
 }
 

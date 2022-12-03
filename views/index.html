@@ -29,329 +29,389 @@
 {#            </div>#}
 {#        </div>#}
 
-        <div id="track-info" class="info-box bg-light text-bg-light container p-1 px-2">
-            <div class="placementInfo row align-content-center mb-1 mt-2">
-                <div class="user col-8"></div>
-                <div class="time col-4">
+        <div id="icon-info" class="info-box bg-light text-bg-light p-1 px-2">
+            <div class="placementInfo row align-items-center justify-content-between">
+                <div class="user col-auto"></div>
+                <div class="time col-auto">
                     <span class="clock">{% include 'clock.svg' %}</span>
                 </div>
             </div>
-            <div class="row mb-1">
-                <span class="col-6">Builder</span>
-                <span class="clan col-6"></span>
-            </div>
-            <div class="notes col-12 mb-2"></div>
-        </div>
-        <div id="track-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="track-form-clan" class="col-sm-3 col-form-label">Builder</label>
-                <div class="col-sm-9">
-                    <input id="track-form-clan" type="text" name="clan" placeholder="Builder" class="clan form-control">
-                </div>
-            </div>
-            <div class="row align-items-center mb-1">
-                <label for="track-form-color" class="col-sm-3 col-form-label">Color</label>
-                <div class="col-sm-9">
-                    <input id="track-form-color" type="color" name="color" class="color form-control" value="#555555">
-                </div>
-            </div>
-            <div class="row align-items-center mb-1">
-                <label for="track-form-type" class="col-sm-3 col-form-label">Type</label>
-                <div class="col-sm-9">
-                    <select id="track-form-type" name="type" class="form-control">
-                        <option value="single" selected>Train Track</option>
-                        <option value="water">Water Route</option>
-                        <option value="planned">Planned Line</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row align-items-center mb-1">
-                <label for="track-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="track-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row mb-2" id="track-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="track-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="track-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
+            <div class="notes col-auto"></div>
         </div>
 
-        <div id="icon-info" class="info-box bg-light text-bg-light container p-1 px-2">
-            <div class="placementInfo row align-items-center mt-2 mb-1">
-                <div class="user col-8"></div>
-                <div class="time col-4">
-                    <span class="clock">{% include 'clock.svg' %}</span>
-                </div>
-            </div>
-            <div class="notes col-12 mb-2"></div>
-        </div>
-
-        <div id="information-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="information-form-icon" class="col-sm-3 col-form-label">Icon</label>
-                <div class="col-sm-9">
-                    <select name="information" id="information-form-icon" class="form-control select2">
-                        <option value="information">Information</option>
-                        <option value="warning" selected>Warning</option>
-                        <option value="caution">Caution</option>
-                        <option value="danger">Danger</option>
-                        <option value="friendly_bridge_destroyed">Bridge Destroyed</option>
-                        <option value="friendly_freighter_blockade">Freighter Blockade</option>
-                        <option value="enemy_bridge_destroyed">Enemy Bridge Destroyed</option>
-                        <option value="enemy_freighter_blockade">Enemy Freighter Blockade</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-1 align-items-center">
-                <label for="information-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="information-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="information-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="information-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="information-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
-
-        <div id="base-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="base-form-icon" class="col-sm-3 col-form-label">Icon</label>
-                <div class="col-sm-9">
-                    <select name="base" id="base-form-icon" class="form-control select2">
-                        <option value="base" selected>Base</option>
-                        <option value="base_frontline">Frontline Base</option>
-                        <option value="base_obs">Obs Base</option>
-                        <option value="base_sleep">Base Sleep</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-1 align-items-center">
-                <label for="base-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="base-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="base-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="base-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="base-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
-
-        <div id="sign-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="sign-form-icon" class="col-sm-3 col-form-label">Sign</label>
-                <div class="col-sm-9">
-                    <select name="sign" id="sign-form-icon" class="form-control select2">
-                        <option value="dead_end">Dead End</option>
-                        <option value="dual_carriageway_ends_ahead">Dual Carriage Way Ends Ahead</option>
-                        <option value="keep_left">Keep Left</option>
-                        <option value="keep_right">Keep Right</option>
-                        <option value="level_crossing">Level Crossing</option>
-{#                        <option value="motorway">Motorway</option>#}
-{#                        <option value="motorway_end">Motorway End</option>#}
-                        <option value="no_entry_sign">No Entry</option>
-                        <option value="no_stopping">No Stopping</option>
-                        <option value="no_waiting">No Waiting</option>
-                        <option value="parking">Parking</option>
-                        <option value="Carriageway_Both_Points">Carriageway Both Points</option>
-                        <option value="Carriageway_Left_Point_Only">Carriageway Left Point Only</option>
-                        <option value="Carriageway_Right_Point_Only">Carriageway Right Point Only</option>
-                        <option value="Dual_Carriageway">Dual Carriageway</option>
-                        <option value="End_Of_Dual_Carriageway">End Of Dual Carriageway</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-1 align-items-center">
-                <label for="sign-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="sign-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="sign-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="sign-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="sign-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
-
-        <div id="field-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="field-form-icon" class="col-sm-3 col-form-label">Icon</label>
-                <div class="col-sm-9">
-                    <select name="icon" id="field-form-icon" class="form-control select2">
-                        <option value="scrap_field">Salvage</option>
-                        <option value="scrap_mine">Salvage Mine</option>
-                        <option value="coal_field">Coal</option>
-                        <option value="comp_field">Components</option>
-                        <option value="comp_mine">Components Mine</option>
-                        <option value="sulfur_field">Sulfur</option>
-                        <option value="sulfur_mine">Sulfur Mine</option>
-                        <option value="oil_field">Oil</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-1 align-items-center">
-                <label for="field-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="field-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="field-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="field-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="field-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
-
-        <div id="facility-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="facility-form-icon" class="col-sm-3 col-form-label">Icon</label>
-                <div class="col-sm-9">
-                    <select name="icon" id="facility-form-icon" class="form-control select2">
-                        <option value="generator">Generator</option>
-                        <option value="maintenance">Maintenance</option>
-                        <option value="port" selected>Sea Port</option>
-                        <option value="Rail_Yard">Rail Yard</option>
-                        <option value="public_facility_generic">Generic Facility</option>
-                        <option value="public_cmats">CMats</option>
-                        <option value="public_pcmats">PC Mats</option>
-                        <option value="public_scmats">Steel</option>
-                        <option value="public_diesel">Diesel</option>
-                        <option value="public_petrol">Petrol</option>
-                        <option value="public_heavy">Heavy Oil</option>
-                        <option value="public_enriched">Enriched Oil</option>
-                        <option value="public_ass_mats_1">AMats 1</option>
-                        <option value="public_ass_mats_2">AMats 2</option>
-                        <option value="public_ass_mats_3">AMats 3</option>
-                        <option value="public_ass_mats_4">AMats 4</option>
-                        <option value="public_ass_mats_5">AMats 5</option>
-                        <option value="public_ammo_facility">Ammo</option>
-                        <option value="public_vehicle_facility">Vehicle</option>
-                        <option value="public_tank_facility">Tank</option>
-                        <option value="public_train_facility">Train</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-1 align-items-center">
-                <label for="facility-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="facility-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="facility-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="facility-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="facility-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
-
-        <div id="facility-private-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="facility-private-form-icon" class="col-sm-3 col-form-label">Icon</label>
-                <div class="col-sm-9">
-                    <select name="icon" id="facility-private-form-icon" class="form-control select2">
-                        <option value="private_facility_generic">Generic Facility</option>
-                        <option value="private_cmats">CMats</option>
-                        <option value="private_pcmats">PC Mats</option>
-                        <option value="private_scmats">Steel</option>
-                        <option value="private_diesel">Diesel</option>
-                        <option value="private_petrol">Petrol</option>
-                        <option value="private_heavy">Heavy Oil</option>
-                        <option value="private_enriched">Enriched Oil</option>
-                        <option value="private_ass_mats_1">AMats 1</option>
-                        <option value="private_ass_mats_2">AMats 2</option>
-                        <option value="private_ass_mats_3">AMats 3</option>
-                        <option value="private_ass_mats_4">AMats 4</option>
-                        <option value="private_ass_mats_5">AMats 5</option>
-                        <option value="private_ammo_facility">Ammo</option>
-                        <option value="private_vehicle_facility">Vehicle</option>
-                        <option value="private_tank_facility">Tank</option>
-                        <option value="private_train_facility">Train</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-1 align-items-center">
-                <label for="facility-private-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="facility-private-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="facility-private-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="facility-private-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="facility-private-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
-
-        <div id="facility-enemy-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2">
-                <label for="facility-enemy-form-icon" class="col-sm-3 col-form-label">Icon</label>
-                <div class="col-sm-9">
-                    <select name="icon" id="facility-enemy-form-icon" class="form-control select2">
-                        <option value="enemy_base">Enemy Base</option>
-                        <option value="enemy_base_frontline">Enemy Frontline Base</option>
-                        <option value="enemy_base_obs">Enemy Obs Base</option>
-                        <option value="enemy_base_sleep">Enemy Base Sleep</option>
-                        <option value="enemy_facility_generic">Enemy Generic Facility</option>
-                        <option value="enemy_cmats">CMats</option>
-                        <option value="enemy_pcmats">PC Mats</option>
-                        <option value="enemy_scmats">Steel</option>
-                        <option value="enemy_diesel">Diesel</option>
-                        <option value="enemy_petrol">Petrol</option>
-                        <option value="enemy_heavy">Heavy Oil</option>
-                        <option value="enemy_enriched">Enriched Oil</option>
-                        <option value="enemy_ass_mats_1">AMats 1</option>
-                        <option value="enemy_ass_mats_2">AMats 2</option>
-                        <option value="enemy_ass_mats_3">AMats 3</option>
-                        <option value="enemy_ass_mats_4">AMats 4</option>
-                        <option value="enemy_ass_mats_5">AMats 5</option>
-                        <option value="enemy_ammo_facility">Ammo</option>
-                        <option value="enemy_vehicle_facility">Vehicle</option>
-                        <option value="enemy_tank_facility">Tank</option>
-                        <option value="enemy_train_facility">Train</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-1 align-items-center">
-                <label for="facility-enemy-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="facility-enemy-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="facility-enemy-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="facility-enemy-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="facility-enemy-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
-
-        <div id="facility-custom-form" class="form bg-light text-bg-light container mb-2">
-            <div class="row mb-1 mt-2 align-items-center">
-                <label for="facility-custom-form-notes" class="col-sm-3 col-form-label">Notes</label>
-                <div class="col-sm-9">
-                    <textarea id="facility-custom-form-notes" name="notes" class="notes form-control"></textarea>
-                </div>
-            </div>
-            <div class="row justify-content-between mb-2" id="facility-custom-form-buttons">
-                <div class="btn-group col-sm-12">
-                    <input id="facility-custom-form-delete" type="submit" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
-                    <input id="facility-custom-form-submit" type="submit" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
-                </div>
-            </div>
-        </div>
         
+    </div>
+    <div class="offcanvas offcanvas-start faction-background-color" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarLabel">Edit Mode</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mb-2">
+                <div class="row text-center">
+                    <div class="btn-group-lg btn-group" id="tool-buttons">
+                        <i class="btn bi bi-hexagon btn-outline-light" data-tool="polygon" title="Polygon"></i>
+                        <i class="btn bi bi-pencil btn-outline-light" data-tool="line" title="Line"></i>
+                        <i class="btn bi bi-scissors btn-outline-light" data-tool="scissor" title="Cut Line"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="row mb-1 mt-2">
+                    <label for="clan-input" class="col-sm-3 col-form-label">Builder</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="clan-input" name="clan" placeholder="Builder" class="clan form-control">
+                    </div>
+                </div>
+                <div class="row align-items-center mb-2">
+                    <label for="color-input" class="col-sm-3 col-form-label">Color</label>
+                    <div class="col-sm-9">
+                        <input type="color" id="color-input" name="color" class="color form-control" value="#555555">
+                    </div>
+                </div>
+                <div class="row align-items-center mb-2">
+                    <label for="line-type-input" class="col-sm-3 col-form-label">Type</label>
+                    <div class="col-sm-9">
+                        <select id="line-type-input" name="type" class="form-control">
+                            <option value="single" selected>Train Track</option>
+                            <option value="water">Water Route</option>
+                            <option value="planned">Planned Line</option>
+                            <option value="pipeline">Pipeline</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row align-items-center mb-2">
+                    <label for="notes-input" class="col-sm-3 col-form-label">Notes</label>
+                    <div class="col-sm-9">
+                        <textarea id="notes-input" name="notes" class="notes form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-2" id="button-row">
+                    <div class="btn-group col-sm-12">
+                        <input type="submit" id="delete-button" value="Delete" name="delete" class="submit col-sm-4 btn btn-danger">
+                        <input type="submit" id="save-button" value="Save" name="save" class="submit col-sm-4 btn btn-primary">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mb-2 mt-2 lh-lg">
+                <div class="tri-state-toggle" id="ppe-filter">
+                    <label for="public-radio">Public</label>
+                    <input class="button public" type="radio" name="toggle" id="public-radio" value="public-radio" checked/>
+                    <label for="private-radio">Private</label>
+                    <input class="button private" type="radio" name="toggle" id="private-radio" value="private-radio" />
+                    <label for="enemy-radio">Enemy</label>
+                    <input class="button enemy" type="radio" name="toggle" id="enemy-radio" value="enemy-radio" />
+                </div>
+            </div>
+
+            <div class="accordion" id="ppe-filter-content">
+                <div class="accordion-item">
+                    <h4 class="accordion-header" id="information-collapse-heading">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#information-collapse" aria-expanded="true" aria-controls="information-collapse">
+                            Information
+                        </button>
+                    </h4>
+                    <div id="information-collapse" class="accordion-collapse collapse show" aria-labelledby="information-collapse-heading">
+                        <div class="accordion-body p-1">
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/information/information.svg" alt="Information" title="Information">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/information/warning.svg" alt="Warning" title="Warning">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/information/caution.svg" alt="Caution" title="Caution">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/information/danger.svg" alt="Danger" title="Danger">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio private-radio">
+                                <img src="/images/information/friendly_bridge_destroyed.svg" alt="Bridge destroyed" title="Bridge destroyed">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/information/enemy_bridge_destroyed.svg" alt="Enemy Bridge destroyed" title="Enemy Bridge destroyed">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio private-radio">
+                                <img src="/images/information/friendly_freighter_blockade.svg" alt="Freighter Blockade" title="Freighter Blockade">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/information/enemy_freighter_blockade.svg" alt="Enemy Freighter Blockade" title="Enemy Freighter Blockade">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item hide-acl-icons">
+                    <h4 class="accordion-header" id="sign-collapse-heading">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#sign-collapse" aria-expanded="true" aria-controls="sign-collapse">
+                            Signs
+                        </button>
+                    </h4>
+                    <div id="sign-collapse" class="accordion-collapse collapse show" aria-labelledby="sign-collapse-heading">
+                        <div class="accordion-body p-1">
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/dead_end.svg" alt="Dead End" title="Dead End">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/dual_carriageway_ends_ahead.svg" alt="Dual Carriage Way Ends Ahead" title="Dual Carriage Way Ends Ahead">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/keep_left.svg" alt="Keep Left" title="Keep Left">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/keep_right.svg" alt="Keep Right" title="Keep Right">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/level_crossing.svg" alt="Level Crossing" title="Level Crossing">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/no_entry_sign.svg" alt="No Entry" title="No Entry">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/no_stopping.svg" alt="No Stopping" title="No Stopping">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/no_waiting.svg" alt="No Waiting" title="No Waiting">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/parking.svg" alt="Parking" title="Parking">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/Carriageway_Both_Points.svg" alt="Carriageway Both Points" title="Carriageway Both Points">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/Carriageway_Left_Point_Only.svg" alt="Carriageway Left Point Only" title="Carriageway Left Point Only">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/Carriageway_Right_Point_Only.svg" alt="Carriageway Right Point Only" title="Carriageway Right Point Only">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/Dual_Carriageway.svg" alt="Dual Carriageway" title="Dual Carriageway">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/sign/End_Of_Dual_Carriageway.svg" alt="End Of Dual Carriageway" title="End Of Dual Carriageway">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item hide-acl-icons">
+                    <h4 class="accordion-header" id="facilities-collapse-heading">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#facilities-collapse" aria-expanded="true" aria-controls="facilities-collapse">
+                            Facilities
+                        </button>
+                    </h4>
+                    <div id="facilities-collapse" class="accordion-collapse collapse show" aria-labelledby="facilities-collapse-heading">
+                        <div class="accordion-body p-1">
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/facility/generator.svg" alt="Generator" title="Generator">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/facility/maintenance.svg" alt="Maintenance" title="Maintenance">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/facility/port.svg" alt="Sea Port" title="Sea Port">
+                            </div>
+                            <div class="btn btn-outline-secondary">
+                                <img src="/images/facility/Rail_Yard.svg" alt="Rail Yard" title="Rail Yard">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_facility_generic.svg" alt="Generic Facility" title="Generic Facility">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_cmats.svg" alt="CMats" title="CMats">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_pcmats.svg" alt="PC Mats" title="PC Mats">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_scmats.svg" alt="Steel" title="Steel">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_diesel.svg" alt="Diesel" title="Diesel">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_petrol.svg" alt="Petrol" title="Petrol">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_heavy.svg" alt="Heavy Oil" title="Heavy Oil">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_enriched.svg" alt="Enriched Oil" title="Enriched Oil">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_ass_mats_1.svg" alt="AMats 1" title="AMats 1">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_ass_mats_2.svg" alt="AMats 2" title="AMats 2">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_ass_mats_3.svg" alt="AMats 3" title="AMats 3">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_ass_mats_4.svg" alt="AMats 4" title="AMats 4">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_ass_mats_5.svg" alt="AMats 5" title="AMats 5">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_ammo_facility.svg" alt="Ammo" title="Ammo">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_vehicle_facility.svg" alt="Vehicle" title="Vehicle">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_tank_facility.svg" alt="Tank" title="Tank">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio">
+                                <img src="/images/facility/public_train_facility.svg" alt="Train" title="Train">
+                            </div>
+
+
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_facility_generic.svg" alt="Generic Facility" title="Generic Facility">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_cmats.svg" alt="CMats" title="CMats">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_pcmats.svg" alt="PC Mats" title="PC Mats">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_scmats.svg" alt="Steel" title="Steel">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_diesel.svg" alt="Diesel" title="Diesel">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_petrol.svg" alt="Petrol" title="Petrol">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_heavy.svg" alt="Heavy Oil" title="Heavy Oil">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_enriched.svg" alt="Enriched Oil" title="Enriched Oil">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_ass_mats_1.svg" alt="AMats 1" title="AMats 1">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_ass_mats_2.svg" alt="AMats 2" title="AMats 2">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_ass_mats_3.svg" alt="AMats 3" title="AMats 3">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_ass_mats_4.svg" alt="AMats 4" title="AMats 4">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_ass_mats_5.svg" alt="AMats 5" title="AMats 5">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_ammo_facility.svg" alt="Ammo" title="Ammo">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_vehicle_facility.svg" alt="Vehicle" title="Vehicle">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_tank_facility.svg" alt="Tank" title="Tank">
+                            </div>
+                            <div class="btn btn-outline-secondary private-radio">
+                                <img src="/images/facility-private/private_train_facility.svg" alt="Train" title="Train">
+                            </div>
+                            
+                            
+                            
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_facility_generic.svg" alt="Enemy Generic Facility" title="Enemy Generic Facility">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_cmats.svg" alt="CMats" title="CMats">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_pcmats.svg" alt="PC Mats" title="PC Mats">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_scmats.svg" alt="Steel" title="Steel">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_diesel.svg" alt="Diesel" title="Diesel">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_petrol.svg" alt="Petrol" title="Petrol">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_heavy.svg" alt="Heavy Oil" title="Heavy Oil">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_enriched.svg" alt="Enriched Oil" title="Enriched Oil">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_ass_mats_1.svg" alt="AMats 1" title="AMats 1">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_ass_mats_2.svg" alt="AMats 2" title="AMats 2">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_ass_mats_3.svg" alt="AMats 3" title="AMats 3">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_ass_mats_4.svg" alt="AMats 4" title="AMats 4">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_ass_mats_5.svg" alt="AMats 5" title="AMats 5">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_ammo_facility.svg" alt="Ammo" title="Ammo">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_vehicle_facility.svg" alt="Vehicle" title="Vehicle">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_tank_facility.svg" alt="Tank" title="Tank">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_train_facility.svg" alt="Train" title="Train">
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item hide-acl-icons">
+                    <h4 class="accordion-header" id="base-collapse-heading">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#base-collapse" aria-expanded="true" aria-controls="base-collapse">
+                            Base
+                        </button>
+                    </h4>
+                    <div id="base-collapse" class="accordion-collapse collapse show" aria-labelledby="base-collapse-heading">
+                        <div class="accordion-body p-1">
+                            <div class="btn btn-outline-secondary public-radio private-radio">
+                                <img src="/images/base/base.svg" alt="Base" title="Base">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio private-radio">
+                                <img src="/images/base/base_frontline.svg" alt="Frontline Base" title="Frontline Base">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio private-radio">
+                                <img src="/images/base/base_obs.svg" alt="Obs Base" title="Obs Base">
+                            </div>
+                            <div class="btn btn-outline-secondary public-radio private-radio">
+                                <img src="/images/base/base_sleep.svg" alt="Base Sleep" title="Base Sleep">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_base.svg" alt="Base" title="Base">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_base_frontline.svg" alt="Frontline Base" title="Frontline Base">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_base_obs.svg" alt="Obs Base" title="Obs Base">
+                            </div>
+                            <div class="btn btn-outline-secondary enemy-radio">
+                                <img src="/images/facility-enemy/enemy_base_sleep.svg" alt="Base Sleep" title="Base Sleep">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

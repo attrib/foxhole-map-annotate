@@ -1,10 +1,9 @@
 import TileGrid from "ol/tilegrid/TileGrid";
-import {Map, View, Collection} from "ol";
+import {Map, View} from "ol";
 import {defaults} from "ol/control";
-import {Group, Vector, Tile} from "ol/layer";
-import {TileImage, Vector as VectorSource} from "ol/source";
+import {Group, Tile} from "ol/layer";
+import {TileImage} from "ol/source";
 import {GeoJSON} from "ol/format";
-import {Style, Stroke} from "ol/style";
 import {addDefaultMapControls, enableLayerMemory} from "./mapControls"
 import Socket from "./webSocket";
 import StaticLayers from "./staticLayer";
@@ -73,11 +72,6 @@ document.getElementById('map').addEventListener('contextmenu', (e) => {
 
 const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {version: 0, features: {}}
 const staticLayer = new StaticLayers(map, conquerStatus)
-const clanGroup = new Group({
-  title: 'Train Lines',
-  fold: 'close',
-});
-map.addLayer(clanGroup);
 const tools = new EditTools(map);
 enableLayerMemory(map)
 
@@ -95,16 +89,11 @@ map.getInteractions().forEach((interaction) => {
   }
 })
 
-//
-// add lines
-//
-
 const geoJson = new GeoJSON();
-const collection = new Collection();
-const clanCollections = {}
 const socket = new Socket();
 
-let lastVersion = null
+let lastClientVersion = null
+let lastFeatureHash = ''
 let realACL = null
 socket.on('init', (data) => {
   realACL = data.acl
@@ -112,127 +101,63 @@ socket.on('init', (data) => {
     data.acl = 'read'
   }
   tools.initAcl(data.acl)
-  if (lastVersion === null) {
-    lastVersion = data.version
+  if (lastClientVersion === null) {
+    lastClientVersion = data.version
   }
-  else if (lastVersion !== data.version) {
+  else if (lastClientVersion !== data.version) {
     console.log('Version change detected, reloading page')
     window.location = '/'
   }
 })
 
-tools.allTracksCollection = collection
-
-socket.on('tracks', (tracks) => {
-  collection.clear()
-  for (const clan in clanCollections) {
-    clanCollections[clan].clear()
-  }
-  const col = geoJson.readFeatures(tracks)
-  collection.extend(col)
-})
-
-collection.on('add', (e) => {
-  const feature = e.element
-  const clan = feature.get('clan')
-  if (!(clan in clanCollections)) {
-    clanCollections[clan] = createClanCollection(clan)
-  }
-  clanCollections[clan].push(feature)
-})
-
-function createClanCollection(clan) {
-  const collection = new Collection()
-  const sourceLine = new VectorSource({
-    features: collection,
-  });
-
-  const vectorLine = new Vector({
-    source: sourceLine,
-    title: clan,
-    style: (feature) => {
-      return new Style({
-        stroke: new Stroke({
-          color: feature.get('color'),
-          width: 5,
-          lineDash: tools.track.getDashedOption(feature)
-        }),
-        geometry: tools.track.geometryFunction
-      })
-    }
-  });
-  clanGroup.getLayers().push(vectorLine);
-  return collection;
-}
-
-tools.on(tools.EVENT_TRACK_ADDED, (track) => {
-  socket.send('trackAdd', geoJson.writeFeatureObject(track.feature))
-})
-
-tools.on(tools.EVENT_TRACK_UPDATED, (track) => {
-  socket.send('trackUpdate', geoJson.writeFeatureObject(track))
-})
-
-tools.on(tools.EVENT_TRACK_DELETE, (track) => {
-  if (track && track.get('id')) {
-    socket.send('trackDelete', {id: track.get('id')})
-  }
-})
-
 tools.on(tools.EVENT_ICON_ADDED, (icon) => {
-  socket.send('iconAdd', geoJson.writeFeatureObject(icon))
+  socket.send('featureAdd', geoJson.writeFeatureObject(icon))
 })
 
 tools.on(tools.EVENT_ICON_UPDATED, (icon) => {
   if (icon && icon.get('id')) {
-    socket.send('iconUpdate', geoJson.writeFeatureObject(icon))
+    socket.send('featureUpdate', geoJson.writeFeatureObject(icon))
   }
 })
 
 tools.on(tools.EVENT_ICON_DELETED, (icon) => {
   if (icon && icon.get('id')) {
-    socket.send('iconDelete', {id: icon.get('id')})
+    socket.send('featureDelete', {id: icon.get('id')})
   }
 })
 
-socket.on('icons', (features) => {
+socket.on('allFeatures', (features) => {
   const col = geoJson.readFeatures(features)
-  tools.information.clearFeatures()
-  tools.sign.clearFeatures()
-  tools.base.clearFeatures()
-  //tools.field.clearFeatures()
-  tools.facility.clearFeatures()
-  tools.facilityPrivate.clearFeatures()
-  tools.facilityEnemy.clearFeatures()
-  tools.facilityCustom.clearFeatures();
+  const collections = {}
   col.forEach((feature) => {
-    switch (feature.get('type')) {
-      case 'information':
-        tools.information.addFeature(feature)
-        break;
-      case 'sign':
-        tools.sign.addFeature(feature)
-        break;
-      case 'base':
-        tools.base.addFeature(feature)
-        break;
-      // case 'field':
-      //   tools.field.addFeature(feature)
-      //   break;
-      case 'facility':
-        tools.facility.addFeature(feature)
-        break;
-      case 'facility-private':
-        tools.facilityPrivate.addFeature(feature)
-        break;
-      case 'facility-enemy':
-        tools.facilityEnemy.addFeature(feature)
-        break;
-      case 'facility-custom':
-        tools.facilityCustom.addFeature(feature)
-        break;
+    const type = feature.get('type')
+    if (!(type in collections)) {
+      collections[type] = []
     }
+    collections[type].push(feature)
   })
+  for (const type in tools.icon.sources) {
+    tools.icon.sources[type].clear(true)
+    tools.icon.sources[type].addFeatures(collections[type])
+  }
+  tools.polygon.source.clear(true)
+  tools.polygon.source.addFeatures(collections['polygon'] || [])
+  for (const clan in tools.line.sources) {
+    tools.line.sources[clan].clear(true)
+  }
+  tools.line.allLinesCollection.clear()
+  tools.line.allLinesCollection.extend(collections['line'] || [])
+  lastFeatureHash = features.hash
+})
+
+socket.on('featureUpdate', ({operation, feature, oldHash, newHash}) => {
+  if (lastFeatureHash !== oldHash) {
+    socket.send('getAllFeatures', true)
+    return
+  }
+  feature = geoJson.readFeature(feature)
+  tools.emit(tools.EVENT_FEATURE_UPDATED, {operation, feature})
+  lastFeatureHash = newHash
 })
 
 tools.on(tools.EVENT_DECAY_UPDATE, (data) => {
@@ -241,17 +166,14 @@ tools.on(tools.EVENT_DECAY_UPDATE, (data) => {
 
 socket.on('decayUpdated', (data) => {
   tools.emit(tools.EVENT_DECAY_UPDATED, data)
-  if (data.type === 'track') {
-    collection.forEach((feat) => {
-      if (feat.get('id') === data.id) {
-        feat.set('time', data.time)
-      }
-    })
-  }
 })
 
 socket.on('conquer', (data) => {
   if (conquerStatus.version === data.version) {
+    return
+  }
+  if (data.oldVersion !== conquerStatus.version) {
+    socket.send('getConquerStatus', true)
     return
   }
   staticLayer.conquerUpdate(data.features, !data.full)
@@ -297,6 +219,7 @@ socket.on('open', () => {
   disconnectedWarning.style.display = 'none'
   socket.send('init', {
     conquerStatus: conquerStatus.version,
+    featureHash: lastFeatureHash,
   })
 })
 socket.on('close', () => {
