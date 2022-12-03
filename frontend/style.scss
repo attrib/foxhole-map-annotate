@@ -68,7 +68,7 @@ button.overlay-button {
 }
 
 .info-box {
-  width: 10rem;
+  max-width: 15vw;
   border-radius: 4px;
 }
 
@@ -95,5 +95,53 @@ button.overlay-button {
   z-index: 10;
   ul {
     border-radius: 4px;
+  }
+}
+
+.tri-state-toggle {
+  label {
+    position: relative;
+    left: 10%;
+    width: 0;
+  }
+  input.public {
+    background-color: #7a4501;
+  }
+  input.private {
+    background-color: #7a4501;
+  }
+  input.enemy {
+    background-color: #da251d;
+  }
+  input {
+    width: 100%;
+    appearance: none;
+    background-color: black;
+    border-radius: 50px;
+    opacity: 0;
+  }
+  input:hover {
+    cursor: pointer;
+  }
+  input:checked {
+    opacity: 1;
+  }
+
+  display: flex;
+  justify-content: center;
+  border: 1px solid #f8f9fa;
+  border-radius: 50px;
+}
+
+#ppe-filter-content {
+  .accordion-body {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 1px;
+    .btn {
+      border: none;
+      border-radius: 0;
+      //outline: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+    }
   }
 }

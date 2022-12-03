@@ -1,38 +1,38 @@
 const Edit = require("./tools/edit");
-const Track = require("./tools/track");
-const Signs = require("./tools/signs");
-const Facilities = require("./tools/facilities");
-const {ACL_FULL, ACL_READ, ACL_MOD, ACL_ADMIN, hasAccess} = require("../lib/ACLS");
-const Information = require("./tools/information");
+const {ACL_READ, hasAccess} = require("../lib/ACLS");
 const Select = require("./tools/select");
-const TrackSplit = require("./tools/trackSplit");
-const FacilitiesPrivate = require("./tools/facilitiesPrivate");
-const FacilitiesEnemy = require("./tools/facilitiesEnemy");
-const FacilitiesCustom = require("./tools/facilitiesCustom");
-const Base = require("./tools/base");
 const {Group} = require("ol/layer");
 const {GeoJSON} = require("ol/format");
+const Sidebar = require("./tools/sidebar");
+const Icon = require("./tools/icon");
+const Polygon = require("./tools/polygon");
+const Line = require("./tools/line");
+const Scissor = require("./tools/scissor");
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
     EVENT_EDIT_MODE_DISABLED = 'editModeDisabled';
     EVENT_TOOL_SELECTED = 'toolSelected';
-    EVENT_TRACK_ADDED = 'trackAdded';
-    EVENT_TRACK_UPDATED = 'trackUpdated';
     EVENT_UPDATE_CANCELED = 'updateCanceled';
-    EVENT_TRACK_DELETE = 'trackDelete';
     EVENT_ICON_ADDED = 'iconAdded';
     EVENT_ICON_DELETED = 'iconDeleted';
     EVENT_ICON_UPDATED = 'iconUpdated';
-    EVENT_FEATURE_SELECTED = (type) => type + '-selected'
-    EVENT_FEATURE_DESELECTED = (type) => type + '-deselected'
+    EVENT_FEATURE_SELECTED = (type) => {
+        const t = type === 'line' || type === 'polygon' ? type : 'icon'
+        return t + '-selected'
+    }
+    EVENT_FEATURE_DESELECTED = (type) => {
+        const t = type === 'line' || type === 'polygon' ? type : 'icon'
+        return t + '-deselected'
+    }
     EVENT_DECAY_UPDATE = 'decayUpdate'
     EVENT_DECAY_UPDATED = 'decayUpdated'
+    EVENT_FEATURE_UPDATED = 'featureUpdated'
 
     editMode = false
     selectedTool = false
     listeners = {}
-    iconTools = []
+    iconTools = {}
 
     /**
      * @param {import("ol").Map} map
@@ -48,53 +48,62 @@ class EditTools {
             fold: 'close',
         })
         this.map.addLayer(this.facilitiesGroup)
+        this.iconTools = {
+            'information': {
+                title: 'Information\'s',
+                type: 'information',
+                zIndex: 50,
+            },
+            'sign': {
+                title: 'Signs',
+                type: 'sign',
+                zIndex: 30,
+            },
+            'base': {
+                title: 'Bases',
+                type: 'base',
+                zIndex: 30,
+            },
+            'facility': {
+                title: 'Facilities',
+                type: 'facility',
+                zIndex: 25,
+                layerGroup: this.facilitiesGroup,
+            },
+            'facility-enemy': {
+                title: 'Enemy Structures',
+                type: 'facility-enemy',
+                zIndex: 10,
+            },
+            'facility-private': {
+                title: 'Private Facilities',
+                type: 'facility-private',
+                zIndex: 15,
+                layerGroup: this.facilitiesGroup,
+            },
+        }
 
-        this.edit = new Edit(this, map)
-        this.information = new Information(this, map)
-        this.sign = new Signs(this, map)
-        this.base = new Base(this, map)
-        this.facility = new Facilities(this, map)
-        this.facilityPrivate = new FacilitiesPrivate(this, map)
-        this.facilityEnemy = new FacilitiesEnemy(this, map)
-        this.facilityCustom = new FacilitiesCustom(this, map)
-        this.track = new Track(this, map)
-        this.trackSplit = new TrackSplit(this, map)
-        //this.field = new Field(this, map)
+        this.sidebar = new Sidebar(this, map)
+        this.line = new Line(this, map)
+        this.scissor = new Scissor(this, map)
+        this.icon = new Icon(this, map)
+        this.polygon = new Polygon(this, map)
         this.select = new Select(this, map)
+        this.edit = new Edit(this, map)
     }
 
     resetAcl = () => {
         this.acl = ACL_READ;
         this.map.removeControl(this.edit.control)
-        this.map.removeControl(this.information.control)
-        this.map.removeControl(this.sign.control)
-        this.map.removeControl(this.base.control)
-        //this.map.removeControl(this.field.control) // Maybe later for a admin role
-        this.map.removeControl(this.facility.control)
-        this.map.removeControl(this.facilityPrivate.control)
-        this.map.removeControl(this.facilityEnemy.control)
-        this.map.removeControl(this.facilityCustom.control)
-        this.map.removeControl(this.track.control)
-        this.map.removeControl(this.trackSplit.control)
+        this.sidebar.setAcl(this.acl)
     }
 
     initAcl = (acl) => {
         this.acl = acl;
         if (acl !== ACL_READ) {
             this.map.addControl(this.edit.control)
-            this.map.addControl(this.information.control)
         }
-        if (acl === ACL_FULL || acl === ACL_MOD || acl === ACL_ADMIN) {
-            this.map.addControl(this.sign.control)
-            this.map.addControl(this.base.control)
-            //this.map.addControl(this.field.control) // Maybe later for a admin role
-            this.map.addControl(this.facility.control)
-            this.map.addControl(this.facilityPrivate.control)
-            this.map.addControl(this.facilityEnemy.control)
-            this.map.addControl(this.facilityCustom.control)
-            this.map.addControl(this.track.control)
-            this.map.addControl(this.trackSplit.control)
-        }
+        this.sidebar.setAcl(acl)
     }
 
     hasAccess = (action, feature = null) => {
@@ -121,8 +130,8 @@ class EditTools {
     }
 
     changeTool = (newTool) => {
-        if (this.editMode && this.selectedTool !== newTool) {
-            this.selectedTool = newTool
+        if (this.editMode) {
+            this.selectedTool = this.selectedTool !== newTool ? newTool : false
             this.emit(this.EVENT_TOOL_SELECTED, this.selectedTool)
         }
     }

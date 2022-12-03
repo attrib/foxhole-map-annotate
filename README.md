@@ -8,11 +8,8 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
-* increase button sizes (by [RDRT] A Devil Chicken)
-* gear opens popup with a toolbar of all tools, under it it shows the icons you then can click (by [RDRT] A Devil Chicken) - https://cdn.discordapp.com/attachments/1044680476822093976/1044717627894931476/image.png
-* one facility button for all, switch on the edit if public/private (by [RDRT] A Devil Chicken)
 * implement deactivated hexes
-* victory townhalls? storm cannons
+* victory townhalls? storm cannons? voronoi diagrams
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - length 1.89km, width 2.184km
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?
@@ -23,12 +20,14 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * paste text and create icons from it (FarranacCoastG11k2, (iconType), (note)) (by [SOS] Yabba)
 * move help section into main page with layers you can open (by [RDRT] A Devil Chicken)
 * background pattern custom facility
-* more line options (Enemy logi route, partisan route, planned piepline, pipeline) (by Bazlow, [TSAR]orb)
+* more line options (Enemy logi route, partisan route) (by Bazlow, [TSAR]orb)
 * checkpoint marker (by [HAULR] Barteng)
 * public oil marker (by [HAULR] Barteng)
 * public water marker  (by [HAULR] Barteng)
 * Dedicated text box on the map (by [✚RMC✚] EllieTau (QM))
 * auto expiring icons (by [CHI] Arctifire) 
+* Clan feature? A way to allow others to edit your features? maybe allow full access of same server to allow editing of same server?
+* public activity log
 
 ## DevTodos
 

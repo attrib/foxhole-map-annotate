@@ -3,6 +3,19 @@ const {Style, Circle, Stroke} = require("ol/style");
 const {SelectEvent} = require("ol/interaction/Select");
 const {Select: OlSelect} = require("ol/interaction")
 const {Overlay} = require("ol");
+const {getTopLeft} = require("ol/extent");
+
+const NOT_SELECTABLE = ['Region', 'Major', 'Minor', 'town', 'industry', 'field']
+const NO_USER_INFO = [...NOT_SELECTABLE]
+const NO_CLOCK = [...NOT_SELECTABLE, 'sign']
+
+/**
+ * @param {import('ol/geom').Geometry} geometry
+ */
+function getLeftPoint(geometry) {
+  return geometry.getClosestPoint(getTopLeft(geometry.getExtent()))
+}
+
 
 class Select {
 
@@ -21,7 +34,7 @@ class Select {
       toggleCondition: never,
       style: this.selectStyle(),
       filter: (feature) => {
-        return !(feature.get('type') && ['Region', 'Major', 'Minor', 'town', 'industry', 'field'].includes(feature.get('type')));
+        return !(feature.get('type') && NOT_SELECTABLE.includes(feature.get('type')));
       }
     })
 
@@ -30,12 +43,14 @@ class Select {
         if (event.deselected.length > 0) {
           if (event.deselected[0]) {
             const type = event.deselected[0].get('type')
-            this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
+            if (type) {
+              this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(type), event.deselected[0]);
+            }
           }
         }
         if (event.selected.length > 0) {
           const type = event.selected[0].get('type')
-          if (tools.hasAccess(type + '.edit', event.selected[0])) {
+          if (type && tools.hasAccess(type + '.edit', event.selected[0])) {
             this.tools.emit(this.tools.EVENT_FEATURE_SELECTED(type), event.selected[0]);
           }
         }
@@ -47,21 +62,17 @@ class Select {
       }
       if (event.selected.length > 0) {
         const feature = event.selected[0];
-        const id = feature.get('id')
-        const infoBox = feature.get('type') === 'track' ? this.trackInfo.cloneNode(true) : this.iconInfo.cloneNode(true)
-        if (feature.get('type') === 'track') {
-          this.showTrackInfoBox(infoBox, feature)
-        }
-        else {
-          this.showIconInfoBox(infoBox, feature)
-        }
+        const id = feature.getId()
+        const infoBox = this.iconInfo.cloneNode(true)
+        this.showIconInfoBox(infoBox, feature)
         this.clocks[id] = infoBox.getElementsByClassName('clock')[0]
         this.clocks[id].addEventListener('click', this.updateDecay)
         infoBox.id = 'selected-' + id
         const overlay = new Overlay({
           element: infoBox,
-          offset: [10, 10],
-          position:  event.mapBrowserEvent.coordinate
+          positioning: 'center-right',
+          offset: [-20, 0],
+          position: getLeftPoint(feature.getGeometry())
         })
         this.selectOverlays[id] = overlay
         this.map.addOverlay(overlay)
@@ -75,26 +86,18 @@ class Select {
         tools.emit(tools.EVENT_FEATURE_SELECTED(type), selectedFeature);
       }
     })
-    tools.on(tools.EVENT_TRACK_UPDATED, this.deselectAll)
     tools.on(tools.EVENT_ICON_UPDATED, this.deselectAll)
     tools.on(tools.EVENT_UPDATE_CANCELED, this.deselectAll)
-    tools.on(tools.EVENT_TRACK_DELETE, this.deleteSelectOverlay)
     tools.on(tools.EVENT_ICON_DELETED, this.deleteSelectOverlay)
 
     map.addInteraction(this.select)
 
-    this.trackInfo = document.getElementById('track-info')
     this.iconInfo = document.getElementById('icon-info');
 
-    this.trackInfoOverlay = new Overlay({
-      element: this.trackInfo,
-      offset: [10, 10]
-    })
-    this.map.addOverlay(this.trackInfoOverlay)
     this.iconInfoOverlay = new Overlay({
       element: this.iconInfo,
-      positioning: 'top-right',
-      offset: [-10, 10]
+      positioning: 'top-left',
+      offset: [10, 10]
     })
     this.map.addOverlay(this.iconInfoOverlay)
 
@@ -123,7 +126,7 @@ class Select {
   }
 
   selectStyle = () => {
-    const trackStyle = this.tools.track.style();
+    const trackStyle = this.tools.line.style();
     const white = [255, 255, 255, 1];
     const blue = [0, 153, 255, 1];
     const circleStyle = [
@@ -163,76 +166,48 @@ class Select {
         width: 10,
         color: white,
       }),
-      geometry: this.tools.track.geometryFunction
+      geometry: this.tools.line.geometryFunction
     }),
       new Style({
         stroke: new Stroke({
           width: 7,
           color: blue,
         }),
-        geometry: this.tools.track.geometryFunction
+        geometry: this.tools.line.geometryFunction
       })
     ]
     return (feature, zoom) => {
       const type = feature.get('type')
       switch (type) {
-        case 'track':
-          trackStyleHighlight[0].getStroke().setLineDash(this.tools.track.getDashedOption(feature))
-          trackStyleHighlight[1].getStroke().setLineDash(this.tools.track.getDashedOption(feature))
+        case 'line':
+          trackStyleHighlight[0].getStroke().setLineDash(this.tools.line.getDashedOption(feature))
+          trackStyleHighlight[1].getStroke().setLineDash(this.tools.line.getDashedOption(feature))
           return [...trackStyleHighlight, trackStyle(feature, zoom)]
 
         case 'information':
-          return [...circleStyle, this.tools.information._style(feature, zoom)]
-
         case 'sign':
-          return [...circleStyle, this.tools.sign._style(feature, zoom)]
-
         case 'base':
-          return [...circleStyle, this.tools.base._style(feature, zoom)]
-
-        // case 'field':
-        //   return [...circleStyle, this.tools.field._style(feature, zoom)]
-
         case 'facility':
-          return [...circleStyle, this.tools.facility._style(feature, zoom)]
-
         case 'facility-private':
-          return [...circleStyle, this.tools.facilityPrivate._style(feature, zoom)]
-
         case 'facility-enemy':
-          return [...circleStyle, this.tools.facilityEnemy._style(feature, zoom)]
+          return [...circleStyle, this.tools.icon.iconStyle(feature, zoom)]
 
-        case 'facility-custom':
-          return [this.tools.facilityCustom.style(feature, zoom), ...lineStyle]
+        case 'polygon':
+          return [this.tools.polygon.style(feature, zoom), ...lineStyle]
 
       }
     }
   }
 
   infoBoxFeature = (feature, coords) => {
-    if (feature.get('type') === 'track') {
-      this.trackInfoOverlay.setPosition(coords)
-      this.showTrackInfoBox(this.trackInfo, feature)
-    }
-    else if (this.tools.iconTools.includes(feature.get('type'))) {
-      if (this.trackInfoOverlay.getPosition() === undefined) {
-        this.iconInfoOverlay.setPositioning('top-left')
-        this.iconInfoOverlay.setOffset([10, 10])
-      }
-      else {
-        this.iconInfoOverlay.setPositioning('top-right')
-        this.iconInfoOverlay.setOffset([-10, 10])
-      }
-      this.iconInfoOverlay.setPosition(coords)
-      this.showIconInfoBox(this.iconInfo, feature)
-    }
+    this.iconInfoOverlay.setPosition(coords)
+    this.showIconInfoBox(this.iconInfo, feature)
   }
 
   deselectAll = () => {
     const feature = this.select.getFeatures().pop()
     if (feature) {
-      const type = feature.get('type')
-      this.tools.emit(type + '-deselected', feature);
+      this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(feature.get('type')), feature);
     }
     this.select.dispatchEvent(new SelectEvent('select', [], [feature], null))
   }
@@ -256,31 +231,24 @@ class Select {
   }
 
   hideInfoBoxes = () => {
-    this.trackInfoOverlay.setPosition(undefined)
     this.iconInfoOverlay.setPosition(undefined)
   }
 
-  showTrackInfoBox = (node, feature) => {
-    node.getElementsByClassName('clan')[0].innerHTML = feature.get('clan');
-    node.getElementsByClassName('user')[0].innerHTML = feature.get('user');
-    this.clockColor(node.getElementsByClassName('clock')[0], feature)
-    node.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature);
-  }
-
   showIconInfoBox = (node, feature) => {
-    node.getElementsByClassName('user')[0].innerHTML = feature.get('user');
+    node.getElementsByClassName('placementInfo')[0].style.display = NO_USER_INFO.includes(feature.get('type')) ? 'none' : '';
+    node.getElementsByClassName('user')[0].innerHTML = this.getUser(feature);
     this.clockColor(node.getElementsByClassName('clock')[0], feature)
     node.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature)
   }
 
   clockColor = (clock, feature) => {
-    if (feature.get('type') === 'field' || feature.get('type') === 'sign') {
-      clock.style.display = 'none'
+    if (NO_CLOCK.includes(feature.get('type'))) {
+      clock.parentElement.style.display = 'none'
       return
     }
-    clock.style.display = 'block'
+    clock.parentElement.style.display = ''
     const time = new Date(feature.get('time'))
-    clock.dataset.id = feature.get('id') || null
+    clock.dataset.id = feature.getId() || null
     clock.dataset.type = feature.get('type') || null
     this.setClockColor(clock, time)
   }
@@ -297,6 +265,10 @@ class Select {
     return note.replaceAll("\n", '<br>')
   }
 
+  getUser = (feature) => {
+    return feature.get('clan') || feature.get('user') || 'World'
+  }
+
   updateDecay = (event) => {
     if (event.currentTarget && event.currentTarget.dataset.id) {
       this.tools.emit(this.tools.EVENT_DECAY_UPDATE, {
@@ -310,8 +282,9 @@ class Select {
     if (feature === undefined) {
       return
     }
-    if (feature.get('id') in this.selectOverlays) {
-      this.map.removeOverlay(this.selectOverlays[feature.get('id')])
+    if (feature.getId() in this.selectOverlays) {
+      this.map.removeOverlay(this.selectOverlays[feature.getId()])
+      delete this.selectOverlays[feature.getId()]
     }
   }
 

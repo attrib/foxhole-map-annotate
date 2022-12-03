@@ -17,6 +17,7 @@
     "grant": "^5.4.21",
     "http-errors": "^1.6.3",
     "nunjucks": "^3.2.3",
+    "object-hash": "^3.0.0",
     "read-last-lines": "^1.8.0",
     "sanitize-html": "^2.7.3",
     "session-file-store": "^1.5.0",

@@ -5,37 +5,15 @@ const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
 const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
-const {trackUpdater, iconUpdater} = require("./lib/updater");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions} = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
 const sanitizeHtml = require("sanitize-html");
+const {loadFeatures, saveFeatures} = require("./lib/featureLoader");
 
 setTimeout(conquerUpdater, 10000)
 
-let tracks = {}, icons = {};
-const trackFileName = './data/tracks.json';
-const iconFileName = './data/icons.json';
-if (fs.existsSync(trackFileName)) {
-  tracks = require(trackFileName);
-  tracks = trackUpdater(tracks)
-}
-else {
-  tracks = {
-    type: 'FeatureCollection',
-    features: [],
-  }
-}
-if (fs.existsSync(iconFileName)) {
-  icons = require(iconFileName);
-  icons = iconUpdater(icons)
-}
-else {
-  icons = {
-    type: 'FeatureCollection',
-    features: [],
-  }
-}
+const features = loadFeatures()
 
 const sanitizeOptions = {
   allowedTags: [ 'b', 'i', 'em', 'strong', 'a', 'p', 'img', 'video', 'source' ],
@@ -67,88 +45,33 @@ wss.on('connection', function (ws, request) {
         acl,
         version: process.env.COMMIT_HASH,
         warStatus: warapi.warData.status,
+        featureHash: features.hash,
       }
     }));
-    sendTracks(ws);
-    sendIcons(ws);
 
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
+      const oldHash = features.hash
       message = JSON.parse(message);
       switch (message.type) {
         case 'init':
           if (message.data.conquerStatus !== getConquerStatusVersion()) {
             sendData(ws, 'conquer', getConquerStatus())
           }
+          if (message.data.featureHash !== features.hash) {
+            sendFeatures(ws)
+          }
           break;
 
-        case 'trackAdd':
-          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
-            break;
-          }
-          if (!hasAccess(userId, acl, ACL_ACTIONS.TRACK_ADD, message.data)) {
-            break;
-          }
-          message.data.id = uuid.v4()
-          message.data.properties.id = message.data.id
-          message.data.properties.user = username
-          message.data.properties.userId = userId
-          message.data.properties.time = (new Date()).toISOString()
-          message.data.properties.color = sanitizeHtml(message.data.properties.color, sanitizeOptionsClan)
-          message.data.properties.clan = sanitizeHtml(message.data.properties.clan, sanitizeOptionsClan)
-          message.data.properties.notes = sanitizeHtml(message.data.properties.notes, sanitizeOptions)
-          tracks.features.push(message.data)
-          eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
-          sendTracksToAll();
-          saveTracks();
+        case 'getAllFeatures':
+          sendFeatures(ws)
           break;
 
-        case 'trackUpdate':
-          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
-            break;
-          }
-          for (const existingTracks of tracks.features) {
-            if (message.data.properties.id === existingTracks.properties.id) {
-              if (!hasAccess(userId, acl, ACL_ACTIONS.TRACK_EDIT, message.data)) {
-                return;
-              }
-              existingTracks.properties = message.data.properties
-              existingTracks.properties.muser = username
-              existingTracks.properties.muserId = userId
-              existingTracks.properties.time = (new Date()).toISOString()
-              existingTracks.properties.color = sanitizeHtml(message.data.properties.color, sanitizeOptionsClan)
-              existingTracks.properties.clan = sanitizeHtml(message.data.properties.clan, sanitizeOptionsClan)
-              existingTracks.properties.notes = sanitizeHtml(message.data.properties.notes, sanitizeOptions)
-              existingTracks.geometry = message.data.geometry
-              eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
-            }
-          }
-          sendTracksToAll();
-          saveTracks();
+        case 'getConquerStatus':
+          sendData(ws, 'conquer', getConquerStatus())
           break;
 
-        case 'trackDelete':
-          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
-            break;
-          }
-          for (const existingTrack of tracks.features) {
-            if (message.data.id === existingTrack.properties.id) {
-              if (!hasAccess(userId, acl, ACL_ACTIONS.TRACK_DELETE, existingTrack)) {
-                return;
-              }
-            }
-          }
-          tracks.features = tracks.features.filter((feature) => {
-            if (feature.properties.id === message.data.id) {
-              eventLog.logEvent({type: message.type, user: username, userId, data: feature})
-            }
-            return feature.properties.id !== message.data.id
-          })
-          sendTracksToAll();
-          saveTracks();
-          break;
-
-        case 'iconAdd':
+        case 'featureAdd':
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
@@ -162,53 +85,72 @@ wss.on('connection', function (ws, request) {
           feature.properties.userId = userId
           feature.properties.time = (new Date()).toISOString()
           feature.properties.notes = sanitizeHtml(feature.properties.notes, sanitizeOptions)
-          icons.features.push(feature)
+          if (feature.properties.color) {
+            feature.properties.color = sanitizeHtml(feature.properties.color, sanitizeOptionsClan)
+          }
+          if (feature.properties.clan) {
+            feature.properties.clan = sanitizeHtml(feature.properties.clan, sanitizeOptionsClan)
+          }
+          if (feature.properties.lineType) {
+            feature.properties.lineType = sanitizeHtml(feature.properties.lineType, sanitizeOptionsClan)
+          }
+          features.features.push(feature)
           eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
-          sendIconsToAll()
-          saveIcons()
+          saveFeatures(features)
+          sendUpdateFeature('add', feature, oldHash, features.hash)
           break;
 
-        case 'iconUpdate':
+        case 'featureUpdate':
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          if (message.data.properties.type === 'field') {
-            break;
-          }
-          for (const existingIcon of icons.features) {
-            if (message.data.properties.id === existingIcon.properties.id) {
-              if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_EDIT, existingIcon)) {
+          let editFeature = null
+          for (const existingFeature of features.features) {
+            if (message.data.properties.id === existingFeature.properties.id) {
+              editFeature = existingFeature
+              if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_EDIT, existingFeature)) {
                 return;
               }
-              existingIcon.properties = message.data.properties
-              existingIcon.properties.muser = username
-              existingIcon.properties.muserId = userId
-              existingIcon.properties.time = (new Date()).toISOString()
-              existingIcon.properties.notes = sanitizeHtml(existingIcon.properties.notes, sanitizeOptions)
-              existingIcon.geometry = message.data.geometry
+              existingFeature.properties = message.data.properties
+              existingFeature.properties.muser = username
+              existingFeature.properties.muserId = userId
+              existingFeature.properties.time = (new Date()).toISOString()
+              existingFeature.properties.notes = sanitizeHtml(existingFeature.properties.notes, sanitizeOptions)
+              if (existingFeature.properties.color) {
+                existingFeature.properties.color = sanitizeHtml(existingFeature.properties.color, sanitizeOptionsClan)
+              }
+              if (existingFeature.properties.clan) {
+                existingFeature.properties.clan = sanitizeHtml(existingFeature.properties.clan, sanitizeOptionsClan)
+              }
+              if (existingFeature.properties.lineType) {
+                existingFeature.properties.lineType = sanitizeHtml(existingFeature.properties.lineType, sanitizeOptionsClan)
+              }
+              existingFeature.geometry = message.data.geometry
               eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
             }
           }
-          sendIconsToAll();
-          saveIcons();
+          saveFeatures(features);
+          if (editFeature) {
+            sendUpdateFeature('update', editFeature, oldHash, features.hash)
+          }
           break;
 
-        case 'iconDelete':
+        case 'featureDelete':
           if (warapi.warData.status === warapi.WAR_RESISTANCE) {
             break;
           }
-          const featureIconDelete = icons.features.find((value) => value.properties.id === message.data.id)
-          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_DELETE, featureIconDelete)) {
+          const featureToDelete = features.features.find((value) => value.properties.id === message.data.id)
+          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_DELETE, featureToDelete)) {
             return;
           }
-          icons.features = icons.features.filter((feature) => {
+          features.features = features.features.filter((feature) => {
             if (feature.properties.id === message.data.id) {
               eventLog.logEvent({type: message.type, user: username, userId, data: feature})
             }
             return feature.properties.id !== message.data.id
           })
-          sendIconsToAll();
-          saveIcons();
+          saveFeatures(features)
+          sendUpdateFeature('delete', featureToDelete, oldHash, features.hash)
           break;
 
         case 'ping':
@@ -222,7 +164,6 @@ wss.on('connection', function (ws, request) {
           if (!hasAccess(userId, acl, ACL_ACTIONS.DECAY_UPDATE)) {
             return;
           }
-          let features = message.data.type === 'track' ? tracks : icons
           for (const feature of features.features) {
             if (feature.properties.id === message.data.id) {
               feature.properties.time = (new Date()).toISOString()
@@ -236,6 +177,7 @@ wss.on('connection', function (ws, request) {
               })
             }
           }
+          saveFeatures(features)
           break;
       }
     });
@@ -262,37 +204,21 @@ function sendData(client, type, data) {
   client.send(json);
 }
 
-
-function sendTracksToAll() {
-  sendDataToAll('tracks', tracks)
+function sendUpdateFeature(operation, feature, oldHash, newHash) {
+  sendDataToAll('featureUpdate', {
+    operation,
+    feature,
+    oldHash,
+    newHash
+  })
 }
 
-function sendIconsToAll() {
-  sendDataToAll('icons', icons)
+function sendFeaturesToAll() {
+  sendDataToAll('allFeatures', features)
 }
 
-function sendTracks(client) {
-  sendData(client, 'tracks', tracks)
-}
-
-function sendIcons(client) {
-  sendData(client, 'icons', icons)
-}
-
-function saveTracks() {
-  fs.writeFile(trackFileName, JSON.stringify(tracks, null, 2), err => {
-    if (err) {
-      console.error(err);
-    }
-  });
-}
-
-function saveIcons() {
-  fs.writeFile(iconFileName, JSON.stringify(icons, null, 2), err => {
-    if (err) {
-      console.error(err);
-    }
-  });
+function sendFeatures(client) {
+  sendData(client, 'allFeatures', features)
 }
 
 function conquerUpdater() {
@@ -323,34 +249,27 @@ warapi.on(warapi.EVENT_WAR_PREPARE, ({oldData, newData}) => {
   if (fs.existsSync('./data/conquer.json')) {
     fs.cpSync('./data/conquer.json', oldWarDir + '/conquer.json')
   }
-  if (fs.existsSync('./data/icons.json')) {
-    fs.cpSync('./data/icons.json', oldWarDir + '/icons.json')
-  }
-  if (fs.existsSync('./data/tracks.json')) {
-    fs.cpSync('./data/tracks.json', oldWarDir + '/tracks.json')
+  if (fs.existsSync('./data/features.json')) {
+    fs.cpSync('./data/features.json', oldWarDir + '/features.json')
   }
   if (fs.existsSync('./data/wardata.json')) {
     fs.cpSync('./data/wardata.json', oldWarDir + '/wardata.json')
   }
   fs.cpSync('./public/regions.json', oldWarDir + '/regions.json')
   // clear data
-  icons.features = []
-  tracks.features = tracks.features.filter((track) => track.properties.clan === 'World')
-  saveIcons()
-  saveTracks()
+  features.features = features.features.filter((track) => track.properties.clan === 'World')
+  saveFeatures(features)
   clearRegions()
   sendDataToAll('warPrepare', newData)
   sendDataToAll('conquer', getConquerStatus())
-  sendTracksToAll()
-  sendIconsToAll()
+  sendFeaturesToAll()
 })
 
 warapi.on(warapi.EVENT_WAR_UPDATED, ({newData}) => {
   regenRegions().then(() => {
     sendDataToAll('warChange', newData)
     sendDataToAll('conquer', getConquerStatus())
-    sendTracksToAll()
-    sendIconsToAll()
+    sendFeaturesToAll()
   })
 })
 
