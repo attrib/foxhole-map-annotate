@@ -5,7 +5,8 @@ const {Select: OlSelect} = require("ol/interaction")
 const {Overlay} = require("ol");
 const {getTopLeft} = require("ol/extent");
 
-const NOT_SELECTABLE = ['Region', 'Major', 'Minor', 'town', 'industry', 'field']
+const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi']
+const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field']
 const NO_USER_INFO = [...NOT_SELECTABLE]
 const NO_CLOCK = [...NOT_SELECTABLE, 'sign']
 
@@ -110,7 +111,7 @@ class Select {
       }
       else {
         const [feature, layer] = value;
-        if (layer === null) {
+        if (layer === null || NO_TOOLTIP.includes(feature.get('type'))) {
           this.hideInfoBoxes()
           return
         }

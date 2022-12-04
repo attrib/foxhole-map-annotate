@@ -15,8 +15,8 @@
         <div id="disconnected" class="alert alert-danger mb-2">Connection to server lost. Auto-reconnect in 10s. Map doesn't update automatically. Editing not possible. Refresh page if message doesn't disappear.</div>
         <div id="resistance" class="alert {% if warStatus === 'resistance' and warWinner === 'Colonial' %}alert-warning{% elseif warStatus === 'resistance' and warWinner === 'Warden' %}alert-success{% endif %}" {% if warStatus !== 'resistance' %}style="display: none" {% endif %}>
             <p>War is over. Winner: <strong id="resistance-winner">{{ warWinner }}</strong></p>
-            <p id="resistance-COLONIALS" {% if warWinner !== config.basic.faction %}style="display: none" {% endif %}>We lost. We will get them next time!</p>
-            <p id="resistance-WARDENS" {% if warWinner === config.basic.faction %}style="display: none" {% endif %}>We won! Congratulations! Now go to sleep.</p>
+            <p id="resistance-COLONIALS" {% if warWinner === config.basic.faction %}style="display: none" {% endif %}>We lost. We will get them next time!</p>
+            <p id="resistance-WARDENS" {% if warWinner !== config.basic.faction %}style="display: none" {% endif %}>We won! Congratulations! Now go to sleep.</p>
             <p class="mb-0">Map is now read-only. Goes in preparation mode for next war <span id="resistance-timer" data-conquest-end-time="{{ warConquestEndTime }}"></span>.</p>
         </div>
     </div>

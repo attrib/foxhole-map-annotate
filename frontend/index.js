@@ -138,7 +138,7 @@ socket.on('allFeatures', (features) => {
   })
   for (const type in tools.icon.sources) {
     tools.icon.sources[type].clear(true)
-    tools.icon.sources[type].addFeatures(collections[type])
+    tools.icon.sources[type].addFeatures(collections[type] || [])
   }
   tools.polygon.source.clear(true)
   tools.polygon.source.addFeatures(collections['polygon'] || [])
@@ -172,7 +172,7 @@ socket.on('conquer', (data) => {
   if (conquerStatus.version === data.version) {
     return
   }
-  if (data.oldVersion !== conquerStatus.version) {
+  if (!data.full && data.oldVersion !== conquerStatus.version) {
     socket.send('getConquerStatus', true)
     return
   }
