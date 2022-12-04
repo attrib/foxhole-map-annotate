@@ -55,14 +55,14 @@ class Polygon {
       },
     });
     this.draw.on('drawstart', (event) => {
-      event.feature.set('type', 'polygon')
+      event.feature.set('type', 'polygon', true)
       event.feature.set('color', tools.sidebar.colorInput.value + 'AA')
       this.sketchFeature = event.feature
     })
     this.draw.on('drawend', (event) => {
       const feature = event.feature
-      feature.set('type', 'polygon')
-      feature.set('color', tools.sidebar.colorInput.value + 'AA')
+      feature.set('type', 'polygon', true)
+      feature.set('color', tools.sidebar.colorInput.value + 'AA', true)
       feature.set('notes', tools.sidebar.notesInput.value)
       tools.emit(tools.EVENT_ICON_ADDED, feature)
       tools.changeTool(false)

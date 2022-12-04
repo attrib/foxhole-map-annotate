@@ -8,17 +8,11 @@ const nunjucks = require("nunjucks");
 const sessionParser = require('./lib/session');
 const indexRouter = require('./routes/index');
 const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY, ACL_MOD, ACL_ADMIN, ACL_BLOCKED} = require("./lib/ACLS");
-const fs = require("fs");
 const config = require('./lib/config')
 
 const warapi = require('./lib/warapi')
 
 const app = express();
-
-// bad hack to copy a region.json from data to public
-if (fs.existsSync('./data/regions.json')) {
-  fs.copyFileSync('./data/regions.json', './public/regions.json')
-}
 
 nunjucks.configure('views', {
   autoescape: true,
@@ -41,7 +35,7 @@ else {
   );
 }
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {maxAge: 7200000}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

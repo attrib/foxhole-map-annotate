@@ -70,8 +70,9 @@ document.getElementById('map').addEventListener('contextmenu', (e) => {
   return false;
 })
 
+const warFeatures = localStorage.getItem('warFeatures') ? JSON.parse(localStorage.getItem('warFeatures')) : {version: 0, features: [], deactivatedRegions: []}
 const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {version: 0, features: {}}
-const staticLayer = new StaticLayers(map, conquerStatus)
+const staticLayer = new StaticLayers(map, conquerStatus, warFeatures)
 const tools = new EditTools(map);
 enableLayerMemory(map)
 
@@ -179,7 +180,18 @@ socket.on('conquer', (data) => {
   staticLayer.conquerUpdate(data.features, !data.full)
   conquerStatus.version = data.version
   conquerStatus.features = data.full ? data.features : {...conquerStatus.features, ...data.features}
+  if (warFeatures.version !== data.warVersion) {
+    socket.send('getWarFeatures', true)
+  }
   localStorage.setItem('conquerStatus', JSON.stringify(conquerStatus))
+})
+
+socket.on('warFeatures', (data) => {
+  warFeatures.features = data.features
+  warFeatures.deactivatedRegions = data.deactivatedRegions
+  warFeatures.version = data.version
+  staticLayer.warFeaturesUpdate()
+  localStorage.setItem('warFeatures', JSON.stringify(warFeatures))
 })
 
 const prepareWarTimerElement = document.getElementById('resistance-timer')
@@ -198,8 +210,12 @@ socket.on('warEnded', (data) => {
 socket.on('warPrepare', (data) => {
   conquerStatus.version = 0
   conquerStatus.features = {}
+  warFeatures.features = []
+  warFeatures.deactivatedRegions = []
+  warFeatures.version = 1
+  staticLayer.resetWar()
+  localStorage.setItem('warFeatures', JSON.stringify(warFeatures))
   document.getElementById('warNumber').innerHTML = `${data.shard} #${data.warNumber} (Preparing)`
-  staticLayer.loadRegion(true)
   clearTimeout(prepareWarTimerTimoutId)
   document.getElementById('resistance').style.display = 'none'
   if (realACL) {
@@ -210,8 +226,11 @@ socket.on('warPrepare', (data) => {
 socket.on('warChange', (data) => {
   conquerStatus.version = 0
   conquerStatus.features = {}
+  warFeatures.features = []
+  warFeatures.deactivatedRegions = []
+  warFeatures.version = 1
+  staticLayer.resetWar()
   document.getElementById('warNumber').innerHTML = `${data.shard} #${data.warNumber}`
-  staticLayer.loadRegion(true)
 })
 
 const disconnectedWarning = document.getElementById('disconnected')

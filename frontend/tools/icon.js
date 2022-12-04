@@ -57,12 +57,14 @@ class Icon {
       },
     });
     this.iconDraw.on('drawstart', (event) => {
-      event.feature.set('type', this.featureType)
+      event.feature.set('type', this.featureType, true)
+      event.feature.set('icon', this.featureIcon, true);
+      event.feature.set('notes', this.featureIcon);
     })
     this.iconDraw.on('drawend', (event) => {
       const feature = event.feature
-      feature.set('icon', this.featureIcon);
-      feature.set('type', this.featureType)
+      feature.set('icon', this.featureIcon, true);
+      feature.set('type', this.featureType, true)
       feature.set('notes', tools.sidebar.notesInput.value)
       this.unselectIcon()
       tools.emit(tools.EVENT_ICON_ADDED, feature)
@@ -122,7 +124,7 @@ class Icon {
       this.featureType = match[1]
       this.featureIcon = match[2]
       if (this.tools.sidebar.editFeature) {
-        this.tools.sidebar.editFeature.set('type', this.featureType)
+        this.tools.sidebar.editFeature.set('type', this.featureType, true)
         this.tools.sidebar.editFeature.set('icon', this.featureIcon)
       }
     }

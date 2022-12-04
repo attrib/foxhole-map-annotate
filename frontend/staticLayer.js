@@ -2,17 +2,19 @@ import {Vector as VectorSource} from "ol/source";
 import {Fill, Icon, Stroke, Style, Text} from "ol/style";
 import {Group, Vector} from "ol/layer";
 import {GeoJSON} from "ol/format";
-import {Collection} from "ol";
+import {Collection, Feature} from "ol";
 import CircleStyle from "ol/style/Circle";
 import {easeOut} from "ol/easing";
 import {getVectorContext} from "ol/render";
 import {unByKey} from "ol/Observable";
+import {Point} from "ol/geom";
 
 class StaticLayers {
 
-  constructor(map, conquerStatus) {
+  constructor(map, conquerStatus, warFeatures) {
     this.map = map
     this.conquerStatus = conquerStatus
+    this.warFeatures = warFeatures
     const regionGroup = new Group({
       title: 'Labels',
       combine: true,
@@ -22,12 +24,32 @@ class StaticLayers {
       fold: 'close',
     })
 
-    this.regionCollection = new Collection()
-    this.majorCollection = new Collection()
-    this.minorCollection = new Collection()
-    this.townCollection = new Collection()
-    this.industryCollection = new Collection()
-    this.fieldCollection = new Collection()
+    this.sources = {
+      'Region': new VectorSource({
+        features: new Collection()
+      }),
+      'Major': new VectorSource({
+        features: new Collection()
+      }),
+      'Minor': new VectorSource({
+        features: new Collection()
+      }),
+      'town': new VectorSource({
+        features: new Collection()
+      }),
+      'voronoi': new VectorSource({
+        features: new Collection()
+      }),
+      'industry': new VectorSource({
+        features: new Collection()
+      }),
+      'field': new VectorSource({
+        features: new Collection()
+      }),
+      'stormCannon': new VectorSource({
+        features: new Collection()
+      }),
+    }
 
     this.labelStyle = [
       new Style({
@@ -53,48 +75,75 @@ class StaticLayers {
       })
     ]
 
+    this.conquestTeamStyles = {
+      '': new Style({
+        fill: new Fill({
+          color: '#FFFFFF00',
+        }),
+        stroke: new Stroke({
+          color: '#00000011',
+          width: 1
+        })
+      }),
+      'Warden': new Style({
+        fill: new Fill({
+          color: '#24568244',
+        }),
+        stroke: new Stroke({
+          color: '#24568222',
+          width: 1
+        })
+      }),
+      'Colonial': new Style({
+        fill: new Fill({
+          color: '#516C4B44',
+        }),
+        stroke: new Stroke({
+          color: '#516C4B22',
+          width: 1
+        })
+      }),
+    }
+
     regionGroup.getLayers().push(new Vector({
       title: 'Regions',
-      source: new VectorSource({
-        features: this.regionCollection
-      }),
+      source: this.sources.Region,
       zIndex: 100,
       minResolution: 4,
       style: this.regionStyle
     }))
     regionGroup.getLayers().push(new Vector({
       title: 'Major Labels',
-      source: new VectorSource({
-        features: this.majorCollection
-      }),
+      source: this.sources.Major,
       zIndex: 100,
       maxResolution: 4,
       style: this.regionStyle
     }))
     regionGroup.getLayers().push(new Vector({
       title: 'Minor Labels',
-      source: new VectorSource({
-        features: this.minorCollection
-      }),
+      source: this.sources.Minor,
       zIndex: 99,
       maxResolution: 1.5,
       style: this.regionStyle
     }))
+    staticGroup.getLayers().push(new Vector({
+      source: this.sources.voronoi,
+      zIndex: 1,
+      title: 'Conquest',
+      style: this.conquestStyle,
+      searchable: false,
+    }))
     staticGroup.getLayers().push(regionGroup)
     staticGroup.getLayers().push(new Vector({
-      source: new VectorSource({
-        features: this.townCollection
-      }),
+      source: this.sources.town,
       zIndex: 1,
       title: 'Towns/Relics',
       maxResolution: 5,
       style: this.iconStyle,
-      searchable: false,
+      searchable: true,
     }))
     staticGroup.getLayers().push(new Vector({
-      source: new VectorSource({
-        features: this.industryCollection
-      }),
+      source: this.sources.industry,
       title: 'Industry',
       zIndex: 1,
       maxResolution: 4,
@@ -103,11 +152,17 @@ class StaticLayers {
     }))
     staticGroup.getLayers().push(new Vector({
       title: 'Fields',
-      source: new VectorSource({
-        features: this.fieldCollection
-      }),
+      source: this.sources.field,
       zIndex: 1,
       maxResolution: 4,
+      style: this.iconStyle,
+      searchable: false,
+    }))
+    staticGroup.getLayers().push(new Vector({
+      title: 'Storm Cannons',
+      source: this.sources.stormCannon,
+      zIndex: 6,
+      maxResolution: 12,
       style: this.iconStyle,
       searchable: false,
     }))
@@ -121,22 +176,60 @@ class StaticLayers {
       style: this.iconStyle,
     })
     map.addLayer(this.notificationLayer)
+    this.deactivatedLayer = new Vector({
+      zIndex: 100,
+      source: new VectorSource({
+        features: new Collection()
+      }),
+      style: new Style({
+        fill: new Fill({
+          color: '#212529AA'
+        }),
+        stroke: new Stroke({
+          color: '#212529AA'
+        })
+      }),
+    })
+    map.addLayer(this.deactivatedLayer)
 
     this.cachedIconStyle = {}
     this.loadRegion(false)
   }
 
   regionStyle = (feature) => {
+    if (this.warFeatures.deactivatedRegions && this.warFeatures.deactivatedRegions.includes(feature.getId())) {
+      return null
+    }
     this.labelStyle[0].getText().setText(feature.get('notes'))
     this.labelStyle[1].getText().setText(feature.get('notes'))
     return this.labelStyle
   }
 
-  iconStyle = (feature) => {
+  conquestStyle = (feature) => {
+    let team = feature.get('team') || ''
+    if (team === 'none') {
+      team = ''
+    }
+    const region = feature.get('region')
+    if (region && this.warFeatures.deactivatedRegions && this.warFeatures.deactivatedRegions.includes(region)) {
+      return null
+    }
+    return this.conquestTeamStyles[team]
+  }
+
+  iconStyle = (feature, resolution) => {
     const icon = feature.get('icon')
     let team = feature.get('team') || ''
     if (team === 'none') {
       team = ''
+    }
+    const region = feature.get('region')
+    if (region && this.warFeatures.deactivatedRegions && this.warFeatures.deactivatedRegions.includes(region)) {
+      return null
+    }
+    if (icon === 'MapIconSafehouse' && resolution > 4) {
+      // safehouses are static but also want to show them only when showing industry
+      return null
     }
     const cacheKey = `${icon}${team}`
     if (!(cacheKey in this.cachedIconStyle)) {
@@ -144,8 +237,9 @@ class StaticLayers {
         image: new Icon({
           src: `/images/${feature.get('type')}/${feature.get('icon')}.png`,
           color: team === '' ? undefined : team === 'Warden' ? '#245682' : '#516C4B',
-          scale: (feature.get('type') === 'town' || feature.get('type') === 'field') ? 2/3 : 1,
+          scale: (feature.get('type') === 'town' || feature.get('type') === 'field' || feature.get('type') === 'stormCannon') ? 2/3 : 1,
         }),
+        zIndex: icon === 'MapIconSafehouse' ? 0 : undefined,
       });
     }
     return this.cachedIconStyle[cacheKey]
@@ -157,25 +251,92 @@ class StaticLayers {
     if (flash && Object.keys(features).length > 40) {
       flash = false
     }
-    this.townCollection.forEach((feature) => {
-      if (feature.getId() in features) {
+    for (const id in features) {
+      const data = features[id]
+      const town = this.sources.town.getFeatureById(id)
+      if (town) {
+        town.set('icon', data.icon, true)
+        town.set('team', data.team)
         if (flash) {
-          this.flash(feature)
+          this.flash(town)
         }
-        const data = features[feature.getId()]
-        feature.set('team', data.team)
-        feature.set('icon', data.icon)
+        if (town.get('voronoi') && data.icon !== 'MapIconRocketSite') {
+          const voronoi = this.sources.voronoi.getFeatureById(town.get('voronoi'))
+          if (voronoi) {
+            voronoi.set('team', data.team)
+          }
+        }
+        continue
       }
-    })
-    this.industryCollection.forEach((feature) => {
-      if (feature.getId() in features) {
+      const industry = this.sources.industry.getFeatureById(id)
+      if (industry) {
+        industry.set('team', data.team)
         if (flash) {
-          this.flash(feature)
+          this.flash(industry)
         }
-        const data = features[feature.getId()]
-        feature.set('team', data.team)
+        continue
       }
+      if (data.type === 'stormCannon') {
+        if (!data.destroyed) {
+          this.sources.stormCannon.addFeature(this.createStormCannonFeature(id, data))
+        }
+        else {
+          const stormCannon = this.sources.stormCannon.getFeatureById(id)
+          if (stormCannon) {
+            this.sources.stormCannon.removeFeature(stormCannon)
+          }
+          delete this.conquerStatus.features[id]
+        }
+      }
+    }
+  }
+
+  warFeaturesUpdate = () => {
+    const geoJson = new GeoJSON();
+    const collections = {
+      fields: [],
+      industry: [],
+    }
+    this.warFeatures.features.forEach((feature) => {
+      feature = geoJson.readFeature(feature)
+      const type = feature.get('type')
+      if (!(type in collections)) {
+        collections[type] = []
+      }
+      if (feature.get('id') in this.conquerStatus.features) {
+        feature.set('icon', this.conquerStatus.features[feature.get('id')].icon)
+        feature.set('team', this.conquerStatus.features[feature.get('id')].team)
+      }
+      collections[type].push(feature)
     })
+    for (const type in collections) {
+      if (type in this.sources) {
+        this.sources[type].clear(true)
+        this.sources[type].addFeatures(collections[type])
+      }
+    }
+    this.deactivatedLayer.getSource().clear(true)
+    const deactivatedRegionFeatures = []
+    for (const regionId of this.warFeatures.deactivatedRegions || []) {
+      const region = this.sources.Region.getFeatureById(regionId).clone()
+      deactivatedRegionFeatures.push(region)
+    }
+    this.deactivatedLayer.getSource().addFeatures(deactivatedRegionFeatures)
+  }
+
+  resetWar = () => {
+    this.deactivatedLayer.getSource().clear()
+    this.sources.stormCannon.getSource().clear()
+    this.sources.industry.getSource().clear()
+    this.sources.field.getSource().clear()
+    for (const type in this.sources) {
+      this.sources[type].forEachFeature((feature) => {
+        if (feature.get('icon')?.startsWith('MapIconTownBaseTier')) {
+          feature.set('icon', 'MapIconTownBaseTier1', true)
+        }
+        feature.set('team', '')
+      })
+    }
   }
 
   flash = (feature) => {
@@ -223,57 +384,62 @@ class StaticLayers {
     }
   }
 
-  loadRegion = (avoidCache = false) => {
-    this.regionCollection.clear()
-    this.majorCollection.clear()
-    this.minorCollection.clear()
-    this.townCollection.clear()
-    this.industryCollection.clear()
-    this.fieldCollection.clear()
-
+  loadRegion = () => {
     const geoJson = new GeoJSON();
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/regions.json');
-    if (avoidCache) {
-      xhr.setRequestHeader("If-Modified-Since", '');
-      xhr.setRequestHeader("If-None-Match", '');
-    }
+    xhr.open('GET', '/static.json');
     xhr.onload = () => {
       if (xhr.status === 200) {
         const features = geoJson.readFeatures(xhr.responseText);
+        const collections = {}
         features.forEach((feature) => {
-          switch (feature.get('type')) {
-            case 'Region':
-              this.regionCollection.push(feature)
-              break;
-            case 'Major':
-              this.majorCollection.push(feature)
-              break;
-            case 'Minor':
-              this.minorCollection.push(feature)
-              break;
-            case 'town':
-              if (feature.get('id') in this.conquerStatus.features) {
-                feature.set('icon', this.conquerStatus.features[feature.get('id')].icon)
-                feature.set('team', this.conquerStatus.features[feature.get('id')].team)
-              }
-              this.townCollection.push(feature)
-              break;
-            case 'industry':
-              if (feature.get('id') in this.conquerStatus.features) {
-                feature.set('icon', this.conquerStatus.features[feature.get('id')].icon)
-                feature.set('team', this.conquerStatus.features[feature.get('id')].team)
-              }
-              this.industryCollection.push(feature)
-              break;
-            case 'field':
-              this.fieldCollection.push(feature)
-              break;
+          const type = feature.get('type')
+          if (!(type in collections)) {
+            collections[type] = []
           }
+          if (feature.get('id') in this.conquerStatus.features) {
+            feature.set('icon', this.conquerStatus.features[feature.get('id')].icon, true)
+            feature.set('team', this.conquerStatus.features[feature.get('id')].team)
+          }
+          if (feature.get('town') in this.conquerStatus.features) {
+            feature.set('team', this.conquerStatus.features[feature.get('town')].team)
+          }
+          collections[type].push(feature)
         })
+        for (const type in this.sources) {
+          this.sources[type].clear(true)
+          this.sources[type].addFeatures(collections[type] || [])
+        }
+        this.warFeaturesUpdate()
+        const stormCannons = []
+        for (const id in this.conquerStatus.features) {
+          const feature = this.conquerStatus.features[id]
+          if (feature.type === 'stormCannon') {
+            if (feature.destroyed) {
+              delete this.conquerStatus.features[id]
+            }
+            else {
+              stormCannons.push(this.createStormCannonFeature(id, feature))
+            }
+          }
+        }
+        this.sources.stormCannon.clear(true)
+        this.sources.stormCannon.addFeatures(stormCannons)
       }
     }
     xhr.send();
+  }
+
+  createStormCannonFeature = (id, conquerData) => {
+    const feat = new Feature({
+      type: conquerData.type,
+      notes: conquerData.notes,
+      icon: conquerData.icon,
+      team: conquerData.team,
+      geometry: new Point(conquerData.coordinates),
+    });
+    feat.setId(id)
+    return feat
   }
 
 }

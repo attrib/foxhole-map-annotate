@@ -8,8 +8,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
-* implement deactivated hexes
-* victory townhalls? storm cannons? voronoi diagrams
+* victory townhalls?
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - length 1.89km, width 2.184km
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?
@@ -28,6 +27,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * auto expiring icons (by [CHI] Arctifire) 
 * Clan feature? A way to allow others to edit your features? maybe allow full access of same server to allow editing of same server?
 * public activity log
+* add current VP count to navbar
 
 ## DevTodos
 

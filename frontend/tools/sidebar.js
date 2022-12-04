@@ -72,13 +72,13 @@ class Sidebar {
       if (this.editFeature) {
         const type = this.editFeature.get('type')
         if (type === 'line') {
-          this.editFeature.set('clan', this.clanInput.value)
+          this.editFeature.set('clan', this.clanInput.value, true)
         }
         if (type === 'line') {
-          this.editFeature.set('lineType', this.lineTypeInput.value)
+          this.editFeature.set('lineType', this.lineTypeInput.value, true)
         }
         if (['line', 'polygon'].includes(type)) {
-          this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature))
+          this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature), true)
         }
         this.editFeature.set('notes', this.notesInput.value)
         tools.emit(tools.EVENT_ICON_UPDATED, this.editFeature)

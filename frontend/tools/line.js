@@ -80,18 +80,18 @@ class Line {
       }
     });
     this.draw.on('drawstart', (event) => {
-      event.feature.set('type', 'line')
-      event.feature.set('color', tools.sidebar.colorInput.value)
-      event.feature.set('clan', tools.sidebar.clanInput.value)
+      event.feature.set('type', 'line', true)
+      event.feature.set('color', tools.sidebar.colorInput.value, true)
+      event.feature.set('clan', tools.sidebar.clanInput.value, true)
       event.feature.set('lineType', tools.sidebar.lineTypeInput.value)
       this.sketchFeature = event.feature
     })
     this.draw.on('drawend', (event) => {
       this.confirmOverlay.setPosition(undefined)
       this.cancelOverlay.setPosition(undefined)
-      event.feature.set('type', 'line')
-      event.feature.set('color', tools.sidebar.colorInput.value)
-      event.feature.set('clan', tools.sidebar.clanInput.value)
+      event.feature.set('type', 'line', true)
+      event.feature.set('color', tools.sidebar.colorInput.value, true)
+      event.feature.set('clan', tools.sidebar.clanInput.value, true)
       event.feature.set('lineType', tools.sidebar.lineTypeInput.value)
       this.sketchFeature = null
       tools.emit(tools.EVENT_ICON_ADDED, event.feature)

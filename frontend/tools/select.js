@@ -7,8 +7,8 @@ const {getTopLeft} = require("ol/extent");
 
 const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi']
 const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field']
-const NO_USER_INFO = [...NOT_SELECTABLE]
-const NO_CLOCK = [...NOT_SELECTABLE, 'sign']
+const NO_USER_INFO = [...NOT_SELECTABLE, 'stormCannon']
+const NO_CLOCK = [...NO_USER_INFO, 'sign']
 
 /**
  * @param {import('ol/geom').Geometry} geometry

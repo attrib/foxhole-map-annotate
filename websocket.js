@@ -5,7 +5,7 @@ const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
 const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
-const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions} = require("./lib/conquerUpdater");
+const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions, getWarFeatures} = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
 const sanitizeHtml = require("sanitize-html");
@@ -69,6 +69,10 @@ wss.on('connection', function (ws, request) {
 
         case 'getConquerStatus':
           sendData(ws, 'conquer', getConquerStatus())
+          break;
+
+        case 'getWarFeatures':
+          sendData(ws, 'warFeatures', getWarFeatures())
           break;
 
         case 'featureAdd':
@@ -222,12 +226,14 @@ function sendFeatures(client) {
 }
 
 function conquerUpdater() {
+  const oldVersion = getConquerStatusVersion()
   warapi.warDataUpdate()
     .then(() => {
       return updateMap()
     })
     .then((data) => {
       if (data) {
+        data.oldVersion = oldVersion
         sendDataToAll('conquer', data)
       }
     })
@@ -255,7 +261,9 @@ warapi.on(warapi.EVENT_WAR_PREPARE, ({oldData, newData}) => {
   if (fs.existsSync('./data/wardata.json')) {
     fs.cpSync('./data/wardata.json', oldWarDir + '/wardata.json')
   }
-  fs.cpSync('./public/regions.json', oldWarDir + '/regions.json')
+  if (fs.existsSync('./data/war.json')) {
+    fs.cpSync('./data/war.json', oldWarDir + '/war.json')
+  }
   // clear data
   features.features = features.features.filter((track) => track.properties.clan === 'World')
   saveFeatures(features)
