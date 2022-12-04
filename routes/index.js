@@ -141,6 +141,7 @@ router.get('/login', async function(req, res, next) {
     if (data.access === true) {
       req.session.user = data.user;
       req.session.userId = data.userId;
+      req.session.discordId = data.discordId;
       req.session.acl = data.acl;
       req.session.save(() => {
         res.redirect('/');

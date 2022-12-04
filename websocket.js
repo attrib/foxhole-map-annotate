@@ -35,6 +35,7 @@ wss.on('connection', function (ws, request) {
     }
     const username = request.session.user;
     const userId = request.session.userId;
+    const discordId = request.session.discordId;
     const acl = request.session.acl;
     const wsId = uuid.v4();
     clients.set(wsId, ws);
@@ -87,6 +88,7 @@ wss.on('connection', function (ws, request) {
           feature.properties.id = feature.id
           feature.properties.user = username
           feature.properties.userId = userId
+          feature.properties.discordId = discordId
           feature.properties.time = (new Date()).toISOString()
           feature.properties.notes = sanitizeHtml(feature.properties.notes, sanitizeOptions)
           if (feature.properties.color) {
@@ -116,6 +118,9 @@ wss.on('connection', function (ws, request) {
                 return;
               }
               existingFeature.properties = message.data.properties
+              if (!existingFeature.properties.discordId) {
+                existingFeature.properties.discordId = discordId
+              }
               existingFeature.properties.muser = username
               existingFeature.properties.muserId = userId
               existingFeature.properties.time = (new Date()).toISOString()
