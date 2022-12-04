@@ -26,7 +26,6 @@
     "yaml": "^2.1.3"
   },
   "devDependencies": {
-    "@popperjs/core": "^2.11.6",
     "@turf/bezier-spline": "^6.5.0",
     "@turf/intersect": "^6.5.0",
     "@turf/voronoi": "^6.5.0",

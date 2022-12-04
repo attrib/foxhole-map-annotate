@@ -208,11 +208,11 @@ socket.on('warEnded', (data) => {
 })
 
 socket.on('warPrepare', (data) => {
-  conquerStatus.version = 0
+  conquerStatus.version = ''
   conquerStatus.features = {}
   warFeatures.features = []
   warFeatures.deactivatedRegions = []
-  warFeatures.version = 1
+  warFeatures.version = ''
   staticLayer.resetWar()
   localStorage.setItem('warFeatures', JSON.stringify(warFeatures))
   document.getElementById('warNumber').innerHTML = `${data.shard} #${data.warNumber} (Preparing)`
@@ -224,11 +224,11 @@ socket.on('warPrepare', (data) => {
 })
 
 socket.on('warChange', (data) => {
-  conquerStatus.version = 0
+  conquerStatus.version = ''
   conquerStatus.features = {}
   warFeatures.features = []
   warFeatures.deactivatedRegions = []
-  warFeatures.version = 1
+  warFeatures.version = ''
   staticLayer.resetWar()
   document.getElementById('warNumber').innerHTML = `${data.shard} #${data.warNumber}`
 })

@@ -58,6 +58,7 @@ app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     req.session.user = 'develop';
     req.session.userId = '1234567895';
+    req.session.discordId = '1234567895';
     req.session.acl = ACL_ADMIN;
   }
   res.locals.config = config.config

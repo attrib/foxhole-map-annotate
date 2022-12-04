@@ -31,7 +31,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## DevTodos
 
-* Rework WebSockets to allow partial updates (localStorage?) 
 * discord bot? for better ACL?
 
 ## Run Dev
