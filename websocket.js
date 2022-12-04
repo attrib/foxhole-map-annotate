@@ -5,7 +5,9 @@ const clients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
 const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
-const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions, getWarFeatures} = require("./lib/conquerUpdater");
+const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions, getWarFeatures,
+  getWarFeaturesVersion
+} = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
 const sanitizeHtml = require("sanitize-html");
@@ -61,6 +63,9 @@ wss.on('connection', function (ws, request) {
           }
           if (message.data.featureHash !== features.hash) {
             sendFeatures(ws)
+          }
+          if (message.data.warVersion !== getWarFeaturesVersion()) {
+            sendData(ws, 'warFeatures', getWarFeatures())
           }
           break;
 

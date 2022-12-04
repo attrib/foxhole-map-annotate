@@ -70,8 +70,8 @@ document.getElementById('map').addEventListener('contextmenu', (e) => {
   return false;
 })
 
-const warFeatures = localStorage.getItem('warFeatures') ? JSON.parse(localStorage.getItem('warFeatures')) : {version: 0, features: [], deactivatedRegions: []}
-const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {version: 0, features: {}}
+const warFeatures = localStorage.getItem('warFeatures') ? JSON.parse(localStorage.getItem('warFeatures')) : {version: '', features: [], deactivatedRegions: []}
+const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {version: '', features: {}}
 const staticLayer = new StaticLayers(map, conquerStatus, warFeatures)
 const tools = new EditTools(map);
 enableLayerMemory(map)
@@ -239,6 +239,7 @@ socket.on('open', () => {
   socket.send('init', {
     conquerStatus: conquerStatus.version,
     featureHash: lastFeatureHash,
+    warVersion: warFeatures.version,
   })
 })
 socket.on('close', () => {
