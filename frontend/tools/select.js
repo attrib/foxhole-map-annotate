@@ -107,7 +107,9 @@ class Select {
 
     map.on('pointermove', (evt) => {
       const value = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-        return [feature, layer];
+        if (layer.get('tooltip') === undefined || layer.get('tooltip') === true) {
+          return [feature, layer];
+        }
       });
       if (!value) {
         this.hideInfoBoxes()
@@ -139,7 +141,9 @@ class Select {
         fill: new Fill({
           color: '#21252933'
         }),
-      })
+      }),
+      searchable: false,
+      tooltip: false,
     }))
     map.on('click', (event) => {
       const features = tools.staticLayer.sources.stormCannon.getFeaturesInExtent([event.coordinate[0] - 16, event.coordinate[1] - 16, event.coordinate[0] + 16, event.coordinate[1] + 16])

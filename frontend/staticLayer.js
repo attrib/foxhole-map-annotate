@@ -110,21 +110,24 @@ class StaticLayers {
       source: this.sources.Region,
       zIndex: 100,
       minResolution: 4,
-      style: this.regionStyle
+      style: this.regionStyle,
+      tooltip: false,
     }))
     regionGroup.getLayers().push(new Vector({
       title: 'Major Labels',
       source: this.sources.Major,
       zIndex: 100,
       maxResolution: 4,
-      style: this.regionStyle
+      style: this.regionStyle,
+      tooltip: false,
     }))
     regionGroup.getLayers().push(new Vector({
       title: 'Minor Labels',
       source: this.sources.Minor,
       zIndex: 99,
       maxResolution: 1.5,
-      style: this.regionStyle
+      style: this.regionStyle,
+      tooltip: false,
     }))
     staticGroup.getLayers().push(new Vector({
       source: this.sources.voronoi,
@@ -132,6 +135,7 @@ class StaticLayers {
       title: 'Conquest',
       style: this.conquestStyle,
       searchable: false,
+      tooltip: false,
     }))
     staticGroup.getLayers().push(regionGroup)
     staticGroup.getLayers().push(new Vector({
@@ -174,6 +178,8 @@ class StaticLayers {
         features: new Collection()
       }),
       style: this.iconStyle,
+      searchable: false,
+      tooltip: false,
     })
     map.addLayer(this.notificationLayer)
     this.deactivatedLayer = new Vector({
@@ -189,6 +195,8 @@ class StaticLayers {
           color: '#212529AA'
         })
       }),
+      searchable: false,
+      tooltip: false,
     })
     map.addLayer(this.deactivatedLayer)
 

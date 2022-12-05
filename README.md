@@ -6,8 +6,6 @@ Annotate and draw on the foxhole map and share with your group.
 
 Please create a Ticket in GitHub. Or of any the discord where you maybe heard about this tool.
 
-* tooltip for rails missing
-
 ## Ideas
 
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - length 1.89km, width 2.184km
