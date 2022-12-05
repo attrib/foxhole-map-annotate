@@ -162,7 +162,7 @@ class StaticLayers {
       title: 'Storm Cannons',
       source: this.sources.stormCannon,
       zIndex: 6,
-      maxResolution: 12,
+      maxResolution: 6,
       style: this.iconStyle,
       searchable: false,
     }))

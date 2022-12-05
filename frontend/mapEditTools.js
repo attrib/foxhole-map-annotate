@@ -18,11 +18,11 @@ class EditTools {
     EVENT_ICON_DELETED = 'iconDeleted';
     EVENT_ICON_UPDATED = 'iconUpdated';
     EVENT_FEATURE_SELECTED = (type) => {
-        const t = type === 'line' || type === 'polygon' ? type : 'icon'
+        const t = type === 'line' || type === 'polygon' || type === 'stormCannon' ? type : 'icon'
         return t + '-selected'
     }
     EVENT_FEATURE_DESELECTED = (type) => {
-        const t = type === 'line' || type === 'polygon' ? type : 'icon'
+        const t = type === 'line' || type === 'polygon' || type === 'stormCannon' ? type : 'icon'
         return t + '-deselected'
     }
     EVENT_DECAY_UPDATE = 'decayUpdate'

@@ -1,11 +1,14 @@
 const {never} = require("ol/events/condition");
-const {Style, Circle, Stroke} = require("ol/style");
+const {Style, Circle, Stroke, Fill} = require("ol/style");
+const {Circle: CircleGeo} = require("ol/geom")
 const {SelectEvent} = require("ol/interaction/Select");
 const {Select: OlSelect} = require("ol/interaction")
-const {Overlay} = require("ol");
+const {Overlay, Collection, Feature} = require("ol");
 const {getTopLeft} = require("ol/extent");
+const {Vector: VectorSource} = require("ol/source");
+const {Vector} = require("ol/layer");
 
-const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi']
+const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius']
 const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field']
 const NO_USER_INFO = [...NOT_SELECTABLE, 'stormCannon']
 const NO_CLOCK = [...NO_USER_INFO, 'sign']
@@ -124,6 +127,29 @@ class Select {
         this.setClockColor(this.clocks[data.id], new Date(data.time))
       }
     })
+
+    this.stormCannonSource = new VectorSource({
+      features: new Collection()
+    })
+    map.addLayer(new Vector({
+      source: this.stormCannonSource,
+      zIndex: 0,
+      maxResolution: 6,
+      style: new Style({
+        fill: new Fill({
+          color: '#21252933'
+        }),
+      })
+    }))
+    map.on('click', (event) => {
+      const features = tools.staticLayer.sources.stormCannon.getFeaturesInExtent([event.coordinate[0] - 16, event.coordinate[1] - 16, event.coordinate[0] + 16, event.coordinate[1] + 16])
+      for (const feature of features) {
+        if (feature.get('type') === 'stormCannon') {
+          this.stormCannonSelected(feature)
+          break
+        }
+      }
+    })
   }
 
   selectStyle = () => {
@@ -196,6 +222,8 @@ class Select {
         case 'polygon':
           return [this.tools.polygon.style(feature, zoom), ...lineStyle]
 
+        case 'stormCannon':
+          return this.tools.staticLayer.iconStyle(feature, zoom)
       }
     }
   }
@@ -286,6 +314,31 @@ class Select {
     if (feature.getId() in this.selectOverlays) {
       this.map.removeOverlay(this.selectOverlays[feature.getId()])
       delete this.selectOverlays[feature.getId()]
+    }
+  }
+
+  stormCannonSelected = (feature) => {
+    const radius = this.stormCannonSource.getFeatureById('radius-' + feature.getId())
+    if (radius) {
+      this.stormCannonSource.removeFeature(radius)
+    }
+    else {
+      let radiusInKm = 0
+      if (feature.get('icon') === 'MapIconIntelCenter') {
+        radiusInKm = 2000
+      }
+      else if (feature.get('icon') === 'MapIconStormCannon') {
+        radiusInKm = 1000
+      }
+      const newRadius = new Feature({
+        geometry: new CircleGeo(
+          feature.getGeometry().getFirstCoordinate(),
+          0.94 * radiusInKm
+        )
+      })
+      newRadius.set('type', 'radius')
+      newRadius.setId('radius-' + feature.getId())
+      this.stormCannonSource.addFeature(newRadius)
     }
   }
 

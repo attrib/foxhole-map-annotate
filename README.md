@@ -6,10 +6,12 @@ Annotate and draw on the foxhole map and share with your group.
 
 Please create a Ticket in GitHub. Or of any the discord where you maybe heard about this tool.
 
+* tooltip for rails missing
+
 ## Ideas
 
-* victory townhalls?
 * [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - length 1.89km, width 2.184km
+* watch towers / storm cannon radius
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?
   * [Hover](https://viglino.github.io/ol-ext/examples/interaction/map.interaction.hover.html)
@@ -27,7 +29,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * auto expiring icons (by [CHI] Arctifire) 
 * Clan feature? A way to allow others to edit your features? maybe allow full access of same server to allow editing of same server?
 * public activity log
-* add current VP count to navbar
+* add current VP count to navbar / victory townhalls?
 
 ## DevTodos
 

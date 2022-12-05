@@ -74,6 +74,7 @@ const warFeatures = localStorage.getItem('warFeatures') ? JSON.parse(localStorag
 const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {version: '', features: {}}
 const staticLayer = new StaticLayers(map, conquerStatus, warFeatures)
 const tools = new EditTools(map);
+tools.staticLayer = staticLayer;
 enableLayerMemory(map)
 
 // Allow panning with middle mouse
