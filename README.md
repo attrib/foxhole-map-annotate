@@ -22,7 +22,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * more line options (Enemy logi route, partisan route) (by Bazlow, [TSAR]orb)
 * checkpoint marker (by [HAULR] Barteng)
 * public oil marker (by [HAULR] Barteng)
-* public water marker  (by [HAULR] Barteng)
 * Dedicated text box on the map (by [✚RMC✚] EllieTau (QM))
 * auto expiring icons (by [CHI] Arctifire) 
 * Clan feature? A way to allow others to edit your features? maybe allow full access of same server to allow editing of same server?

@@ -58,6 +58,7 @@ class EditTools {
                 title: 'Signs',
                 type: 'sign',
                 zIndex: 30,
+                maxResolution: 4,
             },
             'base': {
                 title: 'Bases',
