@@ -28,6 +28,8 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Clan feature? A way to allow others to edit your features? maybe allow full access of same server to allow editing of same server?
 * public activity log
 * add current VP count to navbar / victory townhalls?
+* 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
+* comments for signs (by [FMAT] Da Vinci)
 
 ## DevTodos
 

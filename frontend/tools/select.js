@@ -107,6 +107,9 @@ class Select {
 
     map.on('pointermove', (evt) => {
       const value = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+        if (layer === null) {
+          return null
+        }
         if (layer.get('tooltip') === undefined || layer.get('tooltip') === true) {
           return [feature, layer];
         }
