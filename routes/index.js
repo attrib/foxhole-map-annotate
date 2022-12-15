@@ -83,10 +83,11 @@ router.post('/admin/config', function(req, res, next) {
   config.config.access = {users: {}, discords: {}}
 
   if (req.body.access) {
+    const discordIdPattern = /^(\d+)\s*$/;
     if (req.body.access.users) {
       for (const i in req.body.access.users.id) {
-        const userId = req.body.access.users.id[i]
-        if (userId.length === 0 || !userId.match(/^\d+$/)) {
+        const userId = discordIdPattern.exec(req.body.access.users.id[i])?.[1];
+        if (!userId) {
           continue
         }
         config.config.access.users[userId] = {
@@ -95,11 +96,10 @@ router.post('/admin/config', function(req, res, next) {
         }
       }
     }
-
     if (req.body.access.discords) {
       for (const i in req.body.access.discords.id) {
-        const discordId = req.body.access.discords.id[i]
-        if (discordId.length === 0 || !discordId.match(/^\d+$/)) {
+        const discordId = discordIdPattern.exec(req.body.access.discords.id[i])?.[1];
+        if (!discordId) {
           continue
         }
         config.config.access.discords[discordId] = {
@@ -109,8 +109,8 @@ router.post('/admin/config', function(req, res, next) {
         }
         if (req.body.access.discords[discordId]) {
           for (const i in req.body.access.discords[discordId].roles.id) {
-            const roleId = req.body.access.discords[discordId].roles.id[i]
-            if (roleId.length === 0 || !roleId.match(/^\d+$/)) {
+            const roleId = discordIdPattern.exec(req.body.access.discords[discordId].roles.id[i])?.[1];
+            if (!roleId) {
               continue
             }
             config.config.access.discords[discordId].roles[roleId] = {
