@@ -8,7 +8,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
-* [Measure](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - length 1.89km, width 2.184km
+* [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - (Hex length 1.89km, width 2.184km)
 * watch towers / storm cannon radius
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?
@@ -29,10 +29,13 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * add current VP count to navbar / victory townhalls?
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
 * comments for signs (by [FMAT] Da Vinci)
+* Free Hand drawing (by [RDRT] A Devil Chicken)
+* Mobile edit support
+* Artilery Calculator (by [Spook] Yabba - https://media.discordapp.net/attachments/1044680476822093976/1050478548223262810/image.png?width=573&height=810)
 
 ## DevTodos
 
-* discord bot? for better ACL?
+* 
 
 ## Run Dev
 
