@@ -31,6 +31,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * comments for signs (by [FMAT] Da Vinci)
 * Free Hand drawing (by [RDRT] A Devil Chicken)
 * Mobile edit support
+* Artilery Calculator (by [Spook] Yabba - https://media.discordapp.net/attachments/1044680476822093976/1050478548223262810/image.png?width=573&height=810)
 
 ## DevTodos
 
