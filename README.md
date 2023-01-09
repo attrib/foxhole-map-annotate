@@ -6,10 +6,18 @@ Annotate and draw on the foxhole map and share with your group.
 
 Please create a Ticket in GitHub. Or of any the discord where you maybe heard about this tool.
 
+* Private/Public/Enemy Slider on iPad doesn't show correctly
+
 ## Ideas
 
+* Image/Screenshot upload (compressor.js)
 * [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - (Hex length 1.89km, width 2.184km)
 * watch towers / storm cannon radius
+* Free Hand drawing (by [RDRT] A Devil Chicken)
+* auto expiring icons (by [CHI] Arctifire)
+* 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
+* comments for signs (by [FMAT] Da Vinci)
+* add current VP count to navbar / victory townhalls? 
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?
   * [Hover](https://viglino.github.io/ol-ext/examples/interaction/map.interaction.hover.html)
@@ -23,13 +31,8 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * checkpoint marker (by [HAULR] Barteng)
 * public oil marker (by [HAULR] Barteng)
 * Dedicated text box on the map (by [✚RMC✚] EllieTau (QM))
-* auto expiring icons (by [CHI] Arctifire) 
 * Clan feature? A way to allow others to edit your features? maybe allow full access of same server to allow editing of same server?
 * public activity log
-* add current VP count to navbar / victory townhalls?
-* 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
-* comments for signs (by [FMAT] Da Vinci)
-* Free Hand drawing (by [RDRT] A Devil Chicken)
 * Mobile edit support
 * Artilery Calculator (by [Spook] Yabba - https://media.discordapp.net/attachments/1044680476822093976/1050478548223262810/image.png?width=573&height=810)
 
