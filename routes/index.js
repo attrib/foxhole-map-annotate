@@ -6,6 +6,7 @@ const {ACL_ADMIN, ACL_MOD} = require("../lib/ACLS");
 const config = require('../lib/config')
 const sanitizeHtml = require('sanitize-html')
 const eventlog = require('../lib/eventLog');
+const {clearRegionsCache} = require("../lib/conquerUpdater");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -36,6 +37,15 @@ router.get('/admin/config', async function (req, res, next) {
     return res.redirect('/');
   }
   res.render('admin.config.html');
+})
+
+router.post('/admin/reload', function (req, res, next) {
+  if (!req.session || (req.session.acl !== ACL_ADMIN)) {
+    return res.redirect('/');
+  }
+  eventlog.logEvent({type: 'forcedMapReload', user: req.session.user, userId: req.session.userId, data: config.config})
+  clearRegionsCache()
+  return res.redirect('/admin/config');
 })
 
 router.post('/admin/config', function(req, res, next) {
