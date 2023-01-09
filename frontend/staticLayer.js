@@ -268,7 +268,7 @@ class StaticLayers {
         if (flash) {
           this.flash(town)
         }
-        if (town.get('voronoi') && data.icon !== 'MapIconRocketSite') {
+        if (town.get('voronoi') && data.icon !== 'MapIconRocketSite' && data.icon !== 'MapIconObservationTower') {
           const voronoi = this.sources.voronoi.getFeatureById(town.get('voronoi'))
           if (voronoi) {
             voronoi.set('team', data.team)
