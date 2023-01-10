@@ -28,7 +28,7 @@ router.get('/admin/eventlog', async function (req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN && req.session.acl !== ACL_MOD)) {
     return res.redirect('/');
   }
-  res.locals.events = await eventLog.getLastLines()
+  res.locals.events = eventLog.lastLogs
   res.render('admin.eventlog.html');
 })
 

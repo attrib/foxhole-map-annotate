@@ -6,7 +6,7 @@
         <h2>Event Log</h2>
         {% for event in events %}
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-2 date" data-datetime="{{ event.eventTime }}">
                     {{ event.eventTime }}
                 </div>
                 <div class="col-md-2">
@@ -40,5 +40,11 @@
             </div>
         {% endfor %}
     </div>
+    <script>
+        for (const element of document.getElementsByClassName('date')) {
+          const date = new Date(element.dataset.datetime)
+          element.innerHTML = date.toLocaleString()
+        }
+    </script>
 </div>
 {% endblock %}
