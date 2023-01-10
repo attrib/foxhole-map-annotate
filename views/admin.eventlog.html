@@ -20,8 +20,8 @@
                 </div>
                 <div class="col-md-2">
                     <a href="https://discordapp.com/users/{{ event.userId }}">{{ event.user }}</a>
-                    {% if config.access.discords|length > 1 and event.data.properties.discordId and config.access.discords[event.data.properties.discordId].name %}
-                        (<a href="https://discord.com/channels/{{event.data.properties.discordId}}">{{ config.access.discords[event.data.properties.discordId].name }}</a>)
+                    {% if config.access.discords|length > 1 and event.data.properties.discordId %}
+                        (<a href="https://discord.com/channels/{{event.data.properties.discordId}}">{{ config.access.discords[event.data.properties.discordId].name|default(event.data.properties.discordId) }}</a>)
                     {% endif %}
                 </div>
                 <div class="col-md-2">
