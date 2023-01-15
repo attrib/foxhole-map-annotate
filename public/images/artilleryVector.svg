@@ -1,0 +1,10 @@
+<!-- sample rectangle -->
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <line x1 = "4" y1 ="4" x2 = "12" y2 = "12" stroke ="black"/>
+
+  <line x1 = "19" y1 ="12" x2 = "27" y2 = "4" stroke ="black"/>
+
+  <line x1 = "4" y1 ="27" x2 = "12" y2 = "19" stroke ="black"/>
+
+  <line x1 = "19" y1 ="19" x2 = "27" y2 = "27" stroke ="black"/>
+</svg>

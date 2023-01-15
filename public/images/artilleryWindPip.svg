@@ -1,0 +1,6 @@
+<!-- sample rectangle -->
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <circle cx = "15" cy = "15" r ="12" fill="white"/>
+    
+  
+</svg>

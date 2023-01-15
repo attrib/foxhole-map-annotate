@@ -1,13 +1,16 @@
 const Edit = require("./tools/edit");
+const Arty = require("./tools/arty");
 const {ACL_READ, hasAccess} = require("../lib/ACLS");
 const Select = require("./tools/select");
 const {Group} = require("ol/layer");
 const {GeoJSON} = require("ol/format");
 const Sidebar = require("./tools/sidebar");
+const SidebarArty = require("./tools/sidebarArty");
 const Icon = require("./tools/icon");
 const Polygon = require("./tools/polygon");
 const Line = require("./tools/line");
 const Scissor = require("./tools/scissor");
+
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -58,7 +61,6 @@ class EditTools {
                 title: 'Signs',
                 type: 'sign',
                 zIndex: 30,
-                maxResolution: 4,
             },
             'base': {
                 title: 'Bases',
@@ -85,12 +87,14 @@ class EditTools {
         }
 
         this.sidebar = new Sidebar(this, map)
+        this.sidebarArty = new SidebarArty(this, map)
         this.line = new Line(this, map)
         this.scissor = new Scissor(this, map)
         this.icon = new Icon(this, map)
         this.polygon = new Polygon(this, map)
         this.select = new Select(this, map)
         this.edit = new Edit(this, map)
+        this.arty = new Arty(this, map)
     }
 
     resetAcl = () => {
@@ -103,6 +107,7 @@ class EditTools {
         this.acl = acl;
         if (acl !== ACL_READ) {
             this.map.addControl(this.edit.control)
+            this.map.addControl(this.arty.control)
         }
         this.sidebar.setAcl(acl)
     }
