@@ -1,0 +1,6 @@
+<!-- sample rectangle -->
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <polygon points ="16,0 8,28 16,30 24,28" fill="white"/>
+    
+  
+</svg>
