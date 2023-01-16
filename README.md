@@ -10,7 +10,8 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
-* Image/Screenshot upload (compressor.js)
+* Image/Screenshot upload (compressor.js) (by Bazlow)
+* Filter Planned/Built Rails (by [102nd] Asterム)
 * [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - (Hex length 1.89km, width 2.184km)
 * watch towers / storm cannon radius
 * Free Hand drawing (by [RDRT] A Devil Chicken)
@@ -34,7 +35,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Clan feature? A way to allow others to edit your features? maybe allow full access of same server to allow editing of same server?
 * public activity log
 * Mobile edit support
-* Artilery Calculator (by [Spook] Yabba - https://media.discordapp.net/attachments/1044680476822093976/1050478548223262810/image.png?width=573&height=810)
+* Rotate icons (by [FMAT] Zeenz)
 
 ## DevTodos
 
