@@ -1,6 +1,3 @@
-const { ACL_ICONS_ONLY } = require("../../lib/ACLS");
-
-
 const { Collection } = require("ol");
 
 const { default: Feature } = require("ol/Feature")
@@ -11,17 +8,11 @@ const { default: Icon } = require('ol/style/Icon');
 const { default: Style } = require('ol/style/Style');
 
 const { default: Translate } = require("ol/interaction/Translate");
-const { default: Select } = require("ol/interaction/Select");
 
 const { Circle } = require("ol/geom");
 const { default: LineString } = require("ol/geom/LineString");
-const { click, singleClick, pointerMove } = require("ol/events/condition");
 const { default: Stroke } = require("ol/style/Stroke");
 const { default: Fill } = require("ol/style/Fill");
-
-//const {Config} = require("../../lib/config")
-
-
 
 class SidebarArty {
 
@@ -178,7 +169,7 @@ class SidebarArty {
     for (let p in this.artilleryList) {
 
       //header handling
-      if (shellType != this.artilleryList[p].ammo && shellType != '') {
+      if (shellType !== this.artilleryList[p].ammo && shellType !== '') {
 
         let newLiH = document.createElement('li')
         let newHead = document.createElement('h5')
@@ -202,10 +193,8 @@ class SidebarArty {
       artySelector.appendChild(newLi)
     }
 
-    let g = this.artilleryList["Tube Mortars"];
-    this.g = g;
+    this.g = this.artilleryList["Tube Mortars"];
 
-    
     //this is silly but oh well
     document.getElementById("ws0").onclick= () => this.setWindStr();
     document.getElementById("ws1").onclick= () => this.setWindStr();
@@ -222,7 +211,6 @@ class SidebarArty {
       features: new Collection(),
       type: 'arty'
     })
-    this.vectorSource = vectorSource
 
     const vector = new VectorLayer({
       source: vectorSource,
@@ -308,7 +296,6 @@ class SidebarArty {
         rotation: 0
       }),
     });
-    this.iconWindPip = iconWindPip;
 
     const gunVectorStyle = new Style({
       stroke : new Stroke({
@@ -341,14 +328,12 @@ class SidebarArty {
     const sender = new Feature({
       geometry: new Point(map.getView().getCenter()),
       type: 'radius',
-      tag: 'arty'
     });
     this.sender = sender;
 
     const target = new Feature({
       geometry: new Point(map.getView().getCenter()),
       type: 'radius',
-      tag: 'arty'
     });
     this.target = target;
 
@@ -365,13 +350,13 @@ class SidebarArty {
     this.dirWind = dirWind
 
     const windPips = [5];
-    for (let i = 0; i<5; i++){
+    for (let i = 0; i<5; i++) {
       windPips[i] = new Feature({
         geometry: new Point([0,0]),
         type: 'radius',
-        style: this.iconWindPip
+        style: iconWindPip
       })
-      windPips[i].setStyle(this.iconWindPip)
+      windPips[i].setStyle(iconWindPip)
       this.windVectorLayer.addFeature(windPips[i])
     }
     this.windPips = windPips;
@@ -407,28 +392,18 @@ class SidebarArty {
     });
     this.precisionRadius = precisionRadius
 
-    const select = new Select({
-      condition: click,
-      style: null,
+    const translateTarget = new Translate({
       hitTolerance: 10,
-      filter: (feature) => {
-        return (feature.get('tag') == 'arty');
-      }
-    });
-
-    const translate = new Translate({
+      features: new Collection([target]),
+    })
+    translateTarget.on("translating", this.translating)
+    const translateSender = new Translate({
       hitTolerance: 10,
-      features: select.getFeatures()
+      features: new Collection([sender]),
     })
-
-    translate.on("translating", evt => {
-      minRadius.getGeometry().setCenter(sender.getGeometry().getCoordinates())
-      maxRadius.getGeometry().setCenter(sender.getGeometry().getCoordinates())
-      precisionRadius.getGeometry().setCenter(target.getGeometry().getCoordinates())
-      
-      this.calcWind();
-      //this.calcVector();
-    })
+    translateSender.on("translating", this.translating)
+    map.addInteraction(translateTarget);
+    map.addInteraction(translateSender);
 
     sender.setStyle(iconStyle);
     target.setStyle(iconTarget);
@@ -452,14 +427,16 @@ class SidebarArty {
     map.addLayer(vector);
     map.addLayer(windLayer);
 
-    map.addInteraction(select);
-    map.addInteraction(translate);
-
-    
     tools.on(tools.EVENT_ARTY_MODE_ENABLED, this.artyModeEnabled)
     tools.on(tools.EVENT_ARTY_MODE_DISABLED, this.artyModeDisabled)
+  }
 
-    
+  translating = () => {
+    this.minRadius.getGeometry().setCenter(this.sender.getGeometry().getCoordinates())
+    this.maxRadius.getGeometry().setCenter(this.sender.getGeometry().getCoordinates())
+    this.precisionRadius.getGeometry().setCenter(this.target.getGeometry().getCoordinates())
+
+    this.calcWind();
   }
 
   selectGun(gun) {
@@ -474,23 +451,24 @@ class SidebarArty {
   }
 
   setWindStr = () => {
-    this.windStrength = document.querySelector('input[name="windStrength"]:checked').value
+    this.windStrength = parseInt(document.querySelector('input[name="windStrength"]:checked').value)
 
-    if(this.windStrength == 0){
+    if (this.windStrength === 0) {
       this.windLayer.setVisible(false);
-    } else{
+    } else {
       this.windLayer.setVisible(true);
     }
 
     this.calcWind();
   }
+
   setWindDir = () => {
 
     //makes scrolling and arrow buttons loop, most of the time
-    if (document.getElementById("wd0").value == 360){
+    if (document.getElementById("wd0").value >= 360){
       document.getElementById("wd0").value = 0;
     }
-    else if (document.getElementById("wd0").value == 0){
+    else if (document.getElementById("wd0").value <= 0){
       document.getElementById("wd0").value = 360;
     }
 
@@ -582,18 +560,18 @@ class SidebarArty {
   }
 
   copySolution = () => {
-    let text = "Dist: "+document.getElementById('solutionD').innerHTML+" Azim: "+document.getElementById('solutionA').innerHTML
+    let text = "Dist: "+document.getElementById('solutionD').innerHTML + " Azim: "+document.getElementById('solutionA').innerHTML
     navigator.clipboard.writeText(text);
 
   }
 
   artyShow = () => {
     this.vector.setVisible(true);
-    if(this.windStrength){
+    if (this.windStrength) {
       this.windLayer.setVisible(true);
     }
-    
   }
+
   artyHide = () => {
     this.vector.setVisible(false);
     this.windLayer.setVisible(false);
@@ -608,7 +586,6 @@ class SidebarArty {
     this.bsOffcanvas.hide()
     this.vector.setVisible(false);
   }
-
   
 }
 

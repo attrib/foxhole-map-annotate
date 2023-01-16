@@ -1,0 +1,103 @@
+<div class="offcanvas offcanvas-start faction-background-color" tabindex="-1" id="sidebarArty"
+     aria-labelledby="sidebarLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="sidebarLabel">Artillery Calculator</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="arty-close"></button>
+    </div>
+
+
+    <div class="offcanvas-body">
+        <h6 >Gun</h6>
+        <div class="col-12 mt-2 mb-2">
+            <div class="dropdown d-grid">
+                <button type="button" id="artyPieceButton" class="btn btn-primary dropdown-toggle btn-block" data-bs-toggle="dropdown">
+                    Select Gun
+                </button>
+                <ul class="dropdown-menu col-12" id = "artyPieceSelector" style = "max-height: 50vh; overflow-y: scroll;">
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="col-12 mt-2 mb-2"><br></div>
+
+        <h6 >Wind</h6>
+        <div class="col-12 mt-2 mb-2">
+
+            <div class="col-12 mt-2 mb-2">
+                <div class="input-group btn-group">
+                    <span class="input-group-text">Strength</span>
+
+                    <input type="radio" name="windStrength" class="btn-check" id="ws0" value="0" checked>
+                    <label for="ws0" class="btn btn-secondary">Off</label>
+
+                    <input type="radio" name="windStrength" class="btn-check" id="ws1" value="1">
+                    <label for="ws1" class="btn btn-secondary">1</label>
+
+                    <input type="radio" name="windStrength" class="btn-check" id="ws2" value="2">
+                    <label for="ws2" class="btn btn-secondary">2</label>
+
+                    <input type="radio" name="windStrength" class="btn-check" id="ws3" value="3">
+                    <label for="ws3" class="btn btn-secondary">3</label>
+
+                    <input type="radio" name="windStrength" class="btn-check" id="ws4" value="4">
+                    <label for="ws4" class="btn btn-secondary">4</label>
+
+                    <input type="radio" name="windStrength" class="btn-check" id="ws5" value="5">
+                    <label for="ws5" class="btn btn-secondary">5</label>
+
+                </div>
+            </div>
+
+            <div class="col-12 mt-2 mb-2">
+                <div class="input-group" >
+                    <span class="input-group-text">Direction</span>
+                    <input type="number" class="form-control" min="-1" max="361" id = "wd0" value = "0">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-2 mb-2"><br></div>
+
+        <h6>Firing Solution</h6>
+        <div class="col-12 mt-2 mb-2 rounded container">
+            <div class="row">
+                <div class = "col-9 ">
+                    <div class="row rounded-top bg-primary">
+                        <div class = "col-6 border-bottom border-end "><b>Distance</b></div>
+                        <div class = "col-6 border-bottom border-start"><b>Azimuth</b></div>
+                    </div>
+                    <div class="row rounded-bottom bg-dark">
+                        <div class = "col-6 border-top border-end ">
+                            <h2 id = "solutionD">000</h2>
+                        </div>
+                        <div class = "col-6 border-top border-start">
+                            <h2 id = "solutionA">000</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class = col-3>
+                    <button class="btn btn-primary btn-block" id = "solutionCopy">
+                        <i class="bi bi-files"></i>
+                    </button>
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="mb-2">
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

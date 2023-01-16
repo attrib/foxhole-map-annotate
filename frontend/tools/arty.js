@@ -19,7 +19,7 @@ class Arty {
       this.controlElement.classList.remove('selected')
     }, {
       elementClass: 'arty-button',
-      title: 'Toggle Artillery Calculator (e)',
+      title: 'Toggle Artillery Calculator',
     })
     this.control = new Control({
       element: this.controlElement

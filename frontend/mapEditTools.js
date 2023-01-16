@@ -32,6 +32,9 @@ class EditTools {
     EVENT_DECAY_UPDATED = 'decayUpdated'
     EVENT_FEATURE_UPDATED = 'featureUpdated'
 
+    EVENT_ARTY_MODE_ENABLED = 'artyEnabled'
+    EVENT_ARTY_MODE_DISABLED = 'artyDisabled'
+
     editMode = false
     selectedTool = false
     listeners = {}
