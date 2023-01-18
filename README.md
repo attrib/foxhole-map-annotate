@@ -55,6 +55,12 @@ wget https://cdn.discordapp.com/attachments/1003485765273145424/1039646692095574
 docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
 ```
 
+If you are using Windows Powershell
+
+```powershell
+docker run --rm -v ${PWD}:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
+```
+
 Install dependencies and run dev mode
 ```
 npm install
