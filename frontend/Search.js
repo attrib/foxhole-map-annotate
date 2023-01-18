@@ -20,7 +20,7 @@ class Search extends SearchFeature {
   }
 
   getSearchString(f) {
-    return this.getTitle(f).replaceAll("\n", ' ');
+    return this.getTitle(f);
   }
 
   autocomplete(search) {
@@ -33,12 +33,15 @@ class Search extends SearchFeature {
         return
       }
       const searchableLayer = layer.get('searchable') !== undefined ? layer.get('searchable') : true
-      if (layer.getSource && layer.getSource().getFeatures && searchableLayer) {
+      if (layer.getSource?.().getFeatures && searchableLayer) {
         // search by notes
         const features = layer.getSource().getFeatures()
         for (const feature of features) {
-          const att = this.getSearchString(feature);
-          if (att !== undefined && rex.test(att)) {
+          let att = this.getSearchString(feature);
+          if (att) {
+            att.replaceAll("\n", ' ')
+          };
+          if (att && rex.test(att)) {
             result.push(feature);
             if ((--max) <= 0) {
               break;
