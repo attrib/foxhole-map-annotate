@@ -46,21 +46,24 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 Copy `.env.dist` to `.env`
 
 Create the map tiles
-```
-mkdir uploads
-cd uploads
+
+```bash
+cd public
+mkdir map
+cd map
 wget https://cdn.discordapp.com/attachments/1003485765273145424/1039646692095574046/entiremap.png
 docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
 ```
 
-If you are using Windows Powershell
+If you are using Windows Powershell and Docker on Windows
 
 ```powershell
 docker run --rm -v ${PWD}:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
 ```
 
 Install dependencies and run dev mode
-```
+
+```bash
 npm install
 npm run dev
 ```
