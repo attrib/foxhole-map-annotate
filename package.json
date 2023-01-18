@@ -36,7 +36,7 @@
     "css-minimizer-webpack-plugin": "^4.2.2",
     "mini-css-extract-plugin": "^2.6.1",
     "nodemon": "^2.0.20",
-    "ol": "^7.1.0",
+    "ol": "^7.2.2",
     "ol-ext": "^4.0.3",
     "ol-layerswitcher": "^4.1.0",
     "postcss-loader": "^7.0.1",
