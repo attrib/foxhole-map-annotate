@@ -216,18 +216,19 @@ class Line {
     const styles = createEditingStyle();
     const colorInput = this.tools.sidebar.colorInput
     const lineTypeInput = this.tools.sidebar.lineTypeInput
+    const getWidthOption = this.getWidthOption
     const getDashedOption = this.getDashedOption
     styles['LineString'] = new Style({
       stroke: new Stroke({
         color: this.tools.sidebar.colorInput.value,
-        width: 5,
-      }),
+        }),
       geometry: this.geometryFunction
     })
     return function (feature, resolution) {
       if (feature.getGeometry().getType() === 'LineString') {
         styles['LineString'].getStroke().setColor(feature.get('color') || colorInput.value)
         styles['LineString'].getStroke().setLineDash(getDashedOption(feature, lineTypeInput.value))
+        styles['LineString'].getStroke().setWidth(getWidthOption(feature, lineTypeInput.value))
       }
       return styles[feature.getGeometry().getType()];
     };
@@ -273,13 +274,25 @@ class Line {
     this.tools.sidebar.displayForm(['notes'])
   }
 
+  getWidthOption = (feature, defaultValue = 'single') => {
+    const lineType = feature.get('lineType') || defaultValue;
+    switch (lineType) {
+      case 'siding':
+        return 3;
+      
+      case 'lightRail':
+        return 2;
+
+      default:
+        return 5;
+    }
+  }
+
+
+
   getDashedOption = (feature, defaultValue = 'single') => {
     const lineType = feature.get('lineType') || defaultValue;
     switch (lineType) {
-      default:
-      case 'single':
-        return undefined;
-
       case 'water':
         return [30, 15];
 
@@ -288,6 +301,9 @@ class Line {
 
       case 'pipeline':
         return [5, 30];
+
+      default:
+        return undefined;
     }
   }
 
@@ -304,7 +320,7 @@ class Line {
         return new Style({
           stroke: new Stroke({
             color: feature.get('color'),
-            width: 5,
+            width: this.getWidthOption(feature),
             lineDash: this.getDashedOption(feature)
           }),
           geometry: this.geometryFunction
