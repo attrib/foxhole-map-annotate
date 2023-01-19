@@ -213,6 +213,7 @@ class SidebarArty {
       features: new Collection(),
       type: 'arty'
     })
+    this.vectorSource = vectorSource
 
     const vector = new VectorLayer({
       source: vectorSource,
@@ -562,15 +563,28 @@ class SidebarArty {
   }
 
   copySolution = () => {
-    let text = "Dist: "+document.getElementById('solutionD').innerHTML + " Azim: "+document.getElementById('solutionA').innerHTML
+    let text = `Dist: ${document.getElementById('solutionD').innerHTML} Azim: ${document.getElementById('solutionA').innerHTML}`
     navigator.clipboard.writeText(text);
 
   }
 
+  // Updates arty icons to center of screen when reopening arty tab
+  reCenterIconsOnShow = (vectorSource) => {
+    vectorSource.forEachFeature(feature => {
+      if (feature.getGeometry().getType() === 'Point') {
+        feature.getGeometry().setCoordinates(this.map.getView().getCenter())
+      }
+    });
+    this.translating()
+  }
+
+
   artyShow = () => {
     this.vector.setVisible(true);
+    this.reCenterIconsOnShow(this.vectorSource);
     if (this.windStrength) {
       this.windLayer.setVisible(true);
+      this.reCenterIconsOnShow(this.windVectorLayer);
     }
   }
 
