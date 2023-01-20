@@ -8,3 +8,7 @@ logs
 node_modules
 public/dist
 public/regions.json
+
+## VS Code
+.history
+.vscode
