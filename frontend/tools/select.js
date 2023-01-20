@@ -149,11 +149,10 @@ class Select {
       tooltip: false,
     }))
     map.on('click', (event) => {
-      const features = tools.staticLayer.sources.stormCannon.getFeaturesInExtent([event.coordinate[0] - 16, event.coordinate[1] - 16, event.coordinate[0] + 16, event.coordinate[1] + 16])
+      const features = tools.staticLayer.sources.stormCannon.getFeaturesInExtent([event.coordinate[0] - 32, event.coordinate[1] - 32, event.coordinate[0] + 32, event.coordinate[1] + 32])
       for (const feature of features) {
         if (feature.get('type') === 'stormCannon') {
           this.stormCannonSelected(feature)
-          break
         }
       }
     })
@@ -175,6 +174,7 @@ class Select {
             color: white,
           }),
           radius: 18,
+          declutterMode: "none",
         })
       }),
       new Style({
@@ -184,6 +184,7 @@ class Select {
             color: blue,
           }),
           radius: 18,
+          declutterMode: "none",
         })
       })
     ]
