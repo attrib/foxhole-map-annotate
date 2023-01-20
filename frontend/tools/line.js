@@ -294,7 +294,6 @@ class Line {
   createClanLayer = (clan) => {
     const sourceLine = new VectorSource({
       features: new Collection(),
-      attributions: clan,
     });
 
     const vectorLine = new Vector({
