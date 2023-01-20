@@ -11,10 +11,13 @@ class Search extends SearchFeature {
     });
 
     this.on('select', function (e) {
-      var map = this.getMap();
+      const map = this.getMap();
       if (map) {
-        map.getView().setResolution(e.search.get('type') === 'Region' ? 1.75 : 0.75)
-        map.getView().setCenter(getCenter(e.search.getGeometry().getExtent()));
+        map.getView().animate({
+          center: getCenter(e.search.getGeometry().getExtent()),
+          resolution: e.search.get('type') === 'Region' ? 1.75 : 0.75,
+          duration: 2000,
+        })
       }
     });
   }
