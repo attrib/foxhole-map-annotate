@@ -37,6 +37,8 @@ class EditTools {
     EVENT_ARTY_MODE_ENABLED = 'artyEnabled'
     EVENT_ARTY_MODE_DISABLED = 'artyDisabled'
 
+    MAGIC_MAP_SCALING_FACTOR = 0.94
+
     editMode = false
     selectedTool = false
     listeners = {}

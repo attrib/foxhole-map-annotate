@@ -394,7 +394,7 @@ class Select {
       const newRadius = new Feature({
         geometry: new CircleGeo(
           feature.getGeometry().getFirstCoordinate(),
-          0.94 * radiusInKm
+          this.tools.MAGIC_MAP_SCALING_FACTOR * radiusInKm
         )
       })
       newRadius.set('type', 'radius')

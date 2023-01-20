@@ -167,6 +167,8 @@ class SidebarArty {
     let shellType = ''
 
     for (let p in this.artilleryList) {
+      this.artilleryList[p].min *= this.tools.MAGIC_MAP_SCALING_FACTOR
+      this.artilleryList[p].max *= this.tools.MAGIC_MAP_SCALING_FACTOR
 
       //header handling
       if (shellType !== this.artilleryList[p].ammo && shellType !== '') {
