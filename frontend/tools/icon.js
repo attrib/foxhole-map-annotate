@@ -29,7 +29,8 @@ class Icon {
         style: this.iconStyle,
         zIndex: tool.zIndex,
         searchable: true,
-        maxResolution: tool.maxResolution
+        maxResolution: tool.maxResolution,
+        declutter: tool.declutter || false,
       });
       if (tool.layerGroup) {
         tool.layerGroup.getLayers().push(vector)

@@ -69,6 +69,7 @@ class EditTools {
                 title: 'Bases',
                 type: 'base',
                 zIndex: 30,
+                declutter: true,
             },
             'facility': {
                 title: 'Facilities',
@@ -80,6 +81,7 @@ class EditTools {
                 title: 'Enemy Structures',
                 type: 'facility-enemy',
                 zIndex: 10,
+                declutter: true,
             },
             'facility-private': {
                 title: 'Private Facilities',
