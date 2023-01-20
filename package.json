@@ -29,6 +29,7 @@
     "@turf/bezier-spline": "^6.5.0",
     "@turf/intersect": "^6.5.0",
     "@turf/voronoi": "^6.5.0",
+    "@types/ol-ext": "npm:@siedlerchr/types-ol-ext@^3.0.8",
     "autoprefixer": "^10.4.13",
     "bootstrap": "^5.2.2",
     "bootstrap-icons": "^1.9.1",
