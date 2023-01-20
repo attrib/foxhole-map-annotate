@@ -68,8 +68,12 @@ button.overlay-button {
 }
 
 .info-box {
-  max-width: 15vw;
+  max-width: 17vw;
   border-radius: 4px;
+}
+
+.info-box .clock-time {
+  margin-right: 5px;
 }
 
 .clock svg {

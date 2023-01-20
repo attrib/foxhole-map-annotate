@@ -157,6 +157,10 @@ class Select {
         }
       }
     })
+    this.relativeTimeFormat = new Intl.RelativeTimeFormat("en", {
+      numeric: "always",
+      style: "narrow",
+    });
   }
 
   selectStyle = () => {
@@ -294,6 +298,15 @@ class Select {
     const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
     clock.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
     clock.title = time.toLocaleString();
+    if (diff < 3600000) {
+      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 60000), 'minute')
+    }
+    else if (diff < 86400000) {
+      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 3600000), 'hour')
+    }
+    else {
+      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 86400000), 'day')
+    }
   }
 
   getNotes = (feature) => {
