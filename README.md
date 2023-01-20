@@ -12,7 +12,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 ## Ideas
 
 * 2 Votes to flag a marker for Review (by [SPEAR] Hot Mic)
-* Save last color
 * Image/Screenshot upload (compressor.js) (by Phalanx/Bazlow)
 * Filter Planned/Built Rails (by [102nd] Asterム)
 * [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - (Hex length 1.89km, width 2.184km)

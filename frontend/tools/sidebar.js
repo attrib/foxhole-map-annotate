@@ -44,10 +44,15 @@ class Sidebar {
     this.buttonRow = document.getElementById('button-row')
     this.displayForm(['notes'])
 
+    const defaultColor = localStorage.getItem('defaultColor');
+    if (defaultColor) {
+      this.colorInput.value = defaultColor;
+    }
     this.colorInput.addEventListener('input', () => {
       if (this.editFeature && this.editFeature.get('color') !== undefined) {
         this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature))
       }
+      localStorage.setItem('defaultColor', this.colorInput.value)
     })
 
     this.notesInput.addEventListener('keyup', () => {
