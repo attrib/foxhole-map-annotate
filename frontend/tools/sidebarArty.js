@@ -206,7 +206,8 @@ class SidebarArty {
     document.getElementById("ws5").onclick= () => this.setWindStr();
 
     //document.getElementById("wd0").onchange= () => this.setWindDir();
-    document.getElementById("wd0").oninput= () => this.setWindDir();
+    document.getElementById("wd0").onchange = () => this.setWindDir();
+    document.getElementById("wd0").onwheel = () => this.setWindDir();
     //document.getElementById("wd0").onwheel= () => this.setWindDir();
 
     const vectorSource = new VectorSource({
