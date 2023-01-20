@@ -71,6 +71,8 @@ class Select {
         this.showIconInfoBox(infoBox, feature)
         this.clocks[id] = infoBox.getElementsByClassName('clock')[0]
         this.clocks[id].addEventListener('click', this.updateDecay)
+        const flag = infoBox.getElementsByClassName('flag')[0];
+        flag.addEventListener('click', this.flagIcon)
         infoBox.id = 'selected-' + id
         const overlay = new Overlay({
           element: infoBox,
@@ -130,6 +132,18 @@ class Select {
     tools.on(tools.EVENT_DECAY_UPDATED, (data) => {
       if (data.id in this.clocks) {
         this.setClockColor(this.clocks[data.id], new Date(data.time))
+      }
+    })
+
+    tools.on(tools.EVENT_FLAGGED, (data) => {
+      if (data.id in this.selectOverlays) {
+        const flag = this.selectOverlays[data.id].element.getElementsByClassName('flag')[0];
+        if (data.flags.includes(this.tools.userId)) {
+          flag.classList.replace('bi-flag', 'bi-flag-fill')
+        }
+        else {
+          flag.classList.replace('bi-flag-fill', 'bi-flag')
+        }
       }
     })
 
@@ -245,6 +259,15 @@ class Select {
     this.showIconInfoBox(this.iconInfo, feature)
   }
 
+  selectFeature = (feature) => {
+    const oldFeature = this.select.getFeatures().pop()
+    if (oldFeature) {
+      this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(feature.get('type')), feature);
+    }
+    this.select.getFeatures().push(feature)
+    this.changed()
+  }
+
   deselectAll = () => {
     const feature = this.select.getFeatures().pop()
     if (feature) {
@@ -280,6 +303,14 @@ class Select {
     node.getElementsByClassName('user')[0].innerHTML = this.getUser(feature);
     this.clockColor(node.getElementsByClassName('clock')[0], feature)
     node.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature)
+    const flag = node.getElementsByClassName('flag')[0];
+    flag.dataset.id = feature.getId()
+    if ((feature.get('flags') || []).includes(this.tools.userId)) {
+      flag.classList.replace('bi-flag', 'bi-flag-fill')
+    }
+    else {
+      flag.classList.replace('bi-flag-fill', 'bi-flag')
+    }
   }
 
   clockColor = (clock, feature) => {
@@ -328,6 +359,14 @@ class Select {
     }
   }
 
+  flagIcon = (event) => {
+    if (event.currentTarget && event.currentTarget.dataset.id) {
+      this.tools.emit(this.tools.EVENT_FLAG, {
+        id: event.currentTarget.dataset.id
+      })
+    }
+  }
+
   deleteSelectOverlay = (feature) => {
     if (feature === undefined) {
       return
@@ -335,6 +374,7 @@ class Select {
     if (feature.getId() in this.selectOverlays) {
       this.map.removeOverlay(this.selectOverlays[feature.getId()])
       delete this.selectOverlays[feature.getId()]
+      delete this.clocks[feature.getId()]
     }
   }
 

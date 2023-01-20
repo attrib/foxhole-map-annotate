@@ -20,6 +20,8 @@ class EditTools {
     EVENT_ICON_ADDED = 'iconAdded';
     EVENT_ICON_DELETED = 'iconDeleted';
     EVENT_ICON_UPDATED = 'iconUpdated';
+    EVENT_FLAG = 'flagFeature'
+    EVENT_FLAGGED = 'flaggedFeature'
     EVENT_FEATURE_SELECTED = (type) => {
         const t = type === 'line' || type === 'polygon' || type === 'stormCannon' ? type : 'icon'
         return t + '-selected'

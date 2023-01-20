@@ -10,6 +10,7 @@ import StaticLayers from "./staticLayer";
 import {DragPan} from "ol/interaction";
 import {all, noModifierKeys} from "ol/events/condition";
 import {assert} from "ol/asserts";
+import Flags from "./flags";
 const EditTools = require("./mapEditTools")
 
 const url = new URL(window.location);
@@ -169,6 +170,16 @@ tools.on(tools.EVENT_DECAY_UPDATE, (data) => {
 socket.on('decayUpdated', (data) => {
   tools.emit(tools.EVENT_DECAY_UPDATED, data)
 })
+
+tools.on(tools.EVENT_FLAG, (data) => {
+  socket.send('flag', data)
+})
+
+socket.on('flagged', (data) => {
+  tools.emit(tools.EVENT_FLAGGED, data)
+})
+
+new Flags(map, tools)
 
 socket.on('conquer', (data) => {
   if (conquerStatus.version === data.version) {

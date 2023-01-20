@@ -86,6 +86,14 @@ class Icon {
         }
       }
     })
+    tools.on(tools.EVENT_FLAGGED, (data) => {
+      if (data.type in this.sources) {
+        const feature = this.sources[data.type].getFeatureById(data.id)
+        if (feature) {
+          feature.set('flags', data.flags)
+        }
+      }
+    })
     tools.on(tools.EVENT_FEATURE_UPDATED, ({operation, feature}) => {
       if (feature.get('type') in this.sources) {
         const type = feature.get('type')

@@ -76,6 +76,10 @@ button.overlay-button {
   margin-right: 5px;
 }
 
+.info-box .flag {
+  cursor: pointer;
+}
+
 .clock svg {
   cursor: pointer;
   width: 1.5em;
@@ -148,4 +152,9 @@ button.overlay-button {
       //outline: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
     }
   }
+}
+
+.flagged-item {
+  align-items: center;
+  justify-content: space-between;
 }

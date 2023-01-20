@@ -145,6 +145,7 @@ class Sidebar {
     this.clanInput.value = ''
     if (this.editFeature) {
       this.tools.emit(this.tools.EVENT_UPDATE_CANCELED, this.editFeature)
+      this.buttonRow.style.display = 'none'
     }
   }
 
