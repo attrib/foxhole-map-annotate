@@ -92,6 +92,7 @@ class Sidebar {
     document.getElementById('delete-button').addEventListener('click', () => {
       if (this.editFeature) {
         tools.emit(tools.EVENT_ICON_DELETED, this.editFeature)
+        this.clearInput();
       }
     })
 
