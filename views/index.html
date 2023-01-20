@@ -39,7 +39,8 @@
         <div class="placementInfo row align-items-center justify-content-between">
             <div class="user col-auto"></div>
             <div class="time col-auto">
-                <span class="clock">{% include 'clock.svg' %}</span>
+                <span class="clock"><span class="clock-time"></span>{% include 'clock.svg' %}</span>
+                <i class="bi bi-flag flag" title="Flag for moderator check"></i>
             </div>
         </div>
         <div class="notes col-auto"></div>
@@ -52,6 +53,38 @@
 
 {% include 'sidebar-arty.html' %}
 
-
+    <div class="offcanvas offcanvas-start faction-background-color" tabindex="-1" id="flags" aria-labelledby="flagsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="flagsLabel">Flags</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <template id="flaggedTemplate">
+                <tr class="flagged-item">
+                    <td class="icon"></td>
+                    <td class="user"></td>
+                    <td class="notes"></td>
+                    <td class="flagCount"></td>
+                    <td>
+                        <div class="btn-group">
+                        <a href="#" class="target btn btn-light"><i class="bi bi-arrows-move"></i></a>
+                        <a href="#" class="delete btn btn-danger"><i class="bi bi-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </template>
+            <table id="flagged" class="col-12">
+                <thead>
+                    <tr>
+                        <td colspan="2">User</td>
+                        <td>Notes</td>
+                        <td>Count</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 
 {% endblock %}

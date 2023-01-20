@@ -71,6 +71,8 @@ class Select {
         this.showIconInfoBox(infoBox, feature)
         this.clocks[id] = infoBox.getElementsByClassName('clock')[0]
         this.clocks[id].addEventListener('click', this.updateDecay)
+        const flag = infoBox.getElementsByClassName('flag')[0];
+        flag.addEventListener('click', this.flagIcon)
         infoBox.id = 'selected-' + id
         const overlay = new Overlay({
           element: infoBox,
@@ -133,6 +135,18 @@ class Select {
       }
     })
 
+    tools.on(tools.EVENT_FLAGGED, (data) => {
+      if (data.id in this.selectOverlays) {
+        const flag = this.selectOverlays[data.id].element.getElementsByClassName('flag')[0];
+        if (data.flags.includes(this.tools.userId)) {
+          flag.classList.replace('bi-flag', 'bi-flag-fill')
+        }
+        else {
+          flag.classList.replace('bi-flag-fill', 'bi-flag')
+        }
+      }
+    })
+
     this.stormCannonSource = new VectorSource({
       features: new Collection()
     })
@@ -149,14 +163,17 @@ class Select {
       tooltip: false,
     }))
     map.on('click', (event) => {
-      const features = tools.staticLayer.sources.stormCannon.getFeaturesInExtent([event.coordinate[0] - 16, event.coordinate[1] - 16, event.coordinate[0] + 16, event.coordinate[1] + 16])
+      const features = tools.staticLayer.sources.stormCannon.getFeaturesInExtent([event.coordinate[0] - 32, event.coordinate[1] - 32, event.coordinate[0] + 32, event.coordinate[1] + 32])
       for (const feature of features) {
         if (feature.get('type') === 'stormCannon') {
           this.stormCannonSelected(feature)
-          break
         }
       }
     })
+    this.relativeTimeFormat = new Intl.RelativeTimeFormat("en", {
+      numeric: "always",
+      style: "narrow",
+    });
   }
 
   selectStyle = () => {
@@ -171,6 +188,7 @@ class Select {
             color: white,
           }),
           radius: 18,
+          declutterMode: "none",
         })
       }),
       new Style({
@@ -180,6 +198,7 @@ class Select {
             color: blue,
           }),
           radius: 18,
+          declutterMode: "none",
         })
       })
     ]
@@ -240,6 +259,15 @@ class Select {
     this.showIconInfoBox(this.iconInfo, feature)
   }
 
+  selectFeature = (feature) => {
+    const oldFeature = this.select.getFeatures().pop()
+    if (oldFeature) {
+      this.tools.emit(this.tools.EVENT_FEATURE_DESELECTED(feature.get('type')), feature);
+    }
+    this.select.getFeatures().push(feature)
+    this.changed()
+  }
+
   deselectAll = () => {
     const feature = this.select.getFeatures().pop()
     if (feature) {
@@ -275,6 +303,14 @@ class Select {
     node.getElementsByClassName('user')[0].innerHTML = this.getUser(feature);
     this.clockColor(node.getElementsByClassName('clock')[0], feature)
     node.getElementsByClassName('notes')[0].innerHTML = this.getNotes(feature)
+    const flag = node.getElementsByClassName('flag')[0];
+    flag.dataset.id = feature.getId()
+    if ((feature.get('flags') || []).includes(this.tools.userId)) {
+      flag.classList.replace('bi-flag', 'bi-flag-fill')
+    }
+    else {
+      flag.classList.replace('bi-flag-fill', 'bi-flag')
+    }
   }
 
   clockColor = (clock, feature) => {
@@ -294,6 +330,15 @@ class Select {
     const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
     clock.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
     clock.title = time.toLocaleString();
+    if (diff < 3600000) {
+      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 60000), 'minute')
+    }
+    else if (diff < 86400000) {
+      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 3600000), 'hour')
+    }
+    else {
+      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 86400000), 'day')
+    }
   }
 
   getNotes = (feature) => {
@@ -314,6 +359,14 @@ class Select {
     }
   }
 
+  flagIcon = (event) => {
+    if (event.currentTarget && event.currentTarget.dataset.id) {
+      this.tools.emit(this.tools.EVENT_FLAG, {
+        id: event.currentTarget.dataset.id
+      })
+    }
+  }
+
   deleteSelectOverlay = (feature) => {
     if (feature === undefined) {
       return
@@ -321,6 +374,7 @@ class Select {
     if (feature.getId() in this.selectOverlays) {
       this.map.removeOverlay(this.selectOverlays[feature.getId()])
       delete this.selectOverlays[feature.getId()]
+      delete this.clocks[feature.getId()]
     }
   }
 
@@ -340,7 +394,7 @@ class Select {
       const newRadius = new Feature({
         geometry: new CircleGeo(
           feature.getGeometry().getFirstCoordinate(),
-          0.94 * radiusInKm
+          this.tools.MAGIC_MAP_SCALING_FACTOR * radiusInKm
         )
       })
       newRadius.set('type', 'radius')

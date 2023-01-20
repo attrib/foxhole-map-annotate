@@ -162,6 +162,15 @@ class Line {
         })
       }
     })
+    tools.on(tools.EVENT_FLAGGED, (data) => {
+      if (data.type === 'line') {
+        this.allLinesCollection.forEach((line) => {
+          if (data.id === line.getId()) {
+            line.set('flags', data.flags)
+          }
+        })
+      }
+    })
     tools.on(tools.EVENT_FEATURE_UPDATED, ({operation, feature}) => {
       if (feature.get('type') === 'line') {
         if (operation === 'add') {
@@ -310,7 +319,6 @@ class Line {
   createClanLayer = (clan) => {
     const sourceLine = new VectorSource({
       features: new Collection(),
-      attributions: clan,
     });
 
     const vectorLine = new Vector({

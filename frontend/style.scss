@@ -68,8 +68,16 @@ button.overlay-button {
 }
 
 .info-box {
-  max-width: 15vw;
+  max-width: 17vw;
   border-radius: 4px;
+}
+
+.info-box .clock-time {
+  margin-right: 5px;
+}
+
+.info-box .flag {
+  cursor: pointer;
 }
 
 .clock svg {
@@ -144,4 +152,9 @@ button.overlay-button {
       //outline: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
     }
   }
+}
+
+.flagged-item {
+  align-items: center;
+  justify-content: space-between;
 }

@@ -193,6 +193,36 @@ wss.on('connection', function (ws, request) {
           }
           saveFeatures(features)
           break;
+
+        case 'flag':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
+          let flagged = false;
+          for (const feature of features.features) {
+            if (feature.properties.id === message.data.id) {
+              if (!feature.properties.flags) {
+                feature.properties.flags = [userId]
+              }
+              else if (feature.properties.flags.includes(userId)) {
+                feature.properties.flags.splice(feature.properties.flags.indexOf(userId), 1)
+              }
+              else {
+                feature.properties.flags.push(userId)
+              }
+              eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
+              flagged = true;
+              sendDataToAll('flagged', {
+                id: feature.properties.id,
+                type: feature.properties.type,
+                flags: feature.properties.flags,
+              })
+            }
+          }
+          if (flagged) {
+            saveFeatures(features)
+          }
+          break;
       }
     });
 

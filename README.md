@@ -7,10 +7,12 @@ Annotate and draw on the foxhole map and share with your group.
 Please create a Ticket in GitHub. Or of any the discord where you maybe heard about this tool.
 
 * Private/Public/Enemy Slider on iPad doesn't show correctly
+* Facilities not displayed in some strange context
+* arty calculator missing map scaling
 
 ## Ideas
 
-* Image/Screenshot upload (compressor.js) (by Bazlow)
+* Image/Screenshot upload (compressor.js) (by Phalanx/Bazlow)
 * Filter Planned/Built Rails (by [102nd] Asterム)
 * [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - (Hex length 1.89km, width 2.184km)
 * watch towers / storm cannon radius

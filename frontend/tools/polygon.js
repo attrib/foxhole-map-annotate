@@ -108,6 +108,14 @@ class Polygon {
         }
       }
     })
+    tools.on(tools.EVENT_FLAGGED, (data) => {
+      if (data.type === 'polygon') {
+        const feature = this.source.getFeatureById(data.id)
+        if (feature) {
+          feature.set('flags', data.flags)
+        }
+      }
+    })
     tools.on(tools.EVENT_FEATURE_UPDATED, ({operation, feature}) => {
       if (feature.get('type') === 'polygon') {
         if (operation === 'add') {

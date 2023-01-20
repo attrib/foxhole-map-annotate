@@ -44,10 +44,15 @@ class Sidebar {
     this.buttonRow = document.getElementById('button-row')
     this.displayForm(['notes'])
 
+    const defaultColor = localStorage.getItem('defaultColor');
+    if (defaultColor) {
+      this.colorInput.value = defaultColor;
+    }
     this.colorInput.addEventListener('input', () => {
       if (this.editFeature && this.editFeature.get('color') !== undefined) {
         this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature))
       }
+      localStorage.setItem('defaultColor', this.colorInput.value)
     })
 
     this.notesInput.addEventListener('keyup', () => {
@@ -87,6 +92,7 @@ class Sidebar {
     document.getElementById('delete-button').addEventListener('click', () => {
       if (this.editFeature) {
         tools.emit(tools.EVENT_ICON_DELETED, this.editFeature)
+        this.clearInput();
       }
     })
 
@@ -139,6 +145,7 @@ class Sidebar {
     this.clanInput.value = ''
     if (this.editFeature) {
       this.tools.emit(this.tools.EVENT_UPDATE_CANCELED, this.editFeature)
+      this.buttonRow.style.display = 'none'
     }
   }
 

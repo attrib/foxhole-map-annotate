@@ -29,7 +29,8 @@ class Icon {
         style: this.iconStyle,
         zIndex: tool.zIndex,
         searchable: true,
-        maxResolution: tool.maxResolution
+        maxResolution: tool.maxResolution,
+        declutter: tool.declutter || false,
       });
       if (tool.layerGroup) {
         tool.layerGroup.getLayers().push(vector)
@@ -82,6 +83,14 @@ class Icon {
         const feature = this.sources[data.type].getFeatureById(data.id)
         if (feature) {
           feature.set('time', data.time)
+        }
+      }
+    })
+    tools.on(tools.EVENT_FLAGGED, (data) => {
+      if (data.type in this.sources) {
+        const feature = this.sources[data.type].getFeatureById(data.id)
+        if (feature) {
+          feature.set('flags', data.flags)
         }
       }
     })

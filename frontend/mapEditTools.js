@@ -20,6 +20,8 @@ class EditTools {
     EVENT_ICON_ADDED = 'iconAdded';
     EVENT_ICON_DELETED = 'iconDeleted';
     EVENT_ICON_UPDATED = 'iconUpdated';
+    EVENT_FLAG = 'flagFeature'
+    EVENT_FLAGGED = 'flaggedFeature'
     EVENT_FEATURE_SELECTED = (type) => {
         const t = type === 'line' || type === 'polygon' || type === 'stormCannon' ? type : 'icon'
         return t + '-selected'
@@ -34,6 +36,8 @@ class EditTools {
 
     EVENT_ARTY_MODE_ENABLED = 'artyEnabled'
     EVENT_ARTY_MODE_DISABLED = 'artyDisabled'
+
+    MAGIC_MAP_SCALING_FACTOR = 0.94
 
     editMode = false
     selectedTool = false
@@ -69,6 +73,7 @@ class EditTools {
                 title: 'Bases',
                 type: 'base',
                 zIndex: 30,
+                declutter: true,
             },
             'facility': {
                 title: 'Facilities',
@@ -80,6 +85,7 @@ class EditTools {
                 title: 'Enemy Structures',
                 type: 'facility-enemy',
                 zIndex: 10,
+                declutter: true,
             },
             'facility-private': {
                 title: 'Private Facilities',
