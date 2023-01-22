@@ -76,8 +76,11 @@ class Flags {
     flaggedItem.querySelector('.flagCount').innerHTML = feature.get('flags').length
     flaggedItem.querySelector('a.target').addEventListener('click', (e) => {
       e.preventDefault()
-      this.map.getView().setResolution(0.75)
-      this.map.getView().setCenter(getCenter(feature.getGeometry().getExtent()));
+      this.map.getView().animate({
+        resolution: 0.75,
+        center: getCenter(feature.getGeometry().getExtent()),
+        duration: 1000,
+      })
       this.tools.select.selectFeature(feature)
     })
     flaggedItem.querySelector('a.delete').addEventListener('click', (e) => {
