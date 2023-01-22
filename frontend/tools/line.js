@@ -330,6 +330,8 @@ class Line {
     const vectorLine = new Vector({
       source: sourceLine,
       title: clan,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       style: (feature) => {
         const clanLine = [
           new Style({
