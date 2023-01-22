@@ -61,7 +61,7 @@ class Line {
             else {
               this.confirmOverlay.setPosition(undefined)
               this.cancelOverlay.setPosition(undefined)
-              if (!this.sketchFeature && !needSecondAbortClick) {
+              if (!(this.sketchFeature || needSecondAbortClick)) {
                 this.tools.changeTool(false)
               }
             }
@@ -227,17 +227,19 @@ class Line {
     const lineTypeInput = this.tools.sidebar.lineTypeInput
     const getWidthOption = this.getWidthOption
     const getDashedOption = this.getDashedOption
-    styles['LineString'] = new Style({
-      stroke: new Stroke({
-        color: this.tools.sidebar.colorInput.value,
+    styles['LineString'] = [
+      new Style({
+        stroke: new Stroke({
+          color: this.tools.sidebar.colorInput.value,
         }),
-      geometry: this.geometryFunction
-    })
+        geometry: this.geometryFunction
+      })
+    ]
     return function (feature, resolution) {
       if (feature.getGeometry().getType() === 'LineString') {
-        styles['LineString'].getStroke().setColor(feature.get('color') || colorInput.value)
-        styles['LineString'].getStroke().setLineDash(getDashedOption(feature, lineTypeInput.value))
-        styles['LineString'].getStroke().setWidth(getWidthOption(feature, lineTypeInput.value))
+        styles['LineString'][0].getStroke().setColor(feature.get('color') || colorInput.value)
+        styles['LineString'][0].getStroke().setLineDash(getDashedOption(feature, lineTypeInput.value))
+        styles['LineString'][0].getStroke().setWidth(getWidthOption(feature, lineTypeInput.value))
       }
       return styles[feature.getGeometry().getType()];
     };
@@ -283,8 +285,14 @@ class Line {
     this.tools.sidebar.displayForm(['notes'])
   }
 
-  getWidthOption = (feature, defaultValue = 'single') => {
-    const lineType = feature.get('lineType') || defaultValue;
+  /**
+   * Takes an OpenLayer Feature and returns a width 
+   * @param {import("ol").Feature} feature - OpenLayer Feature
+   * @param {string} lineTypeInput - Optional: Provide a line type to get width of
+   * @returns {number} Width size
+   */
+  getWidthOption = (feature, lineTypeInput = 'single') => {
+    const lineType = feature.get('lineType') || lineTypeInput;
     switch (lineType) {
       case 'siding':
         return 3;
@@ -297,8 +305,6 @@ class Line {
     }
   }
 
-
-
   getDashedOption = (feature, defaultValue = 'single') => {
     const lineType = feature.get('lineType') || defaultValue;
     switch (lineType) {
@@ -306,7 +312,7 @@ class Line {
         return [30, 15];
 
       case 'planned':
-        return [15, 15]
+        return [15, 15];
 
       case 'pipeline':
         return [5, 30];
@@ -325,14 +331,30 @@ class Line {
       source: sourceLine,
       title: clan,
       style: (feature) => {
-        return new Style({
-          stroke: new Stroke({
-            color: feature.get('color'),
-            width: this.getWidthOption(feature),
-            lineDash: this.getDashedOption(feature)
-          }),
-          geometry: this.geometryFunction
-        })
+        const clanLine = [
+          new Style({
+            stroke: new Stroke({
+              color: feature.get('color'),
+              width: this.getWidthOption(feature),
+              lineDash: this.getDashedOption(feature)
+            }),
+            geometry: this.geometryFunction
+          })
+        ]
+        if (feature.get('lineType') === 'lightRail') {
+          clanLine.push(
+              new Style({
+                stroke: new Stroke({
+                  color: feature.get('color'),
+                  width: 10,
+                  lineDash: [1.5, 30],
+                  lineCap: 'butt'
+                }),
+                geometry: this.geometryFunction
+              })
+          )
+        }
+        return clanLine
       }
     });
     this.layerGroup.getLayers().push(vectorLine);

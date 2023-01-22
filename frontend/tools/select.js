@@ -235,7 +235,7 @@ class Select {
         case 'line':
           trackStyleHighlight[0].getStroke().setLineDash(this.tools.line.getDashedOption(feature))
           trackStyleHighlight[1].getStroke().setLineDash(this.tools.line.getDashedOption(feature))
-          return [...trackStyleHighlight, trackStyle(feature, zoom)]
+          return [...trackStyleHighlight, ...trackStyle(feature, zoom)]
 
         case 'information':
         case 'sign':
