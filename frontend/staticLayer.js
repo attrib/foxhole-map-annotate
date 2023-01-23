@@ -111,6 +111,8 @@ class StaticLayers {
       zIndex: 100,
       minResolution: 4,
       style: this.regionStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       tooltip: false,
     }))
     regionGroup.getLayers().push(new Vector({
@@ -119,6 +121,8 @@ class StaticLayers {
       zIndex: 100,
       maxResolution: 4,
       style: this.regionStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       tooltip: false,
     }))
     regionGroup.getLayers().push(new Vector({
@@ -127,6 +131,8 @@ class StaticLayers {
       zIndex: 99,
       maxResolution: 1.5,
       style: this.regionStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       tooltip: false,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -134,6 +140,8 @@ class StaticLayers {
       zIndex: 1,
       title: 'Conquest',
       style: this.conquestStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       searchable: false,
       tooltip: false,
     }))
@@ -144,6 +152,8 @@ class StaticLayers {
       title: 'Towns/Relics',
       maxResolution: 5,
       style: this.iconStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       searchable: true,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -152,6 +162,8 @@ class StaticLayers {
       zIndex: 1,
       maxResolution: 4,
       style: this.iconStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -160,6 +172,8 @@ class StaticLayers {
       zIndex: 1,
       maxResolution: 4,
       style: this.iconStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -168,6 +182,8 @@ class StaticLayers {
       zIndex: 6,
       maxResolution: 6,
       style: this.iconStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       searchable: false,
     }))
     map.addLayer(staticGroup)
