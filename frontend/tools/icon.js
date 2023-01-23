@@ -31,8 +31,6 @@ class Icon {
         searchable: true,
         maxResolution: tool.maxResolution,
         declutter: tool.declutter || false,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
       });
       if (tool.layerGroup) {
         tool.layerGroup.getLayers().push(vector)

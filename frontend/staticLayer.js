@@ -136,8 +136,6 @@ class StaticLayers {
       style: this.conquestStyle,
       searchable: false,
       tooltip: false,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
     }))
     staticGroup.getLayers().push(regionGroup)
     staticGroup.getLayers().push(new Vector({
@@ -147,8 +145,6 @@ class StaticLayers {
       maxResolution: 5,
       style: this.iconStyle,
       searchable: true,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
     }))
     staticGroup.getLayers().push(new Vector({
       source: this.sources.industry,
@@ -157,8 +153,6 @@ class StaticLayers {
       maxResolution: 4,
       style: this.iconStyle,
       searchable: false,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
     }))
     staticGroup.getLayers().push(new Vector({
       title: 'Fields',
@@ -167,8 +161,6 @@ class StaticLayers {
       maxResolution: 4,
       style: this.iconStyle,
       searchable: false,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
     }))
     staticGroup.getLayers().push(new Vector({
       title: 'Storm Cannons',
@@ -177,8 +169,6 @@ class StaticLayers {
       maxResolution: 6,
       style: this.iconStyle,
       searchable: false,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
     }))
     map.addLayer(staticGroup)
 
