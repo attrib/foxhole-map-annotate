@@ -194,6 +194,8 @@ class Line {
 
   }
 
+  geometryCache = {}
+
   /**
    *
    * @param {import("ol").Feature} feature
@@ -205,19 +207,21 @@ class Line {
     if (coordinates.length < 2) {
       return feature.getGeometry()
     }
-    const geometry = new LineString(coordinates);
+    if (!feature.getId() || !(feature.getId() in this.geometryCache) || (this.tools.sidebar.editFeature && feature.getId() === this.tools.sidebar.editFeature.getId())) {
+      const line = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "LineString",
+          "coordinates": coordinates
+        }
+      };
+      const curved = bezier(line);
+      this.geometryCache[feature.getId()] = curved["geometry"]["coordinates"]
+    }
 
-    const line = {
-      "type": "Feature",
-      "properties": {
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": coordinates
-      }
-    };
-    const curved = bezier(line);
-    geometry.setCoordinates(curved["geometry"]["coordinates"]);
+    const geometry = new LineString(coordinates);
+    geometry.setCoordinates(this.geometryCache[feature.getId()]);
     return geometry;
   };
 
