@@ -541,7 +541,7 @@ class SidebarArty {
     this.vectorSolution.getGeometry().setCoordinates([this.sender.getGeometry().getCoordinates(),this.targetWind.getGeometry().getCoordinates()])
 
     //what we've all been waiting for
-    this.solutionDistance = this.vectorSolution.getGeometry().getLength()
+    this.solutionDistance = this.vectorSolution.getGeometry().getLength() / this.tools.MAGIC_MAP_SCALING_FACTOR
     document.getElementById('solutionD').innerHTML = String(Math.round(this.solutionDistance)).padStart(3,'0');
 
     
