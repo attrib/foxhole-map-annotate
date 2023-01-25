@@ -8,14 +8,24 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 * Private/Public/Enemy Slider on iPad doesn't show correctly
 * Facilities not displayed in some strange context
-* arty calculator missing map scaling
+* scissor requires a reload to show the new line (by [FMAT] Quini98 - https://discord.com/channels/895735519231762432/1042389158334844948/1067520074040225912)
+* The Attachment point (the blue dot thingy) isn't on the line itself. Very hard to move the line this way (by [FMAT] Quini98)
+* Colour of decay icon is too soon red (by [FMAT] Quini98)
+* Flag missing for all icons which do not have decay timers (by [FMAT] Quini98)
+* Click "Radius" for storm cannon range is to big (by Morgeta)
+
+## Todos
+
+* Remove notes from flagged (by [FMAT] Quini98)
+* Flagged Sidebar should not scroll horizontal (by [FMAT] Quini98)
 
 ## Ideas
 
+* Add other shapes next to polygon (rectangle, circle) (by Morgeta)
 * Image/Screenshot upload (compressor.js) (by Phalanx/Bazlow)
 * Filter Planned/Built Rails (by [102nd] Asterム)
-* [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe) - (Hex length 1.89km, width 2.184km)
-* watch towers / storm cannon radius
+* [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe, Morgeta) - (Hex length 1.89km, width 2.184km)
+* watch towers / relics / town halls / ... radius (by Morgeta)
 * Free Hand drawing (by [RDRT] A Devil Chicken)
 * auto expiring icons (by [CHI] Arctifire)
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
