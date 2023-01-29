@@ -218,18 +218,25 @@ class Select {
         })
       })]
     const trackStyleHighlight = [new Style({
-      stroke: new Stroke({
-        width: 10,
-        color: white,
+        stroke: new Stroke({
+          width: 10,
+          color: white,
+        }),
+        geometry: this.tools.line.geometryFunction
       }),
-      geometry: this.tools.line.geometryFunction
-    }),
       new Style({
         stroke: new Stroke({
           width: 7,
           color: blue,
         }),
         geometry: this.tools.line.geometryFunction
+      }),
+      new Style({
+        stroke: new Stroke({
+          width: 1,
+          color: blue,
+          lineDash: [10, 10]
+        }),
       })
     ]
     return (feature, zoom) => {
