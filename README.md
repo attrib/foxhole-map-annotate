@@ -11,7 +11,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * scissor requires a reload to show the new line (by [FMAT] Quini98 - https://discord.com/channels/895735519231762432/1042389158334844948/1067520074040225912)
 * The Attachment point (the blue dot thingy) isn't on the line itself. Very hard to move the line this way (by [FMAT] Quini98)
 * Colour of decay icon is too soon red (by [FMAT] Quini98)
-* Flag missing for all icons which do not have decay timers (by [FMAT] Quini98)
 
 ## Todos
 

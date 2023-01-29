@@ -325,10 +325,10 @@ class Select {
 
   clockColor = (clock, feature) => {
     if (NO_CLOCK.includes(feature.get('type'))) {
-      clock.parentElement.style.display = 'none'
+      clock.style.display = 'none'
       return
     }
-    clock.parentElement.style.display = ''
+    clock.style.display = ''
     const time = new Date(feature.get('time'))
     clock.dataset.id = feature.getId() || null
     clock.dataset.type = feature.get('type') || null
