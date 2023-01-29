@@ -163,12 +163,15 @@ class Select {
       tooltip: false,
     }))
     map.on('click', (event) => {
-      const features = tools.staticLayer.sources.stormCannon.getFeaturesInExtent([event.coordinate[0] - 32, event.coordinate[1] - 32, event.coordinate[0] + 32, event.coordinate[1] + 32])
-      for (const feature of features) {
+      map.forEachFeatureAtPixel(event.pixel, (feature) => {
         if (feature.get('type') === 'stormCannon') {
           this.stormCannonSelected(feature)
         }
-      }
+      }, {
+        layerFilter: (layer) => {
+          return layer.get('title') === 'Storm Cannons'
+        }
+      })
     })
     this.relativeTimeFormat = new Intl.RelativeTimeFormat("en", {
       numeric: "always",

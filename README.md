@@ -12,7 +12,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * The Attachment point (the blue dot thingy) isn't on the line itself. Very hard to move the line this way (by [FMAT] Quini98)
 * Colour of decay icon is too soon red (by [FMAT] Quini98)
 * Flag missing for all icons which do not have decay timers (by [FMAT] Quini98)
-* Click "Radius" for storm cannon range is to big (by Morgeta)
 
 ## Todos
 
@@ -26,6 +25,11 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Filter Planned/Built Rails (by [102nd] Asterム)
 * [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe, Morgeta) - (Hex length 1.89km, width 2.184km)
 * watch towers / relics / town halls / ... radius (by Morgeta)
+  * Watchtower: 80 meters
+  * Safehouse if radio station teched: 80 meters
+  * Observation Bunker T2: 130-156 meters
+  * Observation Bunker T3: 180-216 meters
+  * Observation Tower: 240 meters
 * Free Hand drawing (by [RDRT] A Devil Chicken)
 * auto expiring icons (by [CHI] Arctifire)
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
