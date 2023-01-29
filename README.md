@@ -30,6 +30,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
   * Observation Bunker T2: 130-156 meters
   * Observation Bunker T3: 180-216 meters
   * Observation Tower: 240 meters
+* Show map coordinates (G11k2) + display keypad on map 
 * Free Hand drawing (by [RDRT] A Devil Chicken)
 * auto expiring icons (by [CHI] Arctifire)
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)

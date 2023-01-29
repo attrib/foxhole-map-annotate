@@ -559,7 +559,7 @@ class SidebarArty {
     
 
     //console.log (Config.basic.color);
-    document.getElementById('solutionA').innerHTML = String(Math.round(this.solutionAzimuth)).padStart(3,'0');
+    document.getElementById('solutionA').innerHTML = String(this.solutionAzimuth.toFixed(1)).padStart(5,'0');
     
   }
 
