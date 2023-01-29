@@ -8,19 +8,18 @@
     function timer() {
       timerRunning = true
       timeout = setTimeout(() => {
-        time.setTime(time.getTime() - 3600000)
+        time.setTime(time.getTime() - 360000)
         timerRunning = displayColor();
         if (timerRunning) {
           timer()
         }
-      }, 500)
+      }, 50)
     }
 
     function displayColor() {
       const diff = new Date().getTime() - time.getTime()
-      const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
       clock.title = time.toLocaleString();
-      clock.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
+      clock.getElementsByTagName('circle')[0].style.fill = getColorForPercentage((24 - diff/3600000)/24)
       return 1 - diff / 86400000 >= 0;
     }
 
@@ -31,6 +30,68 @@
       time = new Date()
       timer()
     })
+
+    const percentColors = [
+      { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
+      { pct: 0.125, color: { r: 0xff, g: 0xa0, b: 0 } },
+      { pct: 0.5, color: { r: 0xff, g: 0xe0, b: 0 } },
+      { pct: 1.0, color: { r: 0x00, g: 0xff, b: 0 } } ];
+
+    const getColorForPercentage = function(pct) {
+      let i;
+      for (i = 1; i < percentColors.length - 1; i++) {
+        if (pct < percentColors[i].pct) {
+          break;
+        }
+      }
+      const lower = percentColors[i - 1];
+      const upper = percentColors[i];
+      const range = upper.pct - lower.pct;
+      const rangePct = (pct - lower.pct) / range;
+      const pctLower = 1 - rangePct;
+      const pctUpper = rangePct;
+      const color = {
+        r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+        g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+        b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+      };
+      return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+    };
+
+    //
+    // function displayColorOld(td, i) {
+    //   const diff = i * 3600000
+    //   const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
+    //   td.title = time.toLocaleString();
+    //   td.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
+    // }
+    //
+    // function displayColorNew(td, i) {
+    //   td.title = time.toLocaleString();
+    //   const perc = (24-i)/24
+    //   td.getElementsByTagName('circle')[0].style.fill = getColorForPercentage(perc);
+    // }
+    //
+    // const table = document.getElementById('test')
+    // for (let i=0;i<=36;i++) {
+    //   const tr = document.createElement('tr')
+    //
+    //   const tdc = document.createElement('td')
+    //   tdc.innerHTML = i
+    //   tr.append(tdc)
+    //
+    //   const td = document.createElement('td')
+    //   td.append(clock.cloneNode(true))
+    //   displayColorOld(td, i)
+    //   tr.append(td)
+    //
+    //   const td2 = document.createElement('td')
+    //   td2.append(clock.cloneNode(true))
+    //   displayColorNew(td2, i)
+    //   tr.append(td2)
+    //
+    //   table.append(tr)
+    // }
 
     displayColor()
     timer()
@@ -43,6 +104,7 @@
         <h1 class="display-5 fw-bold">Help</h1>
         <h2>Decay Information</h2>
         <p>Inside Info boxes there is a Decay notification (<span id="clock" class="clock">{% include 'clock.svg' %}</span>).</p>
+<!--        <table id="test"></table>-->
         <p>This goes from green (just placed) over yellow (updated 12h ago) to red (updated 24h ago).</p>
         <p>Hovering over the element will show the exact time (select an element before to be able to hover).</p>
         <p>Clicking on it will reset the timer.</p>

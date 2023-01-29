@@ -337,8 +337,7 @@ class Select {
 
   setClockColor = (clock, time) => {
     const diff = new Date().getTime() - time.getTime()
-    const hue = (Math.max(0, Math.min(1, 1 - diff/86400000))*120).toString(10);
-    clock.getElementsByTagName('circle')[0].style.fill = `hsl(${hue},100%,50%)`
+    clock.getElementsByTagName('circle')[0].style.fill = this.getColorForPercentage((24 - diff/3600000)/24)
     clock.title = time.toLocaleString();
     if (diff < 3600000) {
       clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 60000), 'minute')
@@ -350,6 +349,33 @@ class Select {
       clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 86400000), 'day')
     }
   }
+
+  percentColors = [
+    { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
+    { pct: 0.125, color: { r: 0xff, g: 0xa0, b: 0 } },
+    { pct: 0.5, color: { r: 0xff, g: 0xe0, b: 0 } },
+    { pct: 1.0, color: { r: 0x00, g: 0xff, b: 0 } } ];
+
+  getColorForPercentage = (pct) => {
+    let i;
+    for (i = 1; i < this.percentColors.length - 1; i++) {
+      if (pct < this.percentColors[i].pct) {
+        break;
+      }
+    }
+    const lower = this.percentColors[i - 1];
+    const upper = this.percentColors[i];
+    const range = upper.pct - lower.pct;
+    const rangePct = (pct - lower.pct) / range;
+    const pctLower = 1 - rangePct;
+    const pctUpper = rangePct;
+    const color = {
+      r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+      g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+      b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+    };
+    return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+  };
 
   getNotes = (feature) => {
     const note = feature.get('notes') || ''
