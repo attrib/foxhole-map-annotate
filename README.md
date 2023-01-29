@@ -16,11 +16,11 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Todos
 
-* Remove notes from flagged (by [FMAT] Quini98)
-* Flagged Sidebar should not scroll horizontal (by [FMAT] Quini98)
+*
 
 ## Ideas
 
+* Sort Flagged by time flagged
 * Add other shapes next to polygon (rectangle, circle) (by Morgeta)
 * Image/Screenshot upload (compressor.js) (by Phalanx/Bazlow)
 * Filter Planned/Built Rails (by [102nd] Asterム)

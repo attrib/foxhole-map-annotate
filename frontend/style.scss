@@ -154,7 +154,23 @@ button.overlay-button {
   }
 }
 
+#flagged {
+  overflow-wrap: anywhere;
+  word-wrap: anywhere;
+  word-break: break-all;
+  hyphens: auto;
+}
+
+#flagged thead, #flagged tbody td:nth-child(3) {
+  text-align: center;
+}
+
 .flagged-item {
   align-items: center;
   justify-content: space-between;
+
+  .icon img {
+    height: 24px;
+  }
 }
+

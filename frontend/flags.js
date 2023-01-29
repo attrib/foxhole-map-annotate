@@ -72,7 +72,7 @@ class Flags {
       flaggedItem.querySelector('.icon').innerHTML = '<img src="' + this.tools.icon.getImageUrl(feature) + '">'
     }
     flaggedItem.querySelector('.user').innerHTML = feature.get('user')
-    flaggedItem.querySelector('.notes').innerHTML = this.tools.select.getNotes(feature)
+    //flaggedItem.querySelector('.notes').innerHTML = this.tools.select.getNotes(feature)
     flaggedItem.querySelector('.flagCount').innerHTML = feature.get('flags').length
     flaggedItem.querySelector('a.target').addEventListener('click', (e) => {
       e.preventDefault()
