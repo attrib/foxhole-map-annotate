@@ -263,7 +263,7 @@ function prepareWarTimer() {
   if (!prepareWarTimerElement.dataset.conquestEndTime) {
     return
   }
-  const hours = (parseInt(prepareWarTimerElement.dataset.conquestEndTime) + 7200000 - Date.now()) / 3600000
+  const hours = (parseInt(prepareWarTimerElement.dataset.conquestEndTime) + 43200000 - Date.now()) / 3600000
   const minutes = (hours - Math.floor(hours)) * 60
   const formattedMinutes = rtf.formatToParts(Math.floor(minutes),'minute')
   prepareWarTimerElement.innerHTML = rtf.format(Math.floor(hours),'hour') + ' ' + formattedMinutes[1].value + ' ' + formattedMinutes[2].value
