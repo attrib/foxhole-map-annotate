@@ -282,6 +282,7 @@ class StaticLayers {
   iconStyle = (feature, resolution) => {
     const icon = feature.get('icon')
     let team = feature.get('team') || ''
+    const flags = feature.get('flags')
     if (team === 'none') {
       team = ''
     }
@@ -295,10 +296,20 @@ class StaticLayers {
     }
     const cacheKey = `${icon}${team}`
     if (!(cacheKey in this.cachedIconStyle)) {
+      let color = undefined
+      if (flags & 0x10) {
+        color = '#c00000'
+      }
+      else if (team === 'Warden') {
+        color = '#245682'
+      }
+      else if (team === 'Colonial') {
+        color = '#516C4B'
+      }
       this.cachedIconStyle[cacheKey] = new Style({
         image: new Icon({
           src: `/images/${feature.get('type')}/${feature.get('icon')}.png`,
-          color: team === '' ? undefined : team === 'Warden' ? '#245682' : '#516C4B',
+          color: color,
           scale: (feature.get('type') === 'town' || feature.get('type') === 'field' || feature.get('type') === 'stormCannon') ? 2/3 : 1,
         }),
         zIndex: icon === 'MapIconSafehouse' ? 0 : undefined,
@@ -318,6 +329,7 @@ class StaticLayers {
       const town = this.sources.town.getFeatureById(id)
       if (town) {
         town.set('icon', data.icon, true)
+        town.set('flags', data.flags, true)
         town.set('team', data.team)
         if (flash) {
           this.flash(town)
@@ -461,6 +473,7 @@ class StaticLayers {
           }
           if (feature.get('id') in this.conquerStatus.features) {
             feature.set('icon', this.conquerStatus.features[feature.get('id')].icon, true)
+            feature.set('flags', this.conquerStatus.features[feature.get('id')].flags, true)
             feature.set('team', this.conquerStatus.features[feature.get('id')].team)
           }
           if (feature.get('town') in this.conquerStatus.features) {

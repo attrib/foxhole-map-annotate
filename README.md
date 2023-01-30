@@ -15,7 +15,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 * Require text for custom area (by [11eFL] mashed)
 * Remove crossing sign!
-* NUKES!
 
 ## Ideas
 
