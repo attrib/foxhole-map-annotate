@@ -7,10 +7,15 @@ import CircleStyle from "ol/style/Circle";
 import {easeOut} from "ol/easing";
 import {getVectorContext} from "ol/render";
 import {unByKey} from "ol/Observable";
-import {Point} from "ol/geom";
+import {LineString, Point} from "ol/geom";
 
 class StaticLayers {
 
+  /**
+   * @param {import('ol').Map} map
+   * @param {Object} conquerStatus
+   * @param {Object} warFeatures
+   */
   constructor(map, conquerStatus, warFeatures) {
     this.map = map
     this.conquerStatus = conquerStatus
@@ -49,6 +54,9 @@ class StaticLayers {
       'stormCannon': new VectorSource({
         features: new Collection()
       }),
+      'grid': new VectorSource({
+        features: new Collection(),
+      })
     }
 
     this.labelStyle = [
@@ -105,6 +113,16 @@ class StaticLayers {
       }),
     }
 
+    const gridLineStyle = new Style({
+      stroke: new Stroke({
+        width: 1,
+        color: '#333333'
+      }),
+      text: new Text({
+        text: null,
+      }),
+    })
+
     regionGroup.getLayers().push(new Vector({
       title: 'Regions',
       source: this.sources.Region,
@@ -134,6 +152,24 @@ class StaticLayers {
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       tooltip: false,
+    }))
+    staticGroup.getLayers().push(new Vector({
+      title: 'Grid',
+      source: this.sources.grid,
+      zIndex: 0,
+      style: (feature) => {
+        if (feature.get('text') !== undefined) {
+          gridLineStyle.getText().setText(feature.get('text'))
+        }
+        else {
+          gridLineStyle.getText().setText(null)
+        }
+        return gridLineStyle;
+      },
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      tooltip: false,
+      defaultVisible: false,
     }))
     staticGroup.getLayers().push(new Vector({
       source: this.sources.voronoi,
@@ -218,6 +254,8 @@ class StaticLayers {
 
     this.cachedIconStyle = {}
     this.loadRegion(false)
+
+    map.on('moveend', this.gridLoader)
   }
 
   regionStyle = (feature) => {
@@ -464,6 +502,56 @@ class StaticLayers {
     });
     feat.setId(id)
     return feat
+  }
+
+  loadedGrid = null
+
+  gridLoader = () => {
+    const region = this.sources.Region.getFeaturesAtCoordinate(this.map.getView().getCenter())[0]
+    if (!region) {
+      this.loadedGrid = null
+      this.sources.grid.clear()
+      return
+    }
+    if (this.loadedGrid === region.getId()) {
+      return
+    }
+    this.sources.grid.clear(true)
+    this.loadedGrid = region.getId()
+
+    const features = []
+    const extent = region.getGeometry().getExtent();
+    for (let i=0;i<=17;i++) {
+      const line = new Feature({
+        geometry: new LineString([[extent[0] + i*125*0.94, extent[1]], [extent[0] + i*125*0.94, extent[3]]]),
+        type: 'grid',
+        region: region.getId(),
+      })
+      features.push(line)
+      const point = new Feature({
+        geometry: new Point([extent[0] + i*125*0.94 + 62.5*0.94, extent[3] - 15]),
+        type: 'grid',
+        region: region.getId(),
+        text: String.fromCharCode(97 + i).toUpperCase()
+      })
+      features.push(point)
+    }
+    for (let i=0;i<=15;i++) {
+      const line = new Feature({
+        geometry: new LineString([[extent[0], extent[3]-i*125*0.94], [extent[2], extent[3]-i*125*0.94]]),
+        type: 'grid',
+        region: region.getId(),
+      })
+      features.push(line)
+      const point = new Feature({
+        geometry: new Point([extent[0] + 15, extent[3] - i*125*0.94 - 62.5*0.94]),
+        type: 'grid',
+        region: region.getId(),
+        text: (i+1).toString()
+      })
+      features.push(point)
+    }
+    this.sources.grid.addFeatures(features)
   }
 
 }

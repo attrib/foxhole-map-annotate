@@ -34,6 +34,9 @@ module.exports.enableLayerMemory = function enableLayerMemory(map) {
                 const visible = (localStorage.getItem(itemName) === 'true');
                 layer.setVisible(visible);
             }
+            else if (layer.get('defaultVisible') === false) {
+                layer.setVisible(false);
+            }
         }
     });
 
