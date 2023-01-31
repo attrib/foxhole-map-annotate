@@ -22,7 +22,7 @@ class SidebarArty {
       "max": 80,
       "minAcc": 2.5,
       "maxAcc": 9.45,
-      "offset": 0,
+      "offset": 10,
       "ammo": "Mortar Shells",
       "team": "N"
     },
@@ -110,8 +110,8 @@ class SidebarArty {
     "Tempest": {
       "min": 350,
       "max": 500,
-      "minAcc": 0,
-      "maxAcc": 0,
+      "minAcc": 15, // this is guessed
+      "maxAcc": 25, // this is guessed
       "offset": 50,
       "ammo": "300mm",
       "team": "N"
@@ -119,8 +119,8 @@ class SidebarArty {
     "Storm Cannon": {
       "min": 400,
       "max": 1000,
-      "minAcc": 0,
-      "maxAcc": 0,
+      "minAcc": 15, // this is guessed
+      "maxAcc": 25, // this is guessed
       "offset": 50,
       "ammo": "300mm",
       "team": "N"
