@@ -14,7 +14,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 ## Todos
 
 * Require text for custom area (by [11eFL] mashed)
-* Remove crossing sign!
 
 ## Ideas
 
@@ -34,7 +33,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * auto expiring icons (by [CHI] Arctifire)
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
 * comments for signs (by [FMAT] Da Vinci)
-* add current VP count to navbar / victory townhalls? 
 * Partisan Rails? (new Role, Green Rail)
 * Popup rework?
   * [Hover](https://viglino.github.io/ol-ext/examples/interaction/map.interaction.hover.html)

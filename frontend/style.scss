@@ -174,3 +174,10 @@ button.overlay-button {
   }
 }
 
+#war-score {
+  display: none;
+  .team-score {
+    margin: 0 15px;
+  }
+}
+

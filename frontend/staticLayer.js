@@ -1,5 +1,5 @@
 import {Vector as VectorSource} from "ol/source";
-import {Fill, Icon, Stroke, Style, Text} from "ol/style";
+import {Circle, Fill, Icon, Stroke, Style, Text} from "ol/style";
 import {Group, Vector} from "ol/layer";
 import {GeoJSON} from "ol/format";
 import {Collection, Feature} from "ol";
@@ -256,6 +256,10 @@ class StaticLayers {
     this.loadRegion(false)
 
     map.on('moveend', this.gridLoader)
+
+    if (window.innerWidth > 990) {
+      document.getElementById('war-score').style.display='flex'
+    }
   }
 
   regionStyle = (feature) => {
@@ -282,7 +286,7 @@ class StaticLayers {
   iconStyle = (feature, resolution) => {
     const icon = feature.get('icon')
     let team = feature.get('team') || ''
-    const flags = feature.get('flags')
+    const flags = feature.get('iconFlags')
     if (team === 'none') {
       team = ''
     }
@@ -315,6 +319,32 @@ class StaticLayers {
         zIndex: icon === 'MapIconSafehouse' ? 0 : undefined,
       });
     }
+    if (flags & 0x01) {
+      const cacheKeyFlag = `${cacheKey}${flags}`
+      if (!(cacheKeyFlag in this.cachedIconStyle)) {
+        let color = '#a0a0a077'
+        if (flags & 0x10) {
+          color = '#c0000077'
+        }
+        else if (team === 'Warden' && (flags & 0x20)) {
+          color = '#24568277'
+        }
+        else if (team === 'Colonial' && (flags & 0x20)) {
+          color = '#516C4B77'
+        }
+        this.cachedIconStyle[cacheKeyFlag] = new Style({
+          image: new Circle({
+            fill: new Fill({color: color}),
+            stroke: new Stroke({width: 1, color: '#080807'}),
+            radius: 16,
+          }),
+        })
+      }
+      return [
+        this.cachedIconStyle[cacheKeyFlag],
+        this.cachedIconStyle[cacheKey]
+      ]
+    }
     return this.cachedIconStyle[cacheKey]
   }
 
@@ -329,7 +359,7 @@ class StaticLayers {
       const town = this.sources.town.getFeatureById(id)
       if (town) {
         town.set('icon', data.icon, true)
-        town.set('flags', data.flags, true)
+        town.set('iconFlags', data.flags, true)
         town.set('team', data.team)
         if (flash) {
           this.flash(town)
@@ -363,6 +393,7 @@ class StaticLayers {
         }
       }
     }
+    this.updateScore()
   }
 
   warFeaturesUpdate = () => {
@@ -473,7 +504,7 @@ class StaticLayers {
           }
           if (feature.get('id') in this.conquerStatus.features) {
             feature.set('icon', this.conquerStatus.features[feature.get('id')].icon, true)
-            feature.set('flags', this.conquerStatus.features[feature.get('id')].flags, true)
+            feature.set('iconFlags', this.conquerStatus.features[feature.get('id')].flags, true)
             feature.set('team', this.conquerStatus.features[feature.get('id')].team)
           }
           if (feature.get('town') in this.conquerStatus.features) {
@@ -500,6 +531,7 @@ class StaticLayers {
         }
         this.sources.stormCannon.clear(true)
         this.sources.stormCannon.addFeatures(stormCannons)
+        this.updateScore()
       }
     }
     xhr.send();
@@ -515,6 +547,31 @@ class StaticLayers {
     });
     feat.setId(id)
     return feat
+  }
+
+  updateScore = () => {
+    let requiredVictoryPoints = this.conquerStatus.requiredVictoryTowns || 32
+    const score = {Warden: 0, Colonial: 0, None: 0, WardenUnclaimed: 0, ColonialUnclaimed: 0, NoneUnclaimed: 0}
+    this.sources.town.forEachFeature((feature) => {
+      const flags = feature.get('iconFlags') || 0
+      if (flags & 0x10) {
+        requiredVictoryPoints--
+      }
+      else if ((flags & 0x20) && (flags & 0x01)) {
+        score[feature.get('team')]++
+      }
+      else if ((flags & 0x01)) {
+        score[feature.get('team') + 'Unclaimed']++
+      }
+    })
+    for (let total of document.getElementsByClassName('total-score')) {
+      total.innerHTML = requiredVictoryPoints.toString()
+    }
+    const unclaimedPrefix = '<span title="Not yet claimed!">(+'
+    const unclaimedSuffix = ')</span>'
+    document.getElementById('colonial-score').innerHTML = score.Colonial.toString() + (score.ColonialUnclaimed > 0 ? unclaimedPrefix + score.ColonialUnclaimed.toString() + unclaimedSuffix : '')
+    document.getElementById('warden-score').innerHTML = score.Warden.toString() + (score.WardenUnclaimed > 0 ? unclaimedPrefix + score.WardenUnclaimed.toString() + unclaimedSuffix : '')
+    console.log(score)
   }
 
   loadedGrid = null
