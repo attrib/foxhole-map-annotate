@@ -111,6 +111,15 @@ class StaticLayers {
           width: 1
         })
       }),
+      'Nuked': new Style({
+        fill: new Fill({
+          color: '#c0000044',
+        }),
+        stroke: new Stroke({
+          color: '#c0000022',
+          width: 1
+        })
+      }),
     }
 
     const gridLineStyle = new Style({
@@ -298,7 +307,7 @@ class StaticLayers {
       // safehouses are static but also want to show them only when showing industry
       return null
     }
-    const cacheKey = `${icon}${team}`
+    const cacheKey = `${icon}${team}${flags}`
     if (!(cacheKey in this.cachedIconStyle)) {
       let color = undefined
       if (flags & 0x10) {
@@ -320,7 +329,7 @@ class StaticLayers {
       });
     }
     if (flags & 0x01) {
-      const cacheKeyFlag = `${cacheKey}${flags}`
+      const cacheKeyFlag = `${cacheKey}VP`
       if (!(cacheKeyFlag in this.cachedIconStyle)) {
         let color = '#a0a0a077'
         if (flags & 0x10) {
@@ -367,7 +376,12 @@ class StaticLayers {
         if (town.get('voronoi') && data.icon !== 'MapIconRocketSite' && data.icon !== 'MapIconObservationTower') {
           const voronoi = this.sources.voronoi.getFeatureById(town.get('voronoi'))
           if (voronoi) {
-            voronoi.set('team', data.team)
+            if (data.flags & 0x10) {
+              voronoi.set('team', 'Nuked')
+            }
+            else {
+              voronoi.set('team', data.team)
+            }
           }
         }
         continue
@@ -508,7 +522,12 @@ class StaticLayers {
             feature.set('team', this.conquerStatus.features[feature.get('id')].team)
           }
           if (feature.get('town') in this.conquerStatus.features) {
-            feature.set('team', this.conquerStatus.features[feature.get('town')].team)
+            if (this.conquerStatus.features[feature.get('town')].flags & 0x10) {
+              feature.set('team', 'Nuked')
+            }
+            else {
+              feature.set('team', this.conquerStatus.features[feature.get('town')].team)
+            }
           }
           collections[type].push(feature)
         })
@@ -554,13 +573,16 @@ class StaticLayers {
     const score = {Warden: 0, Colonial: 0, None: 0, WardenUnclaimed: 0, ColonialUnclaimed: 0, NoneUnclaimed: 0}
     this.sources.town.forEachFeature((feature) => {
       const flags = feature.get('iconFlags') || 0
+      if (!(flags & 0x01)) {
+        return
+      }
       if (flags & 0x10) {
         requiredVictoryPoints--
       }
-      else if ((flags & 0x20) && (flags & 0x01)) {
+      else if (flags & 0x20) {
         score[feature.get('team')]++
       }
-      else if ((flags & 0x01)) {
+      else if (flags & 0x01) {
         score[feature.get('team') + 'Unclaimed']++
       }
     })
