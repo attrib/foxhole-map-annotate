@@ -89,6 +89,12 @@ class Sidebar {
         tools.emit(tools.EVENT_ICON_UPDATED, this.editFeature)
       }
     })
+    document.addEventListener('keydown', (event) => {
+      if (this.editFeature && event.key === 'Delete') {
+        tools.emit(tools.EVENT_ICON_DELETED, this.editFeature)
+        this.clearInput();
+      }
+    })
     document.getElementById('delete-button').addEventListener('click', () => {
       if (this.editFeature) {
         tools.emit(tools.EVENT_ICON_DELETED, this.editFeature)
