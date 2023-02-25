@@ -14,7 +14,7 @@ const mousePositionControl = new MousePosition({
 
 const layerSwitcher = new LayerSwitcher({
     reverse: false,
-    groupSelectStyle: 'group'
+    groupSelectStyle: 'children'
 });
 
 module.exports.addDefaultMapControls = function(map) {
