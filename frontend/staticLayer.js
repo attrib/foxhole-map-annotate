@@ -22,7 +22,7 @@ class StaticLayers {
     this.warFeatures = warFeatures
     const regionGroup = new Group({
       title: 'Labels',
-      combine: true,
+      fold: 'close',
     })
     const staticGroup = new Group({
       title: 'Region',
