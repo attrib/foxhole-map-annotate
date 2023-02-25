@@ -10,6 +10,7 @@ const Icon = require("./tools/icon");
 const Polygon = require("./tools/polygon");
 const Line = require("./tools/line");
 const Scissor = require("./tools/scissor");
+const LayerGroup = require("ol/layer/Group").default
 
 
 class EditTools {
@@ -135,14 +136,15 @@ class EditTools {
             this.editMode = newMode
             if (this.editMode) {
                 this.emit(this.EVENT_EDIT_MODE_ENABLED)
-                const editLayerTitles = [ 'Custom Areas', 'Train Lines', this.facilitiesGroup.get('title')]
-                for (const layer of Object.values(this.iconTools)) {
-                    editLayerTitles.push(layer.title)
+                const editLayerTitles = [ 'Custom Areas', 'Train Lines', this.facilitiesGroup.get('title'), ...Object.keys(this.iconTools).map((key) => { return this.iconTools[key].title})]
+                const nestVisibleTrue = (layer) => {
+                    if (layer instanceof LayerGroup) {
+                        layer.getLayers().forEach((subLayer) => { nestVisibleTrue(subLayer) })
+                    }
+                    layer.setVisible(true)
                 }
                 this.map.getLayers().forEach((layer) => {
-                    if (editLayerTitles.includes(layer.get('title'))) {
-                        layer.setVisible(true)
-                    }
+                    if (editLayerTitles.includes(layer.get('title'))) { nestVisibleTrue(layer) }
                 })
             }
             else {
