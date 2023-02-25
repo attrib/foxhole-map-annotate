@@ -135,6 +135,15 @@ class EditTools {
             this.editMode = newMode
             if (this.editMode) {
                 this.emit(this.EVENT_EDIT_MODE_ENABLED)
+                const editLayerTitles = [ 'Custom Areas', 'Train Lines', this.facilitiesGroup.get('title')]
+                for (const layer of Object.values(this.iconTools)) {
+                    editLayerTitles.push(layer.title)
+                }
+                this.map.getLayers().forEach((layer) => {
+                    if (editLayerTitles.includes(layer.get('title'))) {
+                        layer.setVisible(true)
+                    }
+                })
             }
             else {
                 if (this.selectedTool) {
