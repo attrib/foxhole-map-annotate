@@ -76,10 +76,11 @@ class EditTools {
                 declutter: true,
             },
             'facility': {
-                title: 'Facilities',
+                title: 'Public Facilities',
                 type: 'facility',
                 zIndex: 25,
                 layerGroup: this.facilitiesGroup,
+                layerPerIcon: true,
             },
             'facility-enemy': {
                 title: 'Enemy Structures',
@@ -92,6 +93,7 @@ class EditTools {
                 type: 'facility-private',
                 zIndex: 15,
                 layerGroup: this.facilitiesGroup,
+                layerPerIcon: true,
             },
         }
 
