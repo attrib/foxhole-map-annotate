@@ -593,7 +593,6 @@ class StaticLayers {
     const unclaimedSuffix = ')</span>'
     document.getElementById('colonial-score').innerHTML = score.Colonial.toString() + (score.ColonialUnclaimed > 0 ? unclaimedPrefix + score.ColonialUnclaimed.toString() + unclaimedSuffix : '')
     document.getElementById('warden-score').innerHTML = score.Warden.toString() + (score.WardenUnclaimed > 0 ? unclaimedPrefix + score.WardenUnclaimed.toString() + unclaimedSuffix : '')
-    console.log(score)
   }
 
   loadedGrid = null

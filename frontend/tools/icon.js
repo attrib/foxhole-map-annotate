@@ -1,7 +1,7 @@
 const {Draw} = require("ol/interaction");
 const {assert} = require("ol/asserts");
 const {Style, Icon: olIcon} = require("ol/style");
-const {Vector} = require("ol/layer");
+const {Vector, Group} = require("ol/layer");
 const {Collection} = require("ol");
 const {Vector: VectorSource} = require("ol/source");
 
@@ -23,19 +23,68 @@ class Icon {
       this.sources[tool.type] = new VectorSource({
         features: new Collection([]),
       });
-      const vector = new Vector({
-        source: this.sources[tool.type],
-        title: tool.title,
-        style: this.iconStyle,
-        zIndex: tool.zIndex,
-        searchable: true,
-        maxResolution: tool.maxResolution,
-        declutter: tool.declutter || false,
-      });
-      if (tool.layerGroup) {
-        tool.layerGroup.getLayers().push(vector)
+      let vector;
+      if (tool.layerPerIcon) {
+        const sourcesPerIcon = {}
+        this.sources[tool.type].on('addfeature', (event) => {
+          const icon = event.feature.get('icon')
+          if (!(icon in sourcesPerIcon)) {
+            sourcesPerIcon[icon] = new VectorSource({
+              features: new Collection([]),
+            });
+            const subLayer = new Vector({
+              source: sourcesPerIcon[icon],
+              title: this.getIconTitle(event.feature),
+              style: this.iconStyle,
+              zIndex: tool.zIndex,
+              searchable: true,
+              maxResolution: tool.maxResolution,
+              declutter: tool.declutter || false,
+            });
+            vector.getLayers().push(subLayer)
+          }
+          sourcesPerIcon[icon].addFeature(event.feature)
+        });
+        this.sources[tool.type].on('removefeature', (event) => {
+          const icon = event.feature.get('icon')
+          if (icon in sourcesPerIcon) {
+            sourcesPerIcon[icon].removeFeature(event.feature)
+          }
+        });
+        this.sources[tool.type].on('changefeature', (event) => {
+          const icon = event.feature.get('icon')
+          for (let oldIcon in sourcesPerIcon) {
+            if (oldIcon !== icon) {
+              const oldFeature = sourcesPerIcon[oldIcon].getFeatureById(event.feature.getId())
+              if (oldFeature) {
+                sourcesPerIcon[oldIcon].removeFeature(event.feature)
+                sourcesPerIcon[icon].addFeature(event.feature)
+              }
+            }
+          }
+
+        });
+        vector = new Group({
+          title: tool.title,
+          fold: 'close',
+          maxResolution: tool.maxResolution,
+          declutter: tool.declutter || false,
+        });
       }
       else {
+        vector = new Vector({
+          source: this.sources[tool.type],
+          title: tool.title,
+          style: this.iconStyle,
+          zIndex: tool.zIndex,
+          searchable: true,
+          maxResolution: tool.maxResolution,
+          declutter: tool.declutter || false,
+        });
+      }
+      if (tool.layerGroup) {
+        tool.layerGroup.getLayers().push(vector)
+      } else {
         this.map.addLayer(vector);
       }
     }
@@ -177,6 +226,12 @@ class Icon {
 
   getImageUrl = (feature) => {
     return `/images/${feature.get('type')}/${feature.get('icon')}.svg`
+  }
+
+  getIconTitle = (feature) => {
+    const url = this.getImageUrl(feature)
+    const img = document.getElementById('ppe-filter-content').querySelector(`img[src="${url}"]`);
+    return img?.alt || feature.get('icon')
   }
 
   featureSelected = (feature) => {
