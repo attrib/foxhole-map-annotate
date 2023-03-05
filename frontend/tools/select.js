@@ -34,7 +34,7 @@ class Select {
     this.selectOverlays = {}
     this.clocks = {}
     this.select = new OlSelect({
-      multi: false,
+      multi: true,
       toggleCondition: never,
       style: this.selectStyle(),
       filter: (feature) => {
@@ -42,7 +42,37 @@ class Select {
       }
     })
 
+    let cycleCounter = -1
     this.select.on('select', (event) => {
+
+      // Cycle through features workaround
+      // Allowing to select multiple features, but only have one feature selected at the end and cycle through them
+      const multiSelect = [];
+      // First click selects all features (count selected and count inside selected feature are the same)
+      // nothing to cycle yet
+      const cycle = this.select.getFeatures().getLength() !==  event.selected.length
+      // remove all other selected features, so there is only on selected feature
+      while (this.select.getFeatures().getLength() > 1) {
+        const feature = event.selected.pop();
+        this.select.getFeatures().remove(feature)
+        multiSelect.push(feature)
+      }
+      if (cycle) {
+        // if cycle move the only selected feature to deselected
+        const deselect = this.select.getFeatures().pop()
+        event.deselected.push(deselect)
+        // get the next feature in the cycle and add it to selected
+        // starting at -1 to get index 0 twice, example 3 features:
+        // first time: multiSelect=A,B -> select first
+        // second time: multiSelect=B,C -> select first (again)
+        // third time: multiSelect=A,C -> select second
+        cycleCounter = cycleCounter >= multiSelect.length ? -1 : cycleCounter;
+        const feature = multiSelect.at(cycleCounter < 0 ? 0 : cycleCounter)
+        event.selected.push(feature)
+        this.select.getFeatures().push(feature)
+        cycleCounter++
+      }
+
       if (this.tools.editMode) {
         if (event.deselected.length > 0) {
           if (event.deselected[0]) {
