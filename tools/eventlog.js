@@ -54,3 +54,28 @@ for (let userId in byUser) {
 }
 
 fs.writeFileSync('user.csv', csvContent)
+
+/**
+
+ Discord template:
+
+ **War 101 WE Stats**
+
+ War 101 ended after 14 days.
+
+ Some stats from warden.express side.
+
+ We tracked 4.5k Events by 154 users over this time span. Divided up into:
+
+ * 2.131 Feature additions
+ * 1.128 Feature updates
+ * 777 Feature deletions
+ * 510 Decay updates
+
+ Thank you all for your contributions and using warden.express!
+
+ As always special thanks to the mod team.
+
+ In addition thanks to @Quadrilus , @mashed , @Morgeta  who are responsible for over 20% of all the events!
+
+ */

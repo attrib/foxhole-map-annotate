@@ -121,7 +121,7 @@ class Line {
 
     this.confirmOverlay = new Overlay({
       element: confirmElement,
-      offset: [-10, 10]
+      offset: [-30, 10]
     })
     map.addOverlay(this.confirmOverlay)
 
@@ -139,7 +139,7 @@ class Line {
 
     this.cancelOverlay = new Overlay({
       element: cancelElement,
-      offset: [-30, 10]
+      offset: [-50, 10]
     })
     map.addOverlay(this.cancelOverlay)
 
