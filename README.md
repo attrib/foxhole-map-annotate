@@ -17,6 +17,11 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
+* Check auth more often (by [1erBH] Fran-T4NK)
+* Fuse lines (by [11eFL] mashed)
+* Remove flags as mods - consider item as okay (by [11eFL] mashed)
+* separate icon for fire rockets (by [11eFL] mashed)
+* Icon for obs bunker (by DMJaxun)
 * Sort Flagged by time flagged
 * Add other shapes next to polygon (rectangle, circle) (by Morgeta)
 * Image/Screenshot upload (compressor.js) (by Phalanx/Bazlow)
