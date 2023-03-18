@@ -4,6 +4,10 @@ class Flags {
 
   MIN_FLAGS = 1
 
+  /**
+   * @param {EditTools}  tools
+   * @param {import("ol").Map} map
+   */
   constructor(map, tools) {
     this.tools = tools
     this.map = map

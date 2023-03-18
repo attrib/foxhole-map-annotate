@@ -17,6 +17,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
+* Upkeep Modifier for each voroni chunk (Very Good 0.25, Good 0.5, Poor 1, Very Poor 2)
 * Check auth more often (by [1erBH] Fran-T4NK)
 * Fuse lines (by [11eFL] mashed)
 * separate icon for fire rockets (by [11eFL] mashed)
@@ -25,7 +26,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Image/Screenshot upload (compressor.js) (by Phalanx/Bazlow)
 * Filter Planned/Built Rails (by [102nd] Asterム)
 * Hide icons inside areas and show them when area is selected (by [11eFL] mashed)
-* [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe, Morgeta) - (Hex length 1.89km, width 2.184km)
 * Free Hand drawing (by [RDRT] A Devil Chicken)
 * auto expiring icons (by [CHI] Arctifire)
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)

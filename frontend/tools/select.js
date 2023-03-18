@@ -9,7 +9,7 @@ const {Vector: VectorSource} = require("ol/source");
 const {Vector} = require("ol/layer");
 
 const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius', 'grid']
-const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field']
+const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field', 'ruler']
 const NO_USER_INFO = [...NOT_SELECTABLE, 'stormCannon']
 const NO_CLOCK = [...NO_USER_INFO, 'sign']
 
@@ -65,7 +65,7 @@ class Select {
       toggleCondition: never,
       style: this.selectStyle(),
       filter: (feature) => {
-        return !(feature.get('type') && NOT_SELECTABLE.includes(feature.get('type')));
+        return !(!feature.get('type') || NOT_SELECTABLE.includes(feature.get('type')));
       }
     })
 

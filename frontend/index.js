@@ -11,6 +11,7 @@ import {DragPan} from "ol/interaction";
 import {all, noModifierKeys} from "ol/events/condition";
 import {assert} from "ol/asserts";
 import Flags from "./flags";
+import Measure from "./measure";
 const EditTools = require("./mapEditTools")
 
 const url = new URL(window.location);
@@ -187,6 +188,8 @@ tools.on(tools.EVENT_UNFLAG, (data) => {
 })
 
 new Flags(map, tools)
+
+new Measure(map, tools)
 
 socket.on('conquer', (data) => {
   if (conquerStatus.version === data.version) {
