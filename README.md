@@ -26,12 +26,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Filter Planned/Built Rails (by [102nd] Asterム)
 * Hide icons inside areas and show them when area is selected (by [11eFL] mashed)
 * [Measure Tool](https://viglino.github.io/ol-ext/examples/popup/map.tooltip.measure.html) (by felipipe, Morgeta) - (Hex length 1.89km, width 2.184km)
-* watch towers / relics / town halls / ... radius (by Morgeta)
-  * Watchtower: 80 meters
-  * Safehouse if radio station teched: 80 meters
-  * Observation Bunker T2: 130-156 meters
-  * Observation Bunker T3: 180-216 meters
-  * Observation Tower: 240 meters
 * Free Hand drawing (by [RDRT] A Devil Chicken)
 * auto expiring icons (by [CHI] Arctifire)
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)

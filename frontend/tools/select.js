@@ -13,6 +13,33 @@ const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field']
 const NO_USER_INFO = [...NOT_SELECTABLE, 'stormCannon']
 const NO_CLOCK = [...NO_USER_INFO, 'sign']
 
+const RADIUS = {
+  stormCannon: {
+    MapIconIntelCenter: 2000,
+    MapIconStormCannon: 1000,
+  },
+  town: {
+    MapIconObservationTower: 240,
+    MapIconSafehouse: 100,
+    MapIconFortKeep: 80,
+    MapIconRelicBase: 80,
+    MapIconTownBaseTier1: 150,
+    MapIconTownBaseTier2: 150,
+    MapIconTownBaseTier3: 150,
+  },
+  industry: {
+    MapIconCoastalGun: 200,
+  },
+  base: {
+    friendly_planned_intel_center: 2000,
+    enemy_planned_intel_center: 2000,
+    friendly_planned_storm_cannon: 1000,
+    enemy_planned_storm_cannon: 1000,
+    enemy_base_obs: 216,
+    base_obs: 216,
+  }
+}
+
 /**
  * @param {import('ol/geom').Geometry} geometry
  */
@@ -194,15 +221,32 @@ class Select {
     }))
     map.on('click', (event) => {
       map.forEachFeatureAtPixel(event.pixel, (feature) => {
-        if (feature.get('type') === 'stormCannon') {
-          this.stormCannonSelected(feature)
+        if (feature.get('type') in RADIUS && feature.get('icon') in RADIUS[feature.get('type')]) {
+          this.displayRadius(feature)
         }
       }, {
         layerFilter: (layer) => {
-          return layer.get('title') === 'Storm Cannons'
+          return true;
         }
       })
     })
+
+    this.radiusSource = new VectorSource({
+      features: new Collection()
+    })
+    map.addLayer(new Vector({
+      source: this.radiusSource,
+      zIndex: 0,
+      maxResolution: 6,
+      style: new Style({
+        fill: new Fill({
+          color: '#21252933'
+        }),
+      }),
+      searchable: false,
+      tooltip: false,
+    }))
+
     this.relativeTimeFormat = new Intl.RelativeTimeFormat("en", {
       numeric: "always",
       style: "narrow",
@@ -444,19 +488,13 @@ class Select {
     }
   }
 
-  stormCannonSelected = (feature) => {
-    const radius = this.stormCannonSource.getFeatureById('radius-' + feature.getId())
+  displayRadius = (feature) => {
+    const radius = this.radiusSource.getFeatureById('radius-' + feature.getId())
     if (radius) {
-      this.stormCannonSource.removeFeature(radius)
+      this.radiusSource.removeFeature(radius)
     }
-    else {
-      let radiusInKm = 0
-      if (feature.get('icon') === 'MapIconIntelCenter') {
-        radiusInKm = 2000
-      }
-      else if (feature.get('icon') === 'MapIconStormCannon') {
-        radiusInKm = 1000
-      }
+    else if (feature.get('type') in RADIUS && feature.get('icon') in RADIUS[feature.get('type')]) {
+      const radiusInKm = RADIUS[feature.get('type')][feature.get('icon')]
       const newRadius = new Feature({
         geometry: new CircleGeo(
           feature.getGeometry().getFirstCoordinate(),
@@ -465,7 +503,7 @@ class Select {
       })
       newRadius.set('type', 'radius')
       newRadius.setId('radius-' + feature.getId())
-      this.stormCannonSource.addFeature(newRadius)
+      this.radiusSource.addFeature(newRadius)
     }
   }
 
