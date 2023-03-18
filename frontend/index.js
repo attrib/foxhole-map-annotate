@@ -182,6 +182,10 @@ socket.on('flagged', (data) => {
   tools.emit(tools.EVENT_FLAGGED, data)
 })
 
+tools.on(tools.EVENT_UNFLAG, (data) => {
+  socket.send('unflag', data)
+})
+
 new Flags(map, tools)
 
 socket.on('conquer', (data) => {

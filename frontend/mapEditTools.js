@@ -23,6 +23,7 @@ class EditTools {
     EVENT_ICON_UPDATED = 'iconUpdated';
     EVENT_FLAG = 'flagFeature'
     EVENT_FLAGGED = 'flaggedFeature'
+    EVENT_UNFLAG = 'unflagFeature'
     EVENT_FEATURE_SELECTED = (type) => {
         const t = type === 'line' || type === 'polygon' || type === 'stormCannon' ? type : 'icon'
         return t + '-selected'

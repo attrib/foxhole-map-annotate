@@ -223,6 +223,27 @@ wss.on('connection', function (ws, request) {
             saveFeatures(features)
           }
           break;
+
+        case 'unflag':
+          if (warapi.warData.status === warapi.WAR_RESISTANCE) {
+            break;
+          }
+          if (!hasAccess(userId, acl, ACL_ACTIONS.UNFLAG)) {
+            return;
+          }
+          for (const feature of features.features) {
+            if (feature.properties.id === message.data.id) {
+              feature.properties.flags = [];
+              eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
+              sendDataToAll('flagged', {
+                id: feature.properties.id,
+                type: feature.properties.type,
+                flags: feature.properties.flags,
+              })
+              saveFeatures(features)
+            }
+          }
+          break;
       }
     });
 

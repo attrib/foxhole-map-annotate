@@ -57,6 +57,39 @@ class Flags {
         }
       }
     })
+    tools.on(tools.EVENT_FLAGGED, ({id, type, flags}) => {
+      if (flags) {
+        const element = document.getElementById('flag-' + id)
+        if (flags.length === 0 && element) {
+          element.remove();
+        }
+        else if (flags.length > 0 && !element) {
+          const feature = this.findFeature(id, type)
+          if (feature) {
+            divFlagged.append(this.createFlaggedItem(feature))
+          }
+        }
+      }
+    })
+  }
+
+  findFeature = (id, type) => {
+    let feature
+    for (const source of Object.values(this.tools.icon.sources)) {
+      feature = source.getFeatureById(id)
+      if (feature) {
+        return feature;
+      }
+    }
+    feature = this.tools.line.allLinesCollection.getFeatureById(id)
+    if (feature) {
+      return feature;
+    }
+    feature = this.tools.polygon.source.getFeatureById(id)
+    if (feature) {
+      return feature;
+    }
+    return null
   }
 
   createFlaggedItem = (feature) => {
@@ -82,6 +115,10 @@ class Flags {
         duration: 1000,
       })
       this.tools.select.selectFeature(feature)
+    })
+    flaggedItem.querySelector('a.confirm').addEventListener('click', (e) => {
+      e.preventDefault()
+      this.tools.emit(this.tools.EVENT_UNFLAG, {id: feature.getId()})
     })
     flaggedItem.querySelector('a.delete').addEventListener('click', (e) => {
       e.preventDefault()
