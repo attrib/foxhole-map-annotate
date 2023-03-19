@@ -1,4 +1,5 @@
 const Split = require("ol-ext/interaction/Split");
+const {Vector: VectorSource} = require("ol/source");
 
 class Scissor {
 
@@ -8,15 +9,21 @@ class Scissor {
    */
   constructor(tools, map) {
     this.map = map
+    const fakeSource = new VectorSource({
+      features: tools.line.allLinesCollection,
+    });
     this.split = new Split.default({
+      sources: fakeSource,
     })
 
     this.split.on('aftersplit', (event) => {
-      const oldFeature = event.features[0];
-      tools.emit(tools.EVENT_ICON_UPDATED, oldFeature)
-      const newFeature = event.features[1]
-      newFeature.set('id', null)
-      tools.emit(tools.EVENT_ICON_ADDED, newFeature)
+      tools.emit(tools.EVENT_ICON_DELETED, event.original)
+      for (let feature of event.features) {
+        feature.set('id', null)
+        // All new features by split will be added by event with a new id
+        fakeSource.removeFeature(feature)
+        tools.emit(tools.EVENT_ICON_ADDED, feature)
+      }
       tools.changeTool(false)
     })
 
