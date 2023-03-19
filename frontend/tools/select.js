@@ -22,7 +22,7 @@ const RADIUS = {
     MapIconObservationTower: 240,
     MapIconSafehouse: 100,
     MapIconFortKeep: 80,
-    MapIconRelicBase: 80,
+    MapIconRelicBase: 150,
     MapIconTownBaseTier1: 150,
     MapIconTownBaseTier2: 150,
     MapIconTownBaseTier3: 150,
