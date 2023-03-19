@@ -200,7 +200,7 @@ socket.on('conquer', (data) => {
     return
   }
   if (data.full) {
-    staticLayer.sources.stormCannon.reset();
+    staticLayer.sources.stormCannon.clear();
   }
   staticLayer.conquerUpdate(data.features, !data.full)
   conquerStatus.version = data.version
