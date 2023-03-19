@@ -199,6 +199,9 @@ socket.on('conquer', (data) => {
     socket.send('getConquerStatus', true)
     return
   }
+  if (data.full) {
+    staticLayer.sources.stormCannon.reset();
+  }
   staticLayer.conquerUpdate(data.features, !data.full)
   conquerStatus.version = data.version
   conquerStatus.features = data.full ? data.features : {...conquerStatus.features, ...data.features}
