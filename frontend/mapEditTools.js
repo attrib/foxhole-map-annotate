@@ -10,6 +10,7 @@ const Icon = require("./tools/icon");
 const Polygon = require("./tools/polygon");
 const Line = require("./tools/line");
 const Scissor = require("./tools/scissor");
+const Merge = require("./tools/merge");
 const LayerGroup = require("ol/layer/Group").default
 
 
@@ -103,6 +104,7 @@ class EditTools {
         this.sidebarArty = new SidebarArty(this, map)
         this.line = new Line(this, map)
         this.scissor = new Scissor(this, map)
+        this.merge = new Merge(this, map)
         this.icon = new Icon(this, map)
         this.polygon = new Polygon(this, map)
         this.select = new Select(this, map)

@@ -178,7 +178,7 @@ class Select {
       }
       else {
         const [feature, layer] = value;
-        if (layer === null || NO_TOOLTIP.includes(feature.get('type'))) {
+        if (layer === null || !feature.get('type') || NO_TOOLTIP.includes(feature.get('type'))) {
           this.hideInfoBoxes()
           return
         }

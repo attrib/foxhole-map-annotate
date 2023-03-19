@@ -18,7 +18,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 * Upkeep Modifier for each voroni chunk (Very Good 0.25, Good 0.5, Poor 1, Very Poor 2)
 * Check auth more often (by [1erBH] Fran-T4NK)
-* Fuse lines (by [11eFL] mashed)
 * separate icon for fire rockets (by [11eFL] mashed)
 * Icon for obs bunker (by DMJaxun)
 * Add other shapes next to polygon (rectangle, circle) (by Morgeta)
