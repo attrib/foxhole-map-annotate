@@ -8,6 +8,7 @@ class Search extends SearchFeature {
     super({
       className: 'feature-search text-bg-light',
       property: 'notes',
+      maxItems: 50,
     });
 
     this.on('select', function (e) {

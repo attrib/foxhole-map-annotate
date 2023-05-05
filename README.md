@@ -16,8 +16,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
-* fixed colors for polygons (by [11eFL] mashed)
-* icon names filterable with search (e.g. searching for "petrol" lists petrol icons as well as things with petrol in the name) (by [11eFL] mashed)
 * option to toggle all in the layer filters (by [11eFL] mashed)
 * special icon only visible to admins for easier coordination (by [11eFL] mashed)
 * Upkeep Modifier for each voroni chunk (Very Good 0.25, Good 0.5, Poor 1, Very Poor 2)
