@@ -11,7 +11,7 @@ const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clear
 const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
 const sanitizeHtml = require("sanitize-html");
-const {loadFeatures, saveFeatures} = require("./lib/featureLoader");
+const {loadFeatures, saveFeatures, defaultFeatures} = require("./lib/featureLoader");
 
 setTimeout(conquerUpdater, 10000)
 
@@ -326,7 +326,9 @@ warapi.on(warapi.EVENT_WAR_PREPARE, ({oldData, newData}) => {
     fs.cpSync('./data/war.json', oldWarDir + '/war.json')
   }
   // clear data
+  const defaultFeatureSet = defaultFeatures()
   features.features = features.features.filter((track) => track.properties.clan === 'World')
+  features.features.push(...defaultFeatureSet.features)
   saveFeatures(features)
   clearRegions()
   sendDataToAll('warPrepare', newData)
