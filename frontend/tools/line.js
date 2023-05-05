@@ -280,6 +280,7 @@ class Line {
     this.tools.sidebar.lineTypeInput.value = feature.get('lineType') || 'single'
     this.tools.sidebar.notesInput.value = feature.get('notes') || ''
     this.tools.sidebar.colorInput.value = feature.get('color') || '#555555'
+    this.tools.sidebar.setColorInputActive()
 
     this.tools.sidebar.displayForm(['clan', 'lineType', 'color', 'notes'])
   }

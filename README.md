@@ -16,6 +16,10 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Ideas
 
+* fixed colors for polygons (by [11eFL] mashed)
+* icon names filterable with search (e.g. searching for "petrol" lists petrol icons as well as things with petrol in the name) (by [11eFL] mashed)
+* option to toggle all in the layer filters (by [11eFL] mashed)
+* special icon only visible to admins for easier coordination (by [11eFL] mashed)
 * Upkeep Modifier for each voroni chunk (Very Good 0.25, Good 0.5, Poor 1, Very Poor 2)
 * Check auth more often (by [1erBH] Fran-T4NK)
 * separate icon for fire rockets (by [11eFL] mashed)
@@ -25,7 +29,7 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Filter Planned/Built Rails (by [102nd] Asterム)
 * Hide icons inside areas and show them when area is selected (by [11eFL] mashed)
 * Free Hand drawing (by [RDRT] A Devil Chicken)
-* auto expiring icons (by [CHI] Arctifire)
+* auto expiring icons (by [CHI] Arctifire, [11eFL] mashed)
 * 'suggested' placement of icons by lower clearance users, to be approved by 'edit' clearance users (by [FMAT] Da Vinci)
 * comments for signs (by [FMAT] Da Vinci)
 * Partisan Rails? (new Role, Green Rail)

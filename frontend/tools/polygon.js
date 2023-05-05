@@ -169,6 +169,7 @@ class Polygon {
     this.tools.sidebar.editFeature = feature
     this.tools.sidebar.notesInput.value = feature.get('notes') || ''
     this.tools.sidebar.colorInput.value = feature.get('color').slice(0, -2)
+    this.tools.sidebar.setColorInputActive()
     this.tools.sidebar.displayForm(['color', 'notes'])
   }
 

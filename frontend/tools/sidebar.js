@@ -44,6 +44,7 @@ class Sidebar {
     this.buttonRow = document.getElementById('button-row')
     this.displayForm(['notes'])
 
+    const colorPicker = document.getElementById('color-picker')
     const defaultColor = localStorage.getItem('defaultColor');
     if (defaultColor) {
       this.colorInput.value = defaultColor;
@@ -53,6 +54,7 @@ class Sidebar {
         this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature))
       }
       localStorage.setItem('defaultColor', this.colorInput.value)
+      this.setColorInputActive()
     })
 
     this.notesInput.addEventListener('keyup', () => {
@@ -72,6 +74,13 @@ class Sidebar {
         this.editFeature.set('lineType', this.lineTypeInput.value)
       }
     })
+
+    for (const predefinedColor of colorPicker.getElementsByTagName('i')) {
+      predefinedColor.addEventListener('click', () => {
+        this.colorInput.value = this.rgb2hex(predefinedColor.style.color)
+        this.colorInput.dispatchEvent(new Event('input'))
+      })
+    }
 
     document.getElementById('save-button').addEventListener('click', () => {
       if (this.editFeature) {
@@ -109,6 +118,34 @@ class Sidebar {
       })
     }
     this.tools.on(this.tools.EVENT_TOOL_SELECTED, this.selectTool)
+  }
+
+  rgb2hex = (rgb) => {
+    function hex(x) {
+      return ("0" + parseInt(x).toString(16)).slice(-2);
+    }
+    rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(,\s*\d+\.*\d+)?\)$/);
+    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+  }
+
+  setColorInputActive = () => {
+    const colorPicker = document.getElementById('color-picker')
+    let allFalse = true
+    for (const predefinedColor of colorPicker.getElementsByTagName('i')) {
+      if (this.rgb2hex(predefinedColor.style.color) === this.colorInput.value) {
+        predefinedColor.classList.add('active')
+        allFalse = false
+      }
+      else {
+        predefinedColor.classList.remove('active')
+      }
+    }
+    if (allFalse) {
+      this.colorInput.classList.add('active')
+    }
+    else {
+      this.colorInput.classList.remove('active')
+    }
   }
 
   featureColorSuffix = (feature) => {

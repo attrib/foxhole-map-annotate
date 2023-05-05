@@ -74,7 +74,7 @@ fs.writeFileSync('user.csv', csvContent)
 
  Thank you all for your contributions and using warden.express!
 
- As always special thanks to the mod team.
+ As always special thanks to the mod team and lines maids.
 
  In addition thanks to @Quadrilus , @mashed , @Morgeta  who are responsible for over 20% of all the events!
 
