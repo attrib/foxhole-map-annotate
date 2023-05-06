@@ -44,7 +44,7 @@ class Search extends SearchFeature {
           let att = this.getSearchString(feature);
           if (att) {
             att.replaceAll("\n", ' ')
-          };
+          }
           if (att && rex.test(att)) {
             result.push(feature);
             if ((--max) <= 0) {

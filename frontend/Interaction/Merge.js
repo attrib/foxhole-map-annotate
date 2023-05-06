@@ -1,9 +1,10 @@
-const {Interaction} = require("ol/interaction");
-const {Vector: VectorSource} = require("ol/source");
-const {Vector} = require("ol/layer");
-const {Collection, Feature} = require("ol");
-const {Point, LineString} = require("ol/geom");
-const {createEditingStyle} = require("ol/style/Style");
+import {Interaction} from "ol/interaction";
+import {Vector as VectorSource} from "ol/source";
+import {Vector} from "ol/layer";
+import {Collection, Feature} from "ol";
+import {LineString, Point} from "ol/geom";
+import {createEditingStyle} from "ol/style/Style";
+
 
 class Merge extends Interaction {
   constructor(options) {
@@ -158,4 +159,4 @@ class Merge extends Interaction {
   }
 }
 
-module.exports = Merge
+export default Merge

@@ -1,4 +1,4 @@
-const MergeInteraction = require("../Interaction/Merge")
+import MergeInteraction from "../Interaction/Merge";
 
 class Merge {
 
@@ -41,4 +41,4 @@ class Merge {
 
 }
 
-module.exports = Merge
+export default Merge

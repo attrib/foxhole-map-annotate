@@ -1,18 +1,17 @@
-const Edit = require("./tools/edit");
-const Arty = require("./tools/arty");
-const {ACL_READ, hasAccess} = require("../lib/ACLS");
-const Select = require("./tools/select");
-const {Group} = require("ol/layer");
-const {GeoJSON} = require("ol/format");
-const Sidebar = require("./tools/sidebar");
-const SidebarArty = require("./tools/sidebarArty");
-const Icon = require("./tools/icon");
-const Polygon = require("./tools/polygon");
-const Line = require("./tools/line");
-const Scissor = require("./tools/scissor");
-const Merge = require("./tools/merge");
-const LayerGroup = require("ol/layer/Group").default
-
+import LayerGroup from "ol/layer/Group";
+import Edit from "./tools/edit";
+import Arty from "./tools/arty";
+import {ACL_READ, hasAccess} from "../lib/ACLS";
+import Select from "./tools/select";
+import {Group} from "ol/layer";
+import {GeoJSON} from "ol/format";
+import Sidebar from "./tools/sidebar";
+import SidebarArty from "./tools/sidebarArty";
+import Icon from "./tools/icon";
+import Polygon from "./tools/polygon";
+import Line from "./tools/line";
+import Scissor from "./tools/scissor";
+import Merge from "./tools/merge";
 
 class EditTools {
     EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -185,4 +184,4 @@ class EditTools {
 
 }
 
-module.exports = EditTools
+export default EditTools

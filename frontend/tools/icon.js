@@ -1,9 +1,9 @@
-const {Draw} = require("ol/interaction");
-const {assert} = require("ol/asserts");
-const {Style, Icon: olIcon} = require("ol/style");
-const {Vector, Group} = require("ol/layer");
-const {Collection} = require("ol");
-const {Vector: VectorSource} = require("ol/source");
+import {Draw} from "ol/interaction";
+import {assert} from "ol/asserts";
+import {Icon as olIcon, Style} from "ol/style";
+import {Group, Vector} from "ol/layer";
+import {Collection} from "ol";
+import {Vector as VectorSource} from "ol/source";
 
 class Icon {
 
@@ -270,4 +270,4 @@ class Icon {
 
 }
 
-module.exports = Icon
+export default Icon

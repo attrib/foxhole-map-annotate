@@ -12,11 +12,11 @@ import {all, noModifierKeys} from "ol/events/condition";
 import {assert} from "ol/asserts";
 import Flags from "./flags";
 import Measure from "./measure";
-const EditTools = require("./mapEditTools")
+import EditTools from "./mapEditTools";
 
 const url = new URL(window.location);
 
-var map = new Map({
+const map = new Map({
   controls: defaults(),
   target: 'map',
   layers: [
@@ -84,7 +84,7 @@ document.getElementById('map').addEventListener('contextmenu', (e) => {
 
 // Allow panning with middle mouse
 const primaryPrimaryOrMiddle = function (mapBrowserEvent) {
-  const pointerEvent = /** @type {import("../MapBrowserEvent").default} */ (
+  const pointerEvent = /** @type {import("../MapBrowserEvent")} */ (
     mapBrowserEvent
   ).originalEvent;
   assert(pointerEvent !== undefined, 56); // mapBrowserEvent must originate from a pointer event

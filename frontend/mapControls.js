@@ -1,6 +1,6 @@
-const {MousePosition} = require("ol/control");
-const LayerSwitcher = require("ol-layerswitcher");
-const Search = require("./Search");
+import {MousePosition} from "ol/control";
+import LayerSwitcher from "ol-layerswitcher";
+import Search from "./Search";
 
 const mousePositionControl = new MousePosition({
     className: 'custom-mouse-position',
@@ -17,13 +17,13 @@ const layerSwitcher = new LayerSwitcher({
     groupSelectStyle: 'children'
 });
 
-module.exports.addDefaultMapControls = function(map) {
+function addDefaultMapControls(map) {
     // map.addControl(mousePositionControl);
     map.addControl(layerSwitcher);
-    map.addControl(new Search.default());
+    map.addControl(new Search());
 }
 
-module.exports.enableLayerMemory = function enableLayerMemory(map) {
+function enableLayerMemory(map) {
     // Load saved layer visibility state from localStorage.
     LayerSwitcher.forEachRecursive(map, (layer) => {
         const title = layer.get('title');
@@ -57,7 +57,7 @@ module.exports.enableLayerMemory = function enableLayerMemory(map) {
 
 let customControlTopPosition = 3.5;
 
-module.exports.createCustomControlElement = function(label, clickHandler, options) {
+function createCustomControlElement(label, clickHandler, options) {
     const defaultOptions = {
         elementClass: '',
         buttonClass: ''
@@ -98,3 +98,5 @@ module.exports.createCustomControlElement = function(label, clickHandler, option
 
     return element;
 }
+
+export {createCustomControlElement, enableLayerMemory, addDefaultMapControls}

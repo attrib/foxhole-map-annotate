@@ -1,8 +1,9 @@
-const {createCustomControlElement} = require("./mapControls");
-const {Control} = require("ol/control");
-const {Draw} = require("ol/interaction");
-const {Overlay} = require("ol");
-const {unByKey} = require("ol/Observable");
+import {createCustomControlElement} from "./mapControls";
+import {Control} from "ol/control";
+import {Draw} from "ol/interaction";
+import {Overlay} from "ol";
+import {unByKey} from "ol/Observable";
+
 
 class Measure {
 
@@ -97,4 +98,4 @@ class Measure {
 
 }
 
-module.exports = Measure
+export default Measure

@@ -1,18 +1,16 @@
-const { Collection } = require("ol");
+import {Collection} from "ol";
+import Feature from "ol/Feature";
+import Point from "ol/geom/Point";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import Icon from "ol/style/Icon";
+import Style from "ol/style/Style";
+import Translate from "ol/interaction/Translate";
+import {Circle} from "ol/geom";
+import LineString from "ol/geom/LineString";
+import Stroke from "ol/style/Stroke";
+import Fill from "ol/style/Fill";
 
-const { default: Feature } = require("ol/Feature")
-const { default: Point } = require("ol/geom/Point");
-const { default: VectorLayer } = require("ol/layer/Vector");
-const { default: VectorSource } = require("ol/source/Vector");
-const { default: Icon } = require('ol/style/Icon');
-const { default: Style } = require('ol/style/Style');
-
-const { default: Translate } = require("ol/interaction/Translate");
-
-const { Circle } = require("ol/geom");
-const { default: LineString } = require("ol/geom/LineString");
-const { default: Stroke } = require("ol/style/Stroke");
-const { default: Fill } = require("ol/style/Fill");
 
 class SidebarArty {
 
@@ -606,4 +604,4 @@ class SidebarArty {
   
 }
 
-module.exports = SidebarArty
+export default SidebarArty

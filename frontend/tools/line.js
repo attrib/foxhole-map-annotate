@@ -1,11 +1,11 @@
-const {Draw, Snap} = require("ol/interaction");
-const {Collection, Overlay} = require("ol");
-const {Style, Stroke} = require("ol/style");
-const {LineString} = require("ol/geom");
-const {createEditingStyle} = require("ol/style/Style");
-const {Vector: VectorSource} = require("ol/source");
-const {Vector, Group} = require("ol/layer");
-const bezier = require("@turf/bezier-spline").default;
+import {Draw, Snap} from "ol/interaction";
+import {Collection, Overlay} from "ol";
+import {Stroke, Style} from "ol/style";
+import {LineString} from "ol/geom";
+import {createEditingStyle} from "ol/style/Style";
+import {Vector as VectorSource} from "ol/source";
+import {Group, Vector} from "ol/layer";
+import bezier from "@turf/bezier-spline";
 
 class Line {
 
@@ -368,4 +368,4 @@ class Line {
 
 }
 
-module.exports = Line
+export default Line

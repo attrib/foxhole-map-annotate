@@ -1,5 +1,5 @@
-const {createCustomControlElement} = require("../mapControls");
-const {Control} = require("ol/control");
+import {createCustomControlElement} from "../mapControls";
+import {Control} from "ol/control";
 
 class Arty {
 
@@ -28,5 +28,5 @@ class Arty {
 }
 
 
-module.exports = Arty
+export default Arty
 

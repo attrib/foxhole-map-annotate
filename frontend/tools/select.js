@@ -1,12 +1,13 @@
-const {never} = require("ol/events/condition");
-const {Style, Circle, Stroke, Fill} = require("ol/style");
-const {Circle: CircleGeo} = require("ol/geom")
-const {SelectEvent} = require("ol/interaction/Select");
-const {Select: OlSelect} = require("ol/interaction")
-const {Overlay, Collection, Feature} = require("ol");
-const {getTopLeft} = require("ol/extent");
-const {Vector: VectorSource} = require("ol/source");
-const {Vector} = require("ol/layer");
+import {never} from "ol/events/condition";
+import {Circle, Fill, Stroke, Style} from "ol/style";
+import {Circle as CircleGeo} from "ol/geom";
+import {SelectEvent} from "ol/interaction/Select";
+import {Select as OlSelect} from "ol/interaction";
+import {Collection, Feature, Overlay} from "ol";
+import {getTopLeft} from "ol/extent";
+import {Vector as VectorSource} from "ol/source";
+import {Vector} from "ol/layer";
+
 
 const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius', 'grid']
 const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field', 'ruler']
@@ -509,4 +510,4 @@ class Select {
 
 }
 
-module.exports = Select
+export default Select

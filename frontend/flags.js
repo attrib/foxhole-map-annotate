@@ -1,4 +1,4 @@
-const {getCenter} = require("ol/extent");
+import {getCenter} from "ol/extent";
 
 class Flags {
 
@@ -134,4 +134,4 @@ class Flags {
 }
 
 
-module.exports = Flags
+export default Flags

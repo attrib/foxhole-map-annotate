@@ -1,7 +1,8 @@
-const {createCustomControlElement} = require("../mapControls");
-const {Control} = require("ol/control");
-const {Modify} = require("ol/interaction");
-const {altKeyOnly, shiftKeyOnly, singleClick} = require("ol/events/condition");
+import {createCustomControlElement} from "../mapControls";
+import {Control} from "ol/control";
+import {Modify} from "ol/interaction";
+import {altKeyOnly, shiftKeyOnly, singleClick} from "ol/events/condition";
+
 
 class Edit {
 
@@ -78,4 +79,4 @@ class Edit {
 
 
 
-module.exports = Edit
+export default Edit

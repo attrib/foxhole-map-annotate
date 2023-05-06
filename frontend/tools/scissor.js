@@ -1,5 +1,5 @@
-const Split = require("ol-ext/interaction/Split");
-const {Vector: VectorSource} = require("ol/source");
+import Split from "ol-ext/interaction/Split";
+import {Vector as VectorSource} from "ol/source";
 
 class Scissor {
 
@@ -12,7 +12,7 @@ class Scissor {
     const fakeSource = new VectorSource({
       features: tools.line.allLinesCollection,
     });
-    this.split = new Split.default({
+    this.split = new Split({
       sources: fakeSource,
     })
 
@@ -48,4 +48,4 @@ class Scissor {
 
 }
 
-module.exports = Scissor
+export default Scissor
