@@ -70,8 +70,7 @@ class Icon {
           maxResolution: tool.maxResolution,
           declutter: tool.declutter || false,
         });
-      }
-      else {
+      } else {
         vector = new Vector({
           source: this.sources[tool.type],
           title: tool.title,
@@ -154,8 +153,7 @@ class Icon {
         if (operation === 'update') {
           this.sources[type].removeFeature(editFeature)
           this.sources[type].addFeature(feature)
-        }
-        else if (operation === 'delete') {
+        } else if (operation === 'delete') {
           this.sources[type].removeFeature(editFeature)
         }
       }
@@ -186,8 +184,7 @@ class Icon {
         this.tools.sidebar.editFeature.set('type', this.featureType, true)
         this.tools.sidebar.editFeature.set('icon', this.featureIcon)
       }
-    }
-    else {
+    } else {
       this.unselectIcon()
     }
   }

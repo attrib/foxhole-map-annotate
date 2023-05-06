@@ -24,8 +24,7 @@ class Merge {
     tools.on(tools.EVENT_TOOL_SELECTED, (selectedTool) => {
       if (selectedTool === 'merge') {
         this.toolSelected()
-      }
-      else {
+      } else {
         this.toolDeSelected()
       }
     })

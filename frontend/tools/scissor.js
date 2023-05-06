@@ -31,8 +31,7 @@ class Scissor {
     tools.on(tools.EVENT_TOOL_SELECTED, (selectedTool) => {
       if (selectedTool === 'scissor') {
         this.toolSelected()
-      }
-      else {
+      } else {
         this.toolDeSelected()
       }
     })

@@ -13,7 +13,11 @@ class Sidebar {
     this.tools = tools
 
     const offcanvas = document.getElementById('sidebar')
-    this.bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas ,{ keyboard: true, backdrop: false, scroll: true})
+    this.bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas, {
+      keyboard: true,
+      backdrop: false,
+      scroll: true
+    })
     offcanvas.addEventListener('hide.bs.offcanvas', () => {
       tools.edit.controlElement.classList.remove('selected')
       tools.changeMode(false)
@@ -124,6 +128,7 @@ class Sidebar {
     function hex(x) {
       return ("0" + parseInt(x).toString(16)).slice(-2);
     }
+
     rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(,\s*\d+\.*\d+)?\)$/);
     return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
   }
@@ -135,15 +140,13 @@ class Sidebar {
       if (this.rgb2hex(predefinedColor.style.color) === this.colorInput.value) {
         predefinedColor.classList.add('active')
         allFalse = false
-      }
-      else {
+      } else {
         predefinedColor.classList.remove('active')
       }
     }
     if (allFalse) {
       this.colorInput.classList.add('active')
-    }
-    else {
+    } else {
       this.colorInput.classList.remove('active')
     }
   }
@@ -160,8 +163,7 @@ class Sidebar {
       const tool = button.dataset.tool
       if (selectedTool === tool) {
         button.classList.add('active')
-      }
-      else {
+      } else {
         button.classList.remove('active')
       }
     }
@@ -209,8 +211,7 @@ class Sidebar {
       for (const iconList of this.ppeFilterContent.getElementsByClassName('hide-acl-icons')) {
         iconList.style.display = 'none'
       }
-    }
-    else {
+    } else {
       for (const button of this.toolButtons) {
         button.classList.remove('disabled')
         button.ariaDisabled = ''

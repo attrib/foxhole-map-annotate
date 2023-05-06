@@ -78,7 +78,7 @@ class Select {
       const multiSelect = [];
       // First click selects all features (count selected and count inside selected feature are the same)
       // nothing to cycle yet
-      const cycle = this.select.getFeatures().getLength() !==  event.selected.length
+      const cycle = this.select.getFeatures().getLength() !== event.selected.length
       // remove all other selected features, so there is only on selected feature
       while (this.select.getFeatures().getLength() > 1) {
         const feature = event.selected.pop();
@@ -176,8 +176,7 @@ class Select {
       });
       if (!value) {
         this.hideInfoBoxes()
-      }
-      else {
+      } else {
         const [feature, layer] = value;
         if (layer === null || !feature.get('type') || NO_TOOLTIP.includes(feature.get('type'))) {
           this.hideInfoBoxes()
@@ -198,8 +197,7 @@ class Select {
         const flag = this.selectOverlays[data.id].element.getElementsByClassName('flag')[0];
         if (data.flags.includes(this.tools.userId)) {
           flag.classList.replace('bi-flag', 'bi-flag-fill')
-        }
-        else {
+        } else {
           flag.classList.replace('bi-flag-fill', 'bi-flag')
         }
       }
@@ -293,12 +291,12 @@ class Select {
         })
       })]
     const trackStyleHighlight = [new Style({
-        stroke: new Stroke({
-          width: 10,
-          color: white,
-        }),
-        geometry: this.tools.line.geometryFunction
+      stroke: new Stroke({
+        width: 10,
+        color: white,
       }),
+      geometry: this.tools.line.geometryFunction
+    }),
       new Style({
         stroke: new Stroke({
           width: 7,
@@ -392,8 +390,7 @@ class Select {
     flag.dataset.id = feature.getId()
     if ((feature.get('flags') || []).includes(this.tools.userId)) {
       flag.classList.replace('bi-flag', 'bi-flag-fill')
-    }
-    else {
+    } else {
       flag.classList.replace('bi-flag-fill', 'bi-flag')
     }
   }
@@ -412,24 +409,22 @@ class Select {
 
   setClockColor = (clock, time) => {
     const diff = new Date().getTime() - time.getTime()
-    clock.getElementsByTagName('circle')[0].style.fill = this.getColorForPercentage((24 - diff/3600000)/24)
+    clock.getElementsByTagName('circle')[0].style.fill = this.getColorForPercentage((24 - diff / 3600000) / 24)
     clock.title = time.toLocaleString();
     if (diff < 3600000) {
       clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 60000), 'minute')
-    }
-    else if (diff < 86400000) {
+    } else if (diff < 86400000) {
       clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 3600000), 'hour')
-    }
-    else {
+    } else {
       clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 86400000), 'day')
     }
   }
 
   percentColors = [
-    { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
-    { pct: 0.125, color: { r: 0xff, g: 0xa0, b: 0 } },
-    { pct: 0.5, color: { r: 0xff, g: 0xe0, b: 0 } },
-    { pct: 1.0, color: { r: 0x00, g: 0xff, b: 0 } } ];
+    {pct: 0.0, color: {r: 0xff, g: 0x00, b: 0}},
+    {pct: 0.125, color: {r: 0xff, g: 0xa0, b: 0}},
+    {pct: 0.5, color: {r: 0xff, g: 0xe0, b: 0}},
+    {pct: 1.0, color: {r: 0x00, g: 0xff, b: 0}}];
 
   getColorForPercentage = (pct) => {
     let i;
@@ -493,8 +488,7 @@ class Select {
     const radius = this.radiusSource.getFeatureById('radius-' + feature.getId())
     if (radius) {
       this.radiusSource.removeFeature(radius)
-    }
-    else if (feature.get('type') in RADIUS && feature.get('icon') in RADIUS[feature.get('type')]) {
+    } else if (feature.get('type') in RADIUS && feature.get('icon') in RADIUS[feature.get('type')]) {
       const radiusInKm = RADIUS[feature.get('type')][feature.get('icon')]
       const newRadius = new Feature({
         geometry: new CircleGeo(

@@ -96,8 +96,7 @@ class Polygon {
     this.tools.on(this.tools.EVENT_TOOL_SELECTED, (selectedTool) => {
       if (selectedTool === 'polygon') {
         this.toolSelected()
-      }
-      else {
+      } else {
         this.toolDeSelected()
       }
     })
@@ -127,8 +126,7 @@ class Polygon {
         if (operation === 'update') {
           this.source.removeFeature(editFeature)
           this.source.addFeature(feature)
-        }
-        else if (operation === 'delete') {
+        } else if (operation === 'delete') {
           this.source.removeFeature(editFeature)
         }
       }
@@ -153,8 +151,7 @@ class Polygon {
       this.polygonStyle.getText().setText(notes.split("\n")[0])
       this.polygonStyle.getFill().setColor(color)
       return this.polygonStyle
-    }
-    else {
+    } else {
       return this.editingStyles[feature.getGeometry().getType()]
     }
   }

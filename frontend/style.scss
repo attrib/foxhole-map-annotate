@@ -47,10 +47,12 @@ div#mouse-position-content {
 
 .ts-wrapper .ts-control {
   max-height: 3rem;
+
   .item img {
     margin-right: 5px;
   }
 }
+
 button.overlay-button {
   border-radius: 1rem;
   font-size: 1rem;
@@ -93,7 +95,7 @@ button.overlay-button {
   width: 50%;
 }
 
-.layer-switcher  {
+.layer-switcher {
   li input, .group button {
     height: 1.5em;
   }
@@ -101,6 +103,7 @@ button.overlay-button {
 
 .feature-search {
   z-index: 10;
+
   ul {
     border-radius: 4px;
   }
@@ -112,15 +115,19 @@ button.overlay-button {
     left: 10%;
     width: 0;
   }
+
   input.public {
     background-color: #7a4501;
   }
+
   input.private {
     background-color: #7a4501;
   }
+
   input.enemy {
     background-color: #da251d;
   }
+
   input {
     width: 100%;
     appearance: none;
@@ -128,9 +135,11 @@ button.overlay-button {
     border-radius: 50px;
     opacity: 0;
   }
+
   input:hover {
     cursor: pointer;
   }
+
   input:checked {
     opacity: 1;
   }
@@ -146,6 +155,7 @@ button.overlay-button {
     display: grid;
     grid-template-columns: auto auto auto auto;
     gap: 1px;
+
     .btn {
       border: none;
       border-radius: 0;
@@ -176,6 +186,7 @@ button.overlay-button {
 
 #war-score {
   display: none;
+
   .team-score {
     margin: 0 15px;
   }

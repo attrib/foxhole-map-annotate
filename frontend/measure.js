@@ -17,8 +17,7 @@ class Measure {
     const controlElement = createCustomControlElement('rulers', (e, selected) => {
       if (selected) {
         this.displayRuler()
-      }
-      else {
+      } else {
         this.removeRuler()
       }
     }, {
@@ -82,11 +81,11 @@ class Measure {
     let length = 0;
     const coordinates = line.getCoordinates()
     for (let i = 0; i < coordinates.length - 1; i++) {
-      length += Math.sqrt(Math.pow(coordinates[i][0] - coordinates[i+1][0], 2) + Math.pow(coordinates[i][1] - coordinates[i+1][1], 2))
+      length += Math.sqrt(Math.pow(coordinates[i][0] - coordinates[i + 1][0], 2) + Math.pow(coordinates[i][1] - coordinates[i + 1][1], 2))
     }
     length = length / this.MAGIC_MAP_SCALING_FACTOR;
     if (coordinates.length === 2) {
-      let azi = (((Math.atan2(coordinates[0][0] - coordinates[1][0], coordinates[0][1] - coordinates[1][1]) *(180/Math.PI))+360)%360)-180
+      let azi = (((Math.atan2(coordinates[0][0] - coordinates[1][0], coordinates[0][1] - coordinates[1][1]) * (180 / Math.PI)) + 360) % 360) - 180
       if (azi < 0) {
         azi += 360
       }

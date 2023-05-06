@@ -169,8 +169,7 @@ class StaticLayers {
       style: (feature) => {
         if (feature.get('text') !== undefined) {
           gridLineStyle.getText().setText(feature.get('text'))
-        }
-        else {
+        } else {
           gridLineStyle.getText().setText(null)
         }
         return gridLineStyle;
@@ -267,7 +266,7 @@ class StaticLayers {
     map.on('moveend', this.gridLoader)
 
     if (window.innerWidth > 990) {
-      document.getElementById('war-score').style.display='flex'
+      document.getElementById('war-score').style.display = 'flex'
     }
   }
 
@@ -312,18 +311,16 @@ class StaticLayers {
       let color = undefined
       if (flags & 0x10) {
         color = '#c00000'
-      }
-      else if (team === 'Warden') {
+      } else if (team === 'Warden') {
         color = '#245682'
-      }
-      else if (team === 'Colonial') {
+      } else if (team === 'Colonial') {
         color = '#516C4B'
       }
       this.cachedIconStyle[cacheKey] = new Style({
         image: new Icon({
           src: `/images/${feature.get('type')}/${feature.get('icon')}.png`,
           color: color,
-          scale: (feature.get('type') === 'town' || feature.get('type') === 'field' || feature.get('type') === 'stormCannon') ? 2/3 : 1,
+          scale: (feature.get('type') === 'town' || feature.get('type') === 'field' || feature.get('type') === 'stormCannon') ? 2 / 3 : 1,
         }),
         zIndex: icon === 'MapIconSafehouse' ? 0 : undefined,
       });
@@ -334,11 +331,9 @@ class StaticLayers {
         let color = '#a0a0a077'
         if (flags & 0x10) {
           color = '#c0000077'
-        }
-        else if (team === 'Warden' && (flags & 0x20)) {
+        } else if (team === 'Warden' && (flags & 0x20)) {
           color = '#24568277'
-        }
-        else if (team === 'Colonial' && (flags & 0x20)) {
+        } else if (team === 'Colonial' && (flags & 0x20)) {
           color = '#516C4B77'
         }
         this.cachedIconStyle[cacheKeyFlag] = new Style({
@@ -378,8 +373,7 @@ class StaticLayers {
           if (voronoi) {
             if (data.flags & 0x10) {
               voronoi.set('team', 'Nuked')
-            }
-            else {
+            } else {
               voronoi.set('team', data.team)
             }
           }
@@ -397,8 +391,7 @@ class StaticLayers {
       if (data.type === 'stormCannon') {
         if (!data.destroyed) {
           this.sources.stormCannon.addFeature(this.createStormCannonFeature(id, data))
-        }
-        else {
+        } else {
           const stormCannon = this.sources.stormCannon.getFeatureById(id)
           if (stormCannon) {
             this.sources.stormCannon.removeFeature(stormCannon)
@@ -524,8 +517,7 @@ class StaticLayers {
           if (feature.get('town') in this.conquerStatus.features) {
             if (this.conquerStatus.features[feature.get('town')].flags & 0x10) {
               feature.set('team', 'Nuked')
-            }
-            else {
+            } else {
               feature.set('team', this.conquerStatus.features[feature.get('town')].team)
             }
           }
@@ -542,8 +534,7 @@ class StaticLayers {
           if (feature.type === 'stormCannon') {
             if (feature.destroyed) {
               delete this.conquerStatus.features[id]
-            }
-            else {
+            } else {
               stormCannons.push(this.createStormCannonFeature(id, feature))
             }
           }
@@ -578,11 +569,9 @@ class StaticLayers {
       }
       if (flags & 0x10) {
         requiredVictoryPoints--
-      }
-      else if (flags & 0x20) {
+      } else if (flags & 0x20) {
         score[feature.get('team')]++
-      }
-      else if (flags & 0x01) {
+      } else if (flags & 0x01) {
         score[feature.get('team') + 'Unclaimed']++
       }
     })
@@ -612,33 +601,33 @@ class StaticLayers {
 
     const features = []
     const extent = region.getGeometry().getExtent();
-    for (let i=0;i<=17;i++) {
+    for (let i = 0; i <= 17; i++) {
       const line = new Feature({
-        geometry: new LineString([[extent[0] + i*125*0.94, extent[1]], [extent[0] + i*125*0.94, extent[3]]]),
+        geometry: new LineString([[extent[0] + i * 125 * 0.94, extent[1]], [extent[0] + i * 125 * 0.94, extent[3]]]),
         type: 'grid',
         region: region.getId(),
       })
       features.push(line)
       const point = new Feature({
-        geometry: new Point([extent[0] + i*125*0.94 + 62.5*0.94, extent[3] - 15]),
+        geometry: new Point([extent[0] + i * 125 * 0.94 + 62.5 * 0.94, extent[3] - 15]),
         type: 'grid',
         region: region.getId(),
         text: String.fromCharCode(97 + i).toUpperCase()
       })
       features.push(point)
     }
-    for (let i=0;i<=15;i++) {
+    for (let i = 0; i <= 15; i++) {
       const line = new Feature({
-        geometry: new LineString([[extent[0], extent[3]-i*125*0.94], [extent[2], extent[3]-i*125*0.94]]),
+        geometry: new LineString([[extent[0], extent[3] - i * 125 * 0.94], [extent[2], extent[3] - i * 125 * 0.94]]),
         type: 'grid',
         region: region.getId(),
       })
       features.push(line)
       const point = new Feature({
-        geometry: new Point([extent[0] + 15, extent[3] - i*125*0.94 - 62.5*0.94]),
+        geometry: new Point([extent[0] + 15, extent[3] - i * 125 * 0.94 - 62.5 * 0.94]),
         type: 'grid',
         region: region.getId(),
-        text: (i+1).toString()
+        text: (i + 1).toString()
       })
       features.push(point)
     }

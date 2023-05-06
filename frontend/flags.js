@@ -16,7 +16,11 @@ class Flags {
     this.template = document.getElementById('flaggedTemplate').content
 
     const offcanvas = document.getElementById('flags')
-    this.bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas ,{ keyboard: true, backdrop: false, scroll: true})
+    this.bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas, {
+      keyboard: true,
+      backdrop: false,
+      scroll: true
+    })
     offcanvas.addEventListener('show.bs.offcanvas', () => {
       divFlagged.innerHTML = ''
       const features = []
@@ -66,8 +70,7 @@ class Flags {
         const element = document.getElementById('flag-' + id)
         if (flags.length === 0 && element) {
           element.remove();
-        }
-        else if (flags.length > 0 && !element) {
+        } else if (flags.length > 0 && !element) {
           const feature = this.findFeature(id, type)
           if (feature) {
             divFlagged.append(this.createFlaggedItem(feature))
@@ -101,11 +104,9 @@ class Flags {
     flaggedItem.querySelector('tr').id = 'flag-' + feature.getId()
     if (feature.get('type') === 'line') {
       flaggedItem.querySelector('.icon').innerHTML = '<i class="bi bi-pencil"></i>'
-    }
-    else if (feature.get('type') === 'polygon') {
+    } else if (feature.get('type') === 'polygon') {
       flaggedItem.querySelector('.icon').innerHTML = '<i class="bi bi-hexagon"></i>'
-    }
-    else {
+    } else {
       flaggedItem.querySelector('.icon').innerHTML = '<img src="' + this.tools.icon.getImageUrl(feature) + '">'
     }
     flaggedItem.querySelector('.user').innerHTML = feature.get('user')

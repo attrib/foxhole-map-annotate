@@ -32,16 +32,16 @@ const map = new Map({
           source: new TileImage({
             attributions: '<a href="https://sentsu.itch.io/foxhole-better-map-mod" target="_blank">Sentsu</a> + <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
             tileGrid: new TileGrid({
-              extent: [0,-12432,11279,0],
-              origin: [0,-12432],
-              resolutions: [64,32,16,8,4,2,1],
+              extent: [0, -12432, 11279, 0],
+              origin: [0, -12432],
+              resolutions: [64, 32, 16, 8, 4, 2, 1],
               tileSize: [256, 256]
             }),
-            tileUrlFunction: function(tileCoord) {
+            tileUrlFunction: function (tileCoord) {
               return ('/map/{z}/{x}/{y}.webp'
                 .replace('{z}', String(tileCoord[0]))
                 .replace('{x}', String(tileCoord[1]))
-                .replace('{y}', String(- 1 - tileCoord[2])));
+                .replace('{y}', String(-1 - tileCoord[2])));
             },
           })
         }),
@@ -67,8 +67,15 @@ map.on('moveend', (event) => {
 
 addDefaultMapControls(map)
 
-const warFeatures = localStorage.getItem('warFeatures') ? JSON.parse(localStorage.getItem('warFeatures')) : {version: '', features: [], deactivatedRegions: []}
-const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {version: '', features: {}}
+const warFeatures = localStorage.getItem('warFeatures') ? JSON.parse(localStorage.getItem('warFeatures')) : {
+  version: '',
+  features: [],
+  deactivatedRegions: []
+}
+const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {
+  version: '',
+  features: {}
+}
 const staticLayer = new StaticLayers(map, conquerStatus, warFeatures)
 const tools = new EditTools(map);
 tools.staticLayer = staticLayer;
@@ -110,8 +117,7 @@ socket.on('init', (data) => {
   tools.initAcl(data.acl)
   if (lastClientVersion === null) {
     lastClientVersion = data.version
-  }
-  else if (lastClientVersion !== data.version) {
+  } else if (lastClientVersion !== data.version) {
     console.log('Version change detected, reloading page')
     window.location = '/'
   }
@@ -271,17 +277,19 @@ socket.on('close', () => {
   disconnectedWarning.style.display = 'block'
 })
 
-const rtf = new Intl.RelativeTimeFormat('en', { style: 'long' })
+const rtf = new Intl.RelativeTimeFormat('en', {style: 'long'})
+
 function prepareWarTimer() {
   if (!prepareWarTimerElement.dataset.conquestEndTime) {
     return
   }
   const hours = (parseInt(prepareWarTimerElement.dataset.conquestEndTime) + 43200000 - Date.now()) / 3600000
   const minutes = (hours - Math.floor(hours)) * 60
-  const formattedMinutes = rtf.formatToParts(Math.floor(minutes),'minute')
-  prepareWarTimerElement.innerHTML = rtf.format(Math.floor(hours),'hour') + ' ' + formattedMinutes[1].value + ' ' + formattedMinutes[2].value
+  const formattedMinutes = rtf.formatToParts(Math.floor(minutes), 'minute')
+  prepareWarTimerElement.innerHTML = rtf.format(Math.floor(hours), 'hour') + ' ' + formattedMinutes[1].value + ' ' + formattedMinutes[2].value
   prepareWarTimerTimoutId = setTimeout(prepareWarTimer, 30000)
 }
+
 if (document.getElementById('resistance').style.display === '') {
   prepareWarTimer()
 }

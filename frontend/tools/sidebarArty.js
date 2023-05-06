@@ -137,7 +137,7 @@ class SidebarArty {
 
   solutionDistance = 0;
   solutionAzimuth = 0;
-  
+
 
   editFeature = null
 
@@ -150,7 +150,11 @@ class SidebarArty {
     this.tools = tools
 
     const offcanvas = document.getElementById('sidebarArty')
-    this.bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas, { keyboard: true, backdrop: false, scroll: true })
+    this.bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas, {
+      keyboard: true,
+      backdrop: false,
+      scroll: true
+    })
     offcanvas.addEventListener('hide.bs.offcanvas', () => {
       tools.edit.controlElement.classList.remove('selected')
       tools.changeMode(false)
@@ -196,12 +200,12 @@ class SidebarArty {
     this.g = this.artilleryList["Tube Mortars"];
 
     //this is silly but oh well
-    document.getElementById("ws0").onclick= () => this.setWindStr();
-    document.getElementById("ws1").onclick= () => this.setWindStr();
-    document.getElementById("ws2").onclick= () => this.setWindStr();
-    document.getElementById("ws3").onclick= () => this.setWindStr();
-    document.getElementById("ws4").onclick= () => this.setWindStr();
-    document.getElementById("ws5").onclick= () => this.setWindStr();
+    document.getElementById("ws0").onclick = () => this.setWindStr();
+    document.getElementById("ws1").onclick = () => this.setWindStr();
+    document.getElementById("ws2").onclick = () => this.setWindStr();
+    document.getElementById("ws3").onclick = () => this.setWindStr();
+    document.getElementById("ws4").onclick = () => this.setWindStr();
+    document.getElementById("ws5").onclick = () => this.setWindStr();
 
     //document.getElementById("wd0").onchange= () => this.setWindDir();
     document.getElementById("wd0").onchange = () => this.setWindDir();
@@ -300,30 +304,30 @@ class SidebarArty {
     });
 
     const gunVectorStyle = new Style({
-      stroke : new Stroke({
+      stroke: new Stroke({
         width: 2,
-        color : [0,0,0,1],
-        lineDash : [0, 8, 4, 8]
+        color: [0, 0, 0, 1],
+        lineDash: [0, 8, 4, 8]
       })
     })
 
     const windVectorStyle = new Style({
-      stroke : new Stroke({
+      stroke: new Stroke({
         width: 2,
-        color : [255,255,255,1],
-        
+        color: [255, 255, 255, 1],
+
       })
     })
 
     const precisionRadiusStyle = new Style({
-      stroke : new Stroke({
+      stroke: new Stroke({
         width: 2,
-        color : [255,255,255,0],
-        
+        color: [255, 255, 255, 0],
+
       }),
-      fill : new Fill({
-        color : [0,0,0,.2],
-        
+      fill: new Fill({
+        color: [0, 0, 0, .2],
+
       })
     })
 
@@ -352,9 +356,9 @@ class SidebarArty {
     this.dirWind = dirWind
 
     const windPips = [5];
-    for (let i = 0; i<5; i++) {
+    for (let i = 0; i < 5; i++) {
       windPips[i] = new Feature({
-        geometry: new Point([0,0]),
+        geometry: new Point([0, 0]),
         type: 'radius',
         style: iconWindPip
       })
@@ -362,16 +366,16 @@ class SidebarArty {
       this.windVectorLayer.addFeature(windPips[i])
     }
     this.windPips = windPips;
-    
+
 
     const vectorSolution = new Feature({
-      geometry: new LineString([[0,0],[0,0]]),
+      geometry: new LineString([[0, 0], [0, 0]]),
       type: 'radius'
     });
     this.vectorSolution = vectorSolution
 
     const vectorWindOffsets = new Feature({
-      geometry: new LineString([[0,0],[0,0]]),
+      geometry: new LineString([[0, 0], [0, 0]]),
       type: 'radius'
     });
     this.vectorWindOffsets = vectorWindOffsets
@@ -443,10 +447,10 @@ class SidebarArty {
 
   selectGun(gun) {
     document.getElementById("artyPieceButton").innerText = gun
-   
+
     this.g = this.artilleryList[gun];
     //console.log("gunstats asd " +this.g.toString() + "Max:" + this.g.max);
-    
+
     this.minRadius.getGeometry().setRadius(this.artilleryList[gun].min);
     this.maxRadius.getGeometry().setRadius(this.artilleryList[gun].max);
     this.setWindOff();
@@ -467,15 +471,14 @@ class SidebarArty {
   setWindDir = () => {
 
     //makes scrolling and arrow buttons loop, most of the time
-    if (document.getElementById("wd0").value >= 360){
+    if (document.getElementById("wd0").value >= 360) {
       document.getElementById("wd0").value = 0;
-    }
-    else if (document.getElementById("wd0").value <= 0){
+    } else if (document.getElementById("wd0").value <= 0) {
       document.getElementById("wd0").value = 360;
     }
 
     this.windDirection = document.getElementById("wd0").value
-    
+
 
     //converting angle angles to compass angles
     /*
@@ -485,7 +488,7 @@ class SidebarArty {
     }
     this.windDirection = 360 - this.windDirection;
     */
-    
+
     this.calcWind();
   }
 
@@ -493,10 +496,10 @@ class SidebarArty {
     let scatter = (((this.g.maxAcc - this.g.minAcc) / (this.g.max - this.g.min)) * ((this.vectorSolution.getGeometry().getLength()) - this.g.min) + this.g.minAcc);
     this.precisionRadius.getGeometry().setRadius(scatter);
 
-    if (this.vectorSolution.getGeometry().getLength() > this.g.max){
+    if (this.vectorSolution.getGeometry().getLength() > this.g.max) {
       this.precisionRadius.getGeometry().setRadius(this.g.maxAcc);
     }
-    if (this.vectorSolution.getGeometry().getLength() < this.g.min){
+    if (this.vectorSolution.getGeometry().getLength() < this.g.min) {
       this.precisionRadius.getGeometry().setRadius(this.g.minAcc);
     }
   }
@@ -507,26 +510,26 @@ class SidebarArty {
   }
 
   calcWind = () => {
-    
-    this.targetWindOffsetY = this.windStrength * this.windOffset * Math.cos(this.windDirection*(Math.PI/180))
-    this.targetWindOffsetX = this.windStrength * this.windOffset * Math.sin(this.windDirection*(Math.PI/180))
-    
-    this.targetWind.getGeometry().setCoordinates([this.target.getGeometry().getCoordinates()[0]-this.targetWindOffsetX,this.target.getGeometry().getCoordinates()[1]-this.targetWindOffsetY])
-    
 
-    this.targetWindOffsetYSingle = this.windOffset * Math.cos(this.windDirection*(Math.PI/180))
-    this.targetWindOffsetXSingle = this.windOffset * Math.sin(this.windDirection*(Math.PI/180))
+    this.targetWindOffsetY = this.windStrength * this.windOffset * Math.cos(this.windDirection * (Math.PI / 180))
+    this.targetWindOffsetX = this.windStrength * this.windOffset * Math.sin(this.windDirection * (Math.PI / 180))
 
-    this.vectorWindOffsets.getGeometry().setCoordinates([[this.target.getGeometry().getCoordinates()[0]+this.targetWindOffsetXSingle*1,this.target.getGeometry().getCoordinates()[1]+this.targetWindOffsetYSingle*1],this.target.getGeometry().getCoordinates()]);
+    this.targetWind.getGeometry().setCoordinates([this.target.getGeometry().getCoordinates()[0] - this.targetWindOffsetX, this.target.getGeometry().getCoordinates()[1] - this.targetWindOffsetY])
 
-    this.dirWind.getGeometry().setCoordinates([this.target.getGeometry().getCoordinates()[0]+this.targetWindOffsetXSingle*1,this.target.getGeometry().getCoordinates()[1]+this.targetWindOffsetYSingle*1]);
-    this.dirWind.getStyle().getImage().setRotation(this.windDirection * (Math.PI/180));
 
-    for (let i = 1; i < 6; i++){
-      const newCoord = [this.target.getGeometry().getCoordinates()[0]-this.targetWindOffsetXSingle*i,this.target.getGeometry().getCoordinates()[1]-this.targetWindOffsetYSingle*i]
+    this.targetWindOffsetYSingle = this.windOffset * Math.cos(this.windDirection * (Math.PI / 180))
+    this.targetWindOffsetXSingle = this.windOffset * Math.sin(this.windDirection * (Math.PI / 180))
+
+    this.vectorWindOffsets.getGeometry().setCoordinates([[this.target.getGeometry().getCoordinates()[0] + this.targetWindOffsetXSingle * 1, this.target.getGeometry().getCoordinates()[1] + this.targetWindOffsetYSingle * 1], this.target.getGeometry().getCoordinates()]);
+
+    this.dirWind.getGeometry().setCoordinates([this.target.getGeometry().getCoordinates()[0] + this.targetWindOffsetXSingle * 1, this.target.getGeometry().getCoordinates()[1] + this.targetWindOffsetYSingle * 1]);
+    this.dirWind.getStyle().getImage().setRotation(this.windDirection * (Math.PI / 180));
+
+    for (let i = 1; i < 6; i++) {
+      const newCoord = [this.target.getGeometry().getCoordinates()[0] - this.targetWindOffsetXSingle * i, this.target.getGeometry().getCoordinates()[1] - this.targetWindOffsetYSingle * i]
       this.vectorWindOffsets.getGeometry().appendCoordinate(newCoord);
-      
-      this.windPips[i-1].getGeometry().setCoordinates(newCoord);
+
+      this.windPips[i - 1].getGeometry().setCoordinates(newCoord);
     }
 
     this.calcVector();
@@ -536,29 +539,29 @@ class SidebarArty {
 
   calcVector = () => {
 
-    this.vectorSolution.getGeometry().setCoordinates([this.sender.getGeometry().getCoordinates(),this.targetWind.getGeometry().getCoordinates()])
+    this.vectorSolution.getGeometry().setCoordinates([this.sender.getGeometry().getCoordinates(), this.targetWind.getGeometry().getCoordinates()])
 
     //what we've all been waiting for
     this.solutionDistance = this.vectorSolution.getGeometry().getLength() / this.tools.MAGIC_MAP_SCALING_FACTOR
-    document.getElementById('solutionD').innerHTML = String(Math.round(this.solutionDistance)).padStart(3,'0');
+    document.getElementById('solutionD').innerHTML = String(Math.round(this.solutionDistance)).padStart(3, '0');
 
-    
+
     //I hate angles
-    this.solutionAzimuth = Math.atan2(this.targetWind.getGeometry().getCoordinates()[1] - this.sender.getGeometry().getCoordinates()[1],this.targetWind.getGeometry().getCoordinates()[0] - this.sender.getGeometry().getCoordinates()[0])
+    this.solutionAzimuth = Math.atan2(this.targetWind.getGeometry().getCoordinates()[1] - this.sender.getGeometry().getCoordinates()[1], this.targetWind.getGeometry().getCoordinates()[0] - this.sender.getGeometry().getCoordinates()[0])
 
-    this.solutionAzimuth = this.solutionAzimuth*(180/Math.PI)
-    
+    this.solutionAzimuth = this.solutionAzimuth * (180 / Math.PI)
+
     this.solutionAzimuth = (this.solutionAzimuth + 360) % 360
 
-    this.solutionAzimuth = -(this.solutionAzimuth - 90 % 360) 
-    if (this.solutionAzimuth < 0){
-      this.solutionAzimuth = 360+this.solutionAzimuth
+    this.solutionAzimuth = -(this.solutionAzimuth - 90 % 360)
+    if (this.solutionAzimuth < 0) {
+      this.solutionAzimuth = 360 + this.solutionAzimuth
     }
-    
+
 
     //console.log (Config.basic.color);
-    document.getElementById('solutionA').innerHTML = String(this.solutionAzimuth.toFixed(1)).padStart(5,'0');
-    
+    document.getElementById('solutionA').innerHTML = String(this.solutionAzimuth.toFixed(1)).padStart(5, '0');
+
   }
 
   copySolution = () => {
@@ -601,7 +604,7 @@ class SidebarArty {
     this.bsOffcanvas.hide()
     this.vector.setVisible(false);
   }
-  
+
 }
 
 export default SidebarArty

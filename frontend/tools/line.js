@@ -57,8 +57,7 @@ class Line {
               const coords = this.sketchFeature.getGeometry().getCoordinates();
               this.confirmOverlay.setPosition(coords[coords.length - 1])
               this.cancelOverlay.setPosition(coords[coords.length - 1])
-            }
-            else {
+            } else {
               this.confirmOverlay.setPosition(undefined)
               this.cancelOverlay.setPosition(undefined)
               if (!(this.sketchFeature || needSecondAbortClick)) {
@@ -147,8 +146,7 @@ class Line {
     tools.on(tools.EVENT_TOOL_SELECTED, (selectedTool) => {
       if (selectedTool === 'line') {
         this.toolSelected()
-      }
-      else {
+      } else {
         this.toolDeSelected()
       }
     })
@@ -185,8 +183,7 @@ class Line {
         if (editFeature && operation === 'update') {
           this.allLinesCollection.remove(editFeature)
           this.allLinesCollection.push(feature)
-        }
-        else if (editFeature && operation === 'delete') {
+        } else if (editFeature && operation === 'delete') {
           this.allLinesCollection.remove(editFeature)
         }
       }
@@ -291,7 +288,7 @@ class Line {
   }
 
   /**
-   * Takes an OpenLayer Feature and returns a width 
+   * Takes an OpenLayer Feature and returns a width
    * @param {import("ol").Feature} feature - OpenLayer Feature
    * @param {string} lineTypeInput - Optional: Provide a line type to get width of
    * @returns {number} Width size
@@ -301,7 +298,7 @@ class Line {
     switch (lineType) {
       case 'siding':
         return 3;
-      
+
       case 'lightRail':
         return 2;
 
@@ -348,15 +345,15 @@ class Line {
         ]
         if (feature.get('lineType') === 'lightRail') {
           clanLine.push(
-              new Style({
-                stroke: new Stroke({
-                  color: feature.get('color'),
-                  width: 10,
-                  lineDash: [1.5, 30],
-                  lineCap: 'butt'
-                }),
-                geometry: this.geometryFunction
-              })
+            new Style({
+              stroke: new Stroke({
+                color: feature.get('color'),
+                width: 10,
+                lineDash: [1.5, 30],
+                lineCap: 'butt'
+              }),
+              geometry: this.geometryFunction
+            })
           )
         }
         return clanLine

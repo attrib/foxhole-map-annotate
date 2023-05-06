@@ -1,4 +1,3 @@
-
 addListeners(document)
 
 function addListeners(target) {
@@ -44,8 +43,7 @@ function addListeners(target) {
   }
 }
 
-function changeInputNames(discordIdInput)
-{
+function changeInputNames(discordIdInput) {
   const changeNeeded = discordIdInput.parentElement.parentElement.getElementsByClassName('discordIdChange')
   for (const input of changeNeeded) {
     input.name = input.name.replace(/\[discords\]\[\d*\]/, `[discords][${discordIdInput.value}]`)

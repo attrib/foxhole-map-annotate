@@ -3,14 +3,11 @@ import {Control} from "ol/control";
 
 class Arty {
 
- 
- 
   /**
    * @param {EditTools} tools
    * @param {import("ol").Map} map
    */
-  
-  constructor(tools, map){
+  constructor(tools, map) {
     this.map = map
     this.tools = tools
     this.controlElement = createCustomControlElement('triangle', (e, selected) => {

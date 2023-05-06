@@ -111,8 +111,7 @@ class Merge extends Interaction {
       }
       if (this.sketch.get('last')) {
         coords.push(...coords2)
-      }
-      else {
+      } else {
         coords.reverse().push(...coords2)
       }
 

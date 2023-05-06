@@ -13,8 +13,7 @@ class Socket {
         if (this.disconnectTimer === null) {
           this.disconnectTimer = setTimeout(this.disconnect, 1800000) // Disconnect after 30min idle
         }
-      }
-      else {
+      } else {
         if (this.disconnectTimer !== null) {
           clearTimeout(this.disconnectTimer)
           this.disconnectTimer = null
@@ -41,7 +40,7 @@ class Socket {
     this.socket = new WebSocket(location.protocol.replace('http', 'ws') + '//' + location.host);
     // Connection opened
     this.socket.addEventListener('open', (event) => {
-      this.socketClosed=false;
+      this.socketClosed = false;
       console.log('Websocket connected');
       this.emit('open', this.socket)
       if (cb && typeof cb === 'function') {
@@ -54,8 +53,7 @@ class Socket {
       const data = JSON.parse(event.data);
       if (data.type === 'pong') {
         pingTimeout = this.ping()
-      }
-      else {
+      } else {
         this.emit(data.type, data.data)
       }
     });
@@ -86,8 +84,7 @@ class Socket {
       this.connect(() => {
         this.send(type, data)
       });
-    }
-    else {
+    } else {
       const sendData = {
         type
       }
