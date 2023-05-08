@@ -8,6 +8,8 @@ import {easeOut} from "ol/easing";
 import {getVectorContext} from "ol/render";
 import {unByKey} from "ol/Observable";
 import {LineString, Point} from "ol/geom";
+import {createApp, reactive} from "vue";
+import VPCounter from "./Components/VPCounter.vue";
 
 class StaticLayers {
 
@@ -58,6 +60,7 @@ class StaticLayers {
         features: new Collection(),
       })
     }
+    this.sources.town = reactive(this.sources.town)
 
     this.labelStyle = [
       new Style({
@@ -268,6 +271,11 @@ class StaticLayers {
     if (window.innerWidth > 990) {
       document.getElementById('war-score').style.display = 'flex'
     }
+
+    createApp(VPCounter, {
+        townFeatures: this.sources.town,
+        totalScore: this.conquerStatus.requiredVictoryTowns,
+    }).mount('#war-score')
   }
 
   regionStyle = (feature) => {
@@ -400,7 +408,6 @@ class StaticLayers {
         }
       }
     }
-    this.updateScore()
   }
 
   warFeaturesUpdate = () => {
@@ -541,7 +548,6 @@ class StaticLayers {
         }
         this.sources.stormCannon.clear(true)
         this.sources.stormCannon.addFeatures(stormCannons)
-        this.updateScore()
       }
     }
     xhr.send();
@@ -557,31 +563,6 @@ class StaticLayers {
     });
     feat.setId(id)
     return feat
-  }
-
-  updateScore = () => {
-    let requiredVictoryPoints = this.conquerStatus.requiredVictoryTowns || 32
-    const score = {Warden: 0, Colonial: 0, None: 0, WardenUnclaimed: 0, ColonialUnclaimed: 0, NoneUnclaimed: 0}
-    this.sources.town.forEachFeature((feature) => {
-      const flags = feature.get('iconFlags') || 0
-      if (!(flags & 0x01)) {
-        return
-      }
-      if (flags & 0x10) {
-        requiredVictoryPoints--
-      } else if (flags & 0x20) {
-        score[feature.get('team')]++
-      } else if (flags & 0x01) {
-        score[feature.get('team') + 'Unclaimed']++
-      }
-    })
-    for (let total of document.getElementsByClassName('total-score')) {
-      total.innerHTML = requiredVictoryPoints.toString()
-    }
-    const unclaimedPrefix = '<span title="Not yet claimed!">(+'
-    const unclaimedSuffix = ')</span>'
-    document.getElementById('colonial-score').innerHTML = score.Colonial.toString() + (score.ColonialUnclaimed > 0 ? unclaimedPrefix + score.ColonialUnclaimed.toString() + unclaimedSuffix : '')
-    document.getElementById('warden-score').innerHTML = score.Warden.toString() + (score.WardenUnclaimed > 0 ? unclaimedPrefix + score.WardenUnclaimed.toString() + unclaimedSuffix : '')
   }
 
   loadedGrid = null

@@ -17,6 +17,7 @@ module.exports = merge(common, {
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production'),
+        '__VUE_PROD_DEVTOOLS__': JSON.stringify(false),
       }
     }),
   ]
