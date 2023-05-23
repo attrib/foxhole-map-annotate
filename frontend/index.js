@@ -74,7 +74,8 @@ const warFeatures = localStorage.getItem('warFeatures') ? JSON.parse(localStorag
 }
 const conquerStatus = localStorage.getItem('conquerStatus') ? JSON.parse(localStorage.getItem('conquerStatus')) : {
   version: '',
-  features: {}
+  features: {},
+  warNumber: 0,
 }
 const staticLayer = new StaticLayers(map, conquerStatus, warFeatures)
 const tools = new EditTools(map);
@@ -202,6 +203,9 @@ socket.on('conquer', (data) => {
     return
   }
   if (!data.full && data.oldVersion !== conquerStatus.version) {
+    if (conquerStatus.warNumber !== data.warNumber) {
+      staticLayer.resetWar()
+    }
     socket.send('getConquerStatus', true)
     return
   }
@@ -211,6 +215,7 @@ socket.on('conquer', (data) => {
   staticLayer.conquerUpdate(data.features, !data.full)
   conquerStatus.version = data.version
   conquerStatus.features = data.full ? data.features : {...conquerStatus.features, ...data.features}
+  conquerStatus.warNumber = data.warNumber
   if (warFeatures.version !== data.warVersion) {
     socket.send('getWarFeatures', true)
   }
@@ -241,6 +246,7 @@ socket.on('warEnded', (data) => {
 socket.on('warPrepare', (data) => {
   conquerStatus.version = ''
   conquerStatus.features = {}
+  conquerStatus.warNumber = data.warNumber
   warFeatures.features = []
   warFeatures.deactivatedRegions = []
   warFeatures.version = ''
@@ -257,6 +263,7 @@ socket.on('warPrepare', (data) => {
 socket.on('warChange', (data) => {
   conquerStatus.version = ''
   conquerStatus.features = {}
+  conquerStatus.warNumber = data.warNumber
   warFeatures.features = []
   warFeatures.deactivatedRegions = []
   warFeatures.version = ''
