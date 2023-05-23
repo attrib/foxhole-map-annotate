@@ -202,10 +202,10 @@ socket.on('conquer', (data) => {
   if (conquerStatus.version === data.version) {
     return
   }
+  if (conquerStatus.warNumber !== data.warNumber) {
+    staticLayer.resetWar()
+  }
   if (!data.full && data.oldVersion !== conquerStatus.version) {
-    if (conquerStatus.warNumber !== data.warNumber) {
-      staticLayer.resetWar()
-    }
     socket.send('getConquerStatus', true)
     return
   }
