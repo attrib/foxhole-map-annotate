@@ -445,9 +445,9 @@ class StaticLayers {
 
   resetWar = () => {
     this.deactivatedLayer.getSource().clear()
-    this.sources.stormCannon.getSource().clear()
-    this.sources.industry.getSource().clear()
-    this.sources.field.getSource().clear()
+    this.sources.stormCannon.clear()
+    this.sources.industry.clear()
+    this.sources.field.clear()
     for (const type in this.sources) {
       this.sources[type].forEachFeature((feature) => {
         if (feature.get('icon')?.startsWith('MapIconTownBaseTier')) {
