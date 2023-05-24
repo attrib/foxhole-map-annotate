@@ -199,11 +199,17 @@ new Flags(map, tools)
 new Measure(map, tools)
 
 socket.on('conquer', (data) => {
-  if (conquerStatus.version === data.version) {
-    return
-  }
   if (conquerStatus.warNumber !== data.warNumber) {
     staticLayer.resetWar()
+    conquerStatus.warNumber = data.warNumber
+    conquerStatus.version = ''
+    if (!data.full) {
+      socket.send('getConquerStatus', true)
+      return
+    }
+  }
+  if (conquerStatus.version === data.version) {
+    return
   }
   if (!data.full && data.oldVersion !== conquerStatus.version) {
     socket.send('getConquerStatus', true)
