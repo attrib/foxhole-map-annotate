@@ -295,6 +295,7 @@ function conquerUpdater() {
     .then((data) => {
       if (data) {
         data.oldVersion = oldVersion
+        data.warNumber = warapi.warData.warNumber
         sendDataToAll('conquer', data)
       }
     })

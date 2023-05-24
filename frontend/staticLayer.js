@@ -74,7 +74,8 @@ class StaticLayers {
           offsetX: 1,
           offsetY: 1,
         })
-      }), new Style({
+      }),
+      new Style({
         text: new Text({
           font: '1rem system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
           text: '',
@@ -85,6 +86,19 @@ class StaticLayers {
         })
       })
     ]
+
+    this.wardenStrokeStyle = new Style({
+      stroke: new Stroke({
+        color: '#24568288',
+        width: 0,
+      })
+    })
+    this.colonialStrokeStyle = new Style({
+      stroke: new Stroke({
+        color: '#516C4B88',
+        width: 0,
+      })
+    })
 
     this.conquestTeamStyles = {
       '': new Style({
@@ -150,7 +164,7 @@ class StaticLayers {
       source: this.sources.Major,
       zIndex: 100,
       maxResolution: 4,
-      style: this.regionStyle,
+      style: this.regionLabelStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       tooltip: false,
@@ -160,7 +174,7 @@ class StaticLayers {
       source: this.sources.Minor,
       zIndex: 99,
       maxResolution: 1.5,
-      style: this.regionStyle,
+      style: this.regionLabelStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       tooltip: false,
@@ -209,8 +223,8 @@ class StaticLayers {
       zIndex: 1,
       maxResolution: 4,
       style: this.iconStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
+      updateWhileAnimating: false,
+      updateWhileInteracting: false,
       searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -219,8 +233,8 @@ class StaticLayers {
       zIndex: 1,
       maxResolution: 4,
       style: this.iconStyle,
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
+      updateWhileAnimating: false,
+      updateWhileInteracting: false,
       searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -282,9 +296,28 @@ class StaticLayers {
     if (this.warFeatures.deactivatedRegions && this.warFeatures.deactivatedRegions.includes(feature.getId())) {
       return null
     }
+    const style = [...this.labelStyle]
+    style[0].getText().setText(feature.get('notes'))
+    style[1].getText().setText(feature.get('notes'))
+    const colonialQueueSize = Math.min((feature.get('colonialQueueSize') || 0)/2, 12),
+      wardenQueueSize = Math.min((feature.get('wardenQueueSize') || 0)/2, 12)
+    if (wardenQueueSize > 0) {
+      this.wardenStrokeStyle.getStroke().setWidth(wardenQueueSize)
+      style.push(this.wardenStrokeStyle)
+    }
+    if (colonialQueueSize > 0) {
+      this.colonialStrokeStyle.getStroke().setWidth(colonialQueueSize)
+      style.push(this.colonialStrokeStyle)
+    }
+    return style
+  }
+
+  regionLabelStyle = (feature) => {
+    if (this.warFeatures.deactivatedRegions && this.warFeatures.deactivatedRegions.includes(feature.getId())) {
+      return null
+    }
     this.labelStyle[0].getText().setText(feature.get('notes'))
     this.labelStyle[1].getText().setText(feature.get('notes'))
-    return this.labelStyle
   }
 
   conquestStyle = (feature) => {
@@ -302,7 +335,7 @@ class StaticLayers {
   iconStyle = (feature, resolution) => {
     const icon = feature.get('icon')
     let team = feature.get('team') || ''
-    const flags = feature.get('iconFlags')
+    const flags = feature.get('iconFlags') || 0
     if (team === 'none') {
       team = ''
     }
