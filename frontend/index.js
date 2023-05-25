@@ -228,6 +228,16 @@ socket.on('conquer', (data) => {
   localStorage.setItem('conquerStatus', JSON.stringify(conquerStatus))
 })
 
+const teamIcons = document.querySelectorAll('.team-score img');
+socket.on('queue', (data) => {
+  for (const hexId in data.queues) {
+    staticLayer.sources.Region.getFeatureById(hexId)?.set('queueC', data.queues[hexId].c + data.queues[hexId].w, true)
+    staticLayer.sources.Region.getFeatureById(hexId)?.set('queueW', data.queues[hexId].w)
+  }
+  teamIcons[0].style.scale = (1 - data.ratio + 0.5)
+  teamIcons[1].style.scale = (data.ratio + 0.5)
+})
+
 socket.on('warFeatures', (data) => {
   warFeatures.features = data.features
   warFeatures.deactivatedRegions = data.deactivatedRegions

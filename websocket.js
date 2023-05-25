@@ -16,6 +16,20 @@ const {loadFeatures, saveFeatures, defaultFeatures} = require("./lib/featureLoad
 setTimeout(conquerUpdater, 10000)
 
 const features = loadFeatures()
+let cachedQueue = {
+  queues: {},
+  ratio: 0.5,
+}
+
+if (fs.existsSync(__dirname + '/data/queue.json')) {
+  fs.watch(__dirname + '/data/queue.json', (event) => {
+    if (event === 'change') {
+      const content = fs.readFileSync(__dirname + '/data/queue.json', 'utf8')
+      cachedQueue = JSON.parse(content)
+      sendDataToAll('queue', cachedQueue)
+    }
+  })
+}
 
 const sanitizeOptions = {
   allowedTags: [ 'b', 'i', 'em', 'strong', 'a', 'p', 'img', 'video', 'source' ],
@@ -67,6 +81,7 @@ wss.on('connection', function (ws, request) {
           if (message.data.warVersion !== getWarFeaturesVersion()) {
             sendData(ws, 'warFeatures', getWarFeatures())
           }
+          sendData(ws, 'queue', cachedQueue)
           break;
 
         case 'getAllFeatures':

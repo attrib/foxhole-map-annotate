@@ -1,6 +1,6 @@
 import {Vector as VectorSource} from "ol/source";
 import {Circle, Fill, Icon, Stroke, Style, Text} from "ol/style";
-import {Group, Vector} from "ol/layer";
+import {Group, VectorImage as Vector} from "ol/layer";
 import {GeoJSON} from "ol/format";
 import {Collection, Feature} from "ol";
 import CircleStyle from "ol/style/Circle";
@@ -205,6 +205,7 @@ class StaticLayers {
       updateWhileInteracting: true,
       searchable: false,
       tooltip: false,
+      imageRatio: 2,
     }))
     staticGroup.getLayers().push(regionGroup)
     staticGroup.getLayers().push(new Vector({
@@ -223,8 +224,8 @@ class StaticLayers {
       zIndex: 1,
       maxResolution: 4,
       style: this.iconStyle,
-      updateWhileAnimating: false,
-      updateWhileInteracting: false,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -233,8 +234,8 @@ class StaticLayers {
       zIndex: 1,
       maxResolution: 4,
       style: this.iconStyle,
-      updateWhileAnimating: false,
-      updateWhileInteracting: false,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
       searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
@@ -274,6 +275,8 @@ class StaticLayers {
       }),
       searchable: false,
       tooltip: false,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
     })
     map.addLayer(this.deactivatedLayer)
 
@@ -299,8 +302,8 @@ class StaticLayers {
     const style = [...this.labelStyle]
     style[0].getText().setText(feature.get('notes'))
     style[1].getText().setText(feature.get('notes'))
-    const colonialQueueSize = Math.min((feature.get('colonialQueueSize') || 0)/2, 12),
-      wardenQueueSize = Math.min((feature.get('wardenQueueSize') || 0)/2, 12)
+    const colonialQueueSize = Math.min((feature.get('queueC') || 0)/2, 12),
+      wardenQueueSize = Math.min((feature.get('queueW') || 0)/2, 12)
     if (wardenQueueSize > 0) {
       this.wardenStrokeStyle.getStroke().setWidth(wardenQueueSize)
       style.push(this.wardenStrokeStyle)
