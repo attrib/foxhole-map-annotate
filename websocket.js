@@ -24,9 +24,16 @@ let cachedQueue = {
 if (fs.existsSync(__dirname + '/data/queue.json')) {
   fs.watch(__dirname + '/data/queue.json', (event) => {
     if (event === 'change') {
-      const content = fs.readFileSync(__dirname + '/data/queue.json', 'utf8')
-      cachedQueue = JSON.parse(content)
-      sendDataToAll('queue', cachedQueue)
+      setTimeout(() => {
+        const content = fs.readFileSync(__dirname + '/data/queue.json', 'utf8')
+        try {
+          cachedQueue = JSON.parse(content)
+          sendDataToAll('queue', cachedQueue)
+        }
+        catch (e) {
+          console.log('error parsing queue.json', e)
+        }
+      }, 1000)
     }
   })
 }
