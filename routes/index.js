@@ -7,6 +7,7 @@ const config = require('../lib/config')
 const sanitizeHtml = require('sanitize-html')
 const eventlog = require('../lib/eventLog');
 const {clearRegionsCache} = require("../lib/conquerUpdater");
+const draftStatus = require('../lib/draftStatus');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -36,6 +37,7 @@ router.get('/admin/config', async function (req, res, next) {
   if (!req.session || req.session.acl !== ACL_ADMIN) {
     return res.redirect('/');
   }
+  res.locals.draftStatus = draftStatus;
   res.render('admin.config.html');
 })
 
@@ -133,6 +135,34 @@ router.post('/admin/config', function(req, res, next) {
     }
   }
   config.save()
+  if (req.body.draftStatus) {
+    const draftOrder = []
+    for (const discordId of req.body.draftStatus.draftOrder) {
+      if (discordId in config.config.access.discords) {
+        draftOrder.push({discordId, name: config.config.access.discords[discordId].name})
+      }
+    }
+    draftStatus.draftOrder = draftOrder
+    if (draftStatus.active) {
+      if (!req.body.draftStatus.active) {
+        draftStatus.stopDraft()
+        eventlog.logEvent({
+          type: 'draftStatus',
+          user: req.session.user,
+          userId: req.session.userId,
+          data: {active: false}
+        })
+      }
+      else {
+        draftStatus.activeDraft = req.body.draftStatus.activeDraft
+        draftStatus.emit()
+      }
+    }
+    if (!draftStatus.active && req.body.draftStatus.active) {
+      draftStatus.startDraft()
+      eventlog.logEvent({type: 'draftStatus', user: req.session.user, userId: req.session.userId, data: {active: true}})
+    }
+  }
   return res.redirect('/admin/config');
 })
 

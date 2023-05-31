@@ -14,6 +14,7 @@
 <div id="global-alerts">
     <div id="disconnected" class="alert alert-danger mb-2">Connection to server lost. Auto-reconnect in 10s. Map doesn't
         update automatically. Editing not possible. Refresh page if message doesn't disappear.</div>
+    <div id="draft" class="mb-2"></div>
     <div id="resistance"
         class="alert {% if warStatus === 'resistance' and warWinner === 'Colonial' %}alert-warning{% elseif warStatus === 'resistance' and warWinner === 'Warden' %}alert-success{% endif %}"
         {% if warStatus !=='resistance' %}style="display: none" {% endif %}>

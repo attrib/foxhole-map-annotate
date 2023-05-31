@@ -13,6 +13,9 @@ import {assert} from "ol/asserts";
 import Flags from "./flags";
 import Measure from "./measure";
 import EditTools from "./mapEditTools";
+import {createApp, reactive, ref} from "vue";
+import Draft from "./Components/Draft.vue";
+import {ACL_ACTIONS, hasAccess} from "../lib/ACLS";
 
 const url = new URL(window.location);
 
@@ -110,12 +113,19 @@ const socket = new Socket();
 let lastClientVersion = null
 let lastFeatureHash = ''
 let realACL = null
+const userDiscordId = document.getElementById('discord-username').dataset.userId
+const discordId = ref(null)
+const adminAccess = ref(false)
+let warStatus = null
 socket.on('init', (data) => {
   realACL = data.acl
   if (data.warStatus === 'resistance') {
     data.acl = 'read'
   }
   tools.initAcl(data.acl)
+  discordId.value = data.discordId
+  warStatus = data.warStatus
+  adminAccess.value = hasAccess(userDiscordId, realACL, ACL_ACTIONS.CONFIG)
   if (lastClientVersion === null) {
     lastClientVersion = data.version
   } else if (lastClientVersion !== data.version) {
@@ -123,6 +133,29 @@ socket.on('init', (data) => {
     window.location = '/'
   }
 })
+
+createApp(Draft, {
+  socket,
+  userDiscordId: discordId,
+  admin: adminAccess,
+}).mount('#draft')
+
+socket.on('draftStatus', (draftStatus) => {
+  if (draftStatus.active) {
+    if (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId) {
+      tools.initAcl(realACL)
+    } else {
+      tools.initAcl('read')
+    }
+  }
+  else if (warStatus === 'resistance') {
+    tools.initAcl('read')
+  }
+  else {
+    tools.initAcl(realACL)
+  }
+})
+
 
 tools.on(tools.EVENT_ICON_ADDED, (icon) => {
   socket.send('featureAdd', geoJson.writeFeatureObject(icon))

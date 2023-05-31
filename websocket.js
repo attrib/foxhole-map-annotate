@@ -12,6 +12,7 @@ const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
 const sanitizeHtml = require("sanitize-html");
 const {loadFeatures, saveFeatures, defaultFeatures} = require("./lib/featureLoader");
+const draftStatus = require("./lib/draftStatus");
 
 setTimeout(conquerUpdater, 10000)
 
@@ -70,6 +71,7 @@ wss.on('connection', function (ws, request) {
         version: process.env.COMMIT_HASH,
         warStatus: warapi.warData.status,
         featureHash: features.hash,
+        discordId,
       }
     }));
 
@@ -266,6 +268,16 @@ wss.on('connection', function (ws, request) {
             }
           }
           break;
+
+        case 'getDraftStatus':
+          sendData(ws, 'draftStatus', draftStatus.data())
+          break;
+
+        case 'draftConfirm':
+          if (discordId === draftStatus.draftOrder[draftStatus.activeDraft].discordId || hasAccess(userId, acl, ACL_ACTIONS.CONFIG)) {
+            draftStatus.nextDraft()
+          }
+          break;
       }
     });
 
@@ -274,6 +286,10 @@ wss.on('connection', function (ws, request) {
     });
   }
 );
+
+draftStatus.on((data) => {
+  sendDataToAll('draftStatus', data)
+});
 
 function sendDataToAll(type, data) {
   clients.forEach(function each(client) {

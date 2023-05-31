@@ -19,6 +19,9 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="texts-tab" data-bs-toggle="tab" data-bs-target="#texts-tab-pane" type="button" role="tab" aria-controls="texts-tab-pane" aria-selected="false">Texts</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="draft-tab" data-bs-toggle="tab" data-bs-target="#draft-tab-pane" type="button" role="tab" aria-controls="draft-tab-pane" aria-selected="false">Drafts Settings</button>
+                </li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="basic-tab-pane" role="tabpanel" aria-labelledby="basic-tab" tabindex="0">
@@ -93,6 +96,36 @@
                     <div class="mb-3 row">
                         <div class="col-11 text-end btn">Add new Discord Server</div>
                         <button data-template-id="discord-add" class="btn btn-primary col-1 addRow">+</button>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="draft-tab-pane" role="tabpanel" aria-labelledby="draft-tab" tabindex="0">
+                    <h6>Draft Settings</h6>
+                    <div class="mb-3 row">
+                        <label for="draftStatus-active" class="col-sm-2 col-form-label form-check-label">Active</label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" class="form-check-input" id="draftStatus-active" name="draftStatus[active]" value="1" {% if draftStatus.active %}checked{% endif %}>
+                        </div>
+                    </div>
+                    {% if draftStatus.active %}
+                    <div class="mb-3 row">
+                        <label for="draftStatus-activeDraft" class="col-sm-2 col-form-label">Active Draft</label>
+                        <div class="col-sm-10">
+                            {{ draftSelect('draftStatus[activeDraft]', draftStatus.activeDraft) }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <h6>Drafts</h6>
+                    {% for draft in draftStatus.draftOrder %}
+                        {{ draftRow(draft) }}
+                    {% endfor %}
+                    <template id="draft-add">
+                        {{ draftRow('', {discordId:'',name:''}) }}
+                    </template>
+                    <div class="mb-3 row">
+                        <div class="col-11 text-end btn">Add new Draft</div>
+                        <button data-template-id="draft-add" class="btn btn-primary col-1 addRow">+</button>
                     </div>
                 </div>
             </div>
@@ -194,4 +227,18 @@
         <button data-template-id="discord-role-add{{discordId}}" class="btn btn-primary col-1 addRow">+</button>
     </div>
 </div>
+{% endmacro %}
+
+{% macro draftRow(draft) %}
+<div class="mb-3 row">
+    {{ draftSelect('draftStatus[draftOrder][]', draft.discordId) }}
+</div>
+{% endmacro %}
+
+{% macro draftSelect(name, selected) %}
+<select name="{{name}}" class="form-select">
+    {% for discordId, discord in config.access.discords %}
+        <option value="{{ discordId }}" {% if discordId === selected %}selected{% endif %}>{{ discord.name }}</option>
+    {% endfor %}
+</select>
 {% endmacro %}
