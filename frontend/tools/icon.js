@@ -1,7 +1,7 @@
 import {Draw} from "ol/interaction";
 import {assert} from "ol/asserts";
 import {Icon as olIcon, Style} from "ol/style";
-import {Group, VectorImage as Vector} from "ol/layer";
+import {Group, Vector} from "ol/layer";
 import {Collection} from "ol";
 import {Vector as VectorSource} from "ol/source";
 
