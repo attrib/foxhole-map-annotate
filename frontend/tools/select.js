@@ -165,33 +165,25 @@ class Select {
     })
     this.map.addOverlay(this.iconInfoOverlay)
 
-    let moveTimeout = null
     map.on('pointermove', (evt) => {
-      if (moveTimeout) {
-        return
-      }
-      moveTimeout = setTimeout(() => {
-        moveTimeout = null
-        const value = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-          if (layer === null) {
-            return null
-          }
-          if (layer.get('tooltip') === undefined || layer.get('tooltip') === true) {
-            return [feature, layer];
-          }
-        });
-        if (!value) {
-          this.hideInfoBoxes()
-        } else {
-          const [feature, layer] = value;
-          if (layer === null || !feature.get('type') || NO_TOOLTIP.includes(feature.get('type'))) {
-            this.hideInfoBoxes()
-            return
-          }
-          this.infoBoxFeature(feature, evt.coordinate)
+      const value = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+        if (layer === null) {
+          return null
         }
-      }, 100)
-
+        if (layer.get('tooltip') === undefined || layer.get('tooltip') === true) {
+          return [feature, layer];
+        }
+      });
+      if (!value) {
+        this.hideInfoBoxes()
+      } else {
+        const [feature, layer] = value;
+        if (layer === null || !feature.get('type') || NO_TOOLTIP.includes(feature.get('type'))) {
+          this.hideInfoBoxes()
+          return
+        }
+        this.infoBoxFeature(feature, evt.coordinate)
+      }
     })
 
     tools.on(tools.EVENT_DECAY_UPDATED, (data) => {
