@@ -408,18 +408,15 @@ class StaticLayers {
       if (town) {
         town.set('icon', data.icon, true)
         town.set('iconFlags', data.flags, true)
-        town.set('team', data.team)
+        const team = data.flags & 0x10 ? 'Nuked' : data.team
+        town.set('team', team)
         if (flash) {
           this.flash(town)
         }
-        if (town.get('voronoi') && data.icon !== 'MapIconRocketSite' && data.icon !== 'MapIconObservationTower') {
+        if (town.get('voronoi')) {
           const voronoi = this.sources.voronoi.getFeatureById(town.get('voronoi'))
           if (voronoi) {
-            if (data.flags & 0x10) {
-              voronoi.set('team', 'Nuked')
-            } else {
-              voronoi.set('team', data.team)
-            }
+            voronoi.set('team', team)
           }
         }
         continue
@@ -459,8 +456,16 @@ class StaticLayers {
         collections[type] = []
       }
       if (feature.get('id') in this.conquerStatus.features) {
-        feature.set('icon', this.conquerStatus.features[feature.get('id')].icon)
-        feature.set('team', this.conquerStatus.features[feature.get('id')].team)
+        feature.set('icon', this.conquerStatus.features[feature.get('id')].icon, true)
+        const team = this.conquerStatus.features[feature.get('id')].flags & 0x10 ? 'Nuked' : this.conquerStatus.features[feature.get('id')].team
+        feature.set('iconFlags', this.conquerStatus.features[feature.get('id')].flags, true)
+        feature.set('team', team)
+        if (feature.get('voronoi')) {
+          const voronoi = this.sources.voronoi.getFeatureById(feature.get('voronoi'))
+          if (voronoi) {
+            voronoi.set('team', team)
+          }
+        }
       }
       collections[type].push(feature)
     })
@@ -473,8 +478,10 @@ class StaticLayers {
     this.deactivatedLayer.getSource().clear(true)
     const deactivatedRegionFeatures = []
     for (const regionId of this.warFeatures.deactivatedRegions || []) {
-      const region = this.sources.Region.getFeatureById(regionId).clone()
-      deactivatedRegionFeatures.push(region)
+      const region = this.sources.Region.getFeatureById(regionId)
+      if (region) {
+        deactivatedRegionFeatures.push(region.clone())
+      }
     }
     this.deactivatedLayer.getSource().addFeatures(deactivatedRegionFeatures)
   }
@@ -551,18 +558,6 @@ class StaticLayers {
           const type = feature.get('type')
           if (!(type in collections)) {
             collections[type] = []
-          }
-          if (feature.get('id') in this.conquerStatus.features) {
-            feature.set('icon', this.conquerStatus.features[feature.get('id')].icon, true)
-            feature.set('iconFlags', this.conquerStatus.features[feature.get('id')].flags, true)
-            feature.set('team', this.conquerStatus.features[feature.get('id')].team)
-          }
-          if (feature.get('town') in this.conquerStatus.features) {
-            if (this.conquerStatus.features[feature.get('town')].flags & 0x10) {
-              feature.set('team', 'Nuked')
-            } else {
-              feature.set('team', this.conquerStatus.features[feature.get('town')].team)
-            }
           }
           collections[type].push(feature)
         })

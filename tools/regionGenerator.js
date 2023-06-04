@@ -2,6 +2,12 @@ const region = require('./deadland.json');
 const fs = require('fs');
 const warapi = require("../lib/warapi")
 const uuid = require("uuid");
+const GeoJSON = import("ol/format/GeoJSON.js")
+const VectorSource = import("ol/source/Vector.js")
+const Collection = import("ol")
+const LineString = import("ol/geom/LineString.js")
+const voronoi = require('@turf/voronoi')
+const intersect = require('@turf/intersect').default
 
 const coordsDeadland = region.features[0].geometry.coordinates[0]
 
@@ -54,12 +60,16 @@ names = [{notes: 'Speaking Woods', id: 'SpeakingWoodsHex'}, {notes: 'The Moors',
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[7].geometry.coordinates[0])
-names = [{notes: 'Callums Cape', id: 'CallumsCapeHex'}, {notes: 'Stonecradle', id: 'StonecradleHex'}, {notes: 'Farranac Coast', id: 'FarranacCoastHex'}, {notes: 'Westgate', id: 'WestgateHex'}, {notes: 'Ash Fields', id: 'AshFieldsHex'}];
+names = [{notes: 'Callums Cape', id: 'CallumsCapeHex'}, {notes: 'Stonecradle', id: 'StonecradleHex'}, {notes: 'King\'s Cage', id: 'KingsCageHex'}, {notes: 'Sableport', id: 'SableportHex'}, {notes: 'Ash Fields', id: 'AshFieldsHex'}];
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[13].geometry.coordinates[0])
-names = [{notes: 'Nevish Line', id: 'NevishLineHex'}, {notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}, {notes: 'Fishermans Row', id: 'FishermansRowHex'}, {notes: 'Origin', id: 'OriginHex'}];
+names = [{notes: 'Nevish Line', id: 'NevishLineHex'}, {notes: 'Farranac Coast', id: 'FarranacCoastHex'}, {notes: 'Westgate', id: 'WestgateHex'}, {notes: 'Origin', id: 'OriginHex'}];
 goDown(names, lastCoords)
+
+// lastCoords = leftUp(region.features[17].geometry.coordinates[0])
+// names = [{notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}, {notes: 'Fishermans Row', id: 'FishermansRowHex'}, {notes: '', id: ''}];
+// goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[3].geometry.coordinates[0])
 names = [{notes: 'Howl Country', id: 'HowlCountyHex'}, {notes: 'Viper Pit', id: 'ViperPitHex'}, {notes: 'Marban Hollow', id: 'MarbanHollow'}, {notes: 'The Drowned Vale', id: 'DrownedValeHex'}, {notes: 'Shackled Chasm', id: 'ShackledChasmHex'}, {notes: 'Arcithia', id: 'AcrithiaHex'}];
@@ -72,6 +82,11 @@ goDown(names, lastCoords)
 lastCoords = rightUp(region.features[28].geometry.coordinates[0])
 names = [{notes: 'Morgans Crossing', id: 'MorgensCrossingHex'}, {notes: 'Godscraft', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'The Fingers', id: 'TheFingersHex'}];
 goDown(names, lastCoords)
+
+// lastCoords = leftUp(region.features[32].geometry.coordinates[0])
+// names = [{notes: '', id: ''}, {notes: '', id: ''}, {notes: '', id: ''}];
+// goDown(names, lastCoords)
+
 
 const extend = [diffX + 2*diffX2, diffY]
 console.log('extend', extend)
@@ -96,44 +111,135 @@ for (const reg of region.features) {
             })
         }
     }))
-    promises.push(warapi.dynamicMap(reg.id).then((data) => {
-        for (const item of data.mapItems) {
-            if (item.iconType in warapi.iconTypes) {
-                const id = uuid.v4()
-                region.features.push({
-                    id: id,
-                    type: "Feature",
-                    geometry: {
-                        type: "Point",
-                        coordinates: [reg.properties.box[0] - item.x * extend[0], reg.properties.box[1] - item.y * extend[1]]
-                    },
-                    properties: {
-                        id: id,
-                        type: warapi.iconTypes[item.iconType].type,
-                        icon: warapi.iconTypes[item.iconType].icon,
-                        notes: warapi.iconTypes[item.iconType].notes,
-                        team: '',
-                    }
-                })
-            }
-        }
-    }))
 }
 
-promises.push(warapi.war().then((data) => {
-    data.shard = 'Able'
-    fs.writeFile(__dirname + '/../data/wardata.json', JSON.stringify(data, null, 2), err => {
-        if (err) {
-            console.error(err);
-        }
-    });
-}))
-
 Promise.all(promises).then(() => {
-    fs.writeFile(__dirname + '/../public/regions.json', JSON.stringify(region), err => {
+    fs.writeFile(__dirname + '/../public/static.json', JSON.stringify(region), err => {
         if (err) {
             console.error(err);
+            return
         }
+        console.log('static.json written successfully')
+        const regions = region
+
+        Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, VectorSource, ol, LineString]) => {
+            const geonJson = new GeoJSON.default();
+            /** @type {import('ol/source').Vector} */
+            const regionSource = new VectorSource.default({
+                features: new ol.Collection()
+            })
+            /** @type {import('ol/source').Vector} */
+            const majorLabels = new VectorSource.default({
+                features: new ol.Collection()
+            })
+            const majorLabelsByRegion = {}
+
+
+            for (const region of regions.features) {
+                if (region.properties.type !== 'Region') {
+                    continue;
+                }
+                const regionFeature = geonJson.readFeature(region);
+                //console.log(regionFeature.getId())
+                regionSource.addFeature(regionFeature)
+            }
+
+            for (const label of regions.features) {
+                if (label.properties.type !== 'Major') {
+                    continue;
+                }
+                /** @type {import('ol').Feature} */
+                const majorFeature = geonJson.readFeature(label);
+                majorLabels.addFeature(majorFeature)
+                const extent = majorFeature.getGeometry().getExtent()
+
+                let found = false
+                regionSource.forEachFeatureInExtent(extent, (region) => {
+                    if (region.getGeometry().intersectsCoordinate(majorFeature.getGeometry().getCoordinates())) {
+                        if (found) {
+                            console.log('two regions?', region.getId(), majorFeature.get('notes'), found.getId())
+                        }
+                        found = region
+                    }
+                })
+                if (!found) {
+                    console.log('no region?', label)
+                }
+                const regionId = found.getId()
+                majorFeature.set('region', regionId)
+                if (!(regionId in majorLabelsByRegion)) {
+                    majorLabelsByRegion[regionId] = new VectorSource.default({
+                        features: new ol.Collection()
+                    })
+                }
+                majorLabelsByRegion[regionId].addFeature(majorFeature)
+            }
+
+            const voronoiDiagrams = []
+            for (const regionId in majorLabelsByRegion) {
+                /** @type {import('ol/source').Vector} */
+                const source = majorLabelsByRegion[regionId]
+                /** @type {import('ol').Feature} */
+                const regionFeature = regionSource.getFeatureById(regionId)
+                console.log(regionId, source.getFeatures().length)
+
+                const extent = regionFeature.getGeometry().getExtent()
+                const voronoiPolygons = voronoi(geonJson.writeFeaturesObject(source.getFeatures()), {
+                    bbox: extent
+                });
+                const collection = geonJson.readFeatures(voronoiPolygons)
+
+                collection.forEach((feature) => {
+                    const intersectedFeature = geonJson.readFeature(intersect(geonJson.writeFeatureObject(feature), geonJson.writeFeatureObject(regionFeature)))
+                    intersectedFeature.setId(uuid.v4())
+                    source.forEachFeature((label) => {
+                        if(intersectedFeature.getGeometry().intersectsCoordinate(label.getGeometry().getCoordinates())) {
+                            intersectedFeature.set('notes', label.get('notes'))
+                            intersectedFeature.set('region', regionId)
+                            intersectedFeature.set('type', 'voronoi')
+                        }
+                    })
+                    voronoiDiagrams.push(geonJson.writeFeatureObject(intersectedFeature))
+                })
+            }
+
+            const collection = {
+                type: 'FeatureCollection',
+                features: [],
+            }
+            regionSource.forEachFeature((feature) => {
+                collection.features.push(geonJson.writeFeatureObject(feature))
+            })
+            majorLabels.forEachFeature((feature) => {
+                collection.features.push(geonJson.writeFeatureObject(feature))
+            })
+            for (const minor of regions.features) {
+                if (minor.properties.type !== 'Minor') {
+                    continue;
+                }
+                const minorFeature = geonJson.readFeature(minor);
+                const extent = minorFeature.getGeometry().getExtent()
+                let found = false
+                regionSource.forEachFeatureInExtent(extent, (region) => {
+                    if (region.getGeometry().intersectsCoordinate(minorFeature.getGeometry().getCoordinates())) {
+                        if (found) {
+                            console.log('two regions?', region.getId(), minorFeature.get('notes'), found.getId())
+                        }
+                        found = region
+                    }
+                })
+                if (!found) {
+                    console.log('no region?', minor)
+                } else {
+                    minorFeature.set('region', found.getId())
+                    collection.features.push(geonJson.writeFeatureObject(minorFeature))
+                }
+            }
+            collection.features.push(...voronoiDiagrams)
+
+            fs.writeFileSync(__dirname + '/../public/static.json', JSON.stringify(collection))
+            process.exit(0)
+        })
     });
 })
 

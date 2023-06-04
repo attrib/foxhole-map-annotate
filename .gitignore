@@ -7,7 +7,6 @@ logs
 .env
 node_modules
 public/dist
-public/regions.json
 hidden
 
 ## VS Code
