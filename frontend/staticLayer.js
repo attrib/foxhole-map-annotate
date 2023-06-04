@@ -321,6 +321,7 @@ class StaticLayers {
     }
     this.labelStyle[0].getText().setText(feature.get('notes'))
     this.labelStyle[1].getText().setText(feature.get('notes'))
+    return this.labelStyle
   }
 
   conquestStyle = (feature) => {
