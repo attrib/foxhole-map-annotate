@@ -48,6 +48,13 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Mobile edit support
 * Rotate icons (by [FMAT] Zeenz)
 
+## Draft System
+
+* missed draft gets new chance again after current draft (admin force next, moves to end of list)
+* make drafts for single users possible
+* prepare mode for draft (no placement allowed till admin starts the draft, on start 5min countdown)
+* TBD time each draft
+
 ## DevTodos
 
 * 

@@ -56,7 +56,7 @@ names = [{notes: 'Umbral Wildwood', id: 'UmbralWildwoodHex'}, {notes: 'Great Mar
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[3].geometry.coordinates[0])
-names = [{notes: 'Speaking Woods', id: 'SpeakingWoodsHex'}, {notes: 'The Moors', id: 'MooringCountyHex'}, {notes: 'The Linn of Mercy', id: 'LinnMercyHex'}, {notes: 'Loch Mor', id: 'LochMorHex'}, {notes: 'The Heartlands', id: 'HeartlandsHex'}, {notes: 'Red River', id: 'RedRiverHex'}];
+names = [{notes: 'Speaking Woods', id: 'SpeakingWoodsHex'}, {notes: 'The Moors', id: 'MooringCountyHex'}, {notes: 'The Linn of Mercy', id: 'LinnMercyHex'}, {notes: 'Loch Mór', id: 'LochMorHex'}, {notes: 'The Heartlands', id: 'HeartlandsHex'}, {notes: 'Red River', id: 'RedRiverHex'}];
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[7].geometry.coordinates[0])
@@ -76,11 +76,11 @@ names = [{notes: 'Howl Country', id: 'HowlCountyHex'}, {notes: 'Viper Pit', id: 
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[22].geometry.coordinates[0])
-names = [{notes: 'Clanshead Valley', id: 'ClansheadValleyHex'}, {notes: 'Weathered Expanse', id: 'WeatheredExpanseHex'}, {notes: 'Endless Shore', id: 'EndlessShoreHex'}, {notes: 'Allods Bright', id: 'AllodsBightHex'}, {notes: 'Terminus', id: 'TerminusHex'}];
+names = [{notes: 'Clanshead Valley', id: 'ClansheadValleyHex'}, {notes: 'Weathered Expanse', id: 'WeatheredExpanseHex'}, {notes: 'Endless Shore', id: 'EndlessShoreHex'}, {notes: ' Allod\'s Bight', id: 'AllodsBightHex'}, {notes: 'Terminus', id: 'TerminusHex'}];
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[28].geometry.coordinates[0])
-names = [{notes: 'Morgans Crossing', id: 'MorgensCrossingHex'}, {notes: 'Godscraft', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'The Fingers', id: 'TheFingersHex'}];
+names = [{notes: 'Morgens Crossing', id: 'MorgensCrossingHex'}, {notes: 'Godcrofts', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'The Fingers', id: 'TheFingersHex'}];
 goDown(names, lastCoords)
 
 // lastCoords = leftUp(region.features[32].geometry.coordinates[0])
