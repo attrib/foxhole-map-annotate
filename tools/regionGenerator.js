@@ -8,6 +8,21 @@ const Collection = import("ol")
 const LineString = import("ol/geom/LineString.js")
 const voronoi = require('@turf/voronoi')
 const intersect = require('@turf/intersect').default
+const hash = require('object-hash');
+
+const oldStatic = JSON.parse(fs.readFileSync(__dirname + '/../public/static.json', 'utf8'));
+const idMap = {}
+const posMap = {}
+let pos = 0
+for (const item of oldStatic.features) {
+    const key = item.properties.type + item.properties.notes + item.properties.region;
+    if (key in idMap) {
+        console.log('Duplicate', item.properties.notes, item.properties.region, oldStatic.features[posMap[idMap[key]]].properties.region)
+    }
+    idMap[key] = item.id
+    posMap[item.id] = pos
+    pos++
+}
 
 const coordsDeadland = region.features[0].geometry.coordinates[0]
 
@@ -76,7 +91,7 @@ names = [{notes: 'Howl County', id: 'HowlCountyHex'}, {notes: 'Viper Pit', id: '
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[22].geometry.coordinates[0])
-names = [{notes: 'Clanshead Valley', id: 'ClansheadValleyHex'}, {notes: 'Weathered Expanse', id: 'WeatheredExpanseHex'}, {notes: 'Endless Shore', id: 'EndlessShoreHex'}, {notes: ' Allod\'s Bight', id: 'AllodsBightHex'}, {notes: 'Terminus', id: 'TerminusHex'}];
+names = [{notes: 'Clanshead Valley', id: 'ClansheadValleyHex'}, {notes: 'Weathered Expanse', id: 'WeatheredExpanseHex'}, {notes: 'Endless Shore', id: 'EndlessShoreHex'}, {notes: 'Allod\'s Bight', id: 'AllodsBightHex'}, {notes: 'Terminus', id: 'TerminusHex'}];
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[28].geometry.coordinates[0])
@@ -95,7 +110,7 @@ const promises = []
 for (const reg of region.features) {
     promises.push(warapi.staticMap(reg.id).then((data) => {
         for (const item of data.mapTextItems) {
-            const id = uuid.v4()
+            const id = idMap[item.mapMarkerType + item.text + reg.id] || uuid.v4()
             region.features.push({
                 type: "Feature",
                 id: id,
@@ -107,6 +122,7 @@ for (const reg of region.features) {
                     id: id,
                     type: item.mapMarkerType,
                     notes: item.text,
+                    region: reg.id,
                 }
             })
         }
@@ -151,22 +167,7 @@ Promise.all(promises).then(() => {
                 /** @type {import('ol').Feature} */
                 const majorFeature = geonJson.readFeature(label);
                 majorLabels.addFeature(majorFeature)
-                const extent = majorFeature.getGeometry().getExtent()
-
-                let found = false
-                regionSource.forEachFeatureInExtent(extent, (region) => {
-                    if (region.getGeometry().intersectsCoordinate(majorFeature.getGeometry().getCoordinates())) {
-                        if (found) {
-                            console.log('two regions?', region.getId(), majorFeature.get('notes'), found.getId())
-                        }
-                        found = region
-                    }
-                })
-                if (!found) {
-                    console.log('no region?', label)
-                }
-                const regionId = found.getId()
-                majorFeature.set('region', regionId)
+                const regionId = majorFeature.get('region')
                 if (!(regionId in majorLabelsByRegion)) {
                     majorLabelsByRegion[regionId] = new VectorSource.default({
                         features: new ol.Collection()
@@ -191,14 +192,14 @@ Promise.all(promises).then(() => {
 
                 collection.forEach((feature) => {
                     const intersectedFeature = geonJson.readFeature(intersect(geonJson.writeFeatureObject(feature), geonJson.writeFeatureObject(regionFeature)))
-                    intersectedFeature.setId(uuid.v4())
                     source.forEachFeature((label) => {
-                        if(intersectedFeature.getGeometry().intersectsCoordinate(label.getGeometry().getCoordinates())) {
+                        if (intersectedFeature.getGeometry().intersectsCoordinate(label.getGeometry().getCoordinates())) {
                             intersectedFeature.set('notes', label.get('notes'))
                             intersectedFeature.set('region', regionId)
                             intersectedFeature.set('type', 'voronoi')
                         }
                     })
+                    intersectedFeature.setId(idMap['voronoi' + intersectedFeature.get('notes') + regionId] || uuid.v4())
                     voronoiDiagrams.push(geonJson.writeFeatureObject(intersectedFeature))
                 })
             }
@@ -213,29 +214,26 @@ Promise.all(promises).then(() => {
             majorLabels.forEachFeature((feature) => {
                 collection.features.push(geonJson.writeFeatureObject(feature))
             })
+            const minorHashes = []
             for (const minor of regions.features) {
                 if (minor.properties.type !== 'Minor') {
                     continue;
                 }
-                const minorFeature = geonJson.readFeature(minor);
-                const extent = minorFeature.getGeometry().getExtent()
-                let found = false
-                regionSource.forEachFeatureInExtent(extent, (region) => {
-                    if (region.getGeometry().intersectsCoordinate(minorFeature.getGeometry().getCoordinates())) {
-                        if (found) {
-                            console.log('two regions?', region.getId(), minorFeature.get('notes'), found.getId())
-                        }
-                        found = region
-                    }
-                })
-                if (!found) {
-                    console.log('no region?', minor)
-                } else {
-                    minorFeature.set('region', found.getId())
-                    collection.features.push(geonJson.writeFeatureObject(minorFeature))
+                // remove duplicates https://github.com/clapfoot/warapi/issues/109
+                const h = hash({notes: minor.properties.notes, region: minor.properties.region, type: minor.properties.type, geometry: minor.geometry})
+                if (minorHashes.includes(h)) {
+                    continue;
                 }
+                minorHashes.push(h)
+                const minorFeature = geonJson.readFeature(minor);
+                collection.features.push(geonJson.writeFeatureObject(minorFeature))
             }
             collection.features.push(...voronoiDiagrams)
+
+            // sort like current, new stuff at the end
+            collection.features.sort((a, b) => {
+                return (a.id in posMap ? posMap[a.id] : 2000) - (b.id in posMap ? posMap[b.id] : 2000)
+            })
 
             fs.writeFileSync(__dirname + '/../public/static.json', JSON.stringify(collection))
             process.exit(0)
