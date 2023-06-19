@@ -36,8 +36,9 @@ const RADIUS = {
     enemy_planned_intel_center: 2000,
     friendly_planned_storm_cannon: 1000,
     enemy_planned_storm_cannon: 1000,
-    enemy_base_obs: 216,
-    base_obs: 216,
+    enemy_base_obs: 180,
+    base_obs: 180,
+    EmplacementHouse: 100,
   }
 }
 
