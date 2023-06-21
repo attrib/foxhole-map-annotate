@@ -33,9 +33,9 @@ const map = new Map({
           preload: Infinity,
           // opacity: 0.7,
           source: new TileImage({
-            attributions: '<a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>', // '<a href="https://sentsu.itch.io/foxhole-better-map-mod" target="_blank">Sentsu</a>
+            attributions: '<a href="https://rustard.itch.io/improved-map-mod" target="_blank">Rust Improved Map Mod</a> - <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
             tileGrid: new TileGrid({
-              extent: [0,-12432,11286,0],
+              extent: [0,-12432,11293,0],
               origin: [0,-12432],
               resolutions: [64,32,16,8,4,2,1],
               tileSize: [256, 256]

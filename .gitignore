@@ -1,6 +1,6 @@
 .idea
 backups
-public/map
+public/map*
 sessions
 data
 logs
