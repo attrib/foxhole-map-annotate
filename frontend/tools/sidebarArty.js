@@ -15,112 +15,139 @@ import Fill from "ol/style/Fill";
 class SidebarArty {
 
   artilleryList = {
-    "Tube Mortars": {
-      "min": 45,
-      "max": 80,
-      "minAcc": 2.5,
-      "maxAcc": 9.45,
-      "offset": 10,
-      "ammo": "Mortar Shells",
+    "Tube Mortars": { // BPMortarItemComponent_C / Mortar
+      "min": 45, // MinDistance
+      "max": 80, // MaxDistance
+      "minAcc": 5.5, // ArtilleryAccuracyMinDist
+      "maxAcc": 12.0, // ArtilleryAccuracyMaxDist
+      "offset": 20, // AccuracyRadius (from ammo)
+      "ammo": "Mortar Shell", // MortarAmmo
       "team": "N"
     },
-    "Koronides": {
+    // "Peltast" : { // HalfTrackMortarGunner - not buildable
+    //   "min": 45,
+    //   "max": 80,
+    //   "minAcc": 22.50,
+    //   "maxAcc": 2.5,
+    //   "offset": 9.45,
+    //   "ammo": "120mm", // MortarAmmo
+    //   "team": ""
+    // },
+    "Koronides": { // ArtilleryGunner
       "min": 100,
       "max": 250,
       "minAcc": 22.50,
       "maxAcc": 30,
-      "offset": 25,
-      "ammo": "120mm",
+      "offset": 40,
+      "ammo": "120mm", // LightArtilleryAmmo
       "team": "C"
     },
-    "Huber Lariat": {
+    "Huber Lariat": { // EmplacedLightArtilleryWGunner
       "min": 100,
       "max": 300,
       "minAcc": 25,
       "maxAcc": 35,
-      "offset": 25,
-      "ammo": "120mm",
+      "offset": 40,
+      "ammo": "120mm", // LightArtilleryAmmo
       "team": "W"
     },
-    "Gunship": {
+    "Gunship": { // GunboatOffensiveWArtilleryGunner
       "min": 50,
       "max": 100,
       "minAcc": 2.5,
-      "maxAcc": 16.5,
-      "offset": 10,
-      "ammo": "120mm",
+      "maxAcc": 14.5,
+      "offset": 40,
+      "ammo": "120mm", // LightArtilleryAmmo
       "team": "N"
     },
-    "Thunderbolt": {
+    "Thunderbolt": { // EmplacedHeavyArtilleryCGunner
       "min": 200,
       "max": 350,
       "minAcc": 32.5,
       "maxAcc": 40,
-      "offset": 25,
-      "ammo": "150mm",
+      "offset": 40,
+      "ammo": "150mm", // HeavyArtilleryAmmo
       "team": "C"
     },
-    "Huber Exalt": {
+    "Huber Exalt": { // EmplacedHeavyArtilleryWGunner
       "min": 100,
       "max": 300,
       "minAcc": 25,
       "maxAcc": 35,
-      "offset": 25,
-      "ammo": "150mm",
+      "offset": 40,
+      "ammo": "150mm", // HeavyArtilleryAmmo
       "team": "W"
     },
-    "Hades' Net": {
-      "min": 175,
-      "max": 275,
+    "Hades' Net": { // EmplacedMultiCGunner
+      "min": 200,
+      "max": 425,
       "minAcc": 25,
-      "maxAcc": 50,
-      "offset": 25,
-      "ammo": "3C-HE",
+      "maxAcc": 41.5,
+      "offset": 0,
+      "ammo": "3C-HE", // HERocketAmmo
       "team": "C"
     },
-    "Retarius": {
+    "Retiarius": { // TruckMultiCGunner
+      "min": 225,
+      "max": 350,
+      "minAcc": 25,
+      "maxAcc": 41.5,
+      "offset": 0,
+      "ammo": "3C-HE", // HERocketAmmo
+      "team": "C"
+    },
+    "King Jester Mk. I-1": { // ScoutTankMultiWGunner
+      "min": 200,
+      "max": 350,
+      "minAcc": 30,
+      "maxAcc": 41.5,
+      "offset": 0,
+      "ammo": "3C-HE", // HERocketAmmo
+      "team": "W"
+    },
+    "Wasp Nest": { // FieldMultiWGunner
+      "min": 225,
+      "max": 300,
+      "minAcc": 25,
+      "maxAcc": 37.5,
+      "offset": 0,
+      "ammo": "4C-Fire Rocket", // FireRocketAmmo
+      "team": "W"
+    },
+    "Skycaller": { // HalftrackMultiWGunner
       "min": 200,
       "max": 275,
       "minAcc": 25,
-      "maxAcc": 35,
-      "offset": 25,
-      "ammo": "3C-HE",
+      "maxAcc": 37.5,
+      "offset": 0,
+      "ammo": "4C-Fire Rocket", // FireRocketAmmo
+      "team": "W"
+    },
+    "Deioneus": { // TanketteMultiCGunner
+      "min": 250,
+      "max": 300,
+      "minAcc": 30,
+      "maxAcc": 41.5,
+      "offset": 0,
+      "ammo": "4C-Fire Rocket", // FireRocketAmmo
       "team": "C"
     },
-    "Wasp Nest": {
-      "min": 200,
-      "max": 225,
-      "minAcc": 25,
-      "maxAcc": 35,
-      "offset": 25,
-      "ammo": "4C-Fire Rocket",
-      "team": "W"
-    },
-    "Skycaller": {
-      "min": 200,
-      "max": 225,
-      "minAcc": 25,
-      "maxAcc": 35,
-      "offset": 25,
-      "ammo": "4C-Fire Rocket",
-      "team": "W"
-    },
-    "Tempest": {
+    "Tempest": { // LongRangeArtilleryTrainGunner
       "min": 350,
       "max": 500,
       "minAcc": 15, // this is guessed
       "maxAcc": 25, // this is guessed
       "offset": 50,
-      "ammo": "300mm",
+      "ammo": "300mm", // LRArtilleryAmmo
       "team": "N"
     },
-    "Storm Cannon": {
+    "Storm Cannon": { // LongRangeArtillery
       "min": 400,
-      "max": 1000,
+      "max": 750,
       "minAcc": 15, // this is guessed
       "maxAcc": 25, // this is guessed
       "offset": 50,
-      "ammo": "300mm",
+      "ammo": "300mm", // LRArtilleryAmmo
       "team": "N"
     }
   }
