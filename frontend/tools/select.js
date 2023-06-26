@@ -33,12 +33,14 @@ const RADIUS = {
   },
   base: {
     friendly_planned_intel_center: 2000,
-    enemy_planned_intel_center: 2000,
     friendly_planned_storm_cannon: 1000,
-    enemy_planned_storm_cannon: 1000,
-    enemy_base_obs: 180,
     base_obs: 180,
     EmplacementHouse: 100,
+  },
+  'facility-enemy': {
+    enemy_planned_intel_center: 2000,
+    enemy_planned_storm_cannon: 1000,
+    enemy_base_obs: 180,
   }
 }
 
@@ -221,6 +223,7 @@ class Select {
     }))
     map.on('click', (event) => {
       map.forEachFeatureAtPixel(event.pixel, (feature) => {
+        console.log(feature.get('type'))
         if (feature.get('type') in RADIUS && feature.get('icon') in RADIUS[feature.get('type')]) {
           this.displayRadius(feature)
         }
