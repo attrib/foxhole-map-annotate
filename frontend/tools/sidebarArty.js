@@ -24,15 +24,15 @@ class SidebarArty {
       "ammo": "Mortar Shell", // MortarAmmo
       "team": "N"
     },
-    // "Peltast" : { // HalfTrackMortarGunner - not buildable
-    //   "min": 45,
-    //   "max": 80,
-    //   "minAcc": 22.50,
-    //   "maxAcc": 2.5,
-    //   "offset": 9.45,
-    //   "ammo": "120mm", // MortarAmmo
-    //   "team": ""
-    // },
+    "Peltast" : { // HalfTrackMortarGunner - not buildable
+      "min": 45,
+      "max": 80,
+      "minAcc": 2.50,
+      "maxAcc": 9.45,
+      "offset": 20,
+      "ammo": "Mortar Shell", // MortarAmmo
+      "team": "C"
+    },
     "Koronides": { // ArtilleryGunner
       "min": 100,
       "max": 250,
@@ -200,7 +200,7 @@ class SidebarArty {
       this.artilleryList[p].max *= this.tools.MAGIC_MAP_SCALING_FACTOR
 
       //header handling
-      if (shellType !== this.artilleryList[p].ammo && shellType !== '') {
+      if (shellType !== this.artilleryList[p].ammo) {
 
         let newLiH = document.createElement('li')
         let newHead = document.createElement('h5')
