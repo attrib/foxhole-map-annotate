@@ -83,7 +83,7 @@ class SidebarArty {
       "max": 425,
       "minAcc": 25,
       "maxAcc": 41.5,
-      "offset": 0,
+      "offset": 25, // works but guessed
       "ammo": "3C-HE", // HERocketAmmo
       "team": "C"
     },
@@ -92,7 +92,7 @@ class SidebarArty {
       "max": 350,
       "minAcc": 25,
       "maxAcc": 41.5,
-      "offset": 0,
+      "offset": 25, // works but guessed
       "ammo": "3C-HE", // HERocketAmmo
       "team": "C"
     },
@@ -101,7 +101,7 @@ class SidebarArty {
       "max": 350,
       "minAcc": 30,
       "maxAcc": 41.5,
-      "offset": 0,
+      "offset": 25, // works but guessed
       "ammo": "3C-HE", // HERocketAmmo
       "team": "W"
     },
@@ -110,7 +110,7 @@ class SidebarArty {
       "max": 300,
       "minAcc": 25,
       "maxAcc": 37.5,
-      "offset": 0,
+      "offset": 25, // works but guessed
       "ammo": "4C-Fire Rocket", // FireRocketAmmo
       "team": "W"
     },
@@ -119,7 +119,7 @@ class SidebarArty {
       "max": 275,
       "minAcc": 25,
       "maxAcc": 37.5,
-      "offset": 0,
+      "offset": 25, // works but guessed
       "ammo": "4C-Fire Rocket", // FireRocketAmmo
       "team": "W"
     },
@@ -128,7 +128,7 @@ class SidebarArty {
       "max": 300,
       "minAcc": 30,
       "maxAcc": 41.5,
-      "offset": 0,
+      "offset": 25, // works but guessed
       "ammo": "4C-Fire Rocket", // FireRocketAmmo
       "team": "C"
     },
