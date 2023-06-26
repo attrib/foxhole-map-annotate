@@ -137,12 +137,13 @@ socket.on('init', (data) => {
 createApp(Draft, {
   socket,
   userDiscordId: discordId,
+  userId: userDiscordId,
   admin: adminAccess,
 }).mount('#draft')
 
 socket.on('draftStatus', (draftStatus) => {
   if (draftStatus.active) {
-    if (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId) {
+    if (draftStatus.activeDraft && (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userDiscordId === draftStatus.draftOrder[draftStatus.activeDraft].userId)) {
       tools.initAcl(realACL)
     } else {
       tools.initAcl('read')

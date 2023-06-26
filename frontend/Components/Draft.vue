@@ -1,26 +1,30 @@
 <template>
   <div class="alert alert-info row" v-if="draftStatus.active">
-    <div v-if="draftStatus.draftOrder[draftStatus.activeDraft].discordId === userDiscordId" class="col-8">
+    <div v-if="draftStatus.activeDraft === null" class="col-8">
+        Claiming will start soon, map drawing is disabled until then.
+    </div>
+    <div v-else-if="draftStatus.draftOrder[draftStatus.activeDraft].discordId === userDiscordId || draftStatus.draftOrder[draftStatus.activeDraft].userId === userId" class="col-8">
         You are claiming
         <button @click="socket.emit('draftConfirm')" class="btn btn-info">Finished claim</button>
     </div>
-    <div v-else-if="draftStatus.discordId !== userDiscordId" class="col-8">
+    <div v-else class="col-8">
         Currently claiming: {{draftStatus.draftOrder[draftStatus.activeDraft].name}}
     </div>
     <div class="col-4 text-end">
         Timer: {{timer}}
     </div>
     <div v-if="draftStatus.draftOrder.length > (draftStatus.activeDraft+1)" class="col-12">
-        <span v-if="draftStatus.draftOrder[draftStatus.activeDraft+1].discordId === userDiscordId">
+        <span v-if="draftStatus.draftOrder[draftStatus.activeDraft+1].discordId === userDiscordId || draftStatus.draftOrder[draftStatus.activeDraft].userId === userId">
           You are next
         </span>
         <span v-else>
           Next up: {{draftStatus.draftOrder[draftStatus.activeDraft + 1].name}}
         </span>
     </div>
-    <div class="col-12">For more information on drafting, see the Warden Alliance Discord.</div>
+    <div class="col-12">For more information on claiming, see the <a href="{{draftStatus.draftUrl}}">Warden Alliance Discord.</a></div>
     <div v-if="admin" class="col-12">
-        <button @click="socket.send('draftConfirm', {})" class="btn btn-info">Force Next</button>
+        <button @click="socket.send('draftConfirm', {})" class="btn btn-info">Force finish (no next chance)</button>
+        <button @click="socket.send('draftForceNext', {})" class="btn btn-info">Force next (next chance after next claimant)</button>
     </div>
   </div>
 </template>
@@ -28,13 +32,14 @@
 <script setup>
 import {reactive, ref} from "vue";
 
-const props = defineProps(['socket', 'userDiscordId', 'admin'])
+const props = defineProps(['socket', 'userDiscordId', 'admin', 'userId'])
 
 const draftStatus = reactive({
   active: false,
   timeEnd: null,
   draftOrder: [],
   activeDraft: null,
+  draftUrl: '',
 })
 
 const timer = ref(formatTimer())
