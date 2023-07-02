@@ -143,7 +143,7 @@ class SidebarArty {
     },
     "Storm Cannon": { // LongRangeArtillery
       "min": 400,
-      "max": 750,
+      "max": 1000,
       "minAcc": 15, // this is guessed
       "maxAcc": 25, // this is guessed
       "offset": 50,
