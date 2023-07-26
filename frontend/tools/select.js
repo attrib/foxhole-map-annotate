@@ -35,12 +35,14 @@ const RADIUS = {
     friendly_planned_intel_center: 2000,
     friendly_planned_storm_cannon: 1000,
     base_obs: 180,
+    base_obs_t2: 130,
     EmplacementHouse: 100,
   },
   'facility-enemy': {
     enemy_planned_intel_center: 2000,
     enemy_planned_storm_cannon: 1000,
     enemy_base_obs: 180,
+    enemy_base_obs_t2: 130,
   }
 }
 
@@ -485,6 +487,10 @@ class Select {
       this.map.removeOverlay(this.selectOverlays[feature.getId()])
       delete this.selectOverlays[feature.getId()]
       delete this.clocks[feature.getId()]
+    }
+    const radius = this.radiusSource.getFeatureById('radius-' + feature.getId())
+    if (radius) {
+      this.radiusSource.removeFeature(radius)
     }
   }
 
