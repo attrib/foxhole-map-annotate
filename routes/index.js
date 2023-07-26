@@ -38,6 +38,7 @@ router.get('/admin/config', async function (req, res, next) {
     return res.redirect('/');
   }
   res.locals.draftStatus = draftStatus;
+  res.locals.draftStatusSelected = (draftStatus.active && draftStatus.activeDraft in draftStatus.draftOrder) ? draftStatus.draftOrder[draftStatus.activeDraft].discordId : ''
   res.render('admin.config.html');
 })
 
@@ -137,11 +138,15 @@ router.post('/admin/config', function(req, res, next) {
   config.save()
   if (req.body.draftStatus) {
     const draftOrder = []
-    for (const discordId of req.body.draftStatus.draftOrder) {
+    for (const [i, discordId] of req.body.draftStatus.draftOrder.discordId.entries()) {
       if (discordId in config.config.access.discords) {
-        draftOrder.push({discordId, name: config.config.access.discords[discordId].name})
+        draftOrder.push({discordId, userId: null, name: config.config.access.discords[discordId].name})
+      }
+      else {
+        draftOrder.push({discordId: null, userId: req.body.draftStatus.draftOrder.userId[i], name: req.body.draftStatus.draftOrder.name[i]})
       }
     }
+    draftStatus.draftUrl = req.body.draftStatus.draftUrl
     draftStatus.draftOrder = draftOrder
     if (draftStatus.active) {
       if (!req.body.draftStatus.active) {
@@ -154,7 +159,7 @@ router.post('/admin/config', function(req, res, next) {
         })
       }
       else {
-        draftStatus.activeDraft = req.body.draftStatus.activeDraft
+        draftStatus.activeDraft = draftStatus.draftOrder.findIndex(element => req.body.draftStatus.activeDraft === element.discordId)
         draftStatus.emit()
       }
     }
@@ -162,6 +167,7 @@ router.post('/admin/config', function(req, res, next) {
       draftStatus.startDraft()
       eventlog.logEvent({type: 'draftStatus', user: req.session.user, userId: req.session.userId, data: {active: true}})
     }
+    draftStatus.save()
   }
   return res.redirect('/admin/config');
 })

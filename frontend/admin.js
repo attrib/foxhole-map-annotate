@@ -1,4 +1,5 @@
 addListeners(document)
+let dragElement = null
 
 function addListeners(target) {
   const deleteRowButtons = target.getElementsByClassName('deleteRow')
@@ -41,7 +42,65 @@ function addListeners(target) {
       changeInputNames(discordIdInput)
     })
   }
+
+  const draftRow = target.classList && target.classList.contains('draftRow') ? [target] : target.getElementsByClassName('draftRow')
+  for (const row of draftRow) {
+    const select = row.getElementsByTagName('select')[0]
+    const draftUser = row.getElementsByClassName('draftUser')[0]
+    function updateDraftRows() {
+      if (select.value === '') {
+        draftUser.style.display = null
+      }
+      else {
+        draftUser.style.display = 'none'
+      }
+      const draftRows = document.querySelectorAll('.draftRow select');
+      const selected = []
+      draftRows.forEach((otherSelects) => {
+        if (otherSelects.value !== '') {
+          selected.push(otherSelects.value)
+        }
+      });
+      draftRows.forEach((otherSelects) => {
+        otherSelects.querySelectorAll('option').forEach((option) => {
+          if (selected.includes(option.value) && otherSelects.value !== option.value) {
+            option.disabled = true
+          }
+          else {
+            option.disabled = false
+          }
+        });
+      })
+    }
+    updateDraftRows()
+    select.addEventListener('change', updateDraftRows);
+    row.draggable = true
+    row.addEventListener('dragstart', (event) => {
+      dragElement = row;
+      row.classList.add('dragging')
+    })
+    row.addEventListener('dragend', (event) => {
+      row.classList.remove('dragging')
+    })
+  }
 }
+
+const dropzone = document.getElementById('draftDropzone')
+dropzone.addEventListener('dragenter', (event) => {
+  event.preventDefault();
+})
+dropzone.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  let siblings = [ ...dropzone.querySelectorAll(".draftRow:not(.dragging)") ];
+  let nextSibling = siblings.find( sibling => {
+    return event.clientY <= sibling.offsetTop + sibling.offsetHeight
+  })
+  dropzone.insertBefore(dragElement, nextSibling);
+})
+dropzone.addEventListener('drop', (event) => {
+  dragElement = null
+})
+
 
 function changeInputNames(discordIdInput) {
   const changeNeeded = discordIdInput.parentElement.parentElement.getElementsByClassName('discordIdChange')

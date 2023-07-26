@@ -101,6 +101,13 @@
 
                 <div class="tab-pane fade" id="draft-tab-pane" role="tabpanel" aria-labelledby="draft-tab" tabindex="0">
                     <h6>Draft Settings</h6>
+                    <p>This view does not auto update!</p>
+                    <div class="mb-3 row">
+                        <label for="draftStatus-draftUrl" class="col-sm-2 col-form-label form-check-label">Link to Discord Post</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="draftStatus-draftUrl" name="draftStatus[draftUrl]" value="{{draftStatus.draftUrl}}">
+                        </div>
+                    </div>
                     <div class="mb-3 row">
                         <label for="draftStatus-active" class="col-sm-2 col-form-label form-check-label">Active</label>
                         <div class="col-sm-10">
@@ -111,21 +118,23 @@
                     <div class="mb-3 row">
                         <label for="draftStatus-activeDraft" class="col-sm-2 col-form-label">Active Draft</label>
                         <div class="col-sm-10">
-                            {{ draftSelect('draftStatus[activeDraft]', draftStatus.activeDraft) }}
+                            {{ draftSelect('draftStatus[activeDraft]', draftStatusSelected, draftStatus.draftOrder) }}
                         </div>
                     </div>
                     {% endif %}
 
                     <h6>Drafts</h6>
+                    <div id="draftDropzone">
                     {% for draft in draftStatus.draftOrder %}
                         {{ draftRow(draft) }}
                     {% endfor %}
                     <template id="draft-add">
-                        {{ draftRow('', {discordId:'',name:''}) }}
+                        {{ draftRow('', {discordId:'',userId:'',name:''}) }}
                     </template>
                     <div class="mb-3 row">
                         <div class="col-11 text-end btn">Add new Draft</div>
-                        <button data-template-id="draft-add" class="btn btn-primary col-1 addRow">+</button>
+                        <button data-template-id="draft-add" class="btn btn-primary col-1 addRow"><i class="bi bi-plus-circle"></i></button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -230,15 +239,32 @@
 {% endmacro %}
 
 {% macro draftRow(draft) %}
-<div class="mb-3 row">
-    {{ draftSelect('draftStatus[draftOrder][]', draft.discordId) }}
+<div class="mb-3 row draftRow">
+    <div class="col-sm-12 text-center"><i class="bi bi-grip-horizontal"></i></div>
+    <div class="col-sm-11">
+        <select name="draftStatus[draftOrder][discordId][]" class="form-select">
+            <option value="">Specific User</option>
+            {% for discordId, discord in config.access.discords %}
+            <option value="{{ discordId }}" {% if discordId === draft.discordId %}selected{% endif %}>{{ discord.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="btn btn-danger col-sm-1 deleteRow"><i class="bi bi-trash3"></i></button>
+    <div class="draftUser row" style="display: none">
+        <div class="col-sm-6">
+            <input type="text" name="draftStatus[draftOrder][userId][]" value="{{draft.userId}}" class="form-control" placeholder="User Discord ID">
+        </div>
+        <div class="col-sm-5">
+            <input type="text" name="draftStatus[draftOrder][name][]" value="{{draft.name}}" class="form-control" placeholder="Name">
+        </div>
+    </div>
 </div>
 {% endmacro %}
 
-{% macro draftSelect(name, selected) %}
+{% macro draftSelect(name, selected, draftOrder) %}
 <select name="{{name}}" class="form-select">
-    {% for discordId, discord in config.access.discords %}
-        <option value="{{ discordId }}" {% if discordId === selected %}selected{% endif %}>{{ discord.name }}</option>
+    {% for discord in draftOrder %}
+        <option value="{{ discord.discordId }}" {% if discordId === selected %}selected{% endif %}>{{ config.access.discords[discord.discordId].name }}</option>
     {% endfor %}
 </select>
 {% endmacro %}

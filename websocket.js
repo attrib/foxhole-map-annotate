@@ -274,8 +274,14 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'draftConfirm':
-          if (discordId === draftStatus.draftOrder[draftStatus.activeDraft].discordId || hasAccess(userId, acl, ACL_ACTIONS.CONFIG)) {
-            draftStatus.nextDraft()
+          if (discordId === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userId === draftStatus.draftOrder[draftStatus.activeDraft].userId || hasAccess(userId, acl, ACL_ACTIONS.CONFIG)) {
+            draftStatus.nextDraft(true)
+          }
+          break;
+
+        case 'draftForceNext':
+          if (hasAccess(userId, acl, ACL_ACTIONS.CONFIG)) {
+            draftStatus.nextDraft(false)
           }
           break;
       }
