@@ -3,9 +3,9 @@
     <div v-if="draftStatus.activeDraft === null" class="col-8">
         Claiming will start soon, map drawing is disabled until then.
     </div>
-    <div v-else-if="draftStatus.draftOrder[draftStatus.activeDraft].discordId === userDiscordId || draftStatus.draftOrder[draftStatus.activeDraft].userId === userId" class="col-8">
+    <div v-else-if="draftStatus.draftOrder[draftStatus.activeDraft].discordId === userDiscordId.value || draftStatus.draftOrder[draftStatus.activeDraft].userId === userId" class="col-8">
         You are claiming
-        <button @click="socket.emit('draftConfirm')" class="btn btn-info">Finished claim</button>
+        <button @click="socket.send('draftConfirm', {})" class="btn btn-info">Finished claim</button>
     </div>
     <div v-else class="col-8">
         Currently claiming: {{draftStatus.draftOrder[draftStatus.activeDraft].name}}
@@ -13,8 +13,8 @@
     <div class="col-4 text-end">
         Timer: {{timer}}
     </div>
-    <div v-if="draftStatus.draftOrder.length > (draftStatus.activeDraft+1)" class="col-12">
-        <span v-if="draftStatus.draftOrder[draftStatus.activeDraft+1].discordId === userDiscordId || draftStatus.draftOrder[draftStatus.activeDraft].userId === userId">
+    <div v-if="draftStatus.draftOrder.length > ((draftStatus.activeDraft ?? 0)+1)" class="col-12">
+        <span v-if="draftStatus.draftOrder[(draftStatus.activeDraft ?? 0)+1].discordId === userDiscordId.value || draftStatus.draftOrder[(draftStatus.activeDraft ?? 0)].userId === userId">
           You are next
         </span>
         <span v-else>
@@ -22,7 +22,7 @@
         </span>
     </div>
     <div class="col-12">For more information on claiming, see the <a href="{{draftStatus.draftUrl}}">Warden Alliance Discord.</a></div>
-    <div v-if="admin" class="col-12">
+    <div v-if="admin.value" class="col-12">
         <button @click="socket.send('draftConfirm', {})" class="btn btn-info">Force finish (no next chance)</button>
         <button @click="socket.send('draftForceNext', {})" class="btn btn-info">Force next (next chance after next claimant)</button>
     </div>

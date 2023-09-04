@@ -142,15 +142,21 @@ createApp(Draft, {
 }).mount('#draft')
 
 socket.on('draftStatus', (draftStatus) => {
+  if (adminAccess.value) {
+    tools.initAcl(realACL)
+    return
+  }
   if (draftStatus.active) {
-    if (draftStatus.activeDraft && (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userDiscordId === draftStatus.draftOrder[draftStatus.activeDraft].userId)) {
+    console.log(realACL, draftStatus.activeDraft, (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userDiscordId === draftStatus.draftOrder[draftStatus.activeDraft].userId))
+    if (draftStatus.activeDraft !== null && (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userDiscordId === draftStatus.draftOrder[draftStatus.activeDraft].userId)) {
       tools.initAcl(realACL)
     } else {
-      tools.initAcl('read')
+      tools.resetAcl()
+      tools.changeMode(false)
     }
   }
   else if (warStatus === 'resistance') {
-    tools.initAcl('read')
+    tools.resetAcl()
   }
   else {
     tools.initAcl(realACL)
