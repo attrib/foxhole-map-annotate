@@ -274,7 +274,7 @@ wss.on('connection', function (ws, request) {
           break;
 
         case 'draftConfirm':
-          if (discordId === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userId === draftStatus.draftOrder[draftStatus.activeDraft].userId || hasAccess(userId, acl, ACL_ACTIONS.CONFIG)) {
+          if (discordId === draftStatus.draftOrder[draftStatus.activeDraft]?.discordId || userId === draftStatus.draftOrder[draftStatus.activeDraft]?.userId || hasAccess(userId, acl, ACL_ACTIONS.CONFIG)) {
             draftStatus.nextDraft(true)
           }
           break;
