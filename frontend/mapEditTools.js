@@ -122,6 +122,9 @@ class EditTools {
     if (acl !== ACL_READ) {
       this.map.addControl(this.edit.control)
     }
+    else {
+      this.map.removeControl(this.edit.control)
+    }
     this.map.addControl(this.arty.control)
     this.sidebar.setAcl(acl)
   }

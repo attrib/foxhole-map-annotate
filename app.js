@@ -64,10 +64,48 @@ app.use(grant({
 
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
-    req.session.user = 'develop';
-    req.session.userId = '1234567895';
-    req.session.discordId = '1234567895';
-    req.session.acl = ACL_ADMIN;
+    if (req.query.dev === 'admin') {
+      req.session.user = 'admin';
+      req.session.userId = '285113857326710784';
+      req.session.discordId = '987654321098765410';
+      req.session.acl = ACL_ADMIN;
+    }
+    else if (req.query.dev === 'mod') {
+      req.session.user = 'mod';
+      req.session.userId = '101716812827217920';
+      req.session.discordId = '987654321098765410';
+      req.session.acl = ACL_MOD;
+    }
+    else if (req.query.dev === 'full') {
+      req.session.user = 'full';
+      req.session.userId = '123456789012345610';
+      req.session.discordId = '987654321098765410';
+      req.session.acl = ACL_FULL;
+    }
+    else if (req.query.dev === 'full2') {
+      req.session.user = 'full2';
+      req.session.userId = '123456789012345620';
+      req.session.discordId = '987654321098765420';
+      req.session.acl = ACL_FULL;
+    }
+    else if (req.query.dev === 'full3') {
+      req.session.user = 'full3';
+      req.session.userId = '123456789012345630';
+      req.session.discordId = '987654321098765430';
+      req.session.acl = ACL_FULL;
+    }
+    else if (req.query.dev === 'icons') {
+      req.session.user = 'icons';
+      req.session.userId = '123456789012345640';
+      req.session.discordId = '987654321098765410';
+      req.session.acl = ACL_ICONS_ONLY;
+    }
+    else if (req.query.dev === 'read') {
+      req.session.user = 'read';
+      req.session.userId = '123456789012345650';
+      req.session.discordId = '987654321098765410';
+      req.session.acl = ACL_READ;
+    }
   }
   res.locals.config = config.config
   res.locals.title = config.config.basic.title;
