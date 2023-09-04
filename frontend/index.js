@@ -147,7 +147,6 @@ socket.on('draftStatus', (draftStatus) => {
     return
   }
   if (draftStatus.active) {
-    console.log(realACL, draftStatus.activeDraft, (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userDiscordId === draftStatus.draftOrder[draftStatus.activeDraft].userId))
     if (draftStatus.activeDraft !== null && (discordId.value === draftStatus.draftOrder[draftStatus.activeDraft].discordId || userDiscordId === draftStatus.draftOrder[draftStatus.activeDraft].userId)) {
       tools.initAcl(realACL)
     } else {
