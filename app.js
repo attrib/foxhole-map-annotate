@@ -51,6 +51,13 @@ app.use(grant({
     "secret": config.config.discord.secret,
     "scope": ["identify", "guilds.members.read"],
     "callback": "/login",
+  },
+  "discordcn": {
+    "key": config.config.discord.key,
+    "secret": config.config.discord.secret,
+    "scope": ["identify", "guilds.members.read"],
+    "origin": "https://cn.warden.express",
+    "callback": "/login",
   }
 }))
 

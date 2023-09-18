@@ -32,7 +32,9 @@
     serverSelect.addEventListener('change', setServer)
 
     function setServer() {
-      loginButton.href = '/connect/discord?discordServerId=' + serverSelect.value
+      // hack to get cn.warden.express working
+      const oauth = location.hostname === 'cn.warden.express' ? 'discordcn' : 'discord'
+      loginButton.href = '/connect/ ' + oauth + '?discordServerId=' + serverSelect.value
       localStorage.setItem('preferredDiscordServer', serverSelect.value)
     }
 </script>
