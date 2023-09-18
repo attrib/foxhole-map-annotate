@@ -40,6 +40,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionParser)
+app.use((req, res, next) => {
+  // Bad hacks for cn.warden.express
+  if (req.get('host') === 'cn.warden.express') {
+    res.locals.grant = {dynamic: {redirect_uri: 'https://cn.warden.express/connect/discord/callback'}}
+  }
+  next()
+})
 app.use(grant({
   "defaults": {
     "origin": config.config.basic.url,
@@ -51,13 +58,7 @@ app.use(grant({
     "secret": config.config.discord.secret,
     "scope": ["identify", "guilds.members.read"],
     "callback": "/login",
-  },
-  "discordcn": {
-    "key": config.config.discord.key,
-    "secret": config.config.discord.secret,
-    "scope": ["identify", "guilds.members.read"],
-    "origin": "https://cn.warden.express",
-    "callback": "/login",
+    "dynamic": [],
   }
 }))
 
