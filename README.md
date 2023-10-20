@@ -10,6 +10,10 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Facilities not displayed in some strange context
 * The Attachment point (the blue dot thingy) isn't on the line itself. Very hard to move the line this way (by [FMAT] Quini98)
 
+* admin save error
+* edit not working?
+* html entities in text
+
 ## Todos
 
 * Require text for custom area (by [11eFL] mashed)
@@ -67,7 +71,7 @@ cd public
 mkdir map
 cd map
 wget https://cdn.discordapp.com/attachments/1003485765273145424/1039646692095574046/entiremap.png
-docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/ResolvedMap2.png /tmp/files/
+docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
 ```
 
 If you are using Windows Powershell and Docker on Windows

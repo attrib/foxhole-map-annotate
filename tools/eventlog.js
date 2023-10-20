@@ -64,6 +64,8 @@ users = users.sort((a, b) => {
 
 const days = Math.round((war.conquestEndTime - war.conquestStartTime) / 1000 / 60 / 60 / 24)
 
+console.log(users.slice(0, 3))
+
 console.log(`
 **World Conquest ${war.warNumber} WE Stats**
 
