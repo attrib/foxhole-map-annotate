@@ -238,7 +238,7 @@ class Icon {
       return;
     }
     this.tools.sidebar.editFeature = feature
-    this.tools.sidebar.notesInput.value = feature.get('notes') || ''
+    this.tools.sidebar.notesInput.value = this.tools.sidebar.unescape(feature.get('notes') || '')
     this.tools.sidebar.displayForm(['notes']);
     this.featureType = feature.get('type')
     this.featureIcon = feature.get('icon')

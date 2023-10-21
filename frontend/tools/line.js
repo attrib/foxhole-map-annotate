@@ -273,9 +273,9 @@ class Line {
       return;
     }
     this.tools.sidebar.editFeature = feature
-    this.tools.sidebar.clanInput.value = feature.get('clan') || ''
+    this.tools.sidebar.clanInput.value = this.tools.sidebar.unescape(feature.get('clan') || '')
     this.tools.sidebar.lineTypeInput.value = feature.get('lineType') || 'single'
-    this.tools.sidebar.notesInput.value = feature.get('notes') || ''
+    this.tools.sidebar.notesInput.value = this.tools.sidebar.unescape(feature.get('notes') || '')
     this.tools.sidebar.colorInput.value = feature.get('color') || '#555555'
     this.tools.sidebar.setColorInputActive()
 

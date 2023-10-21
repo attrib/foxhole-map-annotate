@@ -225,7 +225,6 @@ class Select {
     }))
     map.on('click', (event) => {
       map.forEachFeatureAtPixel(event.pixel, (feature) => {
-        console.log(feature.get('type'))
         if (feature.get('type') in RADIUS && feature.get('icon') in RADIUS[feature.get('type')]) {
           this.displayRadius(feature)
         }

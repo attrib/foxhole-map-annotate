@@ -10,10 +10,6 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 * Facilities not displayed in some strange context
 * The Attachment point (the blue dot thingy) isn't on the line itself. Very hard to move the line this way (by [FMAT] Quini98)
 
-* admin save error
-* edit not working?
-* html entities in text
-
 ## Todos
 
 * Require text for custom area (by [11eFL] mashed)

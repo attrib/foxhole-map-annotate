@@ -138,12 +138,17 @@ router.post('/admin/config', function(req, res, next) {
   config.save()
   if (req.body.draftStatus) {
     const draftOrder = []
-    for (const [i, discordId] of req.body.draftStatus.draftOrder.discordId.entries()) {
-      if (discordId in config.config.access.discords) {
-        draftOrder.push({discordId, userId: null, name: config.config.access.discords[discordId].name})
-      }
-      else {
-        draftOrder.push({discordId: null, userId: req.body.draftStatus.draftOrder.userId[i], name: req.body.draftStatus.draftOrder.name[i]})
+    if (req.body.draftStatus.draftOrder) {
+      for (const [i, discordId] of req.body.draftStatus.draftOrder.discordId.entries()) {
+        if (discordId in config.config.access.discords) {
+          draftOrder.push({discordId, userId: null, name: config.config.access.discords[discordId].name})
+        } else {
+          draftOrder.push({
+            discordId: null,
+            userId: req.body.draftStatus.draftOrder.userId[i],
+            name: req.body.draftStatus.draftOrder.name[i]
+          })
+        }
       }
     }
     draftStatus.draftUrl = req.body.draftStatus.draftUrl

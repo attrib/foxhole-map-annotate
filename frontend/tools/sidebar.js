@@ -221,6 +221,19 @@ class Sidebar {
       }
     }
   }
+
+  unescape = (val) => {
+    const replace = {
+      '&amp;': '&',
+      '&lt;': '<',
+      '&gt;': '>',
+      '&quot;': '"',
+      '&#x27;': "'",
+      '&#x60;': '`',
+    }
+    val = val == null ? '' : '' + val;
+    return val.replace(RegExp('(?:' + Object.keys(replace).join('|') + ')', 'g'), function (m) { return replace[m]; });
+  }
 }
 
 export default Sidebar
