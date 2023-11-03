@@ -20,7 +20,7 @@ const RADIUS = {
     MapIconStormCannon: 1000,
   },
   town: {
-    MapIconObservationTower: 240,
+    MapIconObservationTower: 500,
     MapIconSafehouse: 100,
     MapIconFortKeep: 80,
     MapIconRelicBase: 150,
@@ -507,6 +507,19 @@ class Select {
       })
       newRadius.set('type', 'radius')
       newRadius.setId('radius-' + feature.getId())
+      if (feature.get('icon') === 'MapIconObservationTower') {
+        newRadius.setStyle(new Style({
+          stroke: new Stroke({
+            color: '#21252955',
+            lineDash: [261, 20],
+            width: 2,
+          }),
+          fill: new Fill({
+            color: '#21252922',
+
+          })
+        }))
+      }
       this.radiusSource.addFeature(newRadius)
     }
   }
