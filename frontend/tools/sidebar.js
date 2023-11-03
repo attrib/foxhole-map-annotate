@@ -103,6 +103,9 @@ class Sidebar {
       }
     })
     document.addEventListener('keydown', (event) => {
+      if (event.target.nodeName.toLowerCase() === 'input' || event.target.nodeName.toLowerCase() === 'textarea') {
+        return
+      }
       if (this.editFeature && event.key === 'Delete') {
         tools.emit(tools.EVENT_ICON_DELETED, this.editFeature)
         this.clearInput();

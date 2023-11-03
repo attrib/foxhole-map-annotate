@@ -23,7 +23,7 @@ class Edit {
       element: this.controlElement
     })
     document.addEventListener('keydown', (event) => {
-      if (event.target.nodeName.toLowerCase() === 'input') {
+      if (event.target.nodeName.toLowerCase() === 'input' || event.target.nodeName.toLowerCase() === 'textarea') {
         return
       }
       if (event.key === 'e') {
