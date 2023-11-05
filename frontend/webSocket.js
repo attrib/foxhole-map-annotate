@@ -1,6 +1,7 @@
 class Socket {
 
-  constructor() {
+  constructor(path = '') {
+    this.path = path
     this.socketClosed = true
     this.listeners = {}
     this.connect()
@@ -37,7 +38,7 @@ class Socket {
   }
 
   connect = (cb) => {
-    this.socket = new WebSocket(location.protocol.replace('http', 'ws') + '//' + location.host);
+    this.socket = new WebSocket(location.protocol.replace('http', 'ws') + '//' + location.host + this.path);
     // Connection opened
     this.socket.addEventListener('open', (event) => {
       this.socketClosed = false;

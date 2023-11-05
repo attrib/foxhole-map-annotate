@@ -133,6 +133,10 @@ app.use((req, res, next) => {
     }
   }
   else {
+    if (req.path === '/stats' || req.path === '/help') {
+      next();
+      return;
+    }
     res.locals.hiddenCode = req.query.hiddenCode || false
     res.locals.user = false
     res.status(req.path === '/' ? 200 : 403);

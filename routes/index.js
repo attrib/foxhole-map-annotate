@@ -18,6 +18,10 @@ router.get('/help', function(req, res, next) {
   res.render('help');
 });
 
+router.get('/stats', function(req, res, next) {
+  res.render('stats');
+});
+
 router.get('/admin', async function (req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN && req.session.acl !== ACL_MOD)) {
     return res.redirect('/');

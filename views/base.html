@@ -65,6 +65,7 @@
                                     <li class="nav-item"><a class="nav-link {% if path == '/admin/eventlog' %}active{% endif %}" href="/admin/eventlog">Admin</a></li>
                                 {% endif %}
                                 <li class="nav-item flex-grow-1"><a class="nav-link {% if path == '/help' %}active{% endif %}" href="/help">Help</a></li>
+                                <li class="nav-item flex-grow-1"><a class="nav-link {% if path == '/stats' %}active{% endif %}" href="/stats">Stats</a></li>
                             </ul>
                             <div class="navbar-nav me-auto text-bg-dark rounded" id="war-score"></div>
                             <div class="navbar-nav justify-content-end">
@@ -115,7 +116,7 @@
                 </nav>
             </div>
         </header>
-        <main class="px-3 h-100">
+        <main class="px-3" style="height: calc(100% - 56px);">
             {% block content %}{% endblock %}
         </main>
     </div>
