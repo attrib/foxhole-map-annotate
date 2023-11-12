@@ -8,7 +8,7 @@ const fs = require('fs');
 const uuid = require('uuid')
 const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions, getWarFeatures,
-  getWarFeaturesVersion, getPublicWarFeatures
+  getWarFeaturesVersion, getPublicWarFeatures, moveObs
 } = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
@@ -286,6 +286,19 @@ wss.on('connection', function (ws, request) {
         case 'draftForceNext':
           if (hasAccess(userId, acl, ACL_ACTIONS.CONFIG)) {
             draftStatus.nextDraft(false)
+          }
+          break;
+
+        case 'obsMove':
+          if (hasAccess(userId, acl, ACL_ACTIONS.MOVE_OBS)) {
+            eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
+            const oldVersion = getConquerStatusVersion()
+            const newData = moveObs(message.data)
+            if (newData) {
+              newData.oldVersion = oldVersion
+              newData.warNumber = warapi.warData.warNumber
+              sendDataToAll('conquer', newData)
+            }
           }
           break;
       }

@@ -7,9 +7,10 @@ import {Collection, Feature, Overlay} from "ol";
 import {getTopLeft} from "ol/extent";
 import {Vector as VectorSource} from "ol/source";
 import {Vector} from "ol/layer";
+import {ACL_ACTIONS} from "../../lib/ACLS";
 
 
-const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius', 'grid']
+const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius', 'grid', 'obsTowerRadius']
 const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field', 'ruler']
 const NO_USER_INFO = [...NOT_SELECTABLE, 'stormCannon']
 const NO_CLOCK = [...NO_USER_INFO, 'sign']
@@ -235,6 +236,45 @@ class Select {
       })
     })
 
+    // ObsTower handling
+    let radiusDragging = {feature: null, diff: 0}
+    map.on('pointerdrag', (event) => {
+      // disable when something is selected or arty calculator is open
+      if (this.select.getFeatures().getLength() > 0 || this.tools.sidebarArty.vector.getVisible() || !this.tools.hasAccess(ACL_ACTIONS.MOVE_OBS, null)) {
+        return
+      }
+      map.forEachFeatureAtPixel(event.pixel, (feature) => {
+        if (feature.get('type') === 'obsTowerRadius') {
+          event.stopPropagation()
+          const angle = Math.atan2(event.coordinate[1] - feature.getGeometry().getFirstCoordinate()[1], event.coordinate[0] - feature.getGeometry().getFirstCoordinate()[0])
+          let norm = Math.ceil(((angle - radiusDragging.diff) * 180 / Math.PI) % 360)
+          if (norm < 0) {
+            norm += 360
+          }
+          if (radiusDragging.feature?.get('id') === feature.get('id')) {
+            radiusDragging.feature.set('angle', norm)
+          }
+          else {
+            radiusDragging.feature = feature
+            radiusDragging.diff = angle - (feature.get('angle')) * Math.PI / 180
+          }
+        }
+      }, {
+        layerFilter: (layer) => {
+          return layer.get('title') === 'ObsTower Range';
+        }
+      });
+    })
+    map.on('pointerup', (event) => {
+      if (radiusDragging.feature) {
+        this.tools.emit(this.tools.EVENT_OBS_MOVED, {
+          id: radiusDragging.feature.get('id'),
+          angle: radiusDragging.feature.get('angle')
+        })
+        radiusDragging.feature = null
+      }
+    })
+
     this.radiusSource = new VectorSource({
       features: new Collection()
     })
@@ -453,8 +493,16 @@ class Select {
   };
 
   getNotes = (feature) => {
-    const note = feature.get('notes') || ''
-    return note.replaceAll("\n", '<br>')
+    let note = feature.get('notes') || ''
+    note = note.replaceAll("\n", '<br>')
+    if (feature.get('icon') === 'MapIconObservationTower') {
+      let angle = ((this.tools.staticLayer.sources['obsTower'].getFeatureById(feature.getId()).get('angle') + 15 + 360 + 90) * -1) % 360
+      if (angle < 0) {
+        angle += 360
+      }
+      note += '<br>Azimuth: ' + angle
+    }
+    return note
   }
 
   getUser = (feature) => {

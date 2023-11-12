@@ -233,6 +233,10 @@ tools.on(tools.EVENT_UNFLAG, (data) => {
   socket.send('unflag', data)
 })
 
+tools.on(tools.EVENT_OBS_MOVED, (data) => {
+  socket.send('obsMove', data)
+})
+
 new Flags(map, tools)
 
 new Measure(map, tools)
