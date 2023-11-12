@@ -88,11 +88,18 @@ function getColor(conquerStatus) {
   if ((conquerStatus.flags & 0x10) === 1) {
     return 'black'
   }
+  let hue = Date.now() - (conquerStatus.lastChange || Date.now() - 86400000)
+  if (hue >= 86400000) {
+    hue = 'BB'
+  }
+  else {
+    hue = Math.floor(255 - (hue / 86400000) * 68).toString(16).padStart(2, '0')
+  }
   if (conquerStatus.team === 'Warden') {
-    return '#245682FF'
+    return '#245682' + hue
   }
   if (conquerStatus.team === 'Colonial') {
-      return '#516C4BFF'
+      return '#516C4B' + hue
   }
   return '#FFFFFFBB'
 }
