@@ -244,7 +244,7 @@ class Select {
         return
       }
       map.forEachFeatureAtPixel(event.pixel, (feature) => {
-        if (feature.get('type') === 'obsTowerRadius') {
+        if (feature.get('type') === 'obsTowerRadius' && this.radiusSource.getFeatureById('radius-' + feature.get('id')) !== null) {
           event.stopPropagation()
           const angle = Math.atan2(event.coordinate[1] - feature.getGeometry().getFirstCoordinate()[1], event.coordinate[0] - feature.getGeometry().getFirstCoordinate()[0])
           let norm = Math.ceil(((angle - radiusDragging.diff) * 180 / Math.PI) % 360)

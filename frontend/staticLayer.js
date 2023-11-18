@@ -437,7 +437,7 @@ class StaticLayers {
 
     const coordinates = []
     coordinates.push(center)
-    for (let i = 0; i <= 10; i++) {
+    for (let i = 0; i <= 11; i++) {
       const angle = feature.get('angle') + i * 3
       const x = center[0] + 0.94 * 500 * Math.cos(angle * Math.PI / 180)
       const y = center[1] + 0.94 * 500 * Math.sin(angle * Math.PI / 180)
