@@ -37,7 +37,14 @@
       </text>
       <image transform="scale (1, -1)" xlink:href="/images/humanQueueColonial.png" :x="center(feature, 0) - 160" :y="center(feature, 1) * -1 + 270" width="120" height="120" />
 
-      <image v-for="(icon, number) in Object.keys(regionFeatures[feature.id] || {})" transform="scale (1, -1)" :xlink:href="`/images/stormCannon/${icon}.png`" :x="center(feature, 0) - (Object.keys(regionFeatures[feature.id]).length / 2) * 160 + 160 * number" :y="center(feature, 1) * -1 + 500" width="160" height="160" />
+      <template v-for="(icon, number) in Object.keys(regionFeatures[feature.id] || {})">
+        <image transform="scale (1, -1)" :xlink:href="`/images/stormCannon/${icon}.png`" :x="center(feature, 0) - (Object.keys(regionFeatures[feature.id]).length / 2) * 160 + 160 * number" :y="center(feature, 1) * -1 + 500" width="160" height="160">
+          <title>{{iconTitle(icon)}} {{ regionFeatures[feature.id][icon] }}</title>
+        </image>
+        <text transform="scale (1, -1)" :x="center(feature, 0) - (Object.keys(regionFeatures[feature.id]).length / 2) * 160 + 160 * number + 120" :y="center(feature, 1) * -1 + 660" text-anchor="middle" fill="white" font-size="100">
+          {{ regionFeatures[feature.id][icon] }}
+        </text>
+      </template>
     </template>
     </g>
   </svg>
@@ -84,9 +91,43 @@ function shouldTownBeDisplayed(feature) {
   return (props.data.conquerStatus.features[feature.id].flags & 0x01) === 1;
 }
 
+function iconTitle(icon) {
+  switch (icon) {
+    case 'MapIconStormCannonWarden':
+      return 'Warden Storm Cannon'
+    case 'MapIconStormCannonColonial':
+      return 'Colonial Storm Cannon'
+    case 'MapIconIntelCenterWarden':
+      return 'Warden Intel Center'
+    case 'MapIconIntelCenterColonial':
+      return 'Colonial Intel Center'
+    case 'MapIconRocketSiteWarden':
+      return 'Warden Rocket Site'
+    case 'MapIconRocketSiteColonial':
+      return 'Colonial Rocket Site'
+    case 'MapIconRocketSiteWithRocketWarden':
+      return 'Warden Rocket Site with Rocket'
+    case 'MapIconRocketSiteWithRocketColonial':
+      return 'Colonial Rocket Site with Rocket'
+    case 'MapIconRocketTargetWarden':
+      return 'Warden Rocket Target'
+    case 'MapIconRocketTargetColonial':
+      return 'Colonial Rocket Target'
+    case 'MapIconRocketGroundZeroWarden':
+      return 'Warden Rocket Ground Zero'
+    case 'MapIconRocketGroundZeroColonial':
+      return 'Colonial Rocket Ground Zero'
+    default:
+      return icon
+  }
+}
+
 watch(props.data, (data) => {
   if (!data.conquerStatus.features) {
     return
+  }
+  for (const region of Object.keys(regionFeatures)) {
+    delete regionFeatures[region]
   }
   for (let feature of Object.values(data.conquerStatus.features)) {
     if (!['MapIconStormCannon', 'MapIconIntelCenter', 'MapIconRocketSite', 'MapIconRocketSiteWithRocket', 'MapIconRocketTarget', 'MapIconRocketGroundZero'].includes(feature.icon)) {
