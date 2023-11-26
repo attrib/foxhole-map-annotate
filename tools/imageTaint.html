@@ -1,0 +1,69 @@
+<html>
+<head>
+</head>
+<body>
+<!--<img src="../public/images/town/MapIconTownBaseTier1.png" width="48" height="48"/>-->
+<!--<img src="../public/images/town/MapIconTownBaseTier2.png" width="48" height="48"/>-->
+<!--<img src="../public/images/town/MapIconTownBaseTier3.png" width="48" height="48"/>-->
+<!--<img src="../public/images/stormCannon/MapIconStormCannon.png" width="48" height="48"/>-->
+<!--<img src="../public/images/stormCannon/MapIconIntelCenter.png" width="48" height="48"/>-->
+<!--<img src="../public/images/stormCannon/MapIconRocketSite.png" width="48" height="48"/>-->
+<!--<img src="../public/images/stormCannon/MapIconRocketSiteWithRocket.png" width="48" height="48"/>-->
+<img src="../public/images/stormCannon/MapIconRocketTarget.png" width="48" height="48"/>
+<!--<img src="../public/images/humanQueue.svg" width="48" height="48"/>-->
+<!--<img src="../public/images/cross.svg" width="48" height="48"/>-->
+
+<script type="application/javascript">
+  const list = document.getElementsByTagName('img')
+  console.log(list)
+  for (let img of list) {
+    img.onload = function() {
+      createImage(img, '#c00000', 'Nuked')
+      createImage(img, '#245682', 'Warden')
+      createImage(img, '#516C4B', 'Colonial')
+    }
+  }
+
+  function createImage(img, color, suffix) {
+    // Create a buffer element to draw based on the Image img
+    const buffer = document.createElement('canvas');
+    buffer.width = img.width;
+    buffer.height = img.height;
+    const btx = buffer.getContext('2d');
+
+    // First draw your image to the buffer
+    btx.drawImage(img, 0, 0);
+
+    // Now we'll multiply a rectangle of your chosen color
+    btx.fillStyle = color;
+    btx.globalCompositeOperation = 'multiply';
+    btx.fillRect(0, 0, buffer.width, buffer.height);
+
+    // Finally, fix masking issues you'll probably incur and optional globalAlpha
+    btx.globalAlpha = 1;
+    btx.globalCompositeOperation = 'destination-in';
+    btx.drawImage(img, 0, 0);
+
+    document.body.appendChild(buffer);
+
+    const name = img.src.split('/').pop().split('.')[0] + suffix + '.png'
+
+    // this can be used to download any image from webpage to local disk
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = function () {
+      let a = document.createElement('a');
+      a.href = window.URL.createObjectURL(xhr.response);
+      a.download = name;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+    xhr.open('GET', buffer.toDataURL('image/png')); // This is to download the canvas Image
+    xhr.send();
+  }
+  console.log('done')
+</script>
+</body>
+</html>

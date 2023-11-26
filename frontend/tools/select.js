@@ -495,6 +495,9 @@ class Select {
   getNotes = (feature) => {
     let note = feature.get('notes') || ''
     note = note.replaceAll("\n", '<br>')
+    if (feature.get('type') === 'town' && feature.get('lastChange')) {
+      note += '<br>Conquered at ' + new Date(feature.get('lastChange')).toLocaleString()
+    }
     if (feature.get('icon') === 'MapIconObservationTower') {
       let angle = ((this.tools.staticLayer.sources['obsTower'].getFeatureById(feature.getId()).get('angle') + 15 + 360 + 90) * -1) % 360
       if (angle < 0) {

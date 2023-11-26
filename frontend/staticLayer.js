@@ -461,7 +461,8 @@ class StaticLayers {
         town.set('iconFlags', data.flags, true)
         const team = data.flags & 0x10 ? 'Nuked' : data.team
         town.set('team', team)
-        if (flash) {
+        town.set('lastChange', data.lastChange)
+        if (flash && data.icon !== 'MapIconObservationTower') {
           this.flash(town)
         }
         if (town.get('voronoi')) {
@@ -530,6 +531,9 @@ class StaticLayers {
         const team = csFeature.flags & 0x10 ? 'Nuked' : this.conquerStatus.features[feature.get('id')].team
         feature.set('iconFlags', csFeature.flags, true)
         feature.set('team', team)
+        if (csFeature.lastChange) {
+          feature.set('lastChange', csFeature.lastChange)
+        }
         if (feature.get('voronoi')) {
           const voronoi = this.sources.voronoi.getFeatureById(feature.get('voronoi'))
           if (voronoi) {
