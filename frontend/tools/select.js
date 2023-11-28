@@ -19,6 +19,10 @@ const RADIUS = {
   stormCannon: {
     MapIconIntelCenter: 2000,
     MapIconStormCannon: 1000,
+    MapIconRocketSite: 2000,
+    MapIconRocketSiteWithRocket: 2000,
+    MapIconRocketTarget: 80,
+    MapIconRocketGroundZero: 80,
   },
   town: {
     MapIconObservationTower: 500,

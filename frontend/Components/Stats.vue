@@ -26,6 +26,8 @@
       <text transform="scale (1, -1)" :x="center(feature, 0)" :y="center(feature, 1) * -1" text-anchor="middle" fill="white" font-size="200">
         {{ feature.properties.notes }}
       </text>
+
+      <template v-if="loggedIn">
       <text transform="scale (1, -1)" :x="center(feature, 0) + 60" :y="center(feature, 1) * -1 + 240" text-anchor="middle" fill="white" font-size="120">
         <title>Warden Queue</title>
         {{ queueStatus.queues[feature.id]?.w || 0 }}
@@ -36,6 +38,7 @@
         {{ queueStatus.queues[feature.id]?.c || 0 }}
       </text>
       <image transform="scale (1, -1)" xlink:href="/images/humanQueueColonial.png" :x="center(feature, 0) - 160" :y="center(feature, 1) * -1 + 270" width="120" height="120" />
+      </template>
 
       <template v-for="(icon, number) in Object.keys(regionFeatures[feature.id] || {})">
         <image transform="scale (1, -1)" :xlink:href="`/images/stormCannon/${icon}.png`" :x="center(feature, 0) - (Object.keys(regionFeatures[feature.id]).length / 2) * 160 + 160 * number" :y="center(feature, 1) * -1 + 500" width="160" height="160">
@@ -57,6 +60,7 @@ const staticJson = reactive({"type":"FeatureCollection","features":[]})
 const props = defineProps(['data', 'queueStatus'])
 const svgNode = ref(null)
 const regionFeatures = reactive({})
+const loggedIn = document.getElementById('discord-username') !== null
 
 fetch("/static.json")
   .then(response => response.json())
@@ -207,7 +211,6 @@ function redirect(event) {
   pt.x = event.clientX;
   pt.y = event.clientY;
   let cursorpt =  pt.matrixTransform(svgNode.value.getScreenCTM().inverse());
-  const loggedIn = document.getElementById('discord-username')
   if (loggedIn) {
     window.location.href = `/?cx=${cursorpt.x}&cy=${cursorpt.y * -1}&r=2.50000`
   }
