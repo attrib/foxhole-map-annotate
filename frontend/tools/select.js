@@ -502,6 +502,14 @@ class Select {
     if (feature.get('type') === 'town' && feature.get('lastChange')) {
       note += '<br>Conquered at ' + new Date(feature.get('lastChange')).toLocaleString()
     }
+    if (feature.get('icon') === 'MapIconRocketSiteWithRocket' && feature.get('lastChange')) {
+      const rtf1 = new Intl.RelativeTimeFormat('en', { style: 'short' });
+      note += '<br>Fueling since ' + rtf1.format(((new Date(feature.get('lastChange')).getTime() - new Date().getTime()) / 3600000).toFixed(2), 'hour')
+    }
+    if (feature.get('icon') === 'MapIconRocketTarget' && feature.get('lastChange')) {
+      const rtf1 = new Intl.RelativeTimeFormat('en', { style: 'short' });
+      note += '<br>Targeting since ' + rtf1.format(((new Date(feature.get('lastChange')).getTime() - new Date().getTime()) / 3600000).toFixed(2), 'hour')
+    }
     if (feature.get('icon') === 'MapIconObservationTower') {
       let angle = ((this.tools.staticLayer.sources['obsTower'].getFeatureById(feature.getId()).get('angle') + 15 + 360 + 90) * -1) % 360
       if (angle < 0) {

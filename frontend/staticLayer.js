@@ -489,7 +489,17 @@ class StaticLayers {
       }
       if (data.type === 'stormCannon') {
         if (!data.destroyed) {
-          this.sources.stormCannon.addFeature(this.createStormCannonFeature(id, data))
+          const sc = this.sources.stormCannon.getFeatureById(id)
+          if (!sc) {
+            this.sources.stormCannon.addFeature(this.createStormCannonFeature(id, data))
+          }
+          else {
+            sc.set('type', data.type, true)
+            sc.set('notes', data.notes, true)
+            sc.set('icon', data.icon, true)
+            sc.set('team', data.team, true)
+            sc.set('lastChange', data.lastChange)
+          }
         } else {
           const stormCannon = this.sources.stormCannon.getFeatureById(id)
           if (stormCannon) {
@@ -665,6 +675,7 @@ class StaticLayers {
       icon: conquerData.icon,
       team: conquerData.team,
       geometry: new Point(conquerData.coordinates),
+      lastChange: conquerData.lastChange,
     });
     feat.setId(id)
     return feat
