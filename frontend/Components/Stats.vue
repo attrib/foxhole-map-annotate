@@ -92,7 +92,7 @@ function shouldTownBeDisplayed(feature) {
   if (feature.properties.type !== 'town') {
     return false
   }
-  return (props.data.conquerStatus.features[feature.id].flags & 0x01) === 1;
+  return (props.data.conquerStatus.features[feature.id]?.flags & 0x01) === 1;
 }
 
 function iconTitle(icon) {
