@@ -1,6 +1,5 @@
 const fs = require('fs')
 const warapi = require('../lib/warapi')
-const uuid = require("uuid");
 const newIconTypes = [27];
 //  5677.127345, -6208.60737175
 //  5676.70238 -6208.1989975

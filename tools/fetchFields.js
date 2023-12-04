@@ -1,6 +1,6 @@
 const regions = require(__dirname + '/../public/regions.json')
 const warapi = require('../lib/warapi')
-const uuid = require('uuid')
+const { randomUUID } = require('crypto')
 const extent = [-2050,1775]
 
 const icons = require(__dirname + '/../data/icons.json')
@@ -27,7 +27,7 @@ for (const region of regions.features) {
   promises.push(warapi.dynamicMap(region.id).then((data) => {
     for (const item of data.mapItems) {
       if (item.iconType in warapi.iconTypes && warapi.iconTypes[item.iconType].type === 'field') {
-        const id = uuid.v4()
+        const id = randomUUID()
         icons.features.push({
           "type": "Feature",
           "id": id,

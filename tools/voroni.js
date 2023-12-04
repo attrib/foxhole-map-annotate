@@ -1,7 +1,7 @@
 const fs = require('fs');
 const regions = JSON.parse(fs.readFileSync(__dirname + '/../data/regions.json'))
 //const warapi = require("../lib/warapi")
-const uuid = require("uuid")
+const { randomUUID } = require("crypto")
 const GeoJSON = import("ol/format/GeoJSON.js")
 const VectorSource = import("ol/source/Vector.js")
 const Collection = import("ol")
@@ -90,7 +90,7 @@ Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, Vec
 
     collection.forEach((feature) => {
       const intersectedFeature = geonJson.readFeature(intersect(geonJson.writeFeatureObject(feature), geonJson.writeFeatureObject(regionFeature)))
-      intersectedFeature.setId(uuid.v4())
+      intersectedFeature.setId(randomUUID())
       source.forEachFeature((label) => {
         if(intersectedFeature.getGeometry().intersectsCoordinate(label.getGeometry().getCoordinates())) {
           intersectedFeature.set('notes', label.get('notes'))

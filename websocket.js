@@ -5,7 +5,7 @@ const publicWss = new webSocket.Server({clientTracking: false, noServer: true});
 const clients = new Map();
 const publicClients = new Map();
 const fs = require('fs');
-const uuid = require('uuid')
+const { randomUUID } = require('crypto')
 const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions, getWarFeatures,
   getWarFeaturesVersion, getPublicWarFeatures, moveObs
@@ -65,7 +65,7 @@ wss.on('connection', function (ws, request) {
     const userId = request.session.userId;
     const discordId = request.session.discordId;
     const acl = request.session.acl;
-    const wsId = uuid.v4();
+    const wsId = randomUUID();
     clients.set(wsId, ws);
 
     ws.send(JSON.stringify({
@@ -117,7 +117,7 @@ wss.on('connection', function (ws, request) {
           if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_ADD, feature)) {
             return;
           }
-          feature.id = uuid.v4()
+          feature.id = randomUUID()
           feature.properties.id = feature.id
           feature.properties.user = username
           feature.properties.userId = userId
@@ -416,7 +416,7 @@ warapi.on(warapi.EVENT_WAR_UPDATED, ({newData}) => {
 })
 
 publicWss.on('connection', function (ws, request) {
-  const wsId = uuid.v4();
+  const wsId = randomUUID();
   publicClients.set(wsId, ws);
 
   ws.send(JSON.stringify({

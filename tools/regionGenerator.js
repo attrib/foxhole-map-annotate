@@ -1,7 +1,7 @@
 const region = require('./deadland.json');
 const fs = require('fs');
 const warapi = require("../lib/warapi")
-const uuid = require("uuid");
+const { randomUUID } = require("crypto")
 const GeoJSON = import("ol/format/GeoJSON.js")
 const VectorSource = import("ol/source/Vector.js")
 const Collection = import("ol")
@@ -110,7 +110,7 @@ const promises = []
 for (const reg of region.features) {
     promises.push(warapi.staticMap(reg.id).then((data) => {
         for (const item of data.mapTextItems) {
-            const id = idMap[item.mapMarkerType + item.text + reg.id] || uuid.v4()
+            const id = idMap[item.mapMarkerType + item.text + reg.id] || randomUUID()
             region.features.push({
                 type: "Feature",
                 id: id,
@@ -199,7 +199,7 @@ Promise.all(promises).then(() => {
                             intersectedFeature.set('type', 'voronoi')
                         }
                     })
-                    intersectedFeature.setId(idMap['voronoi' + intersectedFeature.get('notes') + regionId] || uuid.v4())
+                    intersectedFeature.setId(idMap['voronoi' + intersectedFeature.get('notes') + regionId] || randomUUID())
                     voronoiDiagrams.push(geonJson.writeFeatureObject(intersectedFeature))
                 })
             }
