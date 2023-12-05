@@ -1,9 +1,9 @@
-import {Draw} from "ol/interaction";
-import {assert} from "ol/asserts";
-import {Icon as olIcon, Style} from "ol/style";
-import {Group, Vector} from "ol/layer";
-import {Collection} from "ol";
-import {Vector as VectorSource} from "ol/source";
+import { Collection } from "ol";
+import { assert } from "ol/asserts.js";
+import { Draw } from "ol/interaction.js";
+import { Group, Vector } from "ol/layer.js";
+import { Vector as VectorSource } from "ol/source.js";
+import { Icon as olIcon, Style } from "ol/style.js";
 
 class Icon {
 

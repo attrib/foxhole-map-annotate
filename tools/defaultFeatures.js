@@ -1,4 +1,5 @@
-const fs = require("fs");
+import fs from "node:fs";
+import path from "node:path";
 
 // const defaultFeature = JSON.parse(fs.readFileSync(`data/features.json`, 'utf8'))
 //
@@ -20,7 +21,7 @@ const defaultFeature = {
 // const defaultFeature = fs.readFileSync(`data/features.json`, 'utf8')
 
 for (let i = 104; i <= 104; i++) {
-  const content = fs.readFileSync(`data/war${i}/features.json`, 'utf8')
+  const content = fs.readFileSync(path.resolve(`data/war${i}/features.json`), 'utf8')
   console.log(i)
   const parsed = JSON.parse(content)
 
@@ -39,7 +40,7 @@ for (let i = 104; i <= 104; i++) {
 }
 
 console.log(defaultFeature.features.length)
-fs.writeFile('data/defaultFeatures.json', JSON.stringify(defaultFeature), err => {
+fs.writeFile(path.resolve('data/defaultFeatures.json'), JSON.stringify(defaultFeature), err => {
   if (err) {
     console.error(err);
   }

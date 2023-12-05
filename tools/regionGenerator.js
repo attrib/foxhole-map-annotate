@@ -1,16 +1,19 @@
-const region = require('./deadland.json');
-const fs = require('fs');
-const warapi = require("../lib/warapi")
-const { randomUUID } = require("crypto")
-const GeoJSON = import("ol/format/GeoJSON.js")
-const VectorSource = import("ol/source/Vector.js")
-const Collection = import("ol")
-const LineString = import("ol/geom/LineString.js")
-const voronoi = require('@turf/voronoi')
-const intersect = require('@turf/intersect').default
-const hash = require('object-hash');
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 
-const oldStatic = JSON.parse(fs.readFileSync(__dirname + '/../public/static.json', 'utf8'));
+import intersect from "@turf/intersect";
+import voronoi from "@turf/voronoi";
+import hash from "object-hash";
+import { Collection } from "ol";
+import GeoJSON from "ol/format/GeoJSON.js";
+import LineString from "ol/geom/LineString.js";
+import VectorSource from "ol/source/Vector.js";
+
+import warapi from "../lib/warapi.js";
+import region from "./deadland.json";
+
+const oldStatic = JSON.parse(fs.readFileSync(path.resolve('public/static.json'), 'utf8'));
 const idMap = {}
 const posMap = {}
 let pos = 0
@@ -110,7 +113,7 @@ const promises = []
 for (const reg of region.features) {
     promises.push(warapi.staticMap(reg.id).then((data) => {
         for (const item of data.mapTextItems) {
-            const id = idMap[item.mapMarkerType + item.text + reg.id] || randomUUID()
+            const id = idMap[item.mapMarkerType + item.text + reg.id] || crypto.randomUUID()
             region.features.push({
                 type: "Feature",
                 id: id,
@@ -130,7 +133,7 @@ for (const reg of region.features) {
 }
 
 Promise.all(promises).then(() => {
-    fs.writeFile(__dirname + '/../public/static.json', JSON.stringify(region), err => {
+    fs.writeFile(path.resolve('public/static.json'), JSON.stringify(region), err => {
         if (err) {
             console.error(err);
             return
@@ -199,7 +202,7 @@ Promise.all(promises).then(() => {
                             intersectedFeature.set('type', 'voronoi')
                         }
                     })
-                    intersectedFeature.setId(idMap['voronoi' + intersectedFeature.get('notes') + regionId] || randomUUID())
+                    intersectedFeature.setId(idMap['voronoi' + intersectedFeature.get('notes') + regionId] || crypto.randomUUID())
                     voronoiDiagrams.push(geonJson.writeFeatureObject(intersectedFeature))
                 })
             }
@@ -235,7 +238,7 @@ Promise.all(promises).then(() => {
                 return (a.id in posMap ? posMap[a.id] : 2000) - (b.id in posMap ? posMap[b.id] : 2000)
             })
 
-            fs.writeFileSync(__dirname + '/../public/static.json', JSON.stringify(collection))
+            fs.writeFileSync(path.resolve('public/static.json'), JSON.stringify(collection))
             process.exit(0)
         })
     });

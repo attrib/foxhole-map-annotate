@@ -1,5 +1,5 @@
-import Split from "ol-ext/interaction/Split";
-import {Vector as VectorSource} from "ol/source";
+import Split from "ol-ext/interaction/Split.js";
+import { Vector as VectorSource } from "ol/source.js";
 
 class Scissor {
 

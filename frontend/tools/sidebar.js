@@ -1,4 +1,4 @@
-import {ACL_ICONS_ONLY} from "../../lib/ACLS";
+import { ACL_ICONS_ONLY } from "../../lib/ACLS.js";
 
 class Sidebar {
 

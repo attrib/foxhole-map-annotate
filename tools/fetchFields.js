@@ -1,10 +1,11 @@
-const regions = require(__dirname + '/../public/regions.json')
-const warapi = require('../lib/warapi')
-const { randomUUID } = require('crypto')
-const extent = [-2050,1775]
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 
-const icons = require(__dirname + '/../data/icons.json')
-const fs = require("fs");
+import icons from "../data/icons.json";
+import warapi from "../lib/warapi.js";
+import regions from "../public/regions.json";
+
 const deleteFields = []
 for (const i in icons.features) {
   const feature = icons.features[i]
@@ -27,7 +28,7 @@ for (const region of regions.features) {
   promises.push(warapi.dynamicMap(region.id).then((data) => {
     for (const item of data.mapItems) {
       if (item.iconType in warapi.iconTypes && warapi.iconTypes[item.iconType].type === 'field') {
-        const id = randomUUID()
+        const id = crypto.randomUUID()
         icons.features.push({
           "type": "Feature",
           "id": id,
@@ -53,7 +54,7 @@ for (const region of regions.features) {
 }
 
 Promise.all(promises).then(() => {
-  fs.writeFile(__dirname + '/../data/icons.json', JSON.stringify(icons, null, 2), err => {
+  fs.writeFile(path.resolve('data/icons.json'), JSON.stringify(icons, null, 2), err => {
     if (err) {
       console.error(err);
     }

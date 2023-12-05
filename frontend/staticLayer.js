@@ -1,15 +1,15 @@
-import {Vector as VectorSource} from "ol/source";
-import {Circle, Fill, Icon, Stroke, Style, Text} from "ol/style";
-import {Circle as CircleGeo, Polygon} from "ol/geom";
-import {Group, VectorImage as Vector} from "ol/layer";
-import {GeoJSON} from "ol/format";
-import {Collection, Feature} from "ol";
-import CircleStyle from "ol/style/Circle";
-import {easeOut} from "ol/easing";
-import {getVectorContext} from "ol/render";
-import {unByKey} from "ol/Observable";
-import {LineString, Point} from "ol/geom";
-import {createApp, reactive} from "vue";
+import { Collection, Feature } from "ol";
+import { unByKey } from "ol/Observable.js";
+import { easeOut } from "ol/easing.js";
+import { GeoJSON } from "ol/format.js";
+import { Circle as CircleGeo, LineString, Point, Polygon } from "ol/geom.js";
+import { Group, VectorImage as Vector } from "ol/layer.js";
+import { getVectorContext } from "ol/render.js";
+import { Vector as VectorSource } from "ol/source.js";
+import { Circle, Fill, Icon, Stroke, Style, Text } from "ol/style.js";
+import CircleStyle from "ol/style/Circle.js";
+import { createApp, reactive } from "vue";
+
 import VPCounter from "./Components/VPCounter.vue";
 
 class StaticLayers {

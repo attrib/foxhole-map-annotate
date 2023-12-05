@@ -1,6 +1,8 @@
-const fs = require("fs");
+import fs from "node:fs";
+import path from "node:path";
 
-const defaultFeature = JSON.parse(fs.readFileSync(`../data/defaultFeatures.json`, 'utf8'))
+const defaultFeaturePath = path.resolve('data/defaultFeatures.json')
+const defaultFeature = JSON.parse(fs.readFileSync(defaultFeaturePath, 'utf8'))
 
 for (const feature of defaultFeature.features) {
   feature.geometry.coordinates[0] = feature.geometry.coordinates[0].map((coords) => {
@@ -10,7 +12,7 @@ for (const feature of defaultFeature.features) {
 }
 
 console.log(defaultFeature.features.length)
-fs.writeFile('../data/defaultFeatures.json', JSON.stringify(defaultFeature), err => {
+fs.writeFile(defaultFeaturePath, JSON.stringify(defaultFeature), err => {
   if (err) {
     console.error(err);
   }

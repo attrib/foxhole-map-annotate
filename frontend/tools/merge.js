@@ -1,4 +1,4 @@
-import MergeInteraction from "../Interaction/Merge";
+import MergeInteraction from "../Interaction/Merge.js";
 
 class Merge {
 

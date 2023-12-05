@@ -4,9 +4,11 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('foxhole-map-annotate:server');
-var http = require('http');
+import http from "node:http";
+
+import debug from "debug";
+
+import app from "../app.js";
 
 /**
  * Get port from environment and store in Express.
@@ -32,7 +34,9 @@ server.on('listening', onListening);
 /**
  * Websocket
  */
-require('../websocket')(server)
+import('../websocket.js')
+  .then((module) => module.default)
+  .then((startServer) => startServer(server))
 
 /**
  * Normalize a port into a number, string, or false.
@@ -91,5 +95,6 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  var debugInstance = debug('foxhole-map-annotate:server');
+  debugInstance('Listening on ' + bind);
 }

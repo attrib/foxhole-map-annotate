@@ -1,5 +1,6 @@
-import {createCustomControlElement} from "../mapControls";
-import {Control} from "ol/control";
+import { Control } from "ol/control.js";
+
+import { createCustomControlElement } from "../mapControls.js";
 
 class Arty {
 

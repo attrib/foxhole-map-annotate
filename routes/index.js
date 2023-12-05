@@ -1,13 +1,14 @@
-const express = require('express');
+import express from "express";
+import sanitizeHtml from "sanitize-html";
+
+import { ACL_ADMIN, ACL_MOD } from "../lib/ACLS.js";
+import config from "../lib/config.js";
+import { clearRegionsCache } from "../lib/conquerUpdater.js";
+import Discord from "../lib/discord.js";
+import draftStatus from "../lib/draftStatus.js";
+import eventLog from "../lib/eventLog.js";
+
 const router = express.Router();
-const Discord = require('../lib/discord')
-const eventLog = require('../lib/eventLog')
-const {ACL_ADMIN, ACL_MOD} = require("../lib/ACLS");
-const config = require('../lib/config')
-const sanitizeHtml = require('sanitize-html')
-const eventlog = require('../lib/eventLog');
-const {clearRegionsCache} = require("../lib/conquerUpdater");
-const draftStatus = require('../lib/draftStatus');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -50,7 +51,7 @@ router.post('/admin/reload', function (req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN)) {
     return res.redirect('/');
   }
-  eventlog.logEvent({type: 'forcedMapReload', user: req.session.user, userId: req.session.userId, data: config.config})
+  eventLog.logEvent({type: 'forcedMapReload', user: req.session.user, userId: req.session.userId, data: config.config})
   clearRegionsCache()
   return res.redirect('/admin/config');
 })
@@ -59,7 +60,7 @@ router.post('/admin/config', function(req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN)) {
     return res.redirect('/');
   }
-  eventlog.logEvent({type: 'configChange', user: req.session.user, userId: req.session.userId, data: config.config})
+  eventLog.logEvent({type: 'configChange', user: req.session.user, userId: req.session.userId, data: config.config})
   if (req.body.title.match(/^[\w ]+$/)) {
     config.config.basic.title = req.body.title
   }
@@ -160,7 +161,7 @@ router.post('/admin/config', function(req, res, next) {
     if (draftStatus.active) {
       if (!req.body.draftStatus.active) {
         draftStatus.stopDraft()
-        eventlog.logEvent({
+        eventLog.logEvent({
           type: 'draftStatus',
           user: req.session.user,
           userId: req.session.userId,
@@ -174,7 +175,7 @@ router.post('/admin/config', function(req, res, next) {
     }
     if (!draftStatus.active && req.body.draftStatus.active) {
       draftStatus.startDraft()
-      eventlog.logEvent({type: 'draftStatus', user: req.session.user, userId: req.session.userId, data: {active: true}})
+      eventLog.logEvent({type: 'draftStatus', user: req.session.user, userId: req.session.userId, data: {active: true}})
     }
     draftStatus.save()
   }
@@ -215,4 +216,4 @@ router.get('/logout', function(req, res, next) {
   })
 });
 
-module.exports = router;
+export default router;

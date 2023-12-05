@@ -1,6 +1,7 @@
-import {MousePosition} from "ol/control";
+import { MousePosition } from "ol/control.js";
 import LayerSwitcher from "ol-layerswitcher";
-import Search from "./Search";
+
+import Search from "./Search.js";
 
 const mousePositionControl = new MousePosition({
   className: 'custom-mouse-position',

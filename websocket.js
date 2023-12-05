@@ -1,21 +1,40 @@
-const webSocket = require("ws");
-const sessionParser = require("./lib/session");
-const wss = new webSocket.Server({clientTracking: false, noServer: true});
-const publicWss = new webSocket.Server({clientTracking: false, noServer: true});
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { parse } from "node:url";
+
+import sanitizeHtml from "sanitize-html";
+import WebSocket, { WebSocketServer } from "ws";
+
+import { ACL_ACTIONS, hasAccess } from "./lib/ACLS.js";
+import {
+  clearRegions,
+  getConquerStatus,
+  getConquerStatusVersion,
+  getPublicWarFeatures,
+  getWarFeatures,
+  getWarFeaturesVersion,
+  moveObs,
+  regenRegions,
+  updateMap,
+} from "./lib/conquerUpdater.js";
+import draftStatus from "./lib/draftStatus.js";
+import eventLog from "./lib/eventLog.js";
+import {
+  defaultFeatures,
+  loadFeatures,
+  saveFeatures,
+} from "./lib/featureLoader.js";
+import sessionParser from "./lib/session.js";
+import warapi from "./lib/warapi.js";
+
+const wss = new WebSocketServer({ clientTracking: false, noServer: true });
+const publicWss = new WebSocketServer({
+  clientTracking: false,
+  noServer: true,
+});
 const clients = new Map();
 const publicClients = new Map();
-const fs = require('fs');
-const { randomUUID } = require('crypto')
-const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
-const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions, getWarFeatures,
-  getWarFeaturesVersion, getPublicWarFeatures, moveObs
-} = require("./lib/conquerUpdater");
-const warapi = require('./lib/warapi')
-const eventLog = require('./lib/eventLog')
-const sanitizeHtml = require("sanitize-html");
-const {loadFeatures, saveFeatures, defaultFeatures} = require("./lib/featureLoader");
-const draftStatus = require("./lib/draftStatus");
-const {parse} = require("url");
 
 setTimeout(conquerUpdater, 10000)
 
@@ -25,11 +44,11 @@ let cachedQueue = {
   ratio: 0.5,
 }
 
-if (fs.existsSync(__dirname + '/data/queue.json')) {
-  fs.watch(__dirname + '/data/queue.json', (event) => {
+if (fs.existsSync(path.resolve('data/queue.json'))) {
+  fs.watch(path.resolve('data/queue.json'), (event) => {
     if (event === 'change') {
       setTimeout(() => {
-        const content = fs.readFileSync(__dirname + '/data/queue.json', 'utf8')
+        const content = fs.readFileSync(path.resolve('data/queue.json'), 'utf8')
         try {
           cachedQueue = JSON.parse(content)
           sendDataToAll('queue', cachedQueue)
@@ -65,7 +84,7 @@ wss.on('connection', function (ws, request) {
     const userId = request.session.userId;
     const discordId = request.session.discordId;
     const acl = request.session.acl;
-    const wsId = randomUUID();
+    const wsId = crypto.randomUUID();
     clients.set(wsId, ws);
 
     ws.send(JSON.stringify({
@@ -117,7 +136,7 @@ wss.on('connection', function (ws, request) {
           if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_ADD, feature)) {
             return;
           }
-          feature.id = randomUUID()
+          feature.id = crypto.randomUUID()
           feature.properties.id = feature.id
           feature.properties.user = username
           feature.properties.userId = userId
@@ -316,7 +335,7 @@ draftStatus.on((data) => {
 
 function sendDataToAll(type, data) {
   clients.forEach(function each(client) {
-    if (client.readyState === webSocket.WebSocket.OPEN) {
+    if (client.readyState === WebSocket.OPEN) {
       sendData(client, type, data);
     }
   });
@@ -324,7 +343,7 @@ function sendDataToAll(type, data) {
 
 function sendDataToPublic(type, data) {
   publicClients.forEach(function each(client) {
-    if (client.readyState === webSocket.WebSocket.OPEN) {
+    if (client.readyState === WebSocket.OPEN) {
       sendData(client, type, data);
     }
   });
@@ -416,7 +435,7 @@ warapi.on(warapi.EVENT_WAR_UPDATED, ({newData}) => {
 })
 
 publicWss.on('connection', function (ws, request) {
-  const wsId = randomUUID();
+  const wsId = crypto.randomUUID();
   publicClients.set(wsId, ws);
 
   ws.send(JSON.stringify({
@@ -440,7 +459,7 @@ publicWss.on('connection', function (ws, request) {
   });
 });
 
-module.exports = function (server) {
+export default function startServer (server) {
   server.on('upgrade', function (request, socket, head) {
     const { pathname } = parse(request.url);
 

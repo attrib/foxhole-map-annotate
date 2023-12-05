@@ -1,10 +1,10 @@
-import {Draw} from "ol/interaction";
-import {assert} from "ol/asserts";
-import {Fill, Stroke, Style, Text} from "ol/style";
-import {Vector} from "ol/layer";
-import {Collection} from "ol";
-import {Vector as VectorSource} from "ol/source";
-import {createEditingStyle} from "ol/style/Style";
+import { Collection } from "ol";
+import { assert } from "ol/asserts.js";
+import { Draw } from "ol/interaction.js";
+import { Vector } from "ol/layer.js";
+import { Vector as VectorSource } from "ol/source.js";
+import { Fill, Stroke, Style, Text } from "ol/style.js";
+import { createEditingStyle } from "ol/style/Style.js";
 
 
 class Polygon {

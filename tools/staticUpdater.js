@@ -1,10 +1,13 @@
-const fs = require('fs')
-const warapi = require('../lib/warapi')
+import fs from "node:fs";
+import path from "node:path";
+
+import warapi from "../lib/warapi.js";
+
 const newIconTypes = [27];
 //  5677.127345, -6208.60737175
 //  5676.70238 -6208.1989975
 
-const regions = JSON.parse(fs.readFileSync(__dirname + '/../public/static.json', 'utf8'))
+const regions = JSON.parse(fs.readFileSync(path.resolve('public/static.json'), 'utf8'))
 
 const extent = [-2050,1775]
 const promises = []
@@ -115,7 +118,7 @@ for (const region of regions.features) {
 
 Promise.all(promises).then(() => {
   console.log('not processed features', knownFeatures, Object.keys(knownFeatures).length)
-  fs.writeFileSync(__dirname + '/../public/static.json', JSON.stringify(regions))
+  fs.writeFileSync(path.resolve('public/static.json'), JSON.stringify(regions))
   console.log('done')
   process.exit(0)
 })

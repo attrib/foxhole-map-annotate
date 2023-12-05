@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 
 const props = defineProps(['socket', 'userDiscordId', 'admin', 'userId'])
 

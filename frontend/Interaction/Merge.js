@@ -1,9 +1,9 @@
-import {Interaction} from "ol/interaction";
-import {Vector as VectorSource} from "ol/source";
-import {Vector} from "ol/layer";
-import {Collection, Feature} from "ol";
-import {LineString, Point} from "ol/geom";
-import {createEditingStyle} from "ol/style/Style";
+import { Collection, Feature } from "ol";
+import { LineString, Point } from "ol/geom.js";
+import { Interaction } from "ol/interaction.js";
+import { Vector } from "ol/layer.js";
+import { Vector as VectorSource } from "ol/source.js";
+import { createEditingStyle } from "ol/style/Style.js";
 
 
 class Merge extends Interaction {

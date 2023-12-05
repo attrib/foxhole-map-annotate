@@ -1,15 +1,15 @@
-import {Collection} from "ol";
-import Feature from "ol/Feature";
-import Point from "ol/geom/Point";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import Icon from "ol/style/Icon";
-import Style from "ol/style/Style";
-import Translate from "ol/interaction/Translate";
-import {Circle} from "ol/geom";
-import LineString from "ol/geom/LineString";
-import Stroke from "ol/style/Stroke";
-import Fill from "ol/style/Fill";
+import { Collection } from "ol";
+import Feature from "ol/Feature.js";
+import { Circle } from "ol/geom.js";
+import LineString from "ol/geom/LineString.js";
+import Point from "ol/geom/Point.js";
+import Translate from "ol/interaction/Translate.js";
+import VectorLayer from "ol/layer/Vector.js";
+import VectorSource from "ol/source/Vector.js";
+import Fill from "ol/style/Fill.js";
+import Icon from "ol/style/Icon.js";
+import Stroke from "ol/style/Stroke.js";
+import Style from "ol/style/Style.js";
 
 
 class SidebarArty {

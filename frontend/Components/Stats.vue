@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import {reactive, ref, watch} from "vue";
+import { reactive, ref, watch } from "vue";
 
 const staticJson = reactive({"type":"FeatureCollection","features":[]})
 const props = defineProps(['data', 'queueStatus'])
