@@ -8,7 +8,7 @@
     "dev": "node --watch --env-file .env ./bin/www",
     "build": "webpack --config ./webpack.prod.js",
     "build.dev": "webpack --config ./webpack.dev.js",
-    "test": "vitest"
+    "test": "vitest --dir __tests__"
   },
   "dependencies": {
     "cookie-parser": "^1.4.4",

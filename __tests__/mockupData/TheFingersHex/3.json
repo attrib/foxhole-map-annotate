@@ -1,0 +1,35 @@
+{
+  "regionId": 38,
+  "scorchedVictoryTowns": 0,
+  "mapItems": [
+    {
+      "teamId": "NONE",
+      "iconType": 20,
+      "x": 0.8716014,
+      "y": 0.58127743,
+      "flags": 0,
+      "viewDirection": 0
+    },
+    {
+      "teamId": "WARDENS",
+      "iconType": 45,
+      "x": 0.4513862,
+      "y": 0.36646345,
+      "flags": 8,
+      "viewDirection": 0
+    },
+    {
+      "teamId": "WARDENS",
+      "iconType": 59,
+      "x": 0.5513862,
+      "y": 0.46646345,
+      "flags": 0,
+      "viewDirection": 0
+    }
+  ],
+  "mapItemsC": [],
+  "mapItemsW": [],
+  "mapTextItems": [],
+  "lastUpdated": 1701336872090,
+  "version": 12
+}

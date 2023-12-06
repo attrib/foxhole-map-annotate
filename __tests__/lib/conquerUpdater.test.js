@@ -6,11 +6,75 @@ import warApi from "../../lib/warapi.js";
 import * as conquerUpdater from "../../lib/conquerUpdater.js";
 import { test, vi, expect } from "vitest";
 
-fs.unlinkSync(path.resolve("data/conquer.test.json"));
-fs.unlinkSync(path.resolve("data/war.test.json"));
-
 vi.mock("../../lib/config.js");
 vi.mock("../../lib/warapi.js");
+vi.mocked(warApi.maps).mockResolvedValue(["TheFingersHex"]);
+vi.mocked(warApi.getTeam).mockImplementation((teamId) => {
+  if (teamId === "NONE") {
+    return "";
+  }
+  if (teamId === "COLONIALS") {
+    return "Colonial";
+  }
+  if (teamId === "WARDENS") {
+    return "Warden";
+  }
+})
+let fakeDataCounter = 1
+const mockedData = function(hexId) {
+  if (fs.existsSync(path.resolve(`__tests__/mockupData/${hexId}/${fakeDataCounter}.json`))) {
+    const content = fs.readFileSync(path.resolve(`__tests__/mockupData/${hexId}/${fakeDataCounter}.json`), 'utf8')
+    return JSON.parse(content)
+  }
+  return null
+}
+vi.mocked(warApi.dynamicMap).mockImplementation(mockedData);
+vi.mocked(warApi.dynamicMapETag).mockImplementation(mockedData);
+
+const expectedDeactivatedRegions = [
+  "TerminusHex",
+  "AllodsBightHex",
+  "EndlessShoreHex",
+  "WeatheredExpanseHex",
+  "ClansheadValleyHex",
+  "MorgensCrossingHex",
+  "GodcroftsHex",
+  "TempestIslandHex",
+  "CallahansPassageHex",
+  "ReachingTrailHex",
+  "BasinSionnachHex",
+  "ViperPitHex",
+  "HowlCountyHex",
+  "AcrithiaHex",
+  "ShackledChasmHex",
+  "DrownedValeHex",
+  "MarbanHollow",
+  "FarranacCoastHex",
+  "NevishLineHex",
+  "CallumsCapeHex",
+  "MooringCountyHex",
+  "SpeakingWoodsHex",
+  "AshFieldsHex",
+  "SableportHex",
+  "KingsCageHex",
+  "StonecradleHex",
+  "WestgateHex",
+  "OriginHex",
+  "RedRiverHex",
+  "HeartlandsHex",
+  "LochMorHex",
+  "LinnMercyHex",
+  "KalokaiHex",
+  "GreatMarchHex",
+  "UmbralWildwoodHex",
+  "DeadLandsHex",
+  "FishermansRowHex",
+  "OarbreakerHex",
+  "StlicanShelfHex",
+  "ReaversPassHex",
+  "ClahstraHex",
+  "StemaLandingHex",
+]
 
 test("getWarFeaturesInit", () => {
   const warFeatures = conquerUpdater.getWarFeatures();
@@ -26,196 +90,7 @@ test("getWarFeaturesInit", () => {
 // console.log(config)
 
 test("updateMapTests", () => {
-  vi.mocked(warApi.maps).mockResolvedValue(["TheFingersHex"]);
-  vi.mocked(warApi.getTeam).mockImplementation((teamId) => {
-    if (teamId === "NONE") {
-      return "";
-    }
-    if (teamId === "COLONIALS") {
-      return "Colonial";
-    }
-    if (teamId === "WARDENS") {
-      return "Warden";
-    }
-  })
-  const data1 = {
-    regionId: 38,
-    scorchedVictoryTowns: 0,
-    mapItems: [
-      {
-        teamId: "NONE",
-        iconType: 20,
-        x: 0.8716014,
-        y: 0.58127743,
-        flags: 0,
-        viewDirection: 0,
-      },
-      {
-        teamId: "COLONIALS",
-        iconType: 45,
-        x: 0.4513862,
-        y: 0.36646345,
-        flags: 8,
-        viewDirection: 0,
-      },
-    ],
-    mapItemsC: [],
-    mapItemsW: [],
-    mapTextItems: [],
-    lastUpdated: 1701336872072,
-    version: 10,
-  };
-  const data2 = {
-    regionId: 38,
-    scorchedVictoryTowns: 0,
-    mapItems: [
-      {
-        teamId: "NONE",
-        iconType: 20,
-        x: 0.8716014,
-        y: 0.58127743,
-        flags: 0,
-        viewDirection: 0,
-      },
-      {
-        teamId: "NONE",
-        iconType: 45,
-        x: 0.4513862,
-        y: 0.36646345,
-        flags: 8,
-        viewDirection: 0,
-      },
-    ],
-    mapItemsC: [],
-    mapItemsW: [],
-    mapTextItems: [],
-    lastUpdated: 1701336872080,
-    version: 11,
-  };
-  const data3 = {
-    regionId: 38,
-    scorchedVictoryTowns: 0,
-    mapItems: [
-      {
-        teamId: "NONE",
-        iconType: 20,
-        x: 0.8716014,
-        y: 0.58127743,
-        flags: 0,
-        viewDirection: 0,
-      },
-      {
-        teamId: "WARDENS",
-        iconType: 45,
-        x: 0.4513862,
-        y: 0.36646345,
-        flags: 8,
-        viewDirection: 0,
-      },
-      {
-        teamId: "WARDENS",
-        iconType: 59,
-        x: 0.5513862,
-        y: 0.46646345,
-        flags: 0,
-        viewDirection: 0,
-      },
-    ],
-    mapItemsC: [],
-    mapItemsW: [],
-    mapTextItems: [],
-    lastUpdated: 1701336872090,
-    version: 12,
-  };
-  const data4 = {
-    regionId: 38,
-    scorchedVictoryTowns: 0,
-    mapItems: [
-      {
-        teamId: "NONE",
-        iconType: 20,
-        x: 0.8716014,
-        y: 0.58127743,
-        flags: 0,
-        viewDirection: 0,
-      },
-      {
-        teamId: "NONE",
-        iconType: 45,
-        x: 0.4513862,
-        y: 0.36646345,
-        flags: 8,
-        viewDirection: 0,
-      },
-      {
-        teamId: "WARDENS",
-        iconType: 59,
-        x: 0.5513862,
-        y: 0.46646345,
-        flags: 0,
-        viewDirection: 0,
-      },
-      {
-        teamId: "WARDENS",
-        iconType: 59,
-        x: 0.5523862,
-        y: 0.46646345,
-        flags: 0,
-        viewDirection: 0,
-      },
-    ],
-    mapItemsC: [],
-    mapItemsW: [],
-    mapTextItems: [],
-    lastUpdated: 1701336872100,
-    version: 13,
-  };
-  const data5 = {
-    regionId: 38,
-    scorchedVictoryTowns: 0,
-    mapItems: [
-      {
-        teamId: "NONE",
-        iconType: 20,
-        x: 0.8716014,
-        y: 0.58127743,
-        flags: 0,
-        viewDirection: 0,
-      },
-      {
-        teamId: "COLONIALS",
-        iconType: 45,
-        x: 0.4513862,
-        y: 0.36646345,
-        flags: 8,
-        viewDirection: 0,
-      },
-      {
-        teamId: "WARDENS",
-        iconType: 59,
-        x: 0.5523862,
-        y: 0.46646345,
-        flags: 0,
-        viewDirection: 0,
-      },
-      {
-        teamId: "COLONIALS",
-        iconType: 59,
-        x: 0.5513862,
-        y: 0.46646345,
-        flags: 0,
-        viewDirection: 0,
-      },
-    ],
-    mapItemsC: [],
-    mapItemsW: [],
-    mapTextItems: [],
-    lastUpdated: 1701336872110,
-    version: 14,
-  };
-
-  vi.mocked(warApi.dynamicMap).mockResolvedValue(data1);
-  vi.mocked(warApi.dynamicMapETag).mockResolvedValue(data1);
+  fakeDataCounter = 1
   return conquerUpdater
     .updateMap()
     .then((data) => {
@@ -232,50 +107,7 @@ test("updateMapTests", () => {
       const warFeatures = conquerUpdater.getWarFeatures();
       expect(warFeatures).toEqual(
         expect.objectContaining({
-          deactivatedRegions: [
-            "TerminusHex",
-            "AllodsBightHex",
-            "EndlessShoreHex",
-            "WeatheredExpanseHex",
-            "ClansheadValleyHex",
-            "MorgensCrossingHex",
-            "GodcroftsHex",
-            "TempestIslandHex",
-            "CallahansPassageHex",
-            "ReachingTrailHex",
-            "BasinSionnachHex",
-            "ViperPitHex",
-            "HowlCountyHex",
-            "AcrithiaHex",
-            "ShackledChasmHex",
-            "DrownedValeHex",
-            "MarbanHollow",
-            "FarranacCoastHex",
-            "NevishLineHex",
-            "CallumsCapeHex",
-            "MooringCountyHex",
-            "SpeakingWoodsHex",
-            "AshFieldsHex",
-            "SableportHex",
-            "KingsCageHex",
-            "StonecradleHex",
-            "WestgateHex",
-            "OriginHex",
-            "RedRiverHex",
-            "HeartlandsHex",
-            "LochMorHex",
-            "LinnMercyHex",
-            "KalokaiHex",
-            "GreatMarchHex",
-            "UmbralWildwoodHex",
-            "DeadLandsHex",
-            "FishermansRowHex",
-            "OarbreakerHex",
-            "StlicanShelfHex",
-            "ReaversPassHex",
-            "ClahstraHex",
-            "StemaLandingHex",
-          ],
+          deactivatedRegions: expectedDeactivatedRegions,
         })
       );
       expect(warFeatures.features).toEqual([
@@ -314,8 +146,7 @@ test("updateMapTests", () => {
         }),
       ]);
       warApi.eTags["TheFingersHex"] = 10;
-      warApi.dynamicMap.mockResolvedValue(null);
-      warApi.dynamicMapETag.mockResolvedValue(null);
+      fakeDataCounter = 99 // null, same etag no change
       return conquerUpdater.updateMap();
     })
     .then((data) => {
@@ -323,50 +154,7 @@ test("updateMapTests", () => {
       const warFeatures = conquerUpdater.getWarFeatures();
       expect(warFeatures).toEqual(
         expect.objectContaining({
-          deactivatedRegions: [
-            "TerminusHex",
-            "AllodsBightHex",
-            "EndlessShoreHex",
-            "WeatheredExpanseHex",
-            "ClansheadValleyHex",
-            "MorgensCrossingHex",
-            "GodcroftsHex",
-            "TempestIslandHex",
-            "CallahansPassageHex",
-            "ReachingTrailHex",
-            "BasinSionnachHex",
-            "ViperPitHex",
-            "HowlCountyHex",
-            "AcrithiaHex",
-            "ShackledChasmHex",
-            "DrownedValeHex",
-            "MarbanHollow",
-            "FarranacCoastHex",
-            "NevishLineHex",
-            "CallumsCapeHex",
-            "MooringCountyHex",
-            "SpeakingWoodsHex",
-            "AshFieldsHex",
-            "SableportHex",
-            "KingsCageHex",
-            "StonecradleHex",
-            "WestgateHex",
-            "OriginHex",
-            "RedRiverHex",
-            "HeartlandsHex",
-            "LochMorHex",
-            "LinnMercyHex",
-            "KalokaiHex",
-            "GreatMarchHex",
-            "UmbralWildwoodHex",
-            "DeadLandsHex",
-            "FishermansRowHex",
-            "OarbreakerHex",
-            "StlicanShelfHex",
-            "ReaversPassHex",
-            "ClahstraHex",
-            "StemaLandingHex",
-          ],
+          deactivatedRegions: expectedDeactivatedRegions,
         })
       );
       expect(warFeatures.features).toEqual([
@@ -405,8 +193,7 @@ test("updateMapTests", () => {
         }),
       ]);
       warApi.eTags["TheFingersHex"] = 10;
-      vi.mocked(warApi.dynamicMap).mockResolvedValue(data2);
-      vi.mocked(warApi.dynamicMapETag).mockResolvedValue(data2);
+      fakeDataCounter = 2
       return conquerUpdater.updateMap();
     })
     .then((data) => {
@@ -423,50 +210,7 @@ test("updateMapTests", () => {
       const warFeatures = conquerUpdater.getWarFeatures();
       expect(warFeatures).toEqual(
         expect.objectContaining({
-          deactivatedRegions: [
-            "TerminusHex",
-            "AllodsBightHex",
-            "EndlessShoreHex",
-            "WeatheredExpanseHex",
-            "ClansheadValleyHex",
-            "MorgensCrossingHex",
-            "GodcroftsHex",
-            "TempestIslandHex",
-            "CallahansPassageHex",
-            "ReachingTrailHex",
-            "BasinSionnachHex",
-            "ViperPitHex",
-            "HowlCountyHex",
-            "AcrithiaHex",
-            "ShackledChasmHex",
-            "DrownedValeHex",
-            "MarbanHollow",
-            "FarranacCoastHex",
-            "NevishLineHex",
-            "CallumsCapeHex",
-            "MooringCountyHex",
-            "SpeakingWoodsHex",
-            "AshFieldsHex",
-            "SableportHex",
-            "KingsCageHex",
-            "StonecradleHex",
-            "WestgateHex",
-            "OriginHex",
-            "RedRiverHex",
-            "HeartlandsHex",
-            "LochMorHex",
-            "LinnMercyHex",
-            "KalokaiHex",
-            "GreatMarchHex",
-            "UmbralWildwoodHex",
-            "DeadLandsHex",
-            "FishermansRowHex",
-            "OarbreakerHex",
-            "StlicanShelfHex",
-            "ReaversPassHex",
-            "ClahstraHex",
-            "StemaLandingHex",
-          ],
+          deactivatedRegions: expectedDeactivatedRegions,
         })
       );
       expect(warFeatures.features).toEqual([
@@ -505,8 +249,7 @@ test("updateMapTests", () => {
         }),
       ]);
       warApi.eTags["TheFingersHex"] = 11;
-      vi.mocked(warApi.dynamicMap).mockResolvedValue(data3);
-      vi.mocked(warApi.dynamicMapETag).mockResolvedValue(data3);
+      fakeDataCounter = 3
       return conquerUpdater.updateMap();
     })
     .then((data) => {
@@ -534,50 +277,7 @@ test("updateMapTests", () => {
       const warFeatures = conquerUpdater.getWarFeatures();
       expect(warFeatures).toEqual(
         expect.objectContaining({
-          deactivatedRegions: [
-            "TerminusHex",
-            "AllodsBightHex",
-            "EndlessShoreHex",
-            "WeatheredExpanseHex",
-            "ClansheadValleyHex",
-            "MorgensCrossingHex",
-            "GodcroftsHex",
-            "TempestIslandHex",
-            "CallahansPassageHex",
-            "ReachingTrailHex",
-            "BasinSionnachHex",
-            "ViperPitHex",
-            "HowlCountyHex",
-            "AcrithiaHex",
-            "ShackledChasmHex",
-            "DrownedValeHex",
-            "MarbanHollow",
-            "FarranacCoastHex",
-            "NevishLineHex",
-            "CallumsCapeHex",
-            "MooringCountyHex",
-            "SpeakingWoodsHex",
-            "AshFieldsHex",
-            "SableportHex",
-            "KingsCageHex",
-            "StonecradleHex",
-            "WestgateHex",
-            "OriginHex",
-            "RedRiverHex",
-            "HeartlandsHex",
-            "LochMorHex",
-            "LinnMercyHex",
-            "KalokaiHex",
-            "GreatMarchHex",
-            "UmbralWildwoodHex",
-            "DeadLandsHex",
-            "FishermansRowHex",
-            "OarbreakerHex",
-            "StlicanShelfHex",
-            "ReaversPassHex",
-            "ClahstraHex",
-            "StemaLandingHex",
-          ],
+          deactivatedRegions: expectedDeactivatedRegions,
         })
       );
       expect(warFeatures.features).toEqual([
@@ -616,8 +316,7 @@ test("updateMapTests", () => {
         }),
       ]);
       warApi.eTags["TheFingersHex"] = 12;
-      vi.mocked(warApi.dynamicMap).mockResolvedValue(data4);
-      vi.mocked(warApi.dynamicMapETag).mockResolvedValue(data4);
+      fakeDataCounter = 4
       return conquerUpdater.updateMap();
     })
     .then((data) => {
@@ -645,50 +344,7 @@ test("updateMapTests", () => {
       const warFeatures = conquerUpdater.getWarFeatures();
       expect(warFeatures).toEqual(
         expect.objectContaining({
-          deactivatedRegions: [
-            "TerminusHex",
-            "AllodsBightHex",
-            "EndlessShoreHex",
-            "WeatheredExpanseHex",
-            "ClansheadValleyHex",
-            "MorgensCrossingHex",
-            "GodcroftsHex",
-            "TempestIslandHex",
-            "CallahansPassageHex",
-            "ReachingTrailHex",
-            "BasinSionnachHex",
-            "ViperPitHex",
-            "HowlCountyHex",
-            "AcrithiaHex",
-            "ShackledChasmHex",
-            "DrownedValeHex",
-            "MarbanHollow",
-            "FarranacCoastHex",
-            "NevishLineHex",
-            "CallumsCapeHex",
-            "MooringCountyHex",
-            "SpeakingWoodsHex",
-            "AshFieldsHex",
-            "SableportHex",
-            "KingsCageHex",
-            "StonecradleHex",
-            "WestgateHex",
-            "OriginHex",
-            "RedRiverHex",
-            "HeartlandsHex",
-            "LochMorHex",
-            "LinnMercyHex",
-            "KalokaiHex",
-            "GreatMarchHex",
-            "UmbralWildwoodHex",
-            "DeadLandsHex",
-            "FishermansRowHex",
-            "OarbreakerHex",
-            "StlicanShelfHex",
-            "ReaversPassHex",
-            "ClahstraHex",
-            "StemaLandingHex",
-          ],
+          deactivatedRegions: expectedDeactivatedRegions,
         })
       );
       expect(warFeatures.features).toEqual([
@@ -727,8 +383,7 @@ test("updateMapTests", () => {
         }),
       ]);
       warApi.eTags["TheFingersHex"] = 13;
-      vi.mocked(warApi.dynamicMap).mockResolvedValue(data5);
-      vi.mocked(warApi.dynamicMapETag).mockResolvedValue(data5);
+      fakeDataCounter = 5
       return conquerUpdater.updateMap();
     })
     .then((data) => {
@@ -767,50 +422,7 @@ test("updateMapTests", () => {
       const warFeatures = conquerUpdater.getWarFeatures();
       expect(warFeatures).toEqual(
         expect.objectContaining({
-          deactivatedRegions: [
-            "TerminusHex",
-            "AllodsBightHex",
-            "EndlessShoreHex",
-            "WeatheredExpanseHex",
-            "ClansheadValleyHex",
-            "MorgensCrossingHex",
-            "GodcroftsHex",
-            "TempestIslandHex",
-            "CallahansPassageHex",
-            "ReachingTrailHex",
-            "BasinSionnachHex",
-            "ViperPitHex",
-            "HowlCountyHex",
-            "AcrithiaHex",
-            "ShackledChasmHex",
-            "DrownedValeHex",
-            "MarbanHollow",
-            "FarranacCoastHex",
-            "NevishLineHex",
-            "CallumsCapeHex",
-            "MooringCountyHex",
-            "SpeakingWoodsHex",
-            "AshFieldsHex",
-            "SableportHex",
-            "KingsCageHex",
-            "StonecradleHex",
-            "WestgateHex",
-            "OriginHex",
-            "RedRiverHex",
-            "HeartlandsHex",
-            "LochMorHex",
-            "LinnMercyHex",
-            "KalokaiHex",
-            "GreatMarchHex",
-            "UmbralWildwoodHex",
-            "DeadLandsHex",
-            "FishermansRowHex",
-            "OarbreakerHex",
-            "StlicanShelfHex",
-            "ReaversPassHex",
-            "ClahstraHex",
-            "StemaLandingHex",
-          ],
+          deactivatedRegions: expectedDeactivatedRegions,
         })
       );
       expect(warFeatures.features).toEqual([

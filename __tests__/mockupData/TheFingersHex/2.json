@@ -1,0 +1,27 @@
+{
+  "regionId": 38,
+  "scorchedVictoryTowns": 0,
+  "mapItems": [
+    {
+      "teamId": "NONE",
+      "iconType": 20,
+      "x": 0.8716014,
+      "y": 0.58127743,
+      "flags": 0,
+      "viewDirection": 0
+    },
+    {
+      "teamId": "NONE",
+      "iconType": 45,
+      "x": 0.4513862,
+      "y": 0.36646345,
+      "flags": 8,
+      "viewDirection": 0
+    }
+  ],
+  "mapItemsC": [],
+  "mapItemsW": [],
+  "mapTextItems": [],
+  "lastUpdated": 1701336872080,
+  "version": 11
+}

@@ -19,4 +19,4 @@ COPY --from=build /app/public/dist /app/public/dist
 ARG COMMIT_HASH
 ENV COMMIT_HASH=${COMMIT_HASH}
 
-CMD [ "node", "bin/www" ]
+CMD [ "node", "--env-file", ".env", "bin/www" ]
