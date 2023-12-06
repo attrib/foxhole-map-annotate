@@ -1,21 +1,22 @@
-import TileGrid from "ol/tilegrid/TileGrid";
-import {Map, View} from "ol";
-import {defaults} from "ol/control";
-import {Group, Tile} from "ol/layer";
-import {TileImage} from "ol/source";
-import {GeoJSON} from "ol/format";
-import {addDefaultMapControls, enableLayerMemory} from "./mapControls"
-import Socket from "./webSocket";
-import StaticLayers from "./staticLayer";
-import {DragPan} from "ol/interaction";
-import {all, noModifierKeys} from "ol/events/condition";
-import {assert} from "ol/asserts";
-import Flags from "./flags";
-import Measure from "./measure";
-import EditTools from "./mapEditTools";
-import {createApp, reactive, ref} from "vue";
+import { Map, View } from "ol";
+import { assert } from "ol/asserts.js";
+import { defaults } from "ol/control.js";
+import { all, noModifierKeys } from "ol/events/condition.js";
+import { GeoJSON } from "ol/format.js";
+import { DragPan } from "ol/interaction.js";
+import { Group, Tile } from "ol/layer.js";
+import { TileImage } from "ol/source.js";
+import TileGrid from "ol/tilegrid/TileGrid.js";
+import { createApp, reactive, ref } from "vue";
+
+import { ACL_ACTIONS, hasAccess } from "../lib/ACLS.js";
 import Draft from "./Components/Draft.vue";
-import {ACL_ACTIONS, hasAccess} from "../lib/ACLS";
+import Flags from "./flags.js";
+import { addDefaultMapControls, enableLayerMemory } from "./mapControls.js";
+import EditTools from "./mapEditTools.js";
+import Measure from "./measure.js";
+import StaticLayers from "./staticLayer.js";
+import Socket from "./webSocket.js";
 
 const url = new URL(window.location);
 

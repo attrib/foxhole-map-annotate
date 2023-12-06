@@ -1,17 +1,18 @@
-import LayerGroup from "ol/layer/Group";
-import Edit from "./tools/edit";
-import Arty from "./tools/arty";
-import {ACL_READ, hasAccess} from "../lib/ACLS";
-import Select from "./tools/select";
-import {Group} from "ol/layer";
-import {GeoJSON} from "ol/format";
-import Sidebar from "./tools/sidebar";
-import SidebarArty from "./tools/sidebarArty";
-import Icon from "./tools/icon";
-import Polygon from "./tools/polygon";
-import Line from "./tools/line";
-import Scissor from "./tools/scissor";
-import Merge from "./tools/merge";
+import { GeoJSON } from "ol/format.js";
+import { Group } from "ol/layer.js";
+import LayerGroup from "ol/layer/Group.js";
+import Arty from "./tools/arty.js";
+import Edit from "./tools/edit.js";
+import Select from "./tools/select.js";
+
+import { ACL_READ, hasAccess } from "../lib/ACLS.js";
+import Icon from "./tools/icon.js";
+import Line from "./tools/line.js";
+import Merge from "./tools/merge.js";
+import Polygon from "./tools/polygon.js";
+import Scissor from "./tools/scissor.js";
+import Sidebar from "./tools/sidebar.js";
+import SidebarArty from "./tools/sidebarArty.js";
 
 class EditTools {
   EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';

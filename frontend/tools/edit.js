@@ -1,8 +1,8 @@
-import {createCustomControlElement} from "../mapControls";
-import {Control} from "ol/control";
-import {Modify} from "ol/interaction";
-import {altKeyOnly, shiftKeyOnly, singleClick} from "ol/events/condition";
+import { Control } from "ol/control.js";
+import { altKeyOnly, shiftKeyOnly, singleClick } from "ol/events/condition.js";
+import { Modify } from "ol/interaction.js";
 
+import { createCustomControlElement } from "../mapControls.js";
 
 class Edit {
 

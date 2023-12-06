@@ -1,7 +1,8 @@
-const fs = require("fs")
+import fs from "node:fs";
+import path from "node:path";
 
-const content = fs.readFileSync(__dirname + '/../data/eventlog.json', 'utf8')
-const war = JSON.parse(fs.readFileSync(__dirname + '/../data/wardata.json', 'utf8'))
+const content = fs.readFileSync(path.resolve('data/eventlog.json'), 'utf8')
+const war = JSON.parse(fs.readFileSync(path.resolve('data/wardata.json'), 'utf8'))
 const eventlog = []
 
 for (let line of content.split("\n")) {

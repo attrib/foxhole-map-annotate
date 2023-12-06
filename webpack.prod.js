@@ -1,15 +1,16 @@
-const { merge } = require('webpack-merge');
-const common = require('./webpack.config.js');
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const webpack = require("webpack");
+import webpack from "webpack";
+import { merge } from "webpack-merge";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 
-module.exports = merge(common, {
+import common from "./webpack.config.js";
+
+export default merge(common, {
   mode: 'production',
   devtool: 'source-map',
   optimization: {
     minimizer: [
       // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-       `...`,
+      `...`,
       new CssMinimizerPlugin(),
     ],
   },

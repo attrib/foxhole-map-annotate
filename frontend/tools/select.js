@@ -1,13 +1,14 @@
-import {never} from "ol/events/condition";
-import {Circle, Fill, Stroke, Style} from "ol/style";
-import {Circle as CircleGeo} from "ol/geom";
-import {SelectEvent} from "ol/interaction/Select";
-import {Select as OlSelect} from "ol/interaction";
-import {Collection, Feature, Overlay} from "ol";
-import {getTopLeft} from "ol/extent";
-import {Vector as VectorSource} from "ol/source";
-import {Vector} from "ol/layer";
-import {ACL_ACTIONS} from "../../lib/ACLS";
+import { Collection, Feature, Overlay } from "ol";
+import { never } from "ol/events/condition.js";
+import { getTopLeft } from "ol/extent.js";
+import { Circle as CircleGeo } from "ol/geom.js";
+import { Select as OlSelect } from "ol/interaction.js";
+import { SelectEvent } from "ol/interaction/Select.js";
+import { Vector } from "ol/layer.js";
+import { Vector as VectorSource } from "ol/source.js";
+import { Circle, Fill, Stroke, Style } from "ol/style.js";
+
+import { ACL_ACTIONS } from "../../lib/ACLS.js";
 
 
 const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius', 'grid', 'obsTowerRadius']

@@ -1,4 +1,4 @@
-FROM node:19 AS build
+FROM node:21 AS build
 ENV NODE_ENV=development
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
@@ -7,7 +7,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:19-alpine
+FROM node:21-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
@@ -19,4 +19,4 @@ COPY --from=build /app/public/dist /app/public/dist
 ARG COMMIT_HASH
 ENV COMMIT_HASH=${COMMIT_HASH}
 
-CMD [ "node", "bin/www" ]
+CMD [ "node", "--env-file", ".env", "bin/www" ]

@@ -1,9 +1,10 @@
-const path = require('path');
-const miniCssExtractPlugin = require('mini-css-extract-plugin')
-const {VueLoaderPlugin} = require('vue-loader')
-const webpack = require("webpack");
+import path from "node:path";
 
-module.exports = {
+import miniCssExtractPlugin from "mini-css-extract-plugin";
+import { VueLoaderPlugin } from "vue-loader";
+import webpack from "webpack";
+
+export default {
   entry: {
     index: ['./frontend/index.js'],
     stats: ['./frontend/stats.js'],
@@ -12,7 +13,7 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'public', 'dist'),
+    path: path.resolve('public', 'dist'),
     publicPath: "/dist/",
   },
   module: {

@@ -1,9 +1,9 @@
-import {createCustomControlElement} from "./mapControls";
-import {Control} from "ol/control";
-import {Draw} from "ol/interaction";
-import {Overlay} from "ol";
-import {unByKey} from "ol/Observable";
+import { Control } from "ol/control.js";
+import { Draw } from "ol/interaction.js";
+import { Overlay } from "ol";
+import { unByKey } from "ol/Observable.js";
 
+import { createCustomControlElement } from "./mapControls.js";
 
 class Measure {
 

@@ -1,6 +1,6 @@
-import SearchFeature from "ol-ext/control/SearchFeature";
+import SearchFeature from "ol-ext/control/SearchFeature.js";
 import LayerSwitcher from "ol-layerswitcher";
-import {getCenter} from "ol/extent";
+import { getCenter } from "ol/extent.js";
 
 class Search extends SearchFeature {
 

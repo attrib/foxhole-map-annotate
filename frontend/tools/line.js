@@ -1,11 +1,11 @@
-import {Draw, Snap} from "ol/interaction";
-import {Collection, Overlay} from "ol";
-import {Stroke, Style} from "ol/style";
-import {LineString} from "ol/geom";
-import {createEditingStyle} from "ol/style/Style";
-import {Vector as VectorSource} from "ol/source";
-import {Group, Vector} from "ol/layer";
 import bezier from "@turf/bezier-spline";
+import { Collection, Overlay } from "ol";
+import { LineString } from "ol/geom.js";
+import { Draw, Snap } from "ol/interaction.js";
+import { Group, Vector } from "ol/layer.js";
+import { Vector as VectorSource } from "ol/source.js";
+import { Stroke, Style } from "ol/style.js";
+import { createEditingStyle } from "ol/style/Style.js";
 
 class Line {
 

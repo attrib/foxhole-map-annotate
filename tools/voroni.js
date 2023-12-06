@@ -1,27 +1,27 @@
-const fs = require('fs');
-const regions = JSON.parse(fs.readFileSync(__dirname + '/../data/regions.json'))
-//const warapi = require("../lib/warapi")
-const uuid = require("uuid")
-const GeoJSON = import("ol/format/GeoJSON.js")
-const VectorSource = import("ol/source/Vector.js")
-const Collection = import("ol")
-const LineString = import("ol/geom/LineString.js")
-const voronoi = require('@turf/voronoi')
-const intersect = require('@turf/intersect').default
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+
+import GeoJSON from "ol/format/GeoJSON.js";
+import { Collection } from "ol";
+import VectorSource from "ol/source/Vector.js";
+import LineString from "ol/geom/LineString.js";
+import voronoi from "@turf/voronoi";
+import intersect from "@turf/intersect";
 
 Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, VectorSource, ol, LineString]) => {
-  const geonJson = new GeoJSON.default();
+  const geonJson = new GeoJSON();
   /** @type {import('ol/source').Vector} */
-  const regionSource = new VectorSource.default({
-    features: new ol.Collection()
+  const regionSource = new VectorSource({
+    features: new Collection()
   })
   /** @type {import('ol/source').Vector} */
-  const majorLabels = new VectorSource.default({
-    features: new ol.Collection()
+  const majorLabels = new VectorSource({
+    features: new Collection()
   })
   /** @type {import('ol/source').Vector} */
-  const towns = new VectorSource.default({
-    features: new ol.Collection()
+  const towns = new VectorSource({
+    features: new Collection()
   })
   const majorLabelsByRegion = {}
 
@@ -67,8 +67,8 @@ Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, Vec
     const regionId = found.getId()
     majorFeature.set('region', regionId)
     if (!(regionId in majorLabelsByRegion)) {
-      majorLabelsByRegion[regionId] = new VectorSource.default({
-        features: new ol.Collection()
+      majorLabelsByRegion[regionId] = new VectorSource({
+        features: new Collection()
       })
     }
     majorLabelsByRegion[regionId].addFeature(majorFeature)
@@ -90,7 +90,7 @@ Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, Vec
 
     collection.forEach((feature) => {
       const intersectedFeature = geonJson.readFeature(intersect(geonJson.writeFeatureObject(feature), geonJson.writeFeatureObject(regionFeature)))
-      intersectedFeature.setId(uuid.v4())
+      intersectedFeature.setId(crypto.randomUUID())
       source.forEachFeature((label) => {
         if(intersectedFeature.getGeometry().intersectsCoordinate(label.getGeometry().getCoordinates())) {
           intersectedFeature.set('notes', label.get('notes'))
@@ -151,6 +151,6 @@ Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, Vec
   })
   collection.features.push(...voronoiDiagrams)
 
-  fs.writeFileSync(__dirname + '/../public/static.json', JSON.stringify(collection))
+  fs.writeFileSync(path.resolve('public/static.json'), JSON.stringify(collection))
 
 })

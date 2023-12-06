@@ -1,16 +1,16 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const grant = require('grant').express()
-const nunjucks = require("nunjucks");
+import path from "node:path";
 
-const sessionParser = require('./lib/session');
-const indexRouter = require('./routes/index');
-const {ACL_FULL, ACL_READ, ACL_ICONS_ONLY, ACL_MOD, ACL_ADMIN, ACL_BLOCKED} = require("./lib/ACLS");
-const config = require('./lib/config')
+import cookieParser from "cookie-parser";
+import express from "express";
+import grant from "grant";
+import createError from "http-errors";
+import nunjucks from "nunjucks";
 
-const warapi = require('./lib/warapi')
+import { ACL_ADMIN, ACL_BLOCKED, ACL_FULL, ACL_ICONS_ONLY, ACL_MOD, ACL_READ } from "./lib/ACLS.js";
+import config from "./lib/config.js";
+import sessionParser from "./lib/session.js";
+import warapi from "./lib/warapi.js";
+import indexRouter from "./routes/index.js";
 
 const app = express();
 
@@ -24,9 +24,9 @@ if (app.get('env') === 'production') {
   app.set('trust proxy', 2) // trust first two proxys (nginx, cloudflare)
 }
 else {
-  const webpack = require('webpack');
-  const webpackDevMiddleware = require('webpack-dev-middleware');
-  const webPackConfig = require('./webpack.dev.js');
+  const webpack = await import('webpack').then((module) => module.default);
+  const webpackDevMiddleware = await import('webpack-dev-middleware').then((module) => module.default);
+  const webPackConfig = await import('./webpack.dev.js').then((module) => module.default);
   const compiler = webpack(webPackConfig);
   app.use(
     webpackDevMiddleware(compiler, {
@@ -35,7 +35,7 @@ else {
   );
 }
 
-app.use(express.static(path.join(__dirname, 'public'), {maxAge: 7200000}));
+app.use(express.static(path.resolve('public'), {maxAge: 7200000}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
   }
   next()
 })
-app.use(grant({
+app.use(grant.express({
   "defaults": {
     "origin": config.config.basic.url,
     "transport": "session",
@@ -161,4 +161,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;
