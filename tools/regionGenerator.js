@@ -30,7 +30,7 @@ region.features[0].properties.box = [coordsDeadland[5][0], coordsDeadland[0][1]]
 
 // 3xUP
 let lastCoords = JSON.parse(JSON.stringify(coordsDeadland))
-let names = [{notes: 'Callahans Passage', id: 'CallahansPassageHex'}, {notes: 'Reaching Trail', id: 'ReachingTrailHex'}, {notes: 'Basin Sionnach', id: 'BasinSionnachHex'}];
+let names = [{notes: 'Callahan\'s Passage', id: 'CallahansPassageHex'}, {notes: 'Reaching Trail', id: 'ReachingTrailHex'}, {notes: 'Basin Sionnach', id: 'BasinSionnachHex'}];
 const diffY = lastCoords[0][1] - lastCoords[3][1]
 const diffX = lastCoords[0][0] - lastCoords[1][0]
 const diffX2 = lastCoords[1][0] - lastCoords[2][0]
@@ -75,32 +75,32 @@ names = [{notes: 'Speaking Woods', id: 'SpeakingWoodsHex'}, {notes: 'The Moors',
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[7].geometry.coordinates[0])
-names = [{notes: 'Callums Cape', id: 'CallumsCapeHex'}, {notes: 'Stonecradle', id: 'StonecradleHex'}, {notes: 'King\'s Cage', id: 'KingsCageHex'}, {notes: 'Sableport', id: 'SableportHex'}, {notes: 'Ash Fields', id: 'AshFieldsHex'}];
+names = [{notes: 'Callum\'s Cape', id: 'CallumsCapeHex'}, {notes: 'Stonecradle', id: 'StonecradleHex'}, {notes: 'King\'s Cage', id: 'KingsCageHex'}, {notes: 'Sableport', id: 'SableportHex'}, {notes: 'Ash Fields', id: 'AshFieldsHex'}];
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[13].geometry.coordinates[0])
 names = [{notes: 'Nevish Line', id: 'NevishLineHex'}, {notes: 'Farranac Coast', id: 'FarranacCoastHex'}, {notes: 'Westgate', id: 'WestgateHex'}, {notes: 'Origin', id: 'OriginHex'}];
 goDown(names, lastCoords)
 
-// lastCoords = leftUp(region.features[17].geometry.coordinates[0])
-// names = [{notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}, {notes: 'Fishermans Row', id: 'FishermansRowHex'}, {notes: '', id: ''}];
-// goDown(names, lastCoords)
+lastCoords = leftUp(region.features[18].geometry.coordinates[0])
+names = [{notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}, {notes: 'Fisherman\'s Row', id: 'FishermansRowHex'}, {notes: 'Stema Landing', id: 'StemaLandingHex'}];
+goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[3].geometry.coordinates[0])
 names = [{notes: 'Howl County', id: 'HowlCountyHex'}, {notes: 'Viper Pit', id: 'ViperPitHex'}, {notes: 'Marban Hollow', id: 'MarbanHollow'}, {notes: 'The Drowned Vale', id: 'DrownedValeHex'}, {notes: 'Shackled Chasm', id: 'ShackledChasmHex'}, {notes: 'Arcithia', id: 'AcrithiaHex'}];
 goDown(names, lastCoords)
 
-lastCoords = rightUp(region.features[22].geometry.coordinates[0])
-names = [{notes: 'Clanshead Valley', id: 'ClansheadValleyHex'}, {notes: 'Weathered Expanse', id: 'WeatheredExpanseHex'}, {notes: 'Endless Shore', id: 'EndlessShoreHex'}, {notes: 'Allod\'s Bight', id: 'AllodsBightHex'}, {notes: 'Terminus', id: 'TerminusHex'}];
+lastCoords = rightUp(region.features[25].geometry.coordinates[0])
+names = [{notes: 'Clanshead Valley', id: 'ClansheadValleyHex'}, {notes: 'Weathered Expanse', id: 'WeatheredExpanseHex'}, {notes: 'The Clahstra', id: 'ClahstraHex'}, {notes: 'Allod\'s Bight', id: 'AllodsBightHex'}, {notes: 'Terminus', id: 'TerminusHex'}];
 goDown(names, lastCoords)
 
-lastCoords = rightUp(region.features[28].geometry.coordinates[0])
-names = [{notes: 'Morgens Crossing', id: 'MorgensCrossingHex'}, {notes: 'Godcrofts', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'The Fingers', id: 'TheFingersHex'}];
+lastCoords = rightUp(region.features[31].geometry.coordinates[0])
+names = [{notes: 'Morgen\'s Crossing', id: 'MorgensCrossingHex'}, {notes: 'Stlican Shelf', id: 'StlicanShelfHex'}, {notes: 'Endless Shore', id: 'EndlessShoreHex'}, {notes: 'Reaver\'s Pass', id: 'ReaversPassHex'}];
 goDown(names, lastCoords)
 
-// lastCoords = leftUp(region.features[32].geometry.coordinates[0])
-// names = [{notes: '', id: ''}, {notes: '', id: ''}, {notes: '', id: ''}];
-// goDown(names, lastCoords)
+lastCoords = rightUp(region.features[36].geometry.coordinates[0])
+names = [{notes: 'Godcrofts', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'The Fingers', id: 'TheFingersHex'}];
+goDown(names, lastCoords)
 
 
 const extend = [diffX + 2*diffX2, diffY]

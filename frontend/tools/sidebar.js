@@ -103,6 +103,9 @@ class Sidebar {
       }
     })
     document.addEventListener('keydown', (event) => {
+      if (event.target.nodeName.toLowerCase() === 'input' || event.target.nodeName.toLowerCase() === 'textarea') {
+        return
+      }
       if (this.editFeature && event.key === 'Delete') {
         tools.emit(tools.EVENT_ICON_DELETED, this.editFeature)
         this.clearInput();
@@ -220,6 +223,19 @@ class Sidebar {
         iconList.style.display = ''
       }
     }
+  }
+
+  unescape = (val) => {
+    const replace = {
+      '&amp;': '&',
+      '&lt;': '<',
+      '&gt;': '>',
+      '&quot;': '"',
+      '&#x27;': "'",
+      '&#x60;': '`',
+    }
+    val = val == null ? '' : '' + val;
+    return val.replace(RegExp('(?:' + Object.keys(replace).join('|') + ')', 'g'), function (m) { return replace[m]; });
   }
 }
 

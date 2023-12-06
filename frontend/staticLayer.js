@@ -1,5 +1,6 @@
 import {Vector as VectorSource} from "ol/source";
 import {Circle, Fill, Icon, Stroke, Style, Text} from "ol/style";
+import {Circle as CircleGeo, Polygon} from "ol/geom";
 import {Group, VectorImage as Vector} from "ol/layer";
 import {GeoJSON} from "ol/format";
 import {Collection, Feature} from "ol";
@@ -58,7 +59,10 @@ class StaticLayers {
       }),
       'grid': new VectorSource({
         features: new Collection(),
-      })
+      }),
+      'obsTower': new VectorSource({
+        features: new Collection(),
+      }),
     }
     this.sources.town = reactive(this.sources.town)
 
@@ -112,7 +116,7 @@ class StaticLayers {
       }),
       'Warden': new Style({
         fill: new Fill({
-          color: '#24568244',
+          color: '#24568266',
         }),
         stroke: new Stroke({
           color: '#24568222',
@@ -121,7 +125,7 @@ class StaticLayers {
       }),
       'Colonial': new Style({
         fill: new Fill({
-          color: '#516C4B44',
+          color: '#516C4B66',
         }),
         stroke: new Stroke({
           color: '#516C4B22',
@@ -130,7 +134,7 @@ class StaticLayers {
       }),
       'Nuked': new Style({
         fill: new Fill({
-          color: '#c0000044',
+          color: '#c0000066',
         }),
         stroke: new Stroke({
           color: '#c0000022',
@@ -244,6 +248,16 @@ class StaticLayers {
       zIndex: 6,
       maxResolution: 6,
       style: this.iconStyle,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      searchable: false,
+    }))
+    staticGroup.getLayers().push(new Vector({
+      title: 'ObsTower Range',
+      source: this.sources.obsTower,
+      zIndex: 0,
+      maxResolution: 6,
+      style: this.obsTowerStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       searchable: false,
@@ -397,6 +411,42 @@ class StaticLayers {
     return this.cachedIconStyle[cacheKey]
   }
 
+  obsTowerStyle = (feature) => {
+    const townFeature = this.sources.town.getFeatureById(feature.get('id'))
+    let team = townFeature.get('team') || ''
+    const flags = townFeature.get('iconFlags') || 0
+    let color = '#a0a0a077'
+    if (flags & 0x10) {
+      color = '#c0000077'
+    } else if (team === 'Warden') {
+      color = '#24568277'
+    } else if (team === 'Colonial') {
+      color = '#516C4B77'
+    }
+    return new Style({
+      fill: new Fill({
+        color: color,
+      }),
+      geometry: this.obsTowerFeature
+    })
+
+  }
+
+  obsTowerFeature = (feature) => {
+    const center = feature.getGeometry().getCenter()
+
+    const coordinates = []
+    coordinates.push(center)
+    for (let i = 0; i <= 11; i++) {
+      const angle = feature.get('angle') + i * 3
+      const x = center[0] + 0.94 * 500 * Math.cos(angle * Math.PI / 180)
+      const y = center[1] + 0.94 * 500 * Math.sin(angle * Math.PI / 180)
+      coordinates.push([x, y])
+    }
+
+    return new Polygon([coordinates])
+  }
+
   conquerUpdate = (features, flash = true) => {
     // More than 40 changes, do not flash to not kill client
     // Should only happen when war map changes
@@ -411,13 +461,20 @@ class StaticLayers {
         town.set('iconFlags', data.flags, true)
         const team = data.flags & 0x10 ? 'Nuked' : data.team
         town.set('team', team)
-        if (flash) {
+        town.set('lastChange', data.lastChange)
+        if (flash && data.icon !== 'MapIconObservationTower') {
           this.flash(town)
         }
         if (town.get('voronoi')) {
           const voronoi = this.sources.voronoi.getFeatureById(town.get('voronoi'))
           if (voronoi) {
             voronoi.set('team', team)
+          }
+        }
+        if (data.icon === 'MapIconObservationTower') {
+          const obsTower = this.sources.obsTower.getFeatureById(id)
+          if (obsTower) {
+            obsTower.set('angle', data.angle || 255)
           }
         }
         continue
@@ -432,7 +489,17 @@ class StaticLayers {
       }
       if (data.type === 'stormCannon') {
         if (!data.destroyed) {
-          this.sources.stormCannon.addFeature(this.createStormCannonFeature(id, data))
+          const sc = this.sources.stormCannon.getFeatureById(id)
+          if (!sc) {
+            this.sources.stormCannon.addFeature(this.createStormCannonFeature(id, data))
+          }
+          else {
+            sc.set('type', data.type, true)
+            sc.set('notes', data.notes, true)
+            sc.set('icon', data.icon, true)
+            sc.set('team', data.team, true)
+            sc.set('lastChange', data.lastChange)
+          }
         } else {
           const stormCannon = this.sources.stormCannon.getFeatureById(id)
           if (stormCannon) {
@@ -449,6 +516,7 @@ class StaticLayers {
     const collections = {
       fields: [],
       industry: [],
+      obsTower: [],
     }
     this.warFeatures.features.forEach((feature) => {
       feature = geoJson.readFeature(feature)
@@ -456,11 +524,26 @@ class StaticLayers {
       if (!(type in collections)) {
         collections[type] = []
       }
+      if (feature.get('icon') === 'MapIconObservationTower') {
+        const obsGeo = feature.getGeometry()
+        const obsFeature = new Feature({
+          id: feature.getId(),
+          type: 'obsTowerRadius',
+          geometry: new CircleGeo(obsGeo.getCoordinates(), 0.94 * 500),
+          angle: this.conquerStatus.features[feature.getId()]?.angle || 255,
+        })
+        obsFeature.setId(feature.getId())
+        collections.obsTower.push(obsFeature)
+      }
       if (feature.get('id') in this.conquerStatus.features) {
-        feature.set('icon', this.conquerStatus.features[feature.get('id')].icon, true)
-        const team = this.conquerStatus.features[feature.get('id')].flags & 0x10 ? 'Nuked' : this.conquerStatus.features[feature.get('id')].team
-        feature.set('iconFlags', this.conquerStatus.features[feature.get('id')].flags, true)
+        const csFeature = this.conquerStatus.features[feature.get('id')]
+        feature.set('icon', csFeature.icon, true)
+        const team = csFeature.flags & 0x10 ? 'Nuked' : this.conquerStatus.features[feature.get('id')].team
+        feature.set('iconFlags', csFeature.flags, true)
         feature.set('team', team)
+        if (csFeature.lastChange) {
+          feature.set('lastChange', csFeature.lastChange)
+        }
         if (feature.get('voronoi')) {
           const voronoi = this.sources.voronoi.getFeatureById(feature.get('voronoi'))
           if (voronoi) {
@@ -592,6 +675,7 @@ class StaticLayers {
       icon: conquerData.icon,
       team: conquerData.team,
       geometry: new Point(conquerData.coordinates),
+      lastChange: conquerData.lastChange,
     });
     feat.setId(id)
     return feat

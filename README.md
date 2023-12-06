@@ -67,7 +67,7 @@ cd public
 mkdir map
 cd map
 wget https://cdn.discordapp.com/attachments/1003485765273145424/1039646692095574046/entiremap.png
-docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/ResolvedMap2.png /tmp/files/
+docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.webp /tmp/files/
 ```
 
 If you are using Windows Powershell and Docker on Windows

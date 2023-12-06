@@ -35,7 +35,7 @@ const map = new Map({
           source: new TileImage({
             attributions: '<a href="https://rustard.itch.io/improved-map-mod" target="_blank">Rust Improved Map Mod</a> - <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
             tileGrid: new TileGrid({
-              extent: [0,-12432,11293,0],
+              extent: [0,-12432,14352,0],
               origin: [0,-12432],
               resolutions: [64,32,16,8,4,2,1],
               tileSize: [256, 256]
@@ -231,6 +231,10 @@ socket.on('flagged', (data) => {
 
 tools.on(tools.EVENT_UNFLAG, (data) => {
   socket.send('unflag', data)
+})
+
+tools.on(tools.EVENT_OBS_MOVED, (data) => {
+  socket.send('obsMove', data)
 })
 
 new Flags(map, tools)

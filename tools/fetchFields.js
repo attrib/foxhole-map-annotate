@@ -1,7 +1,7 @@
 const regions = require(__dirname + '/../public/regions.json')
 const warapi = require('../lib/warapi')
 const uuid = require('uuid')
-const extent = [-2050,1775]
+const extent = [-2046, 1777]
 
 const icons = require(__dirname + '/../data/icons.json')
 const fs = require("fs");

@@ -1,18 +1,21 @@
 const webSocket = require("ws");
 const sessionParser = require("./lib/session");
 const wss = new webSocket.Server({clientTracking: false, noServer: true});
+const publicWss = new webSocket.Server({clientTracking: false, noServer: true});
 const clients = new Map();
+const publicClients = new Map();
 const fs = require('fs');
 const uuid = require('uuid')
 const {hasAccess, ACL_ACTIONS} = require("./lib/ACLS");
 const {getConquerStatus, updateMap, getConquerStatusVersion, regenRegions, clearRegions, getWarFeatures,
-  getWarFeaturesVersion
+  getWarFeaturesVersion, getPublicWarFeatures, moveObs
 } = require("./lib/conquerUpdater");
 const warapi = require('./lib/warapi')
 const eventLog = require('./lib/eventLog')
 const sanitizeHtml = require("sanitize-html");
 const {loadFeatures, saveFeatures, defaultFeatures} = require("./lib/featureLoader");
 const draftStatus = require("./lib/draftStatus");
+const {parse} = require("url");
 
 setTimeout(conquerUpdater, 10000)
 
@@ -30,6 +33,7 @@ if (fs.existsSync(__dirname + '/data/queue.json')) {
         try {
           cachedQueue = JSON.parse(content)
           sendDataToAll('queue', cachedQueue)
+          sendDataToPublic('queue', cachedQueue)
         }
         catch (e) {
           console.log('error parsing queue.json', e)
@@ -284,6 +288,19 @@ wss.on('connection', function (ws, request) {
             draftStatus.nextDraft(false)
           }
           break;
+
+        case 'obsMove':
+          if (hasAccess(userId, acl, ACL_ACTIONS.MOVE_OBS)) {
+            eventLog.logEvent({type: message.type, user: username, userId, data: message.data})
+            const oldVersion = getConquerStatusVersion()
+            const newData = moveObs(message.data)
+            if (newData) {
+              newData.oldVersion = oldVersion
+              newData.warNumber = warapi.warData.warNumber
+              sendDataToAll('conquer', newData)
+            }
+          }
+          break;
       }
     });
 
@@ -299,6 +316,14 @@ draftStatus.on((data) => {
 
 function sendDataToAll(type, data) {
   clients.forEach(function each(client) {
+    if (client.readyState === webSocket.WebSocket.OPEN) {
+      sendData(client, type, data);
+    }
+  });
+}
+
+function sendDataToPublic(type, data) {
+  publicClients.forEach(function each(client) {
     if (client.readyState === webSocket.WebSocket.OPEN) {
       sendData(client, type, data);
     }
@@ -341,10 +366,11 @@ function conquerUpdater() {
         data.oldVersion = oldVersion
         data.warNumber = warapi.warData.warNumber
         sendDataToAll('conquer', data)
+        sendDataToPublic('conquer', data)
       }
     })
     .finally(() => {
-      setTimeout(conquerUpdater, 60000)
+      setTimeout(conquerUpdater, 25000)
     })
 }
 
@@ -389,8 +415,41 @@ warapi.on(warapi.EVENT_WAR_UPDATED, ({newData}) => {
   })
 })
 
+publicWss.on('connection', function (ws, request) {
+  const wsId = uuid.v4();
+  publicClients.set(wsId, ws);
+
+  ws.send(JSON.stringify({
+    type: 'init',
+    data: {
+      version: process.env.COMMIT_HASH,
+      warStatus: warapi.warData.status,
+      conquerStatus: getConquerStatus(),
+      warFeatures: getPublicWarFeatures(),
+      queueStatus: cachedQueue,
+    }
+  }));
+
+  ws.on('message', (message) => {
+    message = JSON.parse(message);
+    switch (message.type) {
+      case 'getConquerStatus':
+        sendData(ws, 'conquer', getConquerStatus())
+        break;
+    }
+  });
+});
+
 module.exports = function (server) {
   server.on('upgrade', function (request, socket, head) {
+    const { pathname } = parse(request.url);
+
+    if (pathname === '/stats') {
+      publicWss.handleUpgrade(request, socket, head, function (ws) {
+        publicWss.emit('connection', ws, request);
+      });
+      return;
+    }
     sessionParser(request, {}, () => {
       if (!request.session.user) {
         socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');

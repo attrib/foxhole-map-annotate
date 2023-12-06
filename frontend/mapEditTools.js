@@ -39,6 +39,8 @@ class EditTools {
   EVENT_ARTY_MODE_ENABLED = 'artyEnabled'
   EVENT_ARTY_MODE_DISABLED = 'artyDisabled'
 
+  EVENT_OBS_MOVED = 'obsMoved'
+
   MAGIC_MAP_SCALING_FACTOR = 0.94
 
   editMode = false
@@ -130,7 +132,7 @@ class EditTools {
   }
 
   hasAccess = (action, feature = null) => {
-    return hasAccess(this.userId, this.acl, action, this.geoJson.writeFeatureObject(feature))
+    return hasAccess(this.userId, this.acl, action, feature ? this.geoJson.writeFeatureObject(feature) : null)
   }
 
   changeMode = (newMode) => {

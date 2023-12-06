@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block css %}
+<!--<script src="/dist/main.css"></script>-->
+{% endblock %}
+
+{% block javascript %}
+<script src="/dist/stats.js?{{ cacheBuster }}"></script>
+{% endblock %}
+
+{% block content %}
+<div id="map" class="h-100 w-100">
+</div>
+<!--<div id="global-alerts">-->
+<!--    <div id="disconnected" class="alert alert-danger mb-2">Connection to server lost. Auto-reconnect in 10s. Map doesn't-->
+<!--        update automatically. Editing not possible. Refresh page if message doesn't disappear.</div>-->
+<!--</div>-->
+
+{% endblock %}

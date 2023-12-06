@@ -18,6 +18,10 @@ router.get('/help', function(req, res, next) {
   res.render('help');
 });
 
+router.get('/stats', function(req, res, next) {
+  res.render('stats');
+});
+
 router.get('/admin', async function (req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN && req.session.acl !== ACL_MOD)) {
     return res.redirect('/');
@@ -138,12 +142,17 @@ router.post('/admin/config', function(req, res, next) {
   config.save()
   if (req.body.draftStatus) {
     const draftOrder = []
-    for (const [i, discordId] of req.body.draftStatus.draftOrder.discordId.entries()) {
-      if (discordId in config.config.access.discords) {
-        draftOrder.push({discordId, userId: null, name: config.config.access.discords[discordId].name})
-      }
-      else {
-        draftOrder.push({discordId: null, userId: req.body.draftStatus.draftOrder.userId[i], name: req.body.draftStatus.draftOrder.name[i]})
+    if (req.body.draftStatus.draftOrder) {
+      for (const [i, discordId] of req.body.draftStatus.draftOrder.discordId.entries()) {
+        if (discordId in config.config.access.discords) {
+          draftOrder.push({discordId, userId: null, name: config.config.access.discords[discordId].name})
+        } else {
+          draftOrder.push({
+            discordId: null,
+            userId: req.body.draftStatus.draftOrder.userId[i],
+            name: req.body.draftStatus.draftOrder.name[i]
+          })
+        }
       }
     }
     draftStatus.draftUrl = req.body.draftStatus.draftUrl
