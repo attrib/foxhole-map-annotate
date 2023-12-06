@@ -116,7 +116,7 @@ class StaticLayers {
       }),
       'Warden': new Style({
         fill: new Fill({
-          color: '#24568244',
+          color: '#24568266',
         }),
         stroke: new Stroke({
           color: '#24568222',
@@ -125,7 +125,7 @@ class StaticLayers {
       }),
       'Colonial': new Style({
         fill: new Fill({
-          color: '#516C4B44',
+          color: '#516C4B66',
         }),
         stroke: new Stroke({
           color: '#516C4B22',
@@ -134,7 +134,7 @@ class StaticLayers {
       }),
       'Nuked': new Style({
         fill: new Fill({
-          color: '#c0000044',
+          color: '#c0000066',
         }),
         stroke: new Stroke({
           color: '#c0000022',

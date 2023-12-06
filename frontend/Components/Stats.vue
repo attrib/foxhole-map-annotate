@@ -153,7 +153,7 @@ function fillColor(feature) {
     return 'black'
   }
   const town = props.data.warFeatures.features.find((f) => f.properties.voronoi === feature.id)
-  if (town.id in props.data.conquerStatus.features) {
+  if (town && town.id in props.data.conquerStatus.features) {
     if (props.data.conquerStatus.features[town.id].team === '') {
       return `url(#pattern${props.data.conquerStatus.features[town.id].lastTeam})`;
     }
