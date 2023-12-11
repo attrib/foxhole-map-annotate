@@ -116,6 +116,10 @@ app.use((req, res, next) => {
     return res.redirect(301, `/map?cx=${req.query.cx}&cy=${req.query.cy}&r=${req.query.r}`)
   }
 
+  if (req.path === '/logout') {
+    return next();
+  }
+
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
     res.locals.userId = req.session.userId
@@ -139,8 +143,7 @@ app.use((req, res, next) => {
     }
 
     if (req.path === '/' || req.path === '/help') {
-      next();
-      return;
+      return next();
     }
     res.locals.hiddenCode = req.query.hiddenCode || false
     res.locals.user = false
