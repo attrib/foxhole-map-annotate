@@ -40,13 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionParser)
-app.use((req, res, next) => {
-  // Bad hacks for cn.warden.express
-  if (req.get('host') === 'cn.warden.express') {
-    res.locals.grant = {dynamic: {redirect_uri: 'https://cn.warden.express/connect/discord/callback'}}
-  }
-  next()
-})
+
 app.use(grant.express({
   "defaults": {
     "origin": config.config.basic.url,

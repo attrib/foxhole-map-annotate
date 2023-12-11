@@ -6,7 +6,7 @@ import { parse } from "node:url";
 import sanitizeHtml from "sanitize-html";
 import WebSocket, { WebSocketServer } from "ws";
 
-import { ACL_ACTIONS, hasAccess } from "./lib/ACLS.js";
+import {ACL_ACTIONS, ACL_BLOCKED, hasAccess} from "./lib/ACLS.js";
 import {
   clearRegions,
   getConquerStatus,
@@ -27,6 +27,7 @@ import {
 } from "./lib/featureLoader.js";
 import sessionParser from "./lib/session.js";
 import warapi from "./lib/warapi.js";
+import Discord from "./lib/discord.js";
 
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 const publicWss = new WebSocketServer({
@@ -35,6 +36,7 @@ const publicWss = new WebSocketServer({
 });
 const clients = new Map();
 const publicClients = new Map();
+const loginChecker = new Map();
 
 setTimeout(conquerUpdater, 10000)
 
@@ -82,10 +84,43 @@ wss.on('connection', function (ws, request) {
     }
     const username = request.session.user;
     const userId = request.session.userId;
-    const discordId = request.session.discordId;
-    const acl = request.session.acl;
+    let discordId = request.session.discordId;
+    let acl = request.session.acl;
     const wsId = crypto.randomUUID();
     clients.set(wsId, ws);
+
+    // Check if user is allowed to access every hour
+    if (!loginChecker.has(userId)) {
+      const loginCheckFunction = () => {
+        Discord.checkAllowedUser(request.session).then((data) => {
+          if (data.access === true && data.userId === userId) {
+            acl = data.acl
+            discordId = data.discordId
+            request.session.acl = acl
+            request.session.discordId = discordId
+            request.session.lastLoginCheck = Date.now();
+            request.session.save()
+            loginChecker.set(userId, setTimeout(loginCheckFunction, 3600000))
+          }
+          else {
+            request.session.acl = ACL_BLOCKED
+            request.session.save()
+            loginChecker.delete(userId)
+            ws.send(JSON.stringify({
+              type: 'logout',
+              data: {}
+            }))
+            ws.close()
+          }
+        })
+      }
+      if (Date.now() - request.session.lastLoginCheck > 3600000) {
+        loginCheckFunction()
+      }
+      else {
+        loginChecker.set(userId, setTimeout(loginCheckFunction, Date.now() - request.session.lastLoginCheck))
+      }
+    }
 
     ws.send(JSON.stringify({
       type: 'init',
@@ -325,6 +360,10 @@ wss.on('connection', function (ws, request) {
 
     ws.on('close', function () {
       clients.delete(wsId);
+      if (loginChecker.has(userId)) {
+        clearTimeout(loginChecker.get(userId))
+        loginChecker.delete(userId)
+      }
     });
   }
 );

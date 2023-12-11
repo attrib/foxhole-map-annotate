@@ -343,6 +343,9 @@ socket.on('open', () => {
 socket.on('close', () => {
   disconnectedWarning.style.display = 'block'
 })
+socket.on('logout', () => {
+  window.location = '/logout'
+})
 
 const rtf = new Intl.RelativeTimeFormat('en', {style: 'long'})
 

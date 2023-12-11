@@ -189,16 +189,14 @@ router.get('/login', async function(req, res, next) {
   if (req.session.grant.error) {
     throw new Error(req.session.grant.error)
   }
-  let discord = new Discord(req.session.grant.response.access_token);
-  if (req.session.grant.dynamic && req.session.grant.dynamic.discordServerId) {
-    discord.preferredDiscordServer = req.session.grant.dynamic.discordServerId
-  }
-  discord.checkAllowedUser().then((data) => {
+  Discord.checkAllowedUser(req.session).then((data) => {
     if (data.access === true) {
       req.session.user = data.user;
       req.session.userId = data.userId;
       req.session.discordId = data.discordId;
       req.session.acl = data.acl;
+      req.session.lastLoginCheck = Date.now();
+      req.session.grant.response.access_token_end = req.session.grant.response.raw.expires_in * 1000 + Date.now();
       req.session.save(() => {
         res.redirect('/map');
       })
