@@ -116,6 +116,12 @@ app.use((req, res, next) => {
   res.locals.warStatus = warapi.warData.status
   res.locals.warWinner = warapi.getTeam(warapi.warData.winner)
   res.locals.warConquestEndTime = warapi.warData.conquestEndTime || ''
+
+  // old routes redirects
+  if (req.query.cx && req.query.cy && req.query.r && req.path === '/') {
+    return res.redirect(301, `/map?cx=${req.query.cx}&cy=${req.query.cy}&r=${req.query.r}`)
+  }
+
   if (req.session && (req.session.user || req.path === '/login')) {
     res.locals.user = req.session.user
     res.locals.userId = req.session.userId
@@ -133,13 +139,18 @@ app.use((req, res, next) => {
     }
   }
   else {
-    if (req.path === '/stats' || req.path === '/help') {
+    // old routes redirects
+    if (req.query.hiddenCode && req.path === '/') {
+     return res.redirect(301, '/map?hiddenCode=' + req.query.hiddenCode)
+    }
+
+    if (req.path === '/' || req.path === '/help') {
       next();
       return;
     }
     res.locals.hiddenCode = req.query.hiddenCode || false
     res.locals.user = false
-    res.status(req.path === '/' ? 200 : 403);
+    res.status(403);
     res.render('login');
   }
 })

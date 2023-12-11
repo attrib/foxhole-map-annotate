@@ -12,15 +12,15 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.render('stats');
 });
 
 router.get('/help', function(req, res, next) {
   res.render('help');
 });
 
-router.get('/stats', function(req, res, next) {
-  res.render('stats');
+router.get('/map', function(req, res, next) {
+  res.render('index');
 });
 
 router.get('/admin', async function (req, res, next) {
@@ -200,7 +200,7 @@ router.get('/login', async function(req, res, next) {
       req.session.discordId = data.discordId;
       req.session.acl = data.acl;
       req.session.save(() => {
-        res.redirect('/');
+        res.redirect('/map');
       })
     }
     else {
