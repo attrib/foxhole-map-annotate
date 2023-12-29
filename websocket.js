@@ -25,7 +25,7 @@ import {
   loadFeatures,
   saveFeatures,
 } from "./lib/featureLoader.js";
-import sessionParser from "./lib/session.js";
+import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import Discord from "./lib/discord.js";
 
