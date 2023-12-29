@@ -8,7 +8,7 @@ import nunjucks from "nunjucks";
 
 import { ACL_ADMIN, ACL_BLOCKED, ACL_FULL, ACL_ICONS_ONLY, ACL_MOD, ACL_READ } from "./lib/ACLS.js";
 import config from "./lib/config.js";
-import sessionParser from "./lib/session.js";
+import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import indexRouter from "./routes/index.js";
 
