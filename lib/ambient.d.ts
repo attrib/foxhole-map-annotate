@@ -1,7 +1,8 @@
 import type session from "express-session";
-import type { GrantResponse } from "grant";
+import type { GrantSession, GrantResponse } from "grant";
 
 import type { Access } from "./ACLS.js";
+import type { Session, SessionData } from "express-session";
 
 declare global {
   namespace NodeJS {
@@ -27,6 +28,18 @@ declare module "express-session" {
     discordId: string;
     acl: Access;
     lastLoginCheck: number;
-    grant: GrantResponse;
+    grant: GrantSession;
+  }
+}
+
+declare module "grant" {
+  export interface GrantResponse {
+    access_token_end: number | undefined;
+  }
+}
+
+declare module "http" {
+  export interface IncomingMessage {
+    session: Session & Partial<SessionData>;
   }
 }
