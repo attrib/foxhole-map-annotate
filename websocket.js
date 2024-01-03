@@ -368,7 +368,7 @@ wss.on('connection', function (ws, request) {
   }
 );
 
-draftStatus.on((data) => {
+draftStatus.on("draftUpdate", (data) => {
   sendDataToAll('draftStatus', data)
 });
 
