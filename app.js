@@ -126,7 +126,7 @@ app.use((req, res, next) => {
     res.locals.acl = req.session.acl
 
     // quick check if somebody is blocked
-    if (req.session.userId && req.session.userId in config.config.access.users && config.config.access.users[req.session.userId] === ACL_BLOCKED) {
+    if (req.session.userId && req.session.userId in config.config.access.users && config.config.access.users[req.session.userId]?.acl === ACL_BLOCKED) {
       req.session.destroy(() => {
         res.clearCookie('connect.sid')
         res.redirect('/');
