@@ -25,7 +25,7 @@ declare module "express-session" {
   export interface SessionData {
     user: string;
     userId: string;
-    discordId: string;
+    discordId: string | null;
     acl: Access;
     lastLoginCheck: number;
     grant: GrantSession;
