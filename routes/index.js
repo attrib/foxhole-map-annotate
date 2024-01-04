@@ -43,12 +43,16 @@ router.get('/admin/config', async function (req, res, next) {
     return res.redirect('/');
   }
   res.locals.draftStatus = draftStatus;
-  res.locals.draftStatusSelected = (draftStatus.active && draftStatus.activeDraft in draftStatus.draftOrder) ? draftStatus.draftOrder[draftStatus.activeDraft].discordId : ''
+  if (draftStatus.activeDraft) {
+    res.locals.draftStatusSelected = draftStatus.draftOrder.at(draftStatus.activeDraft)?.discordId ?? "";
+  } else {
+    res.locals.draftStatusSelected = "";
+  }
   res.render('admin.config.html');
 })
 
 router.post('/admin/reload', function (req, res, next) {
-  if (!req.session || (req.session.acl !== ACL_ADMIN)) {
+  if (!req.session || (req.session.acl !== ACL_ADMIN) || (req.session.user === undefined || req.session.userId === undefined)) {
     return res.redirect('/');
   }
   eventLog.logEvent({type: 'forcedMapReload', user: req.session.user, userId: req.session.userId, data: config.config})
@@ -57,7 +61,7 @@ router.post('/admin/reload', function (req, res, next) {
 })
 
 router.post('/admin/config', function(req, res, next) {
-  if (!req.session || (req.session.acl !== ACL_ADMIN)) {
+  if (!req.session || (req.session.acl !== ACL_ADMIN) || req.session.user === undefined || req.session.userId === undefined) {
     return res.redirect('/');
   }
   eventLog.logEvent({type: 'configChange', user: req.session.user, userId: req.session.userId, data: config.config})
@@ -131,7 +135,11 @@ router.post('/admin/config', function(req, res, next) {
             if (!roleId) {
               continue
             }
-            config.config.access.discords[discordId].roles[roleId] = {
+            const discordConfig = config.config.access.discords[discordId];
+            if (discordConfig === undefined) {
+              continue;
+            }
+            discordConfig.roles[roleId] = {
               name: req.body.access.discords[discordId].roles.name[i],
               acl: req.body.access.discords[discordId].roles.acl[i],
             }
@@ -145,8 +153,9 @@ router.post('/admin/config', function(req, res, next) {
     const draftOrder = []
     if (req.body.draftStatus.draftOrder) {
       for (const [i, discordId] of req.body.draftStatus.draftOrder.discordId.entries()) {
-        if (discordId in config.config.access.discords) {
-          draftOrder.push({discordId, userId: null, name: config.config.access.discords[discordId].name})
+        const discordConfig = config.config.access.discords[discordId];
+        if (discordConfig !== undefined) {
+          draftOrder.push({discordId, userId: null, name: discordConfig.name})
         } else {
           draftOrder.push({
             discordId: null,
@@ -170,7 +179,7 @@ router.post('/admin/config', function(req, res, next) {
       }
       else {
         draftStatus.activeDraft = draftStatus.draftOrder.findIndex(element => req.body.draftStatus.activeDraft === element.discordId)
-        draftStatus.emit()
+        draftStatus.emit("draftUpdate")
       }
     }
     if (!draftStatus.active && req.body.draftStatus.active) {
@@ -186,8 +195,12 @@ router.get('/login', async function(req, res, next) {
   if (req.session.grant === undefined) {
     return res.redirect('/');
   }
-  if (req.session.grant.error) {
-    throw new Error(req.session.grant.error)
+  const grantResponse = req.session.grant.response;
+  if (grantResponse === undefined) {
+    return res.redirect('/');
+  }
+  if (req.session.grant.response?.error) {
+    throw new Error(req.session.grant.response.error)
   }
   Discord.checkAllowedUser(req.session).then((data) => {
     if (data.access === true) {
@@ -196,7 +209,7 @@ router.get('/login', async function(req, res, next) {
       req.session.discordId = data.discordId;
       req.session.acl = data.acl;
       req.session.lastLoginCheck = Date.now();
-      req.session.grant.response.access_token_end = req.session.grant.response.raw.expires_in * 1000 + Date.now();
+      grantResponse.access_token_end = grantResponse.raw.expires_in * 1000 + Date.now();
       req.session.save(() => {
         res.redirect('/map');
       })

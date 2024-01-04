@@ -8,7 +8,7 @@ import nunjucks from "nunjucks";
 
 import { ACL_ADMIN, ACL_BLOCKED, ACL_FULL, ACL_ICONS_ONLY, ACL_MOD, ACL_READ } from "./lib/ACLS.js";
 import config from "./lib/config.js";
-import sessionParser from "./lib/session.js";
+import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import indexRouter from "./routes/index.js";
 
@@ -41,7 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionParser)
 
-app.use(grant.express({
+app.use(grant.default.express({
   "defaults": {
     "origin": config.config.basic.url,
     "transport": "session",
@@ -126,7 +126,7 @@ app.use((req, res, next) => {
     res.locals.acl = req.session.acl
 
     // quick check if somebody is blocked
-    if (req.session.userId in config.config.access.users && config.config.access.users[req.session.userId] === ACL_BLOCKED) {
+    if (req.session.userId && req.session.userId in config.config.access.users && config.config.access.users[req.session.userId]?.acl === ACL_BLOCKED) {
       req.session.destroy(() => {
         res.clearCookie('connect.sid')
         res.redirect('/');
@@ -139,7 +139,7 @@ app.use((req, res, next) => {
   else {
     // old routes redirects
     if (req.query.hiddenCode && req.path === '/') {
-     return res.redirect(301, '/map?hiddenCode=' + req.query.hiddenCode)
+      return res.redirect(301, '/map?hiddenCode=' + req.query.hiddenCode)
     }
 
     if (req.path === '/' || req.path === '/help') {
@@ -158,8 +158,8 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
+/** @type{import("express").ErrorRequestHandler} */
+const errorRequestHandle = (err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -167,6 +167,9 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
+};
+
+// error handler
+app.use(errorRequestHandle);
 
 export default app;
