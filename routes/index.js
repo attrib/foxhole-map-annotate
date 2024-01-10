@@ -20,7 +20,7 @@ router.get('/help', function(req, res, next) {
   res.render('help');
 });
 
-router.get('/map', function(req, res, next) {
+router.get('/cmap', function(req, res, next) {
   res.render('index');
 });
 
