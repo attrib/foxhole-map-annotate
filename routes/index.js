@@ -200,7 +200,7 @@ router.get('/login', async function(req, res, next) {
     return res.redirect('/');
   }
   if (req.session.grant.response?.error) {
-    throw new Error(req.session.grant.response.error)
+    //throw new Error(req.session.grant.response.error)
   }
   Discord.checkAllowedUser(req.session).then((data) => {
     if (data.access === true) {
