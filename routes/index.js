@@ -16,6 +16,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/help', function(req, res, next) {
+  throw new Error(req.session.grant)
   res.render('help');
 });
 
@@ -23,14 +24,14 @@ router.get('/map', function(req, res, next) {
   res.render('index');
 });
 
-router.get('/admin', async function (req, res, next) {
+router.get('/admin', function (req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN && req.session.acl !== ACL_MOD)) {
     return res.redirect('/');
   }
   return res.redirect('/admin/eventlog');
 })
 
-router.get('/admin/eventlog', async function (req, res, next) {
+router.get('/admin/eventlog', function (req, res, next) {
   if (!req.session || (req.session.acl !== ACL_ADMIN && req.session.acl !== ACL_MOD)) {
     return res.redirect('/');
   }
@@ -38,7 +39,7 @@ router.get('/admin/eventlog', async function (req, res, next) {
   res.render('admin.eventlog.html');
 })
 
-router.get('/admin/config', async function (req, res, next) {
+router.get('/admin/config', function (req, res, next) {
   if (!req.session || req.session.acl !== ACL_ADMIN) {
     return res.redirect('/');
   }
@@ -191,7 +192,7 @@ router.post('/admin/config', function(req, res, next) {
   return res.redirect('/admin/config');
 })
 
-router.get('/login', async function(req, res, next) {
+router.get('/login', function(req, res, next) {
   if (req.session.grant === undefined) {
     return res.redirect('/');
   }
@@ -199,8 +200,8 @@ router.get('/login', async function(req, res, next) {
   if (grantResponse === undefined) {
     return res.redirect('/');
   }
-  if (req.session.grant.response?.error) {
-    //throw new Error(req.session.grant.response.error)
+  if (grantResponse.error) {
+    throw new Error(grantResponse.error)
   }
   Discord.checkAllowedUser(req.session).then((data) => {
     if (data.access === true) {
