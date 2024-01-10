@@ -212,7 +212,7 @@ router.get('/login', function(req, res, next) {
       req.session.lastLoginCheck = Date.now();
       grantResponse.access_token_end = grantResponse.raw.expires_in * 1000 + Date.now();
       req.session.save(() => {
-        res.redirect('/map');
+        res.redirect('/cmap');
       })
     }
     else {
