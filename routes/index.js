@@ -16,7 +16,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/help', function(req, res, next) {
-  throw new Error(req.session.grant)
   res.render('help');
 });
 
