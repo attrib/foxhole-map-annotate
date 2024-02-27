@@ -44,3 +44,21 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             COMMIT_HASH=${{ github.sha }}
+
+  deploy:
+    needs: docker
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      -
+        name: Deploy to production
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_KEY }}
+          fingerprint: ${{ secrets.FINGERPRINT }}
+          script: |
+            docker pull attribdd/foxhole-map-annotate:master
+            cd /mnt/deployments/foxhole-map-annotate/
+            docker compose up -d
