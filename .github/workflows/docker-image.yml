@@ -57,7 +57,6 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_KEY }}
-          fingerprint: ${{ secrets.FINGERPRINT }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             docker pull attribdd/foxhole-map-annotate:master
