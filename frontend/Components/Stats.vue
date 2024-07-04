@@ -134,7 +134,7 @@ watch(props.data, (data) => {
     delete regionFeatures[region]
   }
   for (let feature of Object.values(data.conquerStatus.features)) {
-    if (!['MapIconStormCannon', 'MapIconIntelCenter', 'MapIconRocketSite', 'MapIconRocketSiteWithRocket', 'MapIconRocketTarget', 'MapIconRocketGroundZero'].includes(feature.icon)) {
+    if (!['MapIconStormCannon', 'MapIconIntelCenter', 'MapIconRocketSite', 'MapIconRocketSiteWithRocket', 'MapIconRocketTarget', 'MapIconRocketGroundZero', 'MapIconWeatherStation'].includes(feature.icon)) {
       continue
     }
     if (!(feature.region in regionFeatures)) {

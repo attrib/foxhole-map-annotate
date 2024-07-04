@@ -48,7 +48,7 @@ jobs:
   deploy:
     needs: docker
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && (github.ref_name == 'master' || github.ref_name == 'dev')
     steps:
       -
         name: Deploy to production
@@ -59,6 +59,6 @@ jobs:
           key: ${{ secrets.PROD_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            docker pull attribdd/foxhole-map-annotate:master
+            docker pull attribdd/foxhole-map-annotate:${{ github.ref_name }}
             cd /mnt/deployments/foxhole-map-annotate/
             docker compose up -d

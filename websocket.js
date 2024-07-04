@@ -138,7 +138,7 @@ wss.on('connection', function (ws, request) {
       if (lastLoginCheck === undefined || Date.now() - lastLoginCheck > 3_600_000) {
         loginCheckFunction()
       } else {
-        loginChecker.set(userId, setTimeout(loginCheckFunction, Date.now() - lastLoginCheck))
+        loginChecker.set(userId, setTimeout(loginCheckFunction, 3_600_000 - (Date.now() - lastLoginCheck)))
       }
     }
 

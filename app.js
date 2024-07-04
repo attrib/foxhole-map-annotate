@@ -100,6 +100,8 @@ app.use((req, res, next) => {
       req.session.discordId = '987654321098765410';
       req.session.acl = ACL_READ;
     }
+    // Disable last login check for development
+    req.session.lastLoginCheck = Date.now();
   }
   res.locals.config = config.config
   res.locals.title = config.config.basic.title;
