@@ -13,6 +13,8 @@ import Polygon from "./tools/polygon.js";
 import Scissor from "./tools/scissor.js";
 import Sidebar from "./tools/sidebar.js";
 import SidebarArty from "./tools/sidebarArty.js";
+import Rectangle from "./tools/rectangle.js";
+import Move from "./tools/move.js";
 
 class EditTools {
   EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -26,11 +28,11 @@ class EditTools {
   EVENT_FLAGGED = 'flaggedFeature'
   EVENT_UNFLAG = 'unflagFeature'
   EVENT_FEATURE_SELECTED = (type) => {
-    const t = type === 'line' || type === 'polygon' || type === 'stormCannon' ? type : 'icon'
+    const t = type === 'line' || type === 'polygon' || type === 'stormCannon' || type === 'rectangle' ? type : 'icon'
     return t + '-selected'
   }
   EVENT_FEATURE_DESELECTED = (type) => {
-    const t = type === 'line' || type === 'polygon' || type === 'stormCannon' ? type : 'icon'
+    const t = type === 'line' || type === 'polygon' || type === 'stormCannon' || type === 'rectangle' ? type : 'icon'
     return t + '-deselected'
   }
   EVENT_DECAY_UPDATE = 'decayUpdate'
@@ -112,6 +114,8 @@ class EditTools {
     this.select = new Select(this, map)
     this.edit = new Edit(this, map)
     this.arty = new Arty(this, map)
+    this.rectangle = new Rectangle(this, map)
+    this.move = new Move(this, map)
   }
 
   resetAcl = () => {

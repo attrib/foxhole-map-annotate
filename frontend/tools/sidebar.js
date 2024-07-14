@@ -44,14 +44,20 @@ class Sidebar {
     this.clanInput = document.getElementById('clan-input')
     this.lineTypeInput = document.getElementById('line-type-input')
     this.colorInput = document.getElementById('color-input')
+    this.secondaryColorInput = document.getElementById('secondary-color-input')
     this.notesInput = document.getElementById('notes-input')
     this.buttonRow = document.getElementById('button-row')
     this.displayForm(['notes'])
 
     const colorPicker = document.getElementById('color-picker')
+    const secondaryColorPicker = document.getElementById('secondary-color-picker')
     const defaultColor = localStorage.getItem('defaultColor');
+    const secondaryDefaultColor = localStorage.getItem('secondaryDefaultColor');
     if (defaultColor) {
       this.colorInput.value = defaultColor;
+    }
+    if (secondaryDefaultColor) {
+      this.secondaryColorInput.value = secondaryDefaultColor;
     }
     this.colorInput.addEventListener('input', () => {
       if (this.editFeature && this.editFeature.get('color') !== undefined) {
@@ -60,6 +66,13 @@ class Sidebar {
       localStorage.setItem('defaultColor', this.colorInput.value)
       this.setColorInputActive()
     })
+    this.secondaryColorInput.addEventListener('input', () => {
+      if (this.editFeature && this.editFeature.get('secondary-color') !== undefined) {
+        this.editFeature.set('secondary-color', this.secondaryColorInput.value)
+      }
+      localStorage.setItem('secondaryDefaultColor', this.secondaryColorInput.value)
+      this.setSecondaryColorInputActive()
+    });
 
     this.notesInput.addEventListener('keyup', () => {
       if (this.editFeature && this.editFeature.get('notes') !== undefined) {
@@ -86,6 +99,13 @@ class Sidebar {
       })
     }
 
+    for (const predefinedColor of secondaryColorPicker.getElementsByTagName('i')) {
+      predefinedColor.addEventListener('click', () => {
+        this.secondaryColorInput.value = this.rgb2hex(predefinedColor.style.color)
+        this.secondaryColorInput.dispatchEvent(new Event('input'))
+      })
+    }
+
     document.getElementById('save-button').addEventListener('click', () => {
       if (this.editFeature) {
         const type = this.editFeature.get('type')
@@ -97,6 +117,9 @@ class Sidebar {
         }
         if (['line', 'polygon'].includes(type)) {
           this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature), true)
+        }
+        if (type === 'rectangle') {
+          this.editFeature.set('secondary-color', this.secondaryColorInput.value + this.featureColorSuffix(this.editFeature), true)
         }
         this.editFeature.set('notes', this.notesInput.value)
         tools.emit(tools.EVENT_ICON_UPDATED, this.editFeature)
@@ -154,8 +177,26 @@ class Sidebar {
     }
   }
 
+  setSecondaryColorInputActive = () => {
+    const colorPicker = document.getElementById('secondary-color-picker')
+    let allFalse = true
+    for (const predefinedColor of colorPicker.getElementsByTagName('i')) {
+      if (this.rgb2hex(predefinedColor.style.color) === this.secondaryColorInput.value) {
+        predefinedColor.classList.add('active')
+        allFalse = false
+      } else {
+        predefinedColor.classList.remove('active')
+      }
+    }
+    if (allFalse) {
+      this.secondaryColorInput.classList.add('active')
+    } else {
+      this.secondaryColorInput.classList.remove('active')
+    }
+  }
+
   featureColorSuffix = (feature) => {
-    return (feature.get('type') === 'polygon' ? 'AA' : '')
+    return (feature.get('type') === 'polygon' || feature.get('type') === 'rectangle') ? 'AA' : ''
   }
 
   selectTool = (selectedTool) => {
@@ -201,6 +242,7 @@ class Sidebar {
     this.clanInput.parentElement.parentElement.style.display = visibleFields.includes('clan') ? '' : 'none'
     this.lineTypeInput.parentElement.parentElement.style.display = visibleFields.includes('lineType') ? '' : 'none'
     this.colorInput.parentElement.parentElement.style.display = visibleFields.includes('color') ? '' : 'none'
+    this.secondaryColorInput.parentElement.parentElement.style.display = visibleFields.includes('secondaryColor') ? '' : 'none'
     this.notesInput.parentElement.parentElement.style.display = visibleFields.includes('notes') ? '' : 'none'
     this.buttonRow.style.display = this.editFeature ? '' : 'none'
   }

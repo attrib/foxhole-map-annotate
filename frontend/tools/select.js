@@ -381,6 +381,9 @@ class Select {
         case 'polygon':
           return [this.tools.polygon.style(feature, zoom), ...lineStyle]
 
+        case 'rectangle':
+          return [...this.tools.rectangle.styles(feature, zoom), ...lineStyle]
+
         case 'stormCannon':
           return this.tools.staticLayer.iconStyle(feature, zoom)
       }

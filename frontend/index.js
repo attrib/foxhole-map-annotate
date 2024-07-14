@@ -196,6 +196,8 @@ socket.on('allFeatures', (features) => {
   }
   tools.polygon.source.clear(true)
   tools.polygon.source.addFeatures(collections['polygon'] || [])
+  tools.rectangle.source.clear(true)
+  tools.rectangle.source.addFeatures(collections['rectangle'] || [])
   for (const clan in tools.line.sources) {
     tools.line.sources[clan].clear(true)
   }
