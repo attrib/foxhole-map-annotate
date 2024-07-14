@@ -11,6 +11,7 @@ class Rectangle {
   editingStyles = createEditingStyle();
   active = false
   firstAbortClick = false
+  opacity = 'DD'
 
   /**
    * @param {EditTools}  tools
@@ -40,15 +41,15 @@ class Rectangle {
     });
     this.draw.on('drawstart', (event) => {
       event.feature.set('type', 'rectangle', true)
-      event.feature.set('color', tools.sidebar.colorInput.value + 'AA', true)
-      event.feature.set('secondary-color', tools.sidebar.secondaryColorInput.value + 'AA')
+      event.feature.set('color', tools.sidebar.colorInput.value + this.opacity, true)
+      event.feature.set('secondary-color', tools.sidebar.secondaryColorInput.value + this.opacity)
       this.sketchFeature = event.feature
     })
     this.draw.on('drawend', (event) => {
       const feature = event.feature
       feature.set('type', 'rectangle', true)
-      feature.set('color', tools.sidebar.colorInput.value + 'AA', true)
-      feature.set('secondary-color', tools.sidebar.secondaryColorInput.value + 'AA', true)
+      feature.set('color', tools.sidebar.colorInput.value + this.opacity, true)
+      feature.set('secondary-color', tools.sidebar.secondaryColorInput.value + this.opacity, true)
       feature.set('notes', tools.sidebar.notesInput.value)
       tools.emit(tools.EVENT_ICON_ADDED, feature)
       tools.changeTool(false)
@@ -132,11 +133,11 @@ class Rectangle {
   styles = (feature) => {
     if (feature.getGeometry().getType() === 'Polygon') {
       const notes = feature.get('notes') === undefined || this.tools.sidebar.editFeature === feature ? this.tools.sidebar.notesInput.value : feature.get('notes')
-      const color = feature.get('color') === undefined || this.tools.sidebar.editFeature === feature ? this.tools.sidebar.colorInput.value + 'AA' : feature.get('color')
-      const secondaryColor = feature.get('secondary-color') === undefined || this.tools.sidebar.editFeature === feature ? this.tools.sidebar.secondaryColorInput.value + 'AA' : feature.get('secondary-color')
+      const color = feature.get('color') === undefined || this.tools.sidebar.editFeature === feature ? this.tools.sidebar.colorInput.value + this.opacity : feature.get('color')
+      const secondaryColor = feature.get('secondary-color') === undefined || this.tools.sidebar.editFeature === feature ? this.tools.sidebar.secondaryColorInput.value + this.opacity : feature.get('secondary-color')
       this.rectangleStyle.getText().setText(notes.split("\n")[0])
       this.rectangleStyle.getFill().setColor(color)
-      if (secondaryColor.toUpperCase() === '#FFFFFFAA') {
+      if (secondaryColor.toUpperCase() === ('#FFFFFF' + this.opacity)) {
         return [this.rectangleStyle]
       }
       const sec = new Style({
