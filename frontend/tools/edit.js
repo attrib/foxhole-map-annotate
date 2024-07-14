@@ -6,6 +6,8 @@ import { createCustomControlElement } from "../mapControls.js";
 
 class Edit {
 
+  copyFeature = []
+
   /**
    * @param {EditTools} tools
    * @param {import("ol").Map} map
@@ -37,6 +39,18 @@ class Edit {
           this.controlElement.classList.remove('selected')
           tools.changeMode(false)
         }
+      }
+      if (event.key === 'c' && event.ctrlKey) {
+        this.copyFeature = tools.select.getFeatures()
+
+      }
+      if (event.key === 'v' && event.ctrlKey && this.copyFeature.getLength() > 0  && tools.hasAccess('icon.add', this.copyFeature.item(0))) {
+        tools.select.getFeatures().forEach((feature) => {
+          const newFeature = feature.clone()
+          newFeature.set('id', '')
+          newFeature.getGeometry().translate(50, -50)
+          tools.emit(tools.EVENT_ICON_ADDED, newFeature)
+        })
       }
     })
     tools.on(tools.EVENT_EDIT_MODE_ENABLED, this.editModeEnabled)
