@@ -35,8 +35,7 @@
         }
     </style>
 </head>
-<body class="d-flex h-100 text-bg-dark">
-    <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+<body>
         <header class="mb-auto">
             <div>
                 <nav class="navbar navbar-expand-lg navbar-dark bg-primary faction-background-color">
@@ -116,10 +115,9 @@
                 </nav>
             </div>
         </header>
-        <main class="px-3" style="height: calc(100% - 56px);">
+        <main>
             {% block content %}{% endblock %}
         </main>
-    </div>
 
     <script src="/dist/main.js?{{ cacheBuster }}"></script>
     {% block javascript %}{% endblock %}

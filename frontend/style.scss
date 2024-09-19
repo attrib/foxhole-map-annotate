@@ -4,14 +4,74 @@
 @import "ol-ext/control/Search.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 @import "tom-select/src/scss/tom-select.bootstrap5.scss";
+@import url("./consts.css");
+
+:root {
+  color-scheme: light dark;
+}
 
 #map .layer-switcher {
   top: 0.5em;
   color: $black;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100dvw;
+  color: white;
+  background-color: rgba(33, 37, 41, 1)
+}
+
 main {
   position: relative;
+  height: calc(100% - 3.5rem);
+
+  @media (display-mode: picture-in-picture) {
+    height: 100%;
+  }
+}
+
+#pip-button {
+  all: unset;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-color: light-dark(var(--border-light), var(--border-dark));
+  background-color: var(--primary);
+  padding: 0.5rem;
+  display: none;
+  position: absolute;
+  color: var(--copy-dark);
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 100;
+  opacity: 0.6;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: all;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+    transition-behavior: allow-discrete;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &[data-supported] {
+    display: flex;
+
+    @media (display-mode: picture-in-picture) {
+      display: none;
+    }
+  }
+
+  & > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
 
 #feature-info {
