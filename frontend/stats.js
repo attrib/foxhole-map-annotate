@@ -54,3 +54,54 @@ createApp(Stats, {
 createApp(VPCounterStats, {
   data: data,
 }).mount('#war-score')
+
+/**
+ * An experimental browser feature that allows a page to be displayed in Picture-in-Picture mode.
+ * Only for Edge and Chrome right now.
+ *
+ * @returns {void}
+ */
+function loadPipModeFeature() {
+  const mainElement = document.querySelector("main");
+  const pipButton = document.querySelector("#pip-button");
+
+  if (!(mainElement instanceof HTMLElement)) {
+    console.warn("Main element not found on page initialization.");
+    return;
+  }
+
+  if (!(pipButton instanceof HTMLButtonElement)) {
+    console.warn("Picture-in-Picture button not found on page initialization.");
+    return;
+  }
+
+  if (!("documentPictureInPicture" in window)) {
+    console.info("Picture-in-Picture mode is not supported in this browser.");
+    pipButton.remove();
+    return;
+  }
+
+  const documentPictureInPicture = /** @type {{ requestWindow: () => Promise<Window> }} */ (window.documentPictureInPicture);
+
+  pipButton.addEventListener("click", () => {
+    documentPictureInPicture.requestWindow().then((pipWindow) => {
+      for (const stylesheet of document.styleSheets) {
+        const cssRules = [...stylesheet.cssRules].map((rule) => rule.cssText).join("");
+        const style = document.createElement("style");
+
+        style.textContent = cssRules;
+        pipWindow.document.head.appendChild(style);
+      }
+
+      pipWindow.document.body.append(mainElement);
+
+      pipWindow.addEventListener("pagehide", () => {
+        document.body.append(mainElement);
+      });
+    });
+  });
+
+  pipButton.setAttribute("data-supported", "true");
+}
+
+loadPipModeFeature();
