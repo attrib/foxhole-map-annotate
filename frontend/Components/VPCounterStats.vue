@@ -16,7 +16,7 @@ const props = defineProps(['data'])
 
 const score = reactive({Warden: 0, Colonial: 0, None: 0, WardenUnclaimed: 0, ColonialUnclaimed: 0, NoneUnclaimed: 0, requiredVPs: props.totalScore || 32})
 
-document.getElementById('war-score').style.display = 'flex';
+document.getElementById('war-score')?.setAttribute("data-vp-loaded", "");
 
 watch(
     props.data,

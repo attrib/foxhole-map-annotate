@@ -3,74 +3,51 @@
 @import "ol-layerswitcher/src/ol-layerswitcher.css";
 @import "ol-ext/control/Search.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
-@import "tom-select/src/scss/tom-select.bootstrap5.scss";
-@import url("./consts.css");
+@import url("./style/consts.css");
+@import url("./style/header.css");
+@import url("./style/section.css");
+@import url("./style/stats.css");
+@import url("./style/intel.css");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
 
 :root {
+  font-family: "Inter var", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   color-scheme: light dark;
 }
 
-#map .layer-switcher {
-  top: 0.5em;
-  color: $black;
-}
-
 body {
+  width: 100dvw;
+  height: 100dvh;
+  background-color: light-dark(var(--background-light), var(--background-dark));
+  position: relative;
   display: flex;
   flex-direction: column;
-  height: 100dvh;
-  width: 100dvw;
-  color: white;
-  background-color: rgba(33, 37, 41, 1)
+  overflow: clip;
+  margin: 0;
 }
 
 main {
   position: relative;
-  height: calc(100% - 3.5rem);
+  display: flex;
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  view-transition-name: main;
+  background-color: light-dark(var(--background-light), var(--background-dark));
 
   @media (display-mode: picture-in-picture) {
     height: 100%;
-  }
-}
-
-#pip-button {
-  all: unset;
-  cursor: pointer;
-  border-radius: 0.5rem;
-  border-width: 1px;
-  border-color: light-dark(var(--border-light), var(--border-dark));
-  background-color: var(--primary);
-  padding: 0.5rem;
-  display: none;
-  position: absolute;
-  color: var(--copy-dark);
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 100;
-  opacity: 0.6;
-
-  @media (prefers-reduced-motion: no-preference) {
-    transition-property: all;
-    transition-duration: 150ms;
-    transition-timing-function: ease-in-out;
-    transition-behavior: allow-discrete;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &[data-supported] {
-    display: flex;
-
-    @media (display-mode: picture-in-picture) {
-      display: none;
-    }
-  }
-
-  & > svg {
-    width: 1.5rem;
-    height: 1.5rem;
   }
 }
 
@@ -241,15 +218,6 @@ button.overlay-button {
 
   .icon img {
     height: 24px;
-  }
-}
-
-#war-score {
-  display: none;
-
-  .team-score {
-    margin: 0 15px;
-    height: 35px;
   }
 }
 

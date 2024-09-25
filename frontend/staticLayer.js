@@ -299,10 +299,6 @@ class StaticLayers {
 
     map.on('moveend', this.gridLoader)
 
-    if (window.innerWidth > 990) {
-      document.getElementById('war-score').style.display = 'flex'
-    }
-
     createApp(VPCounter, {
         townFeatures: this.sources.town,
         totalScore: this.conquerStatus.requiredVictoryTowns,

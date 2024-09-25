@@ -1,53 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="p-5 m-4 bg-light rounded-3 text-bg-light">
-    <div class="container-fluid py-5">
-        <h2>Event Log</h2>
-        {% for event in events %}
-            <div class="row">
-                <div class="col-md-2 date" data-datetime="{{ event.eventTime }}">
-                    {{ event.eventTime }}
+<main>
+    <section class="p-5 bg-light rounded-3 text-bg-light">
+        <div class="container-fluid py-5">
+            <h2>Event Log</h2>
+            {% for event in events %}
+                <div class="row">
+                    <div class="col-md-2 date" data-datetime="{{ event.eventTime }}">
+                        {{ event.eventTime }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ event.type }}
+                        {% if event.data.properties.type %}
+                            ({{ event.data.properties.type }})
+                        {% endif %}
+                        {% if event.data.properties.type and event.data.properties.icon %}
+                            <img src="/images/{{ event.data.properties.type }}/{{ event.data.properties.icon }}.svg" />
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        <a href="https://discordapp.com/users/{{ event.userId }}">{{ event.user }}</a>
+                        {% if config.access.discords|length > 1 and event.data.properties.discordId %}
+                            (<a href="https://discord.com/channels/{{event.data.properties.discordId}}">{{ config.access.discords[event.data.properties.discordId].name|default(event.data.properties.discordId) }}</a>)
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                        {% if event.data.geometry.coordinates %}
+                        {% if event.data.geometry.coordinates[0][0][0] %}
+                            <a href="/?cx={{ event.data.geometry.coordinates[0][0][0] }}&cy={{ event.data.geometry.coordinates[0][0][1] }}&r=1">Map</a>
+                        {% elseif event.data.geometry.coordinates[0][0] %}
+                            <a href="/?cx={{ event.data.geometry.coordinates[0][0] }}&cy={{ event.data.geometry.coordinates[0][1] }}&r=1">Map</a>
+                        {% else %}
+                            <a href="/?cx={{ event.data.geometry.coordinates[0] }}&cy={{ event.data.geometry.coordinates[1] }}&r=0.5">Map</a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        {% if event.data.properties.notes %}
+                            {{ event.data.properties.notes | nl2br }}
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    {{ event.type }}
-                    {% if event.data.properties.type %}
-                        ({{ event.data.properties.type }})
-                    {% endif %}
-                    {% if event.data.properties.type and event.data.properties.icon %}
-                        <img src="/images/{{ event.data.properties.type }}/{{ event.data.properties.icon }}.svg" />
-                    {% endif %}
-                </div>
-                <div class="col-md-2">
-                    <a href="https://discordapp.com/users/{{ event.userId }}">{{ event.user }}</a>
-                    {% if config.access.discords|length > 1 and event.data.properties.discordId %}
-                        (<a href="https://discord.com/channels/{{event.data.properties.discordId}}">{{ config.access.discords[event.data.properties.discordId].name|default(event.data.properties.discordId) }}</a>)
-                    {% endif %}
-                </div>
-                <div class="col-md-2">
-                    {% if event.data.geometry.coordinates %}
-                    {% if event.data.geometry.coordinates[0][0][0] %}
-                        <a href="/?cx={{ event.data.geometry.coordinates[0][0][0] }}&cy={{ event.data.geometry.coordinates[0][0][1] }}&r=1">Map</a>
-                    {% elseif event.data.geometry.coordinates[0][0] %}
-                        <a href="/?cx={{ event.data.geometry.coordinates[0][0] }}&cy={{ event.data.geometry.coordinates[0][1] }}&r=1">Map</a>
-                    {% else %}
-                        <a href="/?cx={{ event.data.geometry.coordinates[0] }}&cy={{ event.data.geometry.coordinates[1] }}&r=0.5">Map</a>
-                    {% endif %}
-                    {% endif %}
-                </div>
-                <div class="col-md-4">
-                    {% if event.data.properties.notes %}
-                        {{ event.data.properties.notes | nl2br }}
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    <script>
-        for (const element of document.getElementsByClassName('date')) {
-          const date = new Date(element.dataset.datetime)
-          element.innerHTML = date.toLocaleString()
-        }
-    </script>
-</div>
+            {% endfor %}
+        </div>
+        <script>
+            for (const element of document.getElementsByClassName('date')) {
+              const date = new Date(element.dataset.datetime)
+              element.innerHTML = date.toLocaleString()
+            }
+        </script>
+    </section>
+</main>
 {% endblock %}

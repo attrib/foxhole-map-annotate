@@ -1,0 +1,195 @@
+@property --primary {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #245784;
+}
+
+@property --primary-content {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #bbd5ec;
+}
+
+@property --primary-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #2f71ac;
+}
+
+@property --primary-dark {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #193d5c;
+}
+
+@property --secondary {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #812484;
+}
+
+@property --secondary-content {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #ebbbec;
+}
+
+@property --secondary-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #a82fac;
+}
+
+@property --secondary-dark {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #5a195c;
+}
+
+@property --foreground-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #fbfbfc;
+}
+
+@property --foreground-dark {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #21272c;
+}
+
+@property --background-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #edf0f2;
+}
+
+@property --background-dark {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #161a1d;
+}
+
+@property --border-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #dadfe4;
+}
+
+@property --border-dark {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #364049;
+}
+
+@property --copy-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #21272c;
+}
+
+@property --copy-dark {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #fbfbfc;
+}
+
+@property --copy-light-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #576775;
+}
+
+@property --copy-dark-light {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #d3d9de;
+}
+
+@property --copy-light-lighter {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #7b8d9d;
+}
+
+@property --copy-dark-lighter {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #98a7b3;
+}
+
+@property --success {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #248424;
+}
+
+@property --success-content {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #bbecbb;
+}
+
+@property --warning {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #848424;
+}
+
+@property --warning-content {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #ececbb;
+}
+
+@property --error {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #842424;
+}
+
+@property --error-content {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #ecbbbb;
+}
+
+@property --pulse {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #245784;
+}
+
+@property --sm {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 640px;
+}
+
+@property --md {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 768px;
+}
+
+@property --lg {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 1024px;
+}
+
+@property --xl {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 1280px;
+}
+
+@property --2xl {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 1536px;
+}
+
+:root {
+  --discrete-ease-in: all 300ms ease-in-out allow-discrete;
+}

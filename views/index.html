@@ -9,84 +9,59 @@
 {% endblock %}
 
 {% block content %}
-<div id="map" class="h-100 w-100">
-</div>
-<div id="global-alerts">
-    <div id="disconnected" class="alert alert-danger mb-2">Connection to server lost. Auto-reconnect in 10s. Map doesn't
-        update automatically. Editing not possible. Refresh page if message doesn't disappear.</div>
-    <div id="draft" class="mb-2"></div>
-    <div id="resistance"
-        class="alert {% if warStatus === 'resistance' and warWinner === 'Colonial' %}alert-warning{% elseif warStatus === 'resistance' and warWinner === 'Warden' %}alert-success{% endif %}"
-        {% if warStatus !=='resistance' %}style="display: none" {% endif %}>
-        <p>War is over. Winner: <strong id="resistance-winner">{{ warWinner }}</strong></p>
-        <p id="resistance-COLONIALS" {% if warWinner===config.basic.faction %}style="display: none" {% endif %}>We lost.
-            We will get them next time!</p>
-        <p id="resistance-WARDENS" {% if warWinner !==config.basic.faction %}style="display: none" {% endif %}>We won!
-            Congratulations! Now go to sleep.</p>
-        <p class="mb-0">Map is now read-only. Goes in preparation mode for next war <span id="resistance-timer"
-                data-conquest-end-time="{{ warConquestEndTime }}"></span>.</p>
+<main>
+    <div id="map" class="private-map">
     </div>
-</div>
-<div id="feature-info">
-
-    {# <div id="mouse-position-content" class="debug bg-light text-bg-light container mb-2">#}
-        {# <div class="row mb-2 mt-2">#}
-            {# <span class="col-sm-3">Mouse</span>#}
-            {# <div id="mouse-position" class="col-sm-9"></div>#}
-            {# </div>#}
-        {# </div>#}
-
-    <div id="icon-info" class="info-box bg-light text-bg-light p-1 px-2">
-        <div class="placementInfo row align-items-center justify-content-between">
-            <div class="user col-auto"></div>
-            <div class="time col-auto">
-                <span class="clock"><span class="clock-time"></span>{% include 'clock.svg' %}</span>
-                <i class="bi bi-flag flag" title="Flag for moderator check"></i>
-            </div>
+    <div id="global-alerts">
+        <div id="disconnected" class="alert alert-danger mb-2">Connection to server lost. Auto-reconnect in 10s. Map
+            doesn't
+            update automatically. Editing not possible. Refresh page if message doesn't disappear.</div>
+        <div id="draft" class="mb-2"></div>
+        <div id="resistance"
+            class="alert {% if warStatus === 'resistance' and warWinner === 'Colonial' %}alert-warning{% elseif warStatus === 'resistance' and warWinner === 'Warden' %}alert-success{% endif %}"
+            {% if warStatus !=='resistance' %}style="display: none" {% endif %}>
+            <p>War is over. Winner: <strong id="resistance-winner">{{ warWinner }}</strong></p>
+            <p id="resistance-COLONIALS" {% if warWinner===config.basic.faction %}style="display: none" {% endif %}>We
+                lost.
+                We will get them next time!</p>
+            <p id="resistance-WARDENS" {% if warWinner !==config.basic.faction %}style="display: none" {% endif %}>We
+                won!
+                Congratulations! Now go to sleep.</p>
+            <p class="mb-0">Map is now read-only. Goes in preparation mode for next war <span id="resistance-timer"
+                    data-conquest-end-time="{{ warConquestEndTime }}"></span>.</p>
         </div>
-        <div class="notes col-auto"></div>
     </div>
+    <div id="feature-info">
+
+        {# <div id="mouse-position-content" class="debug bg-light text-bg-light container mb-2">#}
+            {# <div class="row mb-2 mt-2">#}
+                {# <span class="col-sm-3">Mouse</span>#}
+                {# <div id="mouse-position" class="col-sm-9"></div>#}
+                {# </div>#}
+            {# </div>#}
+
+        <div id="icon-info" class="info-box bg-light text-bg-light p-1 px-2">
+            <div class="placementInfo row align-items-center justify-content-between">
+                <div class="user col-auto"></div>
+                <div class="time col-auto">
+                    <span class="clock"><span class="clock-time"></span>{% include 'clock.svg' %}</span>
+                    <i class="bi bi-flag flag" title="Flag for moderator check"></i>
+                </div>
+            </div>
+            <div class="notes col-auto"></div>
+        </div>
 
 
-</div>
+    </div>
+</main>
 
 {% include 'sidebar-edit.html' %}
-
 {% include 'sidebar-arty.html' %}
 
-    <div class="offcanvas offcanvas-start faction-background-color" tabindex="-1" id="flags" aria-labelledby="flagsLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="flagsLabel">Flags</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <template id="flaggedTemplate">
-                <tr class="flagged-item">
-                    <td class="icon"></td>
-                    <td class="user"></td>
-{#                    <td class="notes"></td>#}
-                    <td class="flagCount"></td>
-                    <td>
-                        <div class="btn-group">
-                            <a href="#" class="target btn btn-light" title="Move Map"><i class="bi bi-arrows-move"></i></a>
-                            <a href="#" class="confirm btn btn-success" title="Remove all flags"><i class="bi bi-check"></i></a>
-                            <a href="#" class="delete btn btn-danger" title="Remove feature"><i class="bi bi-trash"></i></a>
-                        </div>
-                    </td>
-                </tr>
-            </template>
-            <table id="flagged" class="col-12">
-                <thead>
-                    <tr>
-                        <td colspan="2">User</td>
-{#                        <td>Notes</td>#}
-                        <td style="min-width: 3em">Count</td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+{% if user %}
+{% if acl === 'mod' or acl === 'admin' %}
+{% include 'sidebar-flag.html' %}
+{% endif %}
+{% endif %}
 
 {% endblock %}

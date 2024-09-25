@@ -1,0 +1,79 @@
+.public-map {
+  width: 100dvw;
+  height: calc(100dvh - 6.5rem);
+  margin-top: 5.5rem;
+  view-transition-name: public-map;
+  opacity: 1;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: all;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+    transition-behavior: allow-discrete;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  @media (display-mode: picture-in-picture) {
+    margin-top: 0;
+    height: 100dvh;
+  }
+}
+
+#pip-button {
+  all: unset;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-color: light-dark(var(--border-light), var(--border-dark));
+  background-color: var(--primary);
+  padding: 0.5rem;
+  display: none;
+  position: absolute;
+  color: var(--copy-dark);
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 100;
+  opacity: 0.6;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: all;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+    transition-behavior: allow-discrete;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &[data-supported] {
+    display: flex;
+
+    @media (display-mode: picture-in-picture) {
+      display: none;
+    }
+  }
+
+  & > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.pip-active {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  inset: 0;
+  z-index: -1;
+
+  & > svg {
+    color: light-dark(var(--border-light), var(--border-dark));
+    width: clamp(50% 50%, 100%);
+    height: clamp(50%, 50%, 100%);
+  }
+}

@@ -4,23 +4,25 @@
 {% endblock %}
 
 {% block content %}
-<div class="p-5 m-4 bg-light rounded-3 text-bg-light">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Access Denied</h1>
-        {{ config.text.accessDenied | safe }}
-        <p>
-            <a class="btn btn-primary" data-bs-toggle="collapse" href="#debug" role="button" aria-expanded="false" aria-controls="debug">
-                Debug Info
-            </a>
-        </p>
-        <div class="collapse" id="debug">
-            <div class="card card-body">
-                <p>User ID: {{ userId }}</p>
-                {% for debug in debugInfo %}
-                    <p>{{ debug }}</p>
-                {% endfor %}
+<main>
+    <section class="p-5 m-4 bg-light rounded-3 text-bg-light">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Access Denied</h1>
+            {{ config.text.accessDenied | safe }}
+            <p>
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#debug" role="button" aria-expanded="false" aria-controls="debug">
+                    Debug Info
+                </a>
+            </p>
+            <div class="collapse" id="debug">
+                <div class="card card-body">
+                    <p>User ID: {{ userId }}</p>
+                    {% for debug in debugInfo %}
+                        <p>{{ debug }}</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+</main>
 {% endblock %}

@@ -40,29 +40,31 @@
 {% endblock %}
 
 {% block content %}
-<div class="p-5 m-4 bg-light rounded-3 text-bg-light">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Login required</h1>
-        {{ config.text.login | safe }}
-        <div class="row">
-            {% if showSelect %}
-            <div class="col-auto row">
-                <label for="server" class="col-form-label col-auto">Login via</label>
-                <div class="col-auto">
-                <select id="server" class="form-select form-control">
-                    {% for discordId, discord in config.access.discords %}
-                        {% if not discord.hiddenCode or discord.hiddenCode === hiddenCode %}
-                        <option value="{{ discordId }}" {% if discord.hiddenCode === hiddenCode %}selected{% endif %}>{{ discord.name }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                </div>
-            </div>
-            {% endif %}
-            <div class="col-auto">
-                <a href="/connect/discord" class="btn btn-primary" id="loginButton">Login</a>
-            </div>
-        </div>
-    </div>
-</div>
+<main>
+  <section class="p-5 bg-light rounded-3 text-bg-light">
+      <div class="container-fluid py-5">
+          <h1 class="display-5 fw-bold">Login required</h1>
+          {{ config.text.login | safe }}
+          <div class="row">
+              {% if showSelect %}
+              <div class="col-auto row">
+                  <label for="server" class="col-form-label col-auto">Login via</label>
+                  <div class="col-auto">
+                  <select id="server" class="form-select form-control">
+                      {% for discordId, discord in config.access.discords %}
+                          {% if not discord.hiddenCode or discord.hiddenCode === hiddenCode %}
+                          <option value="{{ discordId }}" {% if discord.hiddenCode === hiddenCode %}selected{% endif %}>{{ discord.name }}</option>
+                          {% endif %}
+                      {% endfor %}
+                  </select>
+                  </div>
+              </div>
+              {% endif %}
+              <div class="col-auto">
+                  <a href="/connect/discord" class="btn btn-primary" id="loginButton">Login</a>
+              </div>
+          </div>
+      </div>
+  </section>
+</main>
 {% endblock %}

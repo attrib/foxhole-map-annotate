@@ -1,0 +1,35 @@
+@import url("./consts.css");
+
+.private-map {
+  width: 100dvw;
+  height: 100dvh;
+  position: absolute;
+  inset: 0;
+  view-transition-name: private-map;
+}
+
+.offcanvas {
+  background-color: var(--primary) !important;
+  color: var(--copy-dark) !important;
+}
+
+#map .layer-switcher {
+  top: 5rem;
+  right: 1rem;
+  color: black;
+}
+
+.ol-zoom {
+  top: 5rem;
+  left: 1rem;
+}
+
+.ol-search {
+  top: 5rem;
+  left: 3rem;
+}
+
+.ol-attribution {
+  bottom: 1rem;
+  right: 1rem;
+}

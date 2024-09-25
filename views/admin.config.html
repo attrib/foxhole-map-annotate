@@ -5,157 +5,159 @@
 {% endblock %}
 
 {% block content %}
-<div class="p-5 m-4 bg-light rounded-3 text-bg-light">
-    <div class="container-fluid py-5">
-        <h2>Configuration</h2>
-        <form action="/admin/config" method="post">
-            <ul class="nav nav-tabs mb-3" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Basic</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="discord-tab" data-bs-toggle="tab" data-bs-target="#discord-tab-pane" type="button" role="tab" aria-controls="discord-tab-pane" aria-selected="false">Discord Permissions</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="texts-tab" data-bs-toggle="tab" data-bs-target="#texts-tab-pane" type="button" role="tab" aria-controls="texts-tab-pane" aria-selected="false">Texts</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="draft-tab" data-bs-toggle="tab" data-bs-target="#draft-tab-pane" type="button" role="tab" aria-controls="draft-tab-pane" aria-selected="false">Drafts Settings</button>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="basic-tab-pane" role="tabpanel" aria-labelledby="basic-tab" tabindex="0">
-                    <div class="mb-3 row">
-                        <label for="title" class="col-sm-2 col-form-label">Title</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="title" name="title" value="{{ config.basic.title }}">
+<main>
+    <section class="p-5 bg-light rounded-3 text-bg-light">
+        <div class="container-fluid py-5">
+            <h2>Configuration</h2>
+            <form action="/admin/config" method="post">
+                <ul class="nav nav-tabs mb-3" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Basic</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="discord-tab" data-bs-toggle="tab" data-bs-target="#discord-tab-pane" type="button" role="tab" aria-controls="discord-tab-pane" aria-selected="false">Discord Permissions</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="texts-tab" data-bs-toggle="tab" data-bs-target="#texts-tab-pane" type="button" role="tab" aria-controls="texts-tab-pane" aria-selected="false">Texts</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="draft-tab" data-bs-toggle="tab" data-bs-target="#draft-tab-pane" type="button" role="tab" aria-controls="draft-tab-pane" aria-selected="false">Drafts Settings</button>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="basic-tab-pane" role="tabpanel" aria-labelledby="basic-tab" tabindex="0">
+                        <div class="mb-3 row">
+                            <label for="title" class="col-sm-2 col-form-label">Title</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="title" name="title" value="{{ config.basic.title }}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="color" class="col-sm-2 col-form-label">Navbar Color</label>
+                            <div class="col-sm-10">
+                                <input type="color" class="form-control" id="color" name="color" value="{{ config.basic.color }}">
+                            </div>
+                        </div>
+                        <h4>Links</h4>
+                        <p>Links are shown as a drop down menu under the shard name/war number</p>
+                        {% for link in config.basic.links %}
+                        {{ linkRow(link) }}
+                        {% endfor %}
+                        <template id="link-add">
+                            {{ linkRow({title:'',href:''}) }}
+                        </template>
+                        <div class="mb-3 row">
+                            <button data-template-id="link-add" class="btn btn-primary col-1 offset-11 addRow">+</button>
                         </div>
                     </div>
-                    <div class="mb-3 row">
-                        <label for="color" class="col-sm-2 col-form-label">Navbar Color</label>
-                        <div class="col-sm-10">
-                            <input type="color" class="form-control" id="color" name="color" value="{{ config.basic.color }}">
+    
+                    <div class="tab-pane fade" id="texts-tab-pane" role="tabpanel" aria-labelledby="texts-tab" tabindex="0">
+                        <div class="mb-3 row">
+                            <label for="text-login" class="form-label">Login Page Text</label>
+                            <textarea class="form-control" id="text-login" rows="3" name="textLogin">{{ config.text.login }}</textarea>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="text-accessDenied" class="form-label">Access Denied</label>
+                            <textarea class="form-control" id="text-accessDenied" rows="3" name="textAccessDenied">{{ config.text.accessDenied }}</textarea>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="text-feedback" class="form-label">Feedback</label>
+                            <textarea class="form-control" id="text-feedback" rows="3" name="textFeedback">{{ config.text.feedback }}</textarea>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="text-contributors" class="form-label">Contributors</label>
+                            <textarea class="form-control" id="text-contributors" rows="3" name="textContributors">{{ config.text.contributors }}</textarea>
                         </div>
                     </div>
-                    <h4>Links</h4>
-                    <p>Links are shown as a drop down menu under the shard name/war number</p>
-                    {% for link in config.basic.links %}
-                    {{ linkRow(link) }}
-                    {% endfor %}
-                    <template id="link-add">
-                        {{ linkRow({title:'',href:''}) }}
-                    </template>
-                    <div class="mb-3 row">
-                        <button data-template-id="link-add" class="btn btn-primary col-1 offset-11 addRow">+</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="texts-tab-pane" role="tabpanel" aria-labelledby="texts-tab" tabindex="0">
-                    <div class="mb-3 row">
-                        <label for="text-login" class="form-label">Login Page Text</label>
-                        <textarea class="form-control" id="text-login" rows="3" name="textLogin">{{ config.text.login }}</textarea>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="text-accessDenied" class="form-label">Access Denied</label>
-                        <textarea class="form-control" id="text-accessDenied" rows="3" name="textAccessDenied">{{ config.text.accessDenied }}</textarea>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="text-feedback" class="form-label">Feedback</label>
-                        <textarea class="form-control" id="text-feedback" rows="3" name="textFeedback">{{ config.text.feedback }}</textarea>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="text-contributors" class="form-label">Contributors</label>
-                        <textarea class="form-control" id="text-contributors" rows="3" name="textContributors">{{ config.text.contributors }}</textarea>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="discord-tab-pane" role="tabpanel" aria-labelledby="discord-tab" tabindex="0">
-                    <h6>Specific User Roles</h6>
-                    <p>
-                        If a user has a specific user role, it will ignore all server roles. Also Discord username is used in the case and not the Discord server username.<br>
-                        Therefor should be used only of admins or blocked.
-                    </p>
-                    {% for userId, user in config.access.users %}
-                    {{ userRow(userId, user) }}
-                    {% endfor %}
-                    <template id="user-add">
-                        {{ userRow('', {name:'',acl:''}) }}
-                    </template>
-                    <div class="mb-3 row">
-                        <div class="col-11 text-end btn">Add new User</div>
-                        <button data-template-id="user-add" class="btn btn-primary col-1 addRow">+</button>
-                    </div>
-
-                    <h6>Assign roles to discord roles</h6>
-                    {% for discordId, discord in config.access.discords %}
-                    {{ discordRow(discordId, discord) }}
-                    {% endfor %}
-                    <template id="discord-add">
-                        {{ discordRow('', {}) }}
-                    </template>
-                    <div class="mb-3 row">
-                        <div class="col-11 text-end btn">Add new Discord Server</div>
-                        <button data-template-id="discord-add" class="btn btn-primary col-1 addRow">+</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="draft-tab-pane" role="tabpanel" aria-labelledby="draft-tab" tabindex="0">
-                    <h6>Draft Settings</h6>
-                    <p>This view does not auto update!</p>
-                    <div class="mb-3 row">
-                        <label for="draftStatus-draftUrl" class="col-sm-2 col-form-label form-check-label">Link to Discord Post</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="draftStatus-draftUrl" name="draftStatus[draftUrl]" value="{{draftStatus.draftUrl}}">
+    
+                    <div class="tab-pane fade" id="discord-tab-pane" role="tabpanel" aria-labelledby="discord-tab" tabindex="0">
+                        <h6>Specific User Roles</h6>
+                        <p>
+                            If a user has a specific user role, it will ignore all server roles. Also Discord username is used in the case and not the Discord server username.<br>
+                            Therefor should be used only of admins or blocked.
+                        </p>
+                        {% for userId, user in config.access.users %}
+                        {{ userRow(userId, user) }}
+                        {% endfor %}
+                        <template id="user-add">
+                            {{ userRow('', {name:'',acl:''}) }}
+                        </template>
+                        <div class="mb-3 row">
+                            <div class="col-11 text-end btn">Add new User</div>
+                            <button data-template-id="user-add" class="btn btn-primary col-1 addRow">+</button>
+                        </div>
+    
+                        <h6>Assign roles to discord roles</h6>
+                        {% for discordId, discord in config.access.discords %}
+                        {{ discordRow(discordId, discord) }}
+                        {% endfor %}
+                        <template id="discord-add">
+                            {{ discordRow('', {}) }}
+                        </template>
+                        <div class="mb-3 row">
+                            <div class="col-11 text-end btn">Add new Discord Server</div>
+                            <button data-template-id="discord-add" class="btn btn-primary col-1 addRow">+</button>
                         </div>
                     </div>
-                    <div class="mb-3 row">
-                        <label for="draftStatus-active" class="col-sm-2 col-form-label form-check-label">Active</label>
-                        <div class="col-sm-10">
-                            <input type="checkbox" class="form-check-input" id="draftStatus-active" name="draftStatus[active]" value="1" {% if draftStatus.active %}checked{% endif %}>
+    
+                    <div class="tab-pane fade" id="draft-tab-pane" role="tabpanel" aria-labelledby="draft-tab" tabindex="0">
+                        <h6>Draft Settings</h6>
+                        <p>This view does not auto update!</p>
+                        <div class="mb-3 row">
+                            <label for="draftStatus-draftUrl" class="col-sm-2 col-form-label form-check-label">Link to Discord Post</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="draftStatus-draftUrl" name="draftStatus[draftUrl]" value="{{draftStatus.draftUrl}}">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="draftStatus-active" class="col-sm-2 col-form-label form-check-label">Active</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" class="form-check-input" id="draftStatus-active" name="draftStatus[active]" value="1" {% if draftStatus.active %}checked{% endif %}>
+                            </div>
+                        </div>
+                        {% if draftStatus.active %}
+                        <div class="mb-3 row">
+                            <label for="draftStatus-activeDraft" class="col-sm-2 col-form-label">Active Draft</label>
+                            <div class="col-sm-10">
+                                {{ draftSelect('draftStatus[activeDraft]', draftStatusSelected, draftStatus.draftOrder) }}
+                            </div>
+                        </div>
+                        {% endif %}
+    
+                        <h6>Drafts</h6>
+                        <div id="draftDropzone">
+                        {% for draft in draftStatus.draftOrder %}
+                            {{ draftRow(draft) }}
+                        {% endfor %}
+                        <template id="draft-add">
+                            {{ draftRow('', {discordId:'',userId:'',name:''}) }}
+                        </template>
+                        <div class="mb-3 row">
+                            <div class="col-11 text-end btn">Add new Draft</div>
+                            <button data-template-id="draft-add" class="btn btn-primary col-1 addRow"><i class="bi bi-plus-circle"></i></button>
+                        </div>
                         </div>
                     </div>
-                    {% if draftStatus.active %}
-                    <div class="mb-3 row">
-                        <label for="draftStatus-activeDraft" class="col-sm-2 col-form-label">Active Draft</label>
-                        <div class="col-sm-10">
-                            {{ draftSelect('draftStatus[activeDraft]', draftStatusSelected, draftStatus.draftOrder) }}
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <h6>Drafts</h6>
-                    <div id="draftDropzone">
-                    {% for draft in draftStatus.draftOrder %}
-                        {{ draftRow(draft) }}
-                    {% endfor %}
-                    <template id="draft-add">
-                        {{ draftRow('', {discordId:'',userId:'',name:''}) }}
-                    </template>
-                    <div class="mb-3 row">
-                        <div class="col-11 text-end btn">Add new Draft</div>
-                        <button data-template-id="draft-add" class="btn btn-primary col-1 addRow"><i class="bi bi-plus-circle"></i></button>
-                    </div>
+                </div>
+    
+    
+                <div class="mb-3 row">
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-3">Save</button>
                     </div>
                 </div>
-            </div>
-
-
-            <div class="mb-3 row">
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-3">Save</button>
+    
+            </form>
+            <form action="/admin/reload" method="post">
+                <div class="mb-3 row">
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-3">Force Map Reload</button>
+                    </div>
                 </div>
-            </div>
-
-        </form>
-        <form action="/admin/reload" method="post">
-            <div class="mb-3 row">
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-3">Force Map Reload</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+            </form>
+        </div>
+    </section>
+</main>
 {% endblock %}
 
 {% macro linkRow(link) %}

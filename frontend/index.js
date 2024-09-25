@@ -9,7 +9,7 @@ import { TileImage } from "ol/source.js";
 import TileGrid from "ol/tilegrid/TileGrid.js";
 import { createApp, reactive, ref } from "vue";
 
-import { ACL_ACTIONS, hasAccess } from "../lib/ACLS.js";
+import { ACL_ACTIONS, ACL_ADMIN, ACL_MOD, hasAccess } from "../lib/ACLS.js";
 import Draft from "./Components/Draft.vue";
 import Flags from "./flags.js";
 import { addDefaultMapControls, enableLayerMemory } from "./mapControls.js";
@@ -122,6 +122,9 @@ socket.on('init', (data) => {
   realACL = data.acl
   if (data.warStatus === 'resistance') {
     data.acl = 'read'
+  }
+  if (data.acl === ACL_MOD || data.acl === ACL_ADMIN) {
+    map.addControl(new Flags(map, tools).control);
   }
   tools.initAcl(data.acl)
   discordId.value = data.discordId
@@ -239,8 +242,6 @@ tools.on(tools.EVENT_UNFLAG, (data) => {
 tools.on(tools.EVENT_OBS_MOVED, (data) => {
   socket.send('obsMove', data)
 })
-
-new Flags(map, tools)
 
 new Measure(map, tools)
 
