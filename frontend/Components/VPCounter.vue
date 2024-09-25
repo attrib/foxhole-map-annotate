@@ -16,6 +16,8 @@ const props = defineProps(['totalScore', 'townFeatures'])
 
 const score = reactive({Warden: 0, Colonial: 0, None: 0, WardenUnclaimed: 0, ColonialUnclaimed: 0, NoneUnclaimed: 0, requiredVPs: props.totalScore || 32})
 
+document.getElementById('war-score')?.setAttribute("data-vp-loaded", "");
+
 watch(
     props.townFeatures,
     (townFeatures) => {

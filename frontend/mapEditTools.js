@@ -16,7 +16,7 @@ import SidebarArty from "./tools/sidebarArty.js";
 import Rectangle from "./tools/rectangle.js";
 import Move from "./tools/move.js";
 
-class EditTools {
+export class EditTools {
   EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
   EVENT_EDIT_MODE_DISABLED = 'editModeDisabled';
   EVENT_TOOL_SELECTED = 'toolSelected';

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,97 +30,175 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/dist/main.css?{{ cacheBuster }}">
     {% block css %}{% endblock %}
-    <style>
-        .faction-background-color {
-            background-color: {{ config.basic.color }} !important;
-        }
-    </style>
 </head>
+
 <body>
-        <header class="mb-auto">
-            <div>
-                <nav class="navbar navbar-expand-lg navbar-dark bg-primary faction-background-color">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="/">
-                            <img src="{{ config.images.logo }}" width="30" height="30" class="d-inline-block align-top" alt="">
-                            {{ title }}
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
+    <header>
+        <nav>
+            <a class="site-title" href="/" aria-label="Homepage Link">
+                <div>
+                    <img src="{{ config.images.logo }}" alt="Website Logo" />
+                </div>
+                <h1>{{ title }}</h1>
+            </a>
+            <div class="header-content">
+                <ul>
+                    <li><a class="{% if '/cmap' in path %}active{% endif %}" href="/cmap">Intel</a></li>
+                    {% if acl === 'admin' or acl === 'moderator' %}
+                    <li><button type="button" id="admin-dropdown" popovertarget="admin-menu"
+                            popovertargetaction="toggle"
+                            class="{% if '/admin' in path %}active{% endif %}">Admin</button></li>
+                    {% endif %}
+                    <li><a class="{% if path == '/help' %}active{% endif %}" href="/help">Help</a></li>
+                    <li><a class="{% if path == '/' %}active{% endif %}" href="/">Stats</a></li>
+                </ul>
+                <div id="war-score"></div>
+                <div>
+                    <span id="war-number">{{ shard }} #{{ war }}{% if warStatus === 'prepare' %} (Preparing){% elseif
+                        warStatus === 'resistance' %} (Resistance){% endif %}</span>
+                    {% if user %}
+                    <div id="user-dropdown" class="link-dropdown">
+                        <button type="button" popovertarget="user-popover" popovertargetaction="toggle"
+                            id="discord-username" data-user-id="{{ userId }}">
+                            <span>{{ user }}</span>
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item"><a class="nav-link {% if '/cmap' in path %}active{% endif %}" href="/cmap">Map</a></li>
-                                {% if acl === 'admin' %}
-                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="offcanvas" href="#flags">Flagged</a></li>
-                                    <li class="nav-item dropdown">
-                                        <span class="nav-link dropdown-toggle {% if '/admin/' in path %}active{% endif %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</span>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item {% if path == '/admin/eventlog' %}active{% endif %}" href="/admin/eventlog">Eventlog</a></li>
-                                            <li><a class="dropdown-item {% if path == '/admin/config' %}active{% endif %}" href="/admin/config">Config</a></li>
-                                        </ul>
-                                    </li>
-                                {% elseif acl === 'moderator' %}
-                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="offcanvas" href="#flags">Flagged</a></li>
-                                    <li class="nav-item"><a class="nav-link {% if path == '/admin/eventlog' %}active{% endif %}" href="/admin/eventlog">Admin</a></li>
-                                {% endif %}
-                                <li class="nav-item flex-grow-1"><a class="nav-link {% if path == '/help' %}active{% endif %}" href="/help">Help</a></li>
-                                <li class="nav-item flex-grow-1"><a class="nav-link {% if path == '/' %}active{% endif %}" href="/">Stats</a></li>
-                            </ul>
-                            <div class="navbar-nav me-auto text-bg-dark rounded" id="war-score"></div>
-                            <div class="navbar-nav justify-content-end">
-                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                    <li class="nav-item{% if config.basic.links|length > 0 %} dropdown{% endif %}">
-                                        {% if config.basic.links|length > 0 %}
-                                            <span id="warNumber" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ shard }} #{{ war }}{% if warStatus === 'prepare' %} (Preparing){% elseif warStatus === 'resistance' %} (Resistance){% endif %}</span>
-                                            <ul class="dropdown-menu">
-                                                {% for item in config.basic.links %}
-                                                <li><a class="dropdown-item" href="{{ item.href }}">{{ item.title }}</a></li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% else %}
-                                            <span id="warNumber" class="nav-link{% if config.basic.links|length > 0 %} dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"{% else %}"{% endif %}>{{ shard }} #{{ war }}{% if warStatus === 'prepare' %} (Preparing){% elseif warStatus === 'resistance' %} (Resistance){% endif %}</span>
-                                        {% endif %}
-                                    </li>
-                                </ul>
-                                {% if user %}
-                                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="discord-username" data-user-id="{{ userId }}">
-                                                {{ user }}
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                            <span class="dropdown-item-text">
-                                                {% if acl === 'full' %}
-                                                    Full access
-                                                {% elseif acl === 'moderator' %}
-                                                    Full access (Mod)
-                                                {% elseif acl === 'admin' %}
-                                                    Admin
-                                                {% elseif acl === 'icons' %}
-                                                    Icons edit only
-                                                {% else %}
-                                                    Read only
-                                                {% endif %}
-                                            </span>
-                                                </li>
-                                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                {% endif %}
-                            </div>
-                        </div>
                     </div>
-                </nav>
+                    {% else %}
+                    <div id="war-number-dropdown" class="link-dropdown">
+                        <button type="button" popovertarget="war-number-popover" popovertargetaction="toggle"
+                            id="war-number">{{ shard }} #{{ war }}{% if warStatus === 'prepare' %} (Preparing){% elseif
+                            warStatus === 'resistance' %} (Resistance){% endif %}</button>
+                    </div>
+                    {% endif %}
+                    <button type="button" id="mobile-nav-button" popovertarget="mobile-nav-menu"
+                        popovertargetaction="toggle" aria-label="Mobile menu button">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </button>
+                </div>
             </div>
-        </header>
-        <main>
-            {% block content %}{% endblock %}
-        </main>
+        </nav>
+    </header>
+    {% if user %}
+    {% if acl === 'admin' or acl === 'moderator' %}
+    <div id="admin-menu" class="link-menu" popover>
+        <a class="{% if path == '/admin/eventlog' %}active{% endif %}" href="/admin/eventlog">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 12h8m-8 6h8M13 6h8M3 12h1m-1 6h1M3 6h1m4 6h1m-1 6h1M8 6h1" />
+            </svg>
+            <span>Eventlog</span>
+        </a>
+        {% if acl === 'admin' %}
+        <a class="{% if path == '/admin/config' %}active{% endif %}" href="/admin/config">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                    d="M10.825 22q-.675 0-1.162-.45t-.588-1.1L8.85 18.8q-.325-.125-.612-.3t-.563-.375l-1.55.65q-.625.275-1.25.05t-.975-.8l-1.175-2.05q-.35-.575-.2-1.225t.675-1.075l1.325-1Q4.5 12.5 4.5 12.337v-.675q0-.162.025-.337l-1.325-1Q2.675 9.9 2.525 9.25t.2-1.225L3.9 5.975q.35-.575.975-.8t1.25.05l1.55.65q.275-.2.575-.375t.6-.3l.225-1.65q.1-.65.588-1.1T10.825 2h2.35q.675 0 1.163.45t.587 1.1l.225 1.65q.325.125.613.3t.562.375l1.55-.65q.625-.275 1.25-.05t.975.8l1.175 2.05q.35.575.2 1.225t-.675 1.075l-1.325 1q.025.175.025.338v.674q0 .163-.05.338l1.325 1q.525.425.675 1.075t-.2 1.225l-1.2 2.05q-.35.575-.975.8t-1.25-.05l-1.5-.65q-.275.2-.575.375t-.6.3l-.225 1.65q-.1.65-.587 1.1t-1.163.45zm1.225-6.5q1.45 0 2.475-1.025T15.55 12t-1.025-2.475T12.05 8.5q-1.475 0-2.488 1.025T8.55 12t1.013 2.475T12.05 15.5" />
+            </svg>
+            <span>Config</span>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div id="user-popover" popover>
+        <div class="user-menu-details">
+            <div>
+                <span>User:&nbsp;</span>
+                <span title="{{ user }}">{{ user }}</span>
+            </div>
+            <div>
+                <span>Access:&nbsp;</span>
+                <span>
+                    {% if acl === "full" %}
+                    Full access
+                    {% elseif acl === "moderator" %}
+                    Full access (Mod)
+                    {% elseif acl === "admin" %}
+                    Admin
+                    {% elseif acl === "icons" %}
+                    Icons edit only
+                    {% else %}
+                    Read only
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        {% if config.basic.links|length > 0 %}
+        <label for="link-open">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m9 18l6-6l-6-6" />
+            </svg>
+            <span>Links</span>
+            <input type="checkbox" id="link-open">
+        </label>
+        <div class="user-menu-links">
+            <div>
+                {% for item in config.basic.links %}
+                <a href="{{ item.href }}" referrerpolicy="no-referrer" target="_blank" title="{{ item.title }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    </svg>
+                    <span>{{ item.title }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+    {% else %}
+    {% if config.basic.links|length > 0 %}
+    <div id="war-number-popover" class="link-menu" popover>
+        {% for item in config.basic.links %}
+        <a href="{{ item.href }}" referrerpolicy="no-referrer" target="_blank" title="{{ item.title }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+            <span>{{ item.title }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+    <div id="mobile-nav-menu" popover>
+        <ul>
+            <li><a class="{% if '/cmap' in path %}active{% endif %}" href="/cmap">Intel</a></li>
+            {% if acl === 'admin' or acl === 'moderator' %}
+            <li><a class="{% if path == '/admin/eventlog' %}active{% endif %}" href="/admin/eventlog">Eventlog</a></li>
+            {% endif %}
+            {% if acl === 'admin' %}
+            <li><a class="{% if path == '/admin/config' %}active{% endif %}" href="/admin/config">Config</a></li>
+            {% endif %}
+            <li><a class="{% if path == '/help' %}active{% endif %}" href="/help">Help</a></li>
+            <li><a class="{% if path == '/' %}active{% endif %}" href="/">Stats</a></li>
+        </ul>
+        {% if config.basic.links|length > 0 %}
+        <div>
+            <span>Links</span>
+            {% for item in config.basic.links %}
+            <a href="{{ item.href }}" referrerpolicy="no-referrer" target="_blank" title="{{ item.title }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                </svg>
+                <span>{{ item.title }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    {% block content %}{% endblock %}
 
     <script src="/dist/main.js?{{ cacheBuster }}"></script>
     {% block javascript %}{% endblock %}
 </body>
+
 </html>

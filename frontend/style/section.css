@@ -1,0 +1,25 @@
+@import url("./consts.css");
+
+main > section {
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  margin-top: 5rem;
+  margin-inline: 0;
+  margin-bottom: 0;
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow-y: auto;
+  clip-path: inset(0 round 0.5rem);
+  scrollbar-gutter: stable;
+  view-transition-name: section;
+
+  @media (width >= 640px) {
+    margin-inline: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (width >= 768px) {
+    margin-top: 5.5rem;
+  }
+}

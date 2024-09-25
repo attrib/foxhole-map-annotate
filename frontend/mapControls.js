@@ -55,7 +55,7 @@ function enableLayerMemory(map) {
   });
 }
 
-let customControlTopPosition = 3.5;
+let customControlTopPosition = 8.5;
 
 function createCustomControlElement(label, clickHandler, options) {
   const defaultOptions = {
@@ -87,10 +87,10 @@ function createCustomControlElement(label, clickHandler, options) {
   if (options.left) {
     customControlTopPosition -= 1.5;
     element.style.left = options.left;
-    element.style.top = customControlTopPosition + 'em';
+    element.style.top = customControlTopPosition + 'rem';
   } else {
-    element.style.left = '0.5em';
-    element.style.top = customControlTopPosition + 'em';
+    element.style.left = '1rem';
+    element.style.top = customControlTopPosition + 'rem';
   }
   customControlTopPosition += 1.5;
 
