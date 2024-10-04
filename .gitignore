@@ -8,6 +8,7 @@ logs
 node_modules
 public/dist
 hidden
+dist
 
 ## VS Code
 .history

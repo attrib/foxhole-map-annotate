@@ -6,8 +6,7 @@ import GeoJSON from "ol/format/GeoJSON.js";
 import { Collection } from "ol";
 import VectorSource from "ol/source/Vector.js";
 import LineString from "ol/geom/LineString.js";
-import voronoi from "@turf/voronoi";
-import intersect from "@turf/intersect";
+import { intersect, voronoi } from "@turf/turf";
 
 Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, VectorSource, ol, LineString]) => {
   const geonJson = new GeoJSON();

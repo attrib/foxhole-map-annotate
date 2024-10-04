@@ -1,4 +1,6 @@
-import path from "node:path";
+/** @import { ErrorRequestHandler } from "express" */
+
+import { resolve } from "node:path";
 
 import cookieParser from "cookie-parser";
 import express from "express";
@@ -11,37 +13,47 @@ import config from "./lib/config.js";
 import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import indexRouter from "./routes/index.js";
+import { getManifest } from "./lib/manifest.js";
+
+if (process.env.NODE_ENV !== "production") {
+  try {
+    process.loadEnvFile();
+  } catch {
+    console.warn("No .env file found. Using system environment variables.");
+  }
+}
+
+const isDevMode = process.env.NODE_ENV === "development";
 
 const app = express();
 
-nunjucks.configure('views', {
-  autoescape: true,
-  express: app,
-  noCache: app.get('env') !== 'production',
-});
-app.set('view engine', 'html');
-if (app.get('env') === 'production') {
-  app.set('trust proxy', 2) // trust first two proxys (nginx, cloudflare)
-}
-else {
-  const webpack = await import('webpack').then((module) => module.default);
-  const webpackDevMiddleware = await import('webpack-dev-middleware').then((module) => module.default);
-  const webPackConfig = await import('./webpack.dev.js').then((module) => module.default);
-  const compiler = webpack(webPackConfig);
-  app.use(
-    webpackDevMiddleware(compiler, {
-      publicPath: webPackConfig.output.publicPath,
-    })
-  );
+if (!isDevMode) {
+  app.set("trust proxy", 2); // trust first two proxys (nginx, cloudflare)
+  app.use(express.static(resolve("dist"), { maxAge: 7200000 }));
+} else {
+  const vite = await import("vite");
+  const devServer = await vite.createServer({
+    server: { middlewareMode: true },
+    appType: "custom",
+  });
+  app.use(devServer.middlewares);
 }
 
-app.use(express.static(path.resolve('public'), {maxAge: 7200000}));
+nunjucks.configure(resolve(import.meta.dirname, "views"), {
+  autoescape: true,
+  express: app,
+  noCache: isDevMode,
+});
+
+app.set("view engine", "html");
+
+app.use(express.static(resolve("public"), {maxAge: 7200000}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionParser)
 
-app.use(grant.default.express({
+app.use(grant.express({
   "defaults": {
     "origin": config.config.basic.url,
     "transport": "session",
@@ -55,6 +67,8 @@ app.use(grant.default.express({
     "dynamic": [],
   }
 }))
+
+const manifest = await getManifest();
 
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
@@ -112,6 +126,8 @@ app.use((req, res, next) => {
   res.locals.warStatus = warapi.warData.status
   res.locals.warWinner = warapi.getTeam(warapi.warData.winner)
   res.locals.warConquestEndTime = warapi.warData.conquestEndTime || ''
+  res.locals.isDevMode = isDevMode;
+  res.locals.manifest = manifest;
 
   // old routes redirects
   if (req.query.cx && req.query.cy && req.query.r && req.path !== '/cmap') {
@@ -160,15 +176,19 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-/** @type{import("express").ErrorRequestHandler} */
+/** @type{ErrorRequestHandler} */
 const errorRequestHandle = (err, req, res, next) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  if (!res.headersSent) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = isDevMode ? err : {};
+  
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+  } else {
+    console.error(err);
+  }
 };
 
 // error handler

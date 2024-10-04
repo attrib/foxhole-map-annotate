@@ -1,4 +1,4 @@
-import bezier from "@turf/bezier-spline";
+import { bezierSpline } from "@turf/turf";
 import { Collection, Overlay } from "ol";
 import { LineString } from "ol/geom.js";
 import { Draw, Snap } from "ol/interaction.js";
@@ -213,7 +213,7 @@ class Line {
           "coordinates": coordinates
         }
       };
-      const curved = bezier(line);
+      const curved = bezierSpline(line);
       this.geometryCache[feature.getId()] = curved["geometry"]["coordinates"]
     }
 

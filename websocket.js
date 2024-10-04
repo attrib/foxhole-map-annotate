@@ -1,6 +1,12 @@
-import crypto from "node:crypto";
+/** @import { Access } from "./lib/ACLS.js" */
+/** @import { UserMapFeature, UserMapFeatures } from "./lib/featureLoader.js"  */
+/** @import { ConquerStatus, WarFeatures, WarFeatureCollection, UpdateMapData } from "./lib/conquerUpdater.js" */
+/** @import { HexName, WarEvent, WarStatusData } from "./lib/warapi.js" */
+/** @import { DraftData } from "./lib/draftStatus.js" */
+
+import { randomUUID } from "node:crypto";
 import fs from "node:fs";
-import path from "node:path";
+import { resolve } from "node:path";
 import { URL } from "node:url";
 
 import sanitizeHtml from "sanitize-html";
@@ -61,11 +67,11 @@ let cachedQueue = {
   ratio: 0.5,
 }
 
-if (fs.existsSync(path.resolve('data/queue.json'))) {
-  fs.watch(path.resolve('data/queue.json'), (event) => {
+if (fs.existsSync(resolve('data/queue.json'))) {
+  fs.watch(resolve('data/queue.json'), (event) => {
     if (event === 'change') {
       setTimeout(() => {
-        const content = fs.readFileSync(path.resolve('data/queue.json'), 'utf8')
+        const content = fs.readFileSync(resolve('data/queue.json'), 'utf8')
         try {
           cachedQueue = JSON.parse(content)
           sendDataToAll('queue', cachedQueue)
@@ -103,10 +109,10 @@ wss.on('connection', function (ws, request) {
     let discordId = request.session.discordId ?? null;
 
     // Casting here because it must be set
-    /** @type{import("./lib/ACLS.js").Access} */
-    let acl = /** @type{import("./lib/ACLS.js").Access} */ (request.session.acl);
+    /** @type{Access} */
+    let acl = /** @type{Access} */ (request.session.acl);
 
-    const wsId = crypto.randomUUID();
+    const wsId = randomUUID();
     clients.set(wsId, ws);
 
     // Check if user is allowed to access every hour
@@ -191,7 +197,7 @@ wss.on('connection', function (ws, request) {
           if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_ADD, feature)) {
             return;
           }
-          feature.id = crypto.randomUUID()
+          feature.id = randomUUID()
           feature.properties.id = feature.id
           feature.properties.user = username
           feature.properties.userId = userId
@@ -554,7 +560,7 @@ warapi.on(warapi.EVENT_WAR_UPDATED, ({newData}) => {
 })
 
 publicWss.on('connection', function (ws, request) {
-  const wsId = crypto.randomUUID();
+  const wsId = randomUUID();
   publicClients.set(wsId, ws);
 
   ws.send(JSON.stringify(/** @type{PublicWebSocketOutgoingTraffic<"init">} */({
@@ -612,25 +618,24 @@ export default function startServer (server) {
 }
 
 /**
- * @typedef {import("./lib/warapi.js").HexName} HexName
- */
-
-/**
  * Feature update action
+ * 
  * @typedef {"add" | "update" | "delete"} FeatureUpdateAction
  */
 
 /**
  * Private feature update message
+ * 
  * @typedef {object} PrivateFeatureUpdateMessage
  * @property {FeatureUpdateAction} operation
- * @property {import("./lib/featureLoader.js").UserMapFeature} feature
+ * @property {UserMapFeature} feature
  * @property {string} oldHash
  * @property {string} newHash
  */
 
 /**
  * Queue Entry
+ * 
  * @typedef {object} QueueEntry
  * @property {number} c
  * @property {number} w
@@ -638,6 +643,7 @@ export default function startServer (server) {
 
 /**
  * Queue Object
+ * 
  * @typedef {object} QueueObject
  * @property {Partial<Record<HexName, QueueEntry>>} queues
  * @property {number} ratio
@@ -645,29 +651,32 @@ export default function startServer (server) {
 
 /**
  * Conquer WebSocket Object
- * @typedef {import("./lib/conquerUpdater.js").UpdateMapData & { oldVersion: string, warNumber: number }} ConquerWebSocketObject
+ * 
+ * @typedef {UpdateMapData & { oldVersion: string, warNumber: number }} ConquerWebSocketObject
  */
 
 /**
  * Public Init Object
+ * 
  * @typedef {object} PublicInit
  * @property {string} version
- * @property {import("./lib/warapi.js").WarEvent} warStatus
- * @property {import("./lib/conquerUpdater.js").ConquerStatus} conquerStatus
- * @property {import("./lib/conquerUpdater.js").WarFeatures} warFeatures
+ * @property {WarEvent} warStatus
+ * @property {ConquerStatus} conquerStatus
+ * @property {WarFeatures} warFeatures
  */
 
 /**
  * @typedef {object} PrivateInit
- * @property {import("./lib/ACLS.js").Access} acl
+ * @property {Access} acl
  * @property {string} version
- * @property {import("./lib/warapi.js").WarEvent} warStatus
+ * @property {WarEvent} warStatus
  * @property {string} featureHash
  * @property {?string} discordId
  */
 
 /**
  * Private Flagged Message
+ * 
  * @typedef {object} PrivateFlaggedMessage
  * @property {string} id
  * @property {string} type
@@ -676,6 +685,7 @@ export default function startServer (server) {
 
 /**
  * Private Decay Updated Message
+ * 
  * @typedef {object} PrivateDecayUpdatedMessage
  * @property {string} id
  * @property {string} type
@@ -691,6 +701,7 @@ export default function startServer (server) {
 
 /**
  * Public Outgoing Types (helper type to define data payload)
+ * 
  * @typedef {object} PublicOutgoingTypes
  * @property {PublicInit} init
  * @property {ConquerWebSocketObject} conquer
@@ -699,12 +710,14 @@ export default function startServer (server) {
 
 /**
  * Public Incoming Types (helper type to define data payload)
+ * 
  * @typedef {object} PublicIncomingTypes
  * @property {never} getConquerStatus
  */
 
 /**
  * Public WebSocket Incoming Traffic
+ * 
  * @template {keyof PublicIncomingTypes} [T = keyof PublicIncomingTypes]
  * @typedef {object} PublicWebSocketIncomingTraffic
  * @property {T} type
@@ -713,6 +726,7 @@ export default function startServer (server) {
 
 /**
  * Public WebSocket Outgoing Traffic
+ * 
  * @template {keyof PublicOutgoingTypes} [T = keyof PublicOutgoingTypes] 
  * @typedef {object} PublicWebSocketOutgoingTraffic
  * @property {T} type
@@ -721,15 +735,16 @@ export default function startServer (server) {
 
 /**
  * Private Outgoing Types (helper type to define data payload)
+ * 
  * @typedef {object} PrivateOutgoingTypes
  * @property {PrivateInit} init
- * @property {import("./lib/conquerUpdater.js").WarFeatureCollection} warFeatures
- * @property {import("./lib/warapi.js").WarStatusData} warChange
- * @property {ConquerWebSocketObject | import("./lib/conquerUpdater.js").ConquerStatus} conquer
- * @property {import("./lib/warapi.js").WarStatusData} warPrepare
- * @property {import("./lib/warapi.js").WarStatusData} warEnded
- * @property {import("./lib/draftStatus.js").DraftData} draftStatus
- * @property {import("./lib/featureLoader.js").UserMapFeatures} allFeatures
+ * @property {WarFeatureCollection} warFeatures
+ * @property {WarStatusData} warChange
+ * @property {ConquerWebSocketObject | ConquerStatus} conquer
+ * @property {WarStatusData} warPrepare
+ * @property {WarStatusData} warEnded
+ * @property {DraftData} draftStatus
+ * @property {UserMapFeatures} allFeatures
  * @property {PrivateFlaggedMessage} flagged
  * @property {PrivateDecayUpdatedMessage} decayUpdated
  * @property {PrivateFeatureUpdateMessage} featureUpdate
@@ -738,19 +753,20 @@ export default function startServer (server) {
 
 /**
  * Private Incoming Types (helper type to define data payload)
+ * 
  * @typedef {object} PrivateIncomingTypes
  * @property {PrivateIncomingInit} init
  * @property {never} getAllFeatures
  * @property {never} getConquerStatus
  * @property {never} getWarFeatures
  * @property {never} getDraftStatus
- * @property {import("./lib/featureLoader.js").UserMapFeature} featureAdd
- * @property {import("./lib/featureLoader.js").UserMapFeature} featureUpdate 
- * @property {import("./lib/featureLoader.js").UserMapFeature} featureDelete
- * @property {import("./lib/featureLoader.js").UserMapFeature} decayUpdate
- * @property {import("./lib/featureLoader.js").UserMapFeature} obsMove
- * @property {import("./lib/featureLoader.js").UserMapFeature} flag
- * @property {import("./lib/featureLoader.js").UserMapFeature} unflag
+ * @property {UserMapFeature} featureAdd
+ * @property {UserMapFeature} featureUpdate 
+ * @property {UserMapFeature} featureDelete
+ * @property {UserMapFeature} decayUpdate
+ * @property {UserMapFeature} obsMove
+ * @property {UserMapFeature} flag
+ * @property {UserMapFeature} unflag
  * @property {never} draftForceNext
  * @property {never} draftConfirm 
  * @property {never} ping
@@ -758,12 +774,14 @@ export default function startServer (server) {
 
 /**
  * Public WebSocket Incoming Traffic
+ * 
  * @template [T = keyof PrivateIncomingTypes]
  * @typedef {T extends keyof PrivateIncomingTypes ? { type: T, data: PrivateIncomingTypes[T] } : never} PrivateWebSocketIncomingTraffic
  */
 
 /**
  * Public WebSocket Outgoing Traffic
+ * 
  * @template {keyof PrivateOutgoingTypes} [T = keyof PrivateOutgoingTypes] 
  * @typedef {object} PrivateWebSocketOutgoingTraffic
  * @property {T} type
