@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block javascript %}
-<script src="/dist/admin.js"></script>
+{% if isDevMode %}
+<script type="module" src="/frontend/admin.js"></script>
+{% else %}
+<script type="module" src="/{{manifest['frontend/admin.js'].file}}"></script>
+{% endif %}
 {% endblock %}
 
 {% block content %}

@@ -1,10 +1,9 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { hash } from "node:crypto";
 
-import intersect from "@turf/intersect";
-import voronoi from "@turf/voronoi";
-import hash from "object-hash";
+import { intersect, voronoi } from "@turf/turf";
 import { Collection } from "ol";
 import GeoJSON from "ol/format/GeoJSON.js";
 import LineString from "ol/geom/LineString.js";
@@ -223,7 +222,7 @@ Promise.all(promises).then(() => {
                     continue;
                 }
                 // remove duplicates https://github.com/clapfoot/warapi/issues/109
-                const h = hash({notes: minor.properties.notes, region: minor.properties.region, type: minor.properties.type, geometry: minor.geometry})
+                const h = hash("sha1", JSON.stringify({notes: minor.properties.notes, region: minor.properties.region, type: minor.properties.type, geometry: minor.geometry}))
                 if (minorHashes.includes(h)) {
                     continue;
                 }

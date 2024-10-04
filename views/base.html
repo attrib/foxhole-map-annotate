@@ -28,7 +28,12 @@
     {% endif %}
     <link rel="icon" type="image/png" href="{{config.images.faviconPng }}">
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="/dist/main.css?{{ cacheBuster }}">
+    {% if isDevMode %}
+    <script type="module" src="/@vite/client"></script>
+    <link rel="stylesheet" href="/frontend/style.scss">
+    {% else %}
+    <link rel="stylesheet" href="/{{manifest['frontend/main.js'].css }}">
+    {% endif %}
     {% block css %}{% endblock %}
 </head>
 
@@ -197,7 +202,11 @@
 
     {% block content %}{% endblock %}
 
-    <script src="/dist/main.js?{{ cacheBuster }}"></script>
+    {% if isDevMode %}
+    <script type="module" src="/frontend/main.js"></script>
+    {% else %}
+    <script type="module" src="/{{manifest['frontend/main.js'].file}}"></script>
+    {% endif %}
     {% block javascript %}{% endblock %}
 </body>
 
