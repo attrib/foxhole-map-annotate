@@ -14,7 +14,7 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --omit=dev
 
 COPY . .
-COPY --from=build /app/public/dist /app/public/dist
+COPY --from=build /app/dist /app/dist
 
 ARG COMMIT_HASH
 ENV COMMIT_HASH=${COMMIT_HASH}
