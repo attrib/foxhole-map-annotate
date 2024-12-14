@@ -19,10 +19,10 @@ global.fetch = vi.fn((url) => {
     })
   }
   switch (url) {
-    case "https://war-service-dev.foxholeservices.com/api/worldconquest/maps":
+    case "https://war-service-live.foxholeservices.com/api/worldconquest/maps":
       return createResponse(["TheFingersHex"])
 
-    case "https://war-service-dev.foxholeservices.com/api/worldconquest/maps/TheFingersHex/dynamic/public":
+    case "https://war-service-live.foxholeservices.com/api/worldconquest/maps/TheFingersHex/dynamic/public":
       const hexId = 'TheFingersHex'
       if (fs.existsSync(path.resolve(`test/mockupData/${hexId}/${fakeDataCounter}.json`))) {
         const content = fs.readFileSync(path.resolve(`test/mockupData/${hexId}/${fakeDataCounter}.json`), 'utf8')
