@@ -15,23 +15,32 @@ import Style from "ol/style/Style.js";
 class SidebarArty {
 
   artilleryList = {
-    "Tube Mortars": { // BPMortarItemComponent_C / Mortar
+    "Cremari Mortar": { // BPMortarItemComponent_C / Mortar
       "min": 45, // MinDistance
       "max": 80, // MaxDistance
       "minAcc": 5.5, // ArtilleryAccuracyMinDist
       "maxAcc": 12.0, // ArtilleryAccuracyMaxDist
-      "offset": 20, // AccuracyRadius (from ammo)
+      "offset": 2, // AccuracyRadius (from ammo)
       "ammo": "Mortar Shell", // MortarAmmo
       "team": "N"
     },
-    "Peltast" : { // HalfTrackMortarGunner - not buildable
+    "Peltast / Devitt-Caine Mk. IV MMR" : { // HalfTrackMortarGunner - not buildable
       "min": 45,
       "max": 80,
       "minAcc": 2.50,
       "maxAcc": 9.45,
-      "offset": 20,
+      "offset": 2,
       "ammo": "Mortar Shell", // MortarAmmo
-      "team": "C"
+      "team": "N"
+    },
+    "Gunship": { // GunboatOffensiveWArtilleryGunner
+      "min": 50,
+      "max": 100,
+      "minAcc": 2.5,
+      "maxAcc": 14.5,
+      "offset": 2,
+      "ammo": "Mortar Shell", // MortarAmmo
+      "team": "N"
     },
     "Koronides": { // ArtilleryGunner
       "min": 100,
@@ -51,14 +60,23 @@ class SidebarArty {
       "ammo": "120mm", // LightArtilleryAmmo
       "team": "W"
     },
-    "Gunship": { // GunboatOffensiveWArtilleryGunner
-      "min": 50,
-      "max": 100,
+    "Large Ship 120mm": { // 120mm guns found on Frigates, Destroyers, and Battleships 
+      "min": 100,
+      "max": 200,
       "minAcc": 2.5,
-      "maxAcc": 14.5,
+      "maxAcc": 8.5,
       "offset": 40,
       "ammo": "120mm", // LightArtilleryAmmo
       "team": "N"
+    },
+    "Trident 120mm": { // The Trident fires 120mm but has most of the stats of a 150mm
+      "min": 100,
+      "max": 225,
+      "minAcc": 2.5,
+      "maxAcc": 8.5,
+      "offset": 40,
+      "ammo": "120mm", // LightArtilleryAmmo
+      "team": "C"
     },
     "Thunderbolt": { // EmplacedHeavyArtilleryCGunner
       "min": 200,
@@ -77,6 +95,24 @@ class SidebarArty {
       "offset": 40,
       "ammo": "150mm", // HeavyArtilleryAmmo
       "team": "W"
+    },
+    "Large Ship 150mm": { // 150mm guns found on the Callahan and on the Titan
+      "min": 100,
+      "max": 225,
+      "minAcc": 2.5,
+      "maxAcc": 8.5,
+      "offset": 40,
+      "ammo": "150mm", // HeavyArtilleryAmmo
+      "team": "N"
+    },
+    "Self Propelled Gun": { // 150mm guns found on the Sarissa and on the Stain
+      "min": 120,
+      "max": 250,
+      "minAcc": 25,
+      "maxAcc": 35,
+      "offset": 40,
+      "ammo": "150mm", // HeavyArtilleryAmmo
+      "team": "N"
     },
     "Hades' Net": { // EmplacedMultiCGunner
       "min": 200,
@@ -135,8 +171,8 @@ class SidebarArty {
     "Tempest": { // LongRangeArtilleryTrainGunner
       "min": 350,
       "max": 500,
-      "minAcc": 15, // this is guessed
-      "maxAcc": 25, // this is guessed
+      "minAcc": 50, // Sourced from the wiki
+      "maxAcc": 50, // Sourced from the wiki
       "offset": 50,
       "ammo": "300mm", // LRArtilleryAmmo
       "team": "N"
@@ -144,10 +180,28 @@ class SidebarArty {
     "Storm Cannon": { // LongRangeArtillery
       "min": 400,
       "max": 1000,
-      "minAcc": 15, // this is guessed
-      "maxAcc": 25, // this is guessed
+      "minAcc": 50, // Sourced from the wiki
+      "maxAcc": 50, // Sourced from the wiki
       "offset": 50,
       "ammo": "300mm", // LRArtilleryAmmo
+      "team": "N"
+    },
+    "Intelligence Center": { // Precision radius represents intel collection radius
+      "min": 500,
+      "max": 2000,
+      "minAcc": 250, 
+      "maxAcc": 120, 
+      "offset": 0,
+      "ammo": "Special", // Eavesdropping juice
+      "team": "N"
+    },
+    "A0E-9 Rocket": { // Precision radius represents destruction radius
+      "min": 0,
+      "max": 2000,
+      "minAcc": 80, 
+      "maxAcc": 80, 
+      "offset": 0,
+      "ammo": "Special", // Big rocket
       "team": "N"
     }
   }
