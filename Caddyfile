@@ -1,0 +1,30 @@
+:80 {
+  root * /srv/
+  file_server
+
+  @static {
+    path /dist/* /images/* /map/*
+  }
+
+  handle @static {
+    file_server
+    header {
+      Cache-Control "public, max-age=7200000, immutable"
+    }
+  }
+
+  @notStatic {
+    not path /dist/* /images/* /map/*
+  }
+
+  # Proxy non-static requests to the 'map' container
+  reverse_proxy @notStatic map:3000 {
+    transport http {
+      versions h1 h2
+    }
+    header_up Host {host}
+    header_up X-Real-IP {remote_host}
+    header_up X-Forwarded-For {remote_host}
+    header_up X-Forwarded-Proto {scheme}
+  }
+}

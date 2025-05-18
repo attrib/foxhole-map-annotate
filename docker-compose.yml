@@ -3,16 +3,37 @@ version: "3.3"
 services:
 
   map:
+    build: .
     image: "attribdd/foxhole-map-annotate:master"
     restart: always
     volumes:
-      - ./map:/app/public/map
+      - ./public/map:/app/public/map
       - ./sessions:/app/sessions
       - ./data:/app/data
     environment:
       SECRET: sessionStorageSecret
+    ports:
+      - "3000:3000"
     expose:
       - 3000
+
+  # optional, better performance for production to handle static files and remove some load from the map server
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: caddy
+    image: "attribdd/foxhole-map-annotate:master-caddy"
+    profiles:
+      - caddy
+    restart: always
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./public/map:/srv/map
+      - ./data/caddy/data:/data
+      - ./data/caddy/config:/config
+    ports:
+      - "8000:80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.map.rule=Host(`warden.express`)"

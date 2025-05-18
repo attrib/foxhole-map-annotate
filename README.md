@@ -60,21 +60,9 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 Copy `.env.dist` to `.env`
 
-Create the map tiles
+[Download](https://warden.express/map/map.tar.gz) the map and unpack it to `public/map`
 
 ```bash
-cd public
-mkdir map
-cd map
-wget https://cdn.discordapp.com/attachments/1003485765273145424/1039646692095574046/entiremap.png
-docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.webp /tmp/files/
-```
-
-If you are using Windows Powershell and Docker on Windows
-
-```powershell
-docker run --rm -v ${PWD}:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
-```
 
 Install dependencies and run dev mode
 
@@ -84,6 +72,25 @@ npm run dev
 ```
 
 Open http://localhost:3000
+
+
+## Create Map Tiles
+
+Optional step to create map tiles for the map, when you want to use a different map.
+
+```bash
+cd public
+mkdir map
+cd map
+cp $GET_MAP/entiremap.png .
+docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.webp /tmp/files/
+```
+
+If you are using Windows Powershell and Docker on Windows
+
+```powershell
+docker run --rm -v ${PWD}:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
+```
 
 ## Run Live
 
