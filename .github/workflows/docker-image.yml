@@ -44,6 +44,17 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             COMMIT_HASH=${{ github.sha }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          target: caddy
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}-caddy
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COMMIT_HASH=${{ github.sha }}
 
   deploy:
     needs: docker
@@ -59,6 +70,6 @@ jobs:
           key: ${{ secrets.PROD_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            docker pull attribdd/foxhole-map-annotate:${{ github.ref_name }}
+            docker pull attribdd/foxhole-map-annotate:${{ github.ref_name }} attribdd/foxhole-map-annotate:${{ github.ref_name }}-caddy
             cd /mnt/deployments/foxhole-map-annotate/
             docker compose up -d

@@ -26,16 +26,16 @@ images:
 text:
   login: |
     <p>You need to be a verified Warden in <a href="https://discord.gg/wzUeJZs6wx">WUH</a> or 
-    <a href="https://discord.gg/x8WAEpWnp7">CTA</a> to see the Map.</p>
+    <a href="https://discord.gg/x8WAEpWnp7">WTG</a> to see the Map.</p>
 
   accessDenied: |
-    <p>You need to be a verified Warden in WUH or CTA.</p>
+    <p>You need to be a verified Warden in WUH or WTG.</p>
 
   feedback: |
-    <p>If you have Feedback please contact us via <a href="https://discord.com/channels/895735519231762432/1042389218363707452">CTAs Discord</a>.</p>
-    <p>If you want more access, please also checkout the Discord from CTA.</p>
-    <p>Bugs can be reported at <a href="https://discord.com/channels/895735519231762432/1042389158334844948">#wardenexpress-bugreports on CTAs Discord</a> or at <a href="https://github.com/attrib/foxhole-map-annotate/issues">github</a></p>
+    <p>If you have Feedback please contact us via <a href="https://discord.gg/pqmKH2VZsU">WTAs Discord</a>.</p>
+    <p>If you want more access, please also checkout the Discord from WTA.</p>
+    <p>Bugs can be reported at <a href="https://discord.gg/pqmKH2VZsU">#wardenexpress-bugreports on WTAs Discord</a> or at <a href="https://github.com/attrib/foxhole-map-annotate/issues">github</a></p>
 
   contributors: |
-    <p><a href="https://warden.express">Hosting</a>: attrib</p>    
+    <p><a href="https://warden.express">Hosting</a>: attrib</p>
   

@@ -7,6 +7,11 @@ COPY . .
 
 RUN npm run build
 
+FROM caddy:2.10.0-alpine AS caddy
+COPY --from=build /app/public /srv/
+COPY --from=build /app/dist /srv/dist
+COPY Caddyfile /etc/caddy/Caddyfile
+
 FROM node:22-alpine
 ENV NODE_ENV=production
 WORKDIR /app
