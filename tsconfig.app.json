@@ -15,7 +15,8 @@
     "noUncheckedSideEffectImports": true,
     "erasableSyntaxOnly": true,
     "resolveJsonModule": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["vite/client"]
   },
   "include": ["frontend"]
 }
