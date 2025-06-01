@@ -5,10 +5,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        index: "./frontend/index.js",
-        stats: "./frontend/stats.js",
-        main: "./frontend/main.js",
-        admin: "./frontend/admin.js",
+        index: "./frontend/index.ts",
+        stats: "./frontend/stats.ts",
+        main: "./frontend/main.ts",
+        admin: "./frontend/admin.ts",
       },
     },
     copyPublicDir: false,

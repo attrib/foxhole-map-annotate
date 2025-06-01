@@ -2,9 +2,9 @@
 
 {% block javascript %}
 {% if isDevMode %}
-<script type="module" src="/frontend/admin.js"></script>
+<script type="module" src="/frontend/admin.ts"></script>
 {% else %}
-<script type="module" src="/{{manifest['frontend/admin.js'].file}}"></script>
+<script type="module" src="/{{manifest['frontend/admin.ts'].file}}"></script>
 {% endif %}
 {% endblock %}
 

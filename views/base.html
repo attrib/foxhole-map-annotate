@@ -32,7 +32,7 @@
     <script type="module" src="/@vite/client"></script>
     <link rel="stylesheet" href="/frontend/style.scss">
     {% else %}
-    <link rel="stylesheet" href="/{{manifest['frontend/main.js'].css }}">
+    <link rel="stylesheet" href="/{{manifest['frontend/main.ts'].css }}">
     {% endif %}
     {% block css %}{% endblock %}
 </head>
@@ -203,9 +203,9 @@
     {% block content %}{% endblock %}
 
     {% if isDevMode %}
-    <script type="module" src="/frontend/main.js"></script>
+    <script type="module" src="/frontend/main.ts"></script>
     {% else %}
-    <script type="module" src="/{{manifest['frontend/main.js'].file}}"></script>
+    <script type="module" src="/{{manifest['frontend/main.ts'].file}}"></script>
     {% endif %}
     {% block javascript %}{% endblock %}
 </body>
