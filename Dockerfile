@@ -1,4 +1,4 @@
-FROM node:22 AS build
+FROM node:24-alpine AS build
 ENV NODE_ENV=development
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
@@ -12,7 +12,7 @@ COPY --from=build /app/public /srv/
 COPY --from=build /app/dist /srv/dist
 COPY Caddyfile /etc/caddy/Caddyfile
 
-FROM node:22-alpine
+FROM node:24-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
