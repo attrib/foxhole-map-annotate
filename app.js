@@ -53,7 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sessionParser)
 
-app.use(grant.express({
+app.use(grant.default.express({
   "defaults": {
     "origin": config.config.basic.url,
     "transport": "session",

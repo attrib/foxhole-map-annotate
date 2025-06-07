@@ -6,9 +6,9 @@
 
 {% block javascript %}
 {% if isDevMode %}
-<script type="module" src="/frontend/index.js"></script>
+<script type="module" src="/frontend/index.ts"></script>
 {% else %}
-<script type="module" src="/{{manifest['frontend/index.js'].file}}"></script>
+<script type="module" src="/{{manifest['frontend/index.ts'].file}}"></script>
 {% endif %}
 {% endblock %}
 
