@@ -33,6 +33,7 @@ const RADIUS = {
     MapIconTownBaseTier1: 150,
     MapIconTownBaseTier2: 150,
     MapIconTownBaseTier3: 150,
+    MapIconMortarHouse: 100,
   },
   industry: {
     MapIconCoastalGun: 200,
