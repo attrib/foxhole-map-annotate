@@ -83,7 +83,7 @@ cd public
 mkdir map
 cd map
 cp $GET_MAP/entiremap.png .
-docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.webp /tmp/files/
+docker run --rm -v `pwd`:/tmp/files osgeo/gdal gdal2tiles.py -p raster -w openlayers --tiledriver=WEBP --webp-lossless /tmp/files/entiremap.png /tmp/files/
 ```
 
 If you are using Windows Powershell and Docker on Windows

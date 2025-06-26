@@ -1,5 +1,5 @@
 <template>
-  <svg style="width: 100%; height: 100%" viewBox="0 0 14352 12432" xmlns="http://www.w3.org/2000/svg" :onclick="redirect" ref="svgNode">
+  <svg style="width: 100%; height: 100%" viewBox="0 0 14336 12432" xmlns="http://www.w3.org/2000/svg" :onclick="redirect" ref="svgNode">
     <defs>
     <pattern x="0" y="0" width="100" height="100" id="patternWarden" patternUnits="userSpaceOnUse">
       <rect x="0" y="0" width="100" height="100" fill="#FFFFFFBB" stroke="#245682" stroke-width="4" />

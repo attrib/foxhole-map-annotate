@@ -9,6 +9,8 @@ node_modules
 public/dist
 hidden
 dist
+tools/entiremap.png
+tools/map/
 
 ## VS Code
 .history
