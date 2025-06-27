@@ -70,6 +70,7 @@ jobs:
           key: ${{ secrets.PROD_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            docker pull attribdd/foxhole-map-annotate:${{ github.ref_name }} attribdd/foxhole-map-annotate:${{ github.ref_name }}-caddy
+            docker pull attribdd/foxhole-map-annotate:${{ github.ref_name }}
+            docker pull attribdd/foxhole-map-annotate:${{ github.ref_name }}-caddy
             cd /mnt/deployments/foxhole-map-annotate/
             docker compose up -d
