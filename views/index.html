@@ -63,7 +63,7 @@
 {% include 'sidebar-arty.html' %}
 
 {% if user %}
-{% if acl === 'mod' or acl === 'admin' %}
+{% if acl === 'moderator' or acl === 'admin' %}
 {% include 'sidebar-flag.html' %}
 {% endif %}
 {% endif %}
