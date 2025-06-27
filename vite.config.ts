@@ -14,5 +14,12 @@ export default defineConfig({
     copyPublicDir: false,
     manifest: true,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'legacy',
+      },
+    },
+  },
   plugins: [vue()],
 });

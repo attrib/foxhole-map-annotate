@@ -10,7 +10,7 @@ import LineString from "ol/geom/LineString.js";
 import VectorSource from "ol/source/Vector.js";
 
 import warapi from "../lib/warapi.js";
-import region from "./deadland.json";
+const region = JSON.parse(fs.readFileSync("tools/deadland.json", 'utf8'));
 
 const oldStatic = JSON.parse(fs.readFileSync(path.resolve('public/static.json'), 'utf8'));
 const idMap = {}
@@ -140,15 +140,16 @@ Promise.all(promises).then(() => {
         console.log('static.json written successfully')
         const regions = region
 
-        Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, VectorSource, ol, LineString]) => {
-            const geonJson = new GeoJSON.default();
+        Promise.all([GeoJSON, VectorSource, Collection, LineString]).then(([GeoJSON, VectorSource, Collection, LineString]) => {
+
+            const geonJson = new GeoJSON();
             /** @type {import('ol/source').Vector} */
-            const regionSource = new VectorSource.default({
-                features: new ol.Collection()
+            const regionSource = new VectorSource({
+                features: new Collection()
             })
             /** @type {import('ol/source').Vector} */
-            const majorLabels = new VectorSource.default({
-                features: new ol.Collection()
+            const majorLabels = new VectorSource({
+                features: new Collection()
             })
             const majorLabelsByRegion = {}
 
@@ -171,8 +172,8 @@ Promise.all(promises).then(() => {
                 majorLabels.addFeature(majorFeature)
                 const regionId = majorFeature.get('region')
                 if (!(regionId in majorLabelsByRegion)) {
-                    majorLabelsByRegion[regionId] = new VectorSource.default({
-                        features: new ol.Collection()
+                    majorLabelsByRegion[regionId] = new VectorSource({
+                        features: new Collection()
                     })
                 }
                 majorLabelsByRegion[regionId].addFeature(majorFeature)
@@ -193,7 +194,7 @@ Promise.all(promises).then(() => {
                 const collection = geonJson.readFeatures(voronoiPolygons)
 
                 collection.forEach((feature) => {
-                    const intersectedFeature = geonJson.readFeature(intersect(geonJson.writeFeatureObject(feature), geonJson.writeFeatureObject(regionFeature)))
+                    const intersectedFeature = geonJson.readFeature(intersect(geonJson.writeFeaturesObject([feature, regionFeature])));
                     source.forEachFeature((label) => {
                         if (intersectedFeature.getGeometry().intersectsCoordinate(label.getGeometry().getCoordinates())) {
                             intersectedFeature.set('notes', label.get('notes'))
