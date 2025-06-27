@@ -222,6 +222,10 @@ class Icon {
   }
 
   getImageUrl = (feature) => {
+    // @todo: find a good way how we can use png and svg for icons
+    if (feature.get('icon') === 'wtg') {
+      return `/images/${feature.get('type')}/${feature.get('icon')}.png`
+    }
     return `/images/${feature.get('type')}/${feature.get('icon')}.svg`
   }
 
