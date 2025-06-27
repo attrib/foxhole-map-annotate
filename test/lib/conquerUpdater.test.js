@@ -117,7 +117,7 @@ test("updateMapTests", () => {
       expect(warFeatures.features).toEqual([
         expect.objectContaining({
           geometry: {
-            coordinates: [14083.2964644, -8137.9299931099995],
+            coordinates: [14082.2964644, -8137.9299931099995],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -133,7 +133,7 @@ test("updateMapTests", () => {
         }),
         expect.objectContaining({
           geometry: {
-            coordinates: [13223.5361652, -7756.20555065],
+            coordinates: [13222.5361652, -7756.20555065],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -164,7 +164,7 @@ test("updateMapTests", () => {
       expect(warFeatures.features).toEqual([
         expect.objectContaining({
           geometry: {
-            coordinates: [14083.2964644, -8137.9299931099995],
+            coordinates: [14082.2964644, -8137.9299931099995],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -180,7 +180,7 @@ test("updateMapTests", () => {
         }),
         expect.objectContaining({
           geometry: {
-            coordinates: [13223.5361652, -7756.20555065],
+            coordinates: [13222.5361652, -7756.20555065],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -220,7 +220,7 @@ test("updateMapTests", () => {
       expect(warFeatures.features).toEqual([
         expect.objectContaining({
           geometry: {
-            coordinates: [14083.2964644, -8137.9299931099995],
+            coordinates: [14082.2964644, -8137.9299931099995],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -236,7 +236,7 @@ test("updateMapTests", () => {
         }),
         expect.objectContaining({
           geometry: {
-            coordinates: [13223.5361652, -7756.20555065],
+            coordinates: [13222.5361652, -7756.20555065],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -272,7 +272,7 @@ test("updateMapTests", () => {
           icon: "MapIconStormCannon",
           type: "stormCannon",
           notes: "Storm Cannon",
-          coordinates: [13428.1361652, -7933.90555065],
+          coordinates: [13427.1361652, -7933.90555065],
           region: "TheFingersHex",
           lastChange: 1701336872090,
           lastTeam: "Warden",
@@ -287,7 +287,7 @@ test("updateMapTests", () => {
       expect(warFeatures.features).toEqual([
         expect.objectContaining({
           geometry: {
-            coordinates: [14083.2964644, -8137.9299931099995],
+            coordinates: [14082.2964644, -8137.9299931099995],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -303,7 +303,7 @@ test("updateMapTests", () => {
         }),
         expect.objectContaining({
           geometry: {
-            coordinates: [13223.5361652, -7756.20555065],
+            coordinates: [13222.5361652, -7756.20555065],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -339,7 +339,7 @@ test("updateMapTests", () => {
           icon: "MapIconStormCannon",
           type: "stormCannon",
           notes: "Storm Cannon",
-          coordinates: [13430.1821652, -7933.90555065],
+          coordinates: [13429.1821652, -7933.90555065],
           region: "TheFingersHex",
           lastChange: 1701336872100,
           lastTeam: "Warden",
@@ -354,7 +354,7 @@ test("updateMapTests", () => {
       expect(warFeatures.features).toEqual([
         expect.objectContaining({
           geometry: {
-            coordinates: [14083.2964644, -8137.9299931099995],
+            coordinates: [14082.2964644, -8137.9299931099995],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -370,7 +370,7 @@ test("updateMapTests", () => {
         }),
         expect.objectContaining({
           geometry: {
-            coordinates: [13223.5361652, -7756.20555065],
+            coordinates: [13222.5361652, -7756.20555065],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -406,7 +406,7 @@ test("updateMapTests", () => {
           icon: "MapIconStormCannon",
           type: "stormCannon",
           notes: "Storm Cannon",
-          coordinates: [13428.1361652, -7933.90555065],
+          coordinates: [13427.1361652, -7933.90555065],
           region: "TheFingersHex",
           lastChange: 1701336872110,
           lastTeam: "Colonial",
@@ -416,7 +416,7 @@ test("updateMapTests", () => {
           icon: "MapIconStormCannon",
           type: "stormCannon",
           notes: "Storm Cannon",
-          coordinates: [13428.1361652, -7933.90555065],
+          coordinates: [13427.1361652, -7933.90555065],
           region: "TheFingersHex",
           lastChange: 1701336872090,
           lastTeam: "Warden",
@@ -432,7 +432,7 @@ test("updateMapTests", () => {
       expect(warFeatures.features).toEqual([
         expect.objectContaining({
           geometry: {
-            coordinates: [14083.2964644, -8137.9299931099995],
+            coordinates: [14082.2964644, -8137.9299931099995],
             type: "Point",
           },
           properties: expect.objectContaining({
@@ -448,7 +448,7 @@ test("updateMapTests", () => {
         }),
         expect.objectContaining({
           geometry: {
-            coordinates: [13223.5361652, -7756.20555065],
+            coordinates: [13222.5361652, -7756.20555065],
             type: "Point",
           },
           properties: expect.objectContaining({
