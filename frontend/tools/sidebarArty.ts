@@ -212,12 +212,34 @@ class SidebarArty {
       "offset": 0,
       "ammo": "Special", // Big rocket
       "team": "N"
+    },
+    "Custom Artillery": {
+      "min": 400, // Custom guns will have these set by the user
+      "max": 1000,
+      "minAcc": 50,
+      "maxAcc": 50,
+      "offset": 30,
+      "ammo": "Custom",
+      "team": "N"
     }
   }
 
   windStrength = 0;
   windDirection = 0;
   windOffset = 0;
+
+  minRange = 0;
+  maxRange = 0;
+  minAcc = 0;
+  maxAcc = 0;
+
+  inputs = {
+    windOffset: null,
+    minRange: null,
+    maxRange: null,
+    minAcc: null,
+    maxAcc: null,
+  };
 
   targetWindOffsetX = 0;
   targetWindOffsetY = 0;
@@ -259,9 +281,6 @@ class SidebarArty {
     let shellType = ''
 
     for (let p in this.artilleryList) {
-      this.artilleryList[p].min *= this.tools.MAGIC_MAP_SCALING_FACTOR
-      this.artilleryList[p].max *= this.tools.MAGIC_MAP_SCALING_FACTOR
-
       //header handling
       if (shellType !== this.artilleryList[p].ammo) {
 
@@ -287,7 +306,39 @@ class SidebarArty {
       artySelector.appendChild(newLi)
     }
 
-    this.g = this.artilleryList["Tube Mortars"];
+    this.inputs.minAcc = document.getElementById('minAccuracy')
+    this.inputs.minAcc.addEventListener('change', (e) => {
+      this.minAcc = parseFloat(e.target.value);
+      this.calcWind();
+    })
+
+    this.inputs.maxAcc = document.getElementById('maxAccuracy')
+    this.inputs.maxAcc.addEventListener('change', (e) => {
+      this.maxAcc = parseFloat(e.target.value);
+      this.calcWind();
+    })
+
+    this.inputs.minRange = document.getElementById('minRange')
+    this.inputs.minRange.addEventListener('change', (e) => {
+      this.minRange = parseInt(e.target.value);
+      this.inputs.maxRange.min = this.minRange;
+      this.minRadius.getGeometry().setRadius(this.minRange);
+      this.calcWind();
+    })
+
+    this.inputs.maxRange = document.getElementById('maxRange')
+    this.inputs.maxRange.addEventListener('change', (e) => {
+      this.maxRange = parseInt(e.target.value);
+      this.inputs.minRange.max = this.maxRange;
+      this.maxRadius.getGeometry().setRadius(this.maxRange);
+      this.calcWind();
+    })
+
+    this.inputs.windOffset = document.getElementById('windFactor')
+    this.inputs.windOffset.addEventListener('change', (e) => {
+        this.windOffset = parseInt(e.target.value);
+        this.calcWind();
+    })
 
     //this is silly but oh well
     document.getElementById("ws0").onclick = () => this.setWindStr();
@@ -298,8 +349,17 @@ class SidebarArty {
     document.getElementById("ws5").onclick = () => this.setWindStr();
 
     //document.getElementById("wd0").onchange= () => this.setWindDir();
-    document.getElementById("wd0").onchange = () => this.setWindDir();
-    document.getElementById("wd0").onwheel = () => this.setWindDir();
+    document.getElementById("wd0").onchange = (e) => this.setWindDir(e.target.value);
+    document.getElementById("wd0").onwheel = (e) => {
+      let val = parseInt(e.target.value)
+      if (e.deltaY < 0) {
+        val += 1;
+      } else {
+        val -= 1;
+      }
+      e.target.value = val;
+      this.setWindDir(val);
+    }
     //document.getElementById("wd0").onwheel= () => this.setWindDir();
 
     const vectorSource = new VectorSource({
@@ -525,6 +585,8 @@ class SidebarArty {
 
     tools.on(tools.EVENT_ARTY_MODE_ENABLED, this.artyModeEnabled)
     tools.on(tools.EVENT_ARTY_MODE_DISABLED, this.artyModeDisabled)
+
+    this.selectGun(Object.keys(this.artilleryList)[0]) //select first gun by default
   }
 
   translating = () => {
@@ -538,12 +600,26 @@ class SidebarArty {
   selectGun(gun) {
     document.getElementById("artyPieceButton").innerText = gun
 
-    this.g = this.artilleryList[gun];
-    //console.log("gunstats asd " +this.g.toString() + "Max:" + this.g.max);
+    if (gun === 'Custom Artillery') {
+      document.getElementById('custom-artillery-input').style.display = 'block';
+    } else {
+      document.getElementById('custom-artillery-input').style.display = 'none';
+      this.inputs.minRange.value = this.artilleryList[gun].min;
+      this.inputs.maxRange.value = this.artilleryList[gun].max;
+      this.inputs.minAcc.value = this.artilleryList[gun].minAcc;
+      this.inputs.maxAcc.value = this.artilleryList[gun].maxAcc;
+      this.inputs.windOffset.value = this.artilleryList[gun].offset;
 
-    this.minRadius.getGeometry().setRadius(this.artilleryList[gun].min);
-    this.maxRadius.getGeometry().setRadius(this.artilleryList[gun].max);
-    this.setWindOff();
+      this.minRange = this.artilleryList[gun].min * this.tools.MAGIC_MAP_SCALING_FACTOR;
+      this.maxRange = this.artilleryList[gun].max * this.tools.MAGIC_MAP_SCALING_FACTOR;
+      this.minAcc = this.artilleryList[gun].minAcc;
+      this.maxAcc = this.artilleryList[gun].maxAcc;
+      this.windOffset = this.artilleryList[gun].offset;
+    }
+
+    this.minRadius.getGeometry().setRadius(this.minRange);
+    this.maxRadius.getGeometry().setRadius(this.maxRange);
+    this.calcWind();
   }
 
   setWindStr = () => {
@@ -558,16 +634,18 @@ class SidebarArty {
     this.calcWind();
   }
 
-  setWindDir = () => {
+  setWindDir = (dir) => {
 
     //makes scrolling and arrow buttons loop, most of the time
-    if (document.getElementById("wd0").value >= 360) {
+    if (dir > 360) {
       document.getElementById("wd0").value = 0;
-    } else if (document.getElementById("wd0").value <= 0) {
+      dir = 0;
+    } else if (dir < 0) {
       document.getElementById("wd0").value = 360;
+      dir = 360;
     }
 
-    this.windDirection = document.getElementById("wd0").value
+    this.windDirection = dir
 
 
     //converting angle angles to compass angles
@@ -583,20 +661,15 @@ class SidebarArty {
   }
 
   setScatterViz = () => {
-    let scatter = (((this.g.maxAcc - this.g.minAcc) / (this.g.max - this.g.min)) * ((this.vectorSolution.getGeometry().getLength()) - this.g.min) + this.g.minAcc);
+    let scatter = (((this.maxAcc - this.minAcc) / (this.maxRange - this.minRange)) * ((this.vectorSolution.getGeometry().getLength()) - this.minRange) + this.minAcc);
     this.precisionRadius.getGeometry().setRadius(scatter);
 
-    if (this.vectorSolution.getGeometry().getLength() > this.g.max) {
-      this.precisionRadius.getGeometry().setRadius(this.g.maxAcc);
+    if (this.vectorSolution.getGeometry().getLength() > this.maxRange) {
+      this.precisionRadius.getGeometry().setRadius(this.maxAcc);
     }
-    if (this.vectorSolution.getGeometry().getLength() < this.g.min) {
-      this.precisionRadius.getGeometry().setRadius(this.g.minAcc);
+    if (this.vectorSolution.getGeometry().getLength() < this.minRange) {
+      this.precisionRadius.getGeometry().setRadius(this.minAcc);
     }
-  }
-
-  setWindOff = () => {
-    this.windOffset = this.artilleryList[document.getElementById("artyPieceButton").innerText].offset
-    this.calcWind();
   }
 
   calcWind = () => {
