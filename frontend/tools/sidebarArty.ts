@@ -115,8 +115,8 @@ class SidebarArty {
       "team": "N"
     },
     "Hades' Net": { // EmplacedMultiCGunner
-      "min": 200,
-      "max": 425,
+      "min": 300,
+      "max": 575,
       "minAcc": 25,
       "maxAcc": 41.5,
       "offset": 25, // works but guessed
@@ -124,8 +124,8 @@ class SidebarArty {
       "team": "C"
     },
     "Retiarius": { // TruckMultiCGunner
-      "min": 225,
-      "max": 350,
+      "min": 375,
+      "max": 500,
       "minAcc": 25,
       "maxAcc": 41.5,
       "offset": 25, // works but guessed
@@ -141,9 +141,18 @@ class SidebarArty {
       "ammo": "3C-HE", // HERocketAmmo
       "team": "W"
     },
+    "O'brien V.200 Squire": {
+      "min": 375,
+      "max": 500,
+      "minAcc": 25, // needs source, just copied from skycaller
+      "maxAcc": 37.5,  // needs source, just copied from skycaller
+      "offset": 25, // works but guessed
+      "ammo": "3C-HE", // HERocketAmmo
+      "team": "W"
+    },
     "Wasp Nest": { // FieldMultiWGunner
-      "min": 225,
-      "max": 300,
+      "min": 350,
+      "max": 450,
       "minAcc": 25,
       "maxAcc": 37.5,
       "offset": 25, // works but guessed
@@ -151,8 +160,8 @@ class SidebarArty {
       "team": "W"
     },
     "Skycaller": { // HalftrackMultiWGunner
-      "min": 200,
-      "max": 275,
+      "min": 275,
+      "max": 350,
       "minAcc": 25,
       "maxAcc": 37.5,
       "offset": 25, // works but guessed
@@ -160,8 +169,8 @@ class SidebarArty {
       "team": "W"
     },
     "Deioneus": { // TanketteMultiCGunner
-      "min": 250,
-      "max": 300,
+      "min": 350,
+      "max": 400,
       "minAcc": 30,
       "maxAcc": 41.5,
       "offset": 25, // works but guessed
@@ -197,7 +206,7 @@ class SidebarArty {
     },
     "A0E-9 Rocket": { // Precision radius represents destruction radius
       "min": 0,
-      "max": 2000,
+      "max": 2500,
       "minAcc": 80, 
       "maxAcc": 80, 
       "offset": 0,
