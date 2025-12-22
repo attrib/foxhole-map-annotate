@@ -5,6 +5,7 @@ import { Vector } from "ol/layer.js";
 import { Vector as VectorSource } from "ol/source.js";
 import { Fill, Stroke, Style, Text } from "ol/style.js";
 import { createEditingStyle } from "ol/style/Style.js";
+import { blinkInput } from "../../lib/errorBlink.ts";
 
 
 class Polygon {
@@ -54,6 +55,15 @@ class Polygon {
         }
         return false;
       },
+      finishCondition: () => {
+      const input = tools.sidebar.notesInput;
+      const value = input.value;
+      if (value !== undefined && value !== null && value.trim() !== '') {
+        return true;
+      }
+      blinkInput(input);
+      return false;
+    }
     });
     this.draw.on('drawstart', (event) => {
       event.feature.set('type', 'polygon', true)

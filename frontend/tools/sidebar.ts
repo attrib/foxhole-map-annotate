@@ -1,4 +1,5 @@
 import { ACL_ICONS_ONLY } from "../../lib/ACLS.js";
+import { blinkInput } from "../../lib/errorBlink.ts";
 
 class Sidebar {
 
@@ -74,12 +75,6 @@ class Sidebar {
       this.setSecondaryColorInputActive()
     });
 
-    this.notesInput.addEventListener('keyup', () => {
-      if (this.editFeature && this.editFeature.get('notes') !== undefined) {
-        this.editFeature.set('notes', this.notesInput.value)
-      }
-    })
-
     this.clanInput.addEventListener('keyup', () => {
       if (this.editFeature && this.editFeature.get('clan') !== undefined) {
         this.editFeature.set('clan', this.clanInput.value)
@@ -107,22 +102,27 @@ class Sidebar {
     }
 
     document.getElementById('save-button').addEventListener('click', () => {
-      if (this.editFeature) {
-        const type = this.editFeature.get('type')
-        if (type === 'line') {
-          this.editFeature.set('clan', this.clanInput.value, true)
+      if (this.notesInput.value !== undefined && this.notesInput.value !== null && this.notesInput.value.trim() !== '') {
+        if (this.editFeature) {
+          const type = this.editFeature.get('type')
+          if (type === 'line') {
+            this.editFeature.set('clan', this.clanInput.value, true)
+          }
+          if (type === 'line') {
+            this.editFeature.set('lineType', this.lineTypeInput.value, true)
+          }
+          if (['line', 'polygon'].includes(type)) {
+            this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature), true)
+          }
+          if (type === 'rectangle') {
+            this.editFeature.set('secondary-color', this.secondaryColorInput.value + this.featureColorSuffix(this.editFeature), true)
+          }
+          this.editFeature.set('notes', this.notesInput.value)
+          tools.emit(tools.EVENT_ICON_UPDATED, this.editFeature)
         }
-        if (type === 'line') {
-          this.editFeature.set('lineType', this.lineTypeInput.value, true)
-        }
-        if (['line', 'polygon'].includes(type)) {
-          this.editFeature.set('color', this.colorInput.value + this.featureColorSuffix(this.editFeature), true)
-        }
-        if (type === 'rectangle') {
-          this.editFeature.set('secondary-color', this.secondaryColorInput.value + this.featureColorSuffix(this.editFeature), true)
-        }
-        this.editFeature.set('notes', this.notesInput.value)
-        tools.emit(tools.EVENT_ICON_UPDATED, this.editFeature)
+      }
+      else {
+        blinkInput(this.notesInput);
       }
     })
     document.addEventListener('keydown', (event) => {
