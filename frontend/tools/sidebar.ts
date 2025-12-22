@@ -102,12 +102,9 @@ class Sidebar {
     }
 
     document.getElementById('save-button').addEventListener('click', () => {
+      if (this.notesInput.value !== undefined && this.notesInput.value !== null && this.notesInput.value.trim() !== '') {
         if (this.editFeature) {
           const type = this.editFeature.get('type')
-          if ((type === 'rectangle' || type === 'polygon') && (this.notesInput.value === undefined || this.notesInput.value === null || this.notesInput.value.trim() === '')) {
-            blinkInput(this.notesInput);
-            return
-          }
           if (type === 'line') {
             this.editFeature.set('clan', this.clanInput.value, true)
           }
@@ -123,7 +120,10 @@ class Sidebar {
           this.editFeature.set('notes', this.notesInput.value)
           tools.emit(tools.EVENT_ICON_UPDATED, this.editFeature)
         }
-      
+      }
+      else {
+        blinkInput(this.notesInput);
+      }
     })
     document.addEventListener('keydown', (event) => {
       if (event.target.nodeName.toLowerCase() === 'input' || event.target.nodeName.toLowerCase() === 'textarea') {
