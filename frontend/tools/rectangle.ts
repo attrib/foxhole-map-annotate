@@ -41,14 +41,14 @@ class Rectangle {
       style: this.styles,
       geometryFunction: createBox(),
       finishCondition: () => {
-      const input = tools.sidebar.notesInput;
-      const value = input.value;
-      if (value !== undefined && value !== null && value.trim() !== '') {
-        return true;
+        const input = tools.sidebar.notesInput;
+        const value = input.value;
+        if (value !== undefined && value !== null && value.trim() !== '') {
+          return true;
+        }
+        blinkInput(input);
+        return false;
       }
-      blinkInput(input);
-      return false;
-    }
     });
     this.draw.on('drawstart', (event) => {
       event.feature.set('type', 'rectangle', true)
