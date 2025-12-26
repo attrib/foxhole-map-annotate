@@ -15,7 +15,24 @@
                 </button>
                 <ul class="dropdown-menu col-12" id = "artyPieceSelector" style = "max-height: 50vh; overflow-y: scroll;">
                 </ul>
-
+                <div id="custom-artillery-input" style="display: none">
+                    <div class="input-group mt-2">
+                        <span class="input-group-text">Range</span>
+                        <input type="number" class="form-control" id="minRange" min="0" value="0">
+                        <span class="input-group-text">-</span>
+                        <input type="number" class="form-control" id="maxRange" min="0" value="3000">
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="input-group-text">Accuracy</span>
+                        <input type="number" class="form-control" id="minAccuracy" min="0" max="300" value="0" step="0.5">
+                        <span class="input-group-text">-</span>
+                        <input type="number" class="form-control" id="maxAccuracy" min="0" max="300" value="0" step="0.5">
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="input-group-text">Wind Factor</span>
+                        <input type="number" class="form-control" id="windFactor" min="0" max="200" value="0" step="1">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -52,7 +69,7 @@
             <div class="col-12 mt-2 mb-2">
                 <div class="input-group" >
                     <span class="input-group-text">Direction</span>
-                    <input type="number" class="form-control" min="-1" max="361" id = "wd0" value = "0">
+                    <input type="number" class="form-control" min="-1" max="361" id="wd0" value="0" step="1">
                 </div>
             </div>
         </div>
