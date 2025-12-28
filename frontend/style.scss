@@ -132,11 +132,29 @@ button.overlay-button {
   width: 50%;
 }
 
-.layer-switcher {
-  li input, .group button {
-    height: 1.5em;
-  }
+.layer-switcher li.toggle-all > button {
+  display: inline-block !important;
+  width: 100% !important;
+  height: 3em !important;
+
+  padding: 4px 8px !important;
+  margin-bottom: 5px !important;
+  border: 3px solid transparent !important;
+  border-radius: 8px; 
+  background: #D7AFE2 !important;
+  color: #000 !important;
+  text-align: center;
+  font-size: 16px;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
 }
+
+.layer-switcher li.toggle-all > button:hover {
+  background: #CE8DDF !important; 
+}
+
 
 .feature-search {
   z-index: 10;

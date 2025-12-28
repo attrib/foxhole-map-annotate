@@ -2,6 +2,7 @@ import { MousePosition } from "ol/control.js";
 import LayerSwitcher from "ol-layerswitcher";
 
 import Search from "./Search.js";
+import { title } from "process";
 
 const mousePositionControl = new MousePosition({
   className: 'custom-mouse-position',
@@ -55,6 +56,65 @@ function enableLayerMemory(map) {
   });
 }
 
+function toggleLayersFunction(map) {
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.checked = true;
+  button.textContent = 'Toggle all';
+  button.addEventListener('click', () => {button.checked = !button.checked;});
+  button.addEventListener('click', () => {
+    LayerSwitcher.forEachRecursive(map, layer => {
+      if (layer.get('type') !== 'base' && layer.get('title')) {
+        layer.setVisible(button.checked);
+        //Necessary to update visual checkboxes in layer switcher
+        const title = layer.get('title');
+        const labels = document.querySelectorAll('.layer-switcher label');
+        for (const label of labels) {
+          if (label.textContent.trim() === title) {
+            const inputId = label.htmlFor;
+            const checkbox = document.getElementById(inputId);
+            if (checkbox) {
+              checkbox.checked = button.checked;
+            }
+          }
+        }
+      }
+    });
+  });
+
+  const panel = document.querySelector('.layer-switcher .panel');
+
+  // Adds a "Toggle all overlays" button to the layer switcher panel.
+  function createToggleAllButton() {
+    requestAnimationFrame(() => {
+    
+    if (!panel) return;
+
+    const ul = panel.querySelector(':scope > ul');
+    if (!ul) return;
+
+    if (ul.querySelector('.toggle-all')) return;
+
+    const li = document.createElement('li');
+    li.className = 'layer toggle-all';
+
+    li.appendChild(button);
+    
+    ul.append(li);
+    });
+  };
+  
+  layerSwitcher.on('render', () => {createToggleAllButton()});
+
+  LayerSwitcher.forEachRecursive(map, layer => {
+    layer.on('change:visible', () => {
+      createToggleAllButton();
+    });
+});
+};
+
+
 let customControlTopPosition = 8.5;
 
 function createCustomControlElement(label, clickHandler, options) {
@@ -97,4 +157,4 @@ function createCustomControlElement(label, clickHandler, options) {
   return element;
 }
 
-export {createCustomControlElement, enableLayerMemory, addDefaultMapControls}
+export {createCustomControlElement, enableLayerMemory, addDefaultMapControls, toggleLayersFunction}
