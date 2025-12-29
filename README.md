@@ -12,11 +12,11 @@ Please create a Ticket in GitHub. Or of any the discord where you maybe heard ab
 
 ## Todos
 
-* Require text for custom area (by [11eFL] mashed)
+* ~~Require text for custom area (by [11eFL] mashed)~~ Done!
 
 ## Ideas
 
-* option to toggle all in the layer filters (by [11eFL] mashed)
+* ~~option to toggle all in the layer filters (by [11eFL] mashed)~~ Added! 
 * special icon only visible to admins for easier coordination (by [11eFL] mashed)
 * Upkeep Modifier for each voroni chunk (Very Good 0.25, Good 0.5, Poor 1, Very Poor 2)
 * Check auth more often (by [1erBH] Fran-T4NK)

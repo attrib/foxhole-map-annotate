@@ -12,7 +12,7 @@ import { createApp, reactive, ref } from "vue";
 import { ACL_ACTIONS, ACL_ADMIN, ACL_MOD, hasAccess } from "../lib/ACLS.js";
 import Draft from "./Components/Draft.vue";
 import Flags from "./flags.js";
-import { addDefaultMapControls, enableLayerMemory } from "./mapControls.js";
+import { addDefaultMapControls, enableLayerMemory, toggleLayersFunction } from "./mapControls.js";
 import EditTools from "./mapEditTools.js";
 import Measure from "./measure.js";
 import StaticLayers from "./staticLayer.js";
@@ -85,6 +85,7 @@ const staticLayer = new StaticLayers(map, conquerStatus, warFeatures)
 const tools = new EditTools(map);
 tools.staticLayer = staticLayer;
 enableLayerMemory(map)
+toggleLayersFunction(map)
 
 // Prevent context menu on map
 document.getElementById('map').addEventListener('contextmenu', (e) => {
