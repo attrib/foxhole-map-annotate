@@ -58,6 +58,8 @@ function enableLayerMemory(map) {
 
 function toggleLayersFunction(map) {
 
+  let toggleAllIsHappening = false;
+
   const button = document.createElement('button');
   button.type = 'button';
   button.checked = true;
@@ -65,6 +67,7 @@ function toggleLayersFunction(map) {
   button.addEventListener('click', () => {button.checked = !button.checked;});
   button.addEventListener('click', () => {
     LayerSwitcher.forEachRecursive(map, layer => {
+      toggleAllIsHappening = true;
       if (layer.get('type') !== 'base' && layer.get('title')) {
         layer.setVisible(button.checked);
         //Necessary to update visual checkboxes in layer switcher
@@ -80,12 +83,13 @@ function toggleLayersFunction(map) {
           }
         }
       }
+      toggleAllIsHappening = false;
     });
   });
 
   const panel = document.querySelector('.layer-switcher .panel');
 
-  // Adds a "Toggle all overlays" button to the layer switcher panel.
+  // Adds the "Toggle all overlays" button to the layer switcher panel. Needs to be called whenever the panel is re-rendered.
   function createToggleAllButton() {
     requestAnimationFrame(() => {
     
@@ -105,13 +109,28 @@ function toggleLayersFunction(map) {
     });
   };
   
+  function updateToggleAllState() {
+    let allVisible = true;
+
+    LayerSwitcher.forEachRecursive(map, layer => {
+      if (layer.get('type') !== 'base' && layer.get('title') && !layer.getVisible()) {
+        allVisible = false;
+      }
+    });
+
+    button.checked = allVisible;
+  };
+
+
   layerSwitcher.on('render', () => {createToggleAllButton()});
 
   LayerSwitcher.forEachRecursive(map, layer => {
     layer.on('change:visible', () => {
+      if (toggleAllIsHappening) return;
+      updateToggleAllState();
       createToggleAllButton();
     });
-});
+  });
 };
 
 
