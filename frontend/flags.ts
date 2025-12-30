@@ -189,11 +189,19 @@ export class Flags {
         return feature;
       }
     }
-    feature = this.tools.line.allLinesCollection.getFeatureById(id);
+    this.tools.line.allLinesCollection.forEach((line) => {
+      if (line.getId() === id) {
+        feature = line;
+      }
+    });
     if (feature) {
       return feature;
     }
     feature = this.tools.polygon.source.getFeatureById(id);
+    if (feature) {
+      return feature;
+    }
+    feature = this.tools.rectangle.source.getFeatureById(id);
     if (feature) {
       return feature;
     }
