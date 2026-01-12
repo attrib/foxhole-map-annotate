@@ -585,6 +585,21 @@ body > header {
     }
   }
 
+  &:has(#groups-open:checked) {
+    & > .user-menu-links {
+      overflow: visible;
+      grid-template-rows: 1fr;
+    }
+
+    & > label {
+      background-color: light-dark(color-mix(in oklab, var(--foreground-light) 40%, var(--copy-light-lighter) 20%), color-mix(in oklab, var(--foreground-dark) 40%, var(--copy-dark-lighter) 20%));
+
+      & > svg {
+        rotate: 90deg;
+      }
+    }
+  }
+
   & > .logout {
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
@@ -653,6 +668,23 @@ body > header {
       }
     }
   }
+}
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-menu-item.active {
+    font-weight: 600;
 }
 
 #war-score {

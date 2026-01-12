@@ -248,3 +248,28 @@ button.overlay-button {
   animation: blink-red 0.4s ease-in-out 2;
   border-color: red;
 }
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-menu-item.active {
+    font-weight: 600;
+}
+
+.group-panel {
+  display: none;
+}
+
+.group-panel.active {
+  display: block;
+}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+{% if isDevMode %}
+<script type="module" src="/frontend/groups.ts"></script>
+{% else %}
+<script type="module" src="/{{manifest['frontend/groups.ts'].file}}"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="p-5 bg-light rounded-3 text-bg-light ">
+        <div class="container-fluid">
+        <h1 class="mb-4">Group Management</h1>
+
+        <div class="row mh-75">
+            <!-- LEFT: Group list -->
+            <div class="col-12 col-md-3 border-end border-2">
+                <h4>My Groups</h4>
+                <ul class="list-group overflow-auto" id="group-editor"></ul>
+                <button class="btn btn-primary mt-3" id="new-group-btn" data-target="create" type="button">
+                + New Group
+                </button>
+            </div>
+
+            <!-- RIGHT: Group editor -->
+            <div class="col-12 col-md-6">
+                <div class="tab-content">
+                    <!-- Create group pane -->
+                    <div class="group-panel" id="create-group" data-panel="create">
+                        <h4>New Group</h4>
+                        <form id="create-group-form">
+                            <div class="mb-3">
+                                <label for="group-name" class="form-label">Group Name</label>
+                                <input type="text" class="form-control" id="group-name" required>
+                            </div>
+                            <button type="submit" class="btn btn-success" id="create-group-btn">Create Group</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<template id="group-editor-template">
+    <div class="tab-pane fade" role="tabpanel">
+        <h4></h4> 
+        <div class="mb-3">
+            <label for="group-name" class="form-label">Group Name</label>
+            <input type="text" class="form-control" id="group-name" required>
+        </div>
+        <div>
+            <h5>Add Role</h5>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="add-server" placeholder="Server ID">
+                <input type="text" class="form-control" id="add-role" placeholder="Role ID">
+                <input type="text" class="form-control" id="add-role-note" placeholder="Role Info (Optional)">
+                <button class="btn btn-outline-secondary" type="button" id="add-role-btn" data-group-id="">Add</button>
+            </div>
+        </div>
+        
+        <div>
+            <h5>Add Member</h5>
+            <p>If they have a role with access they do not need to be added individually.</p>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="add-member" placeholder="Discord User ID">
+                <input type="text" class="form-control" id="add-member-note" placeholder="Member Name (Optional)">
+                <button class="btn btn-outline-secondary" type="button" id="add-member-btn" data-group-id="">Add</button>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between row">
+            <div class="col-6">   
+                <h5>Members</h5>
+                <ul class="list-group mb-3" id="member-list">
+                </ul>
+            </div>
+            <div class="col-6">
+                <h5>Roles</h5>
+                <ul class="list-group mb-3" id="role-list">
+                </ul>
+            </div>
+        </div>
+        <button class="btn btn-danger " data-group-id="" id="delete-group-btn">Delete Group</button>
+    </div>
+</template>
+
+<template id="role-list-item-template">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span class="role-info"></span>
+        <button class="btn btn-sm btn-danger remove-role-btn" data-group-id="" data-role-id="">Remove</button>
+    </li>
+</template>
+
+<template id="member-list-item-template">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span class="member-info"></span>
+        <button class="btn btn-sm btn-danger remove-member-btn" data-group-id="" data-member-id="">Remove</button>
+    </li>
+</template>
+
+{% endblock %}
+
