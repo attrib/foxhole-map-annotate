@@ -5,7 +5,7 @@ import {Vector} from "ol/layer.js";
 import {Draw} from "ol/interaction.js";
 import {Fill, Stroke, Style, Text} from "ol/style.js";
 import {createBox} from "ol/interaction/Draw.js";
-import { blinkInput } from "../../lib/errorBlink.ts";
+import { blinkInput } from "./errorBlink.js";
 
 class Rectangle {
 

@@ -1,38 +1,7 @@
 import { render } from "nunjucks";
-
-interface Group {
-  id: string;
-  name: string;
-
-  individual_members?: Record<
-    string,
-    {
-      id: string;
-      username?: string;
-    }
-  >;
-
-  discord_roles?: Record<
-    string,
-    {
-      role: string;
-      server: string;
-      info?: string;
-    }
-  >;
-
-  permissions?: Record<string, boolean>;
-}
-
-interface GroupsFile {
-  users: {
-    [userId: string]: {
-      groups: Record<string, Group>;
-      hash: string;
-    };
-  };
-}
-
+import { blinkInput } from "./tools/errorBlink";
+import type {UserGroups, Group} from "../lib/saveGroups";
+import { set } from "ol/transform";
 
 class Groups {
 
@@ -53,6 +22,9 @@ class Groups {
 
     renderGroups() {
         if (!this.groupsData) return;
+
+        const activeButton = document.querySelector('#group-editor .list-group-item.active') as HTMLElement | null;
+        const activeGroupId = activeButton?.getAttribute('data-bs-target')?.replace('#group-', '') ?? null;
 
         const list = document.getElementById('group-editor');
         const panels = document.querySelector(".tab-content");
@@ -80,8 +52,37 @@ class Groups {
             root.id = `group-${group.id}`;
             root.dataset.groupId = group.id;
 
+            const nameInput = root.querySelector("#group-name") as HTMLInputElement;
             root.querySelector("h4")!.textContent = group.name;
-            (root.querySelector("#group-name") as HTMLInputElement).value = group.name;
+            nameInput.value = group.name;
+            nameInput.addEventListener('blur', async () => {
+                const newName = nameInput.value.trim();
+                if (newName === group.name) return;
+                if (newName === '') {
+                    nameInput.value = group.name;
+                    blinkInput(nameInput);
+                    setTimeout(() => {nameInput.classList.remove('input-error-blink');}, 3000);
+                    return;
+                }
+                if (Object.values(this.groupsData.groups).some(g => g.name.toLowerCase() === newName.toLowerCase() && g.id !== group.id)) {
+                    nameInput.value = group.name;
+                    blinkInput(nameInput);
+                    setTimeout(() => {nameInput.classList.remove('input-error-blink');}, 3000);
+                    root.querySelector('#existing-group-name-error')!.style.display = 'inline';
+                    setTimeout(() => {root.querySelector('#existing-group-name-error')!.style.display = 'none';}, 4000);
+                    return;
+                }
+                const newData = this.groupsData;
+                newData.groups[group.id].name = newName;
+                const res = await fetch(`/api/groups/${group.id}`, {
+                    method: "PUT",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({name: newName})
+                });
+                const groupsFile = await res.json();
+                this.groupsData = groupsFile;
+                this.renderGroups();
+            });
 
             this.renderGroupMembers(group, root);
             this.renderGroupRoles(group, root);
@@ -95,6 +96,14 @@ class Groups {
                 const memberNoteInput = root.querySelector("#add-member-note") as HTMLInputElement;
                 const memberId = memberIdInput.value.trim();
                 const memberNote = memberNoteInput.value.trim();
+                if (memberId === '') {
+                    blinkInput(memberIdInput);
+                    setTimeout(() => {memberIdInput.classList.remove('input-error-blink');}, 3000);
+                    return;
+                }
+                if (memberIdInput.classList.contains('input-error-blink')) {
+                    memberIdInput.classList.remove('input-error-blink');
+                }
                 const newData = this.groupsData;
                 memberIdInput.value = '';
                 memberNoteInput.value = '';
@@ -117,6 +126,20 @@ class Groups {
                 const serverId = serverIdInput.value.trim();
                 const roleId = roleIdInput.value.trim();
                 const roleNote = roleNoteInput.value.trim();
+                if (serverId === '' || roleId === '') {
+                    if (roleId === '') {
+                        blinkInput(roleIdInput);
+                        setTimeout(() => {roleIdInput.classList.remove('input-error-blink');}, 3000);
+                    }
+                    if (serverId === '') {
+                        blinkInput(serverIdInput);
+                        setTimeout(() => {serverIdInput.classList.remove('input-error-blink');}, 3000);  
+                    }
+                    return;
+                }
+                root.querySelectorAll(".input-error-blink#add-server, .input-error-blink#add-role").forEach(el => {
+                    el.classList.remove('input-error-blink');
+                });
                 const newData = this.groupsData;
                 serverIdInput.value = '';
                 roleIdInput.value = '';
@@ -143,6 +166,11 @@ class Groups {
 
             panels.appendChild(panel);
         }
+        if (activeGroupId) {
+            const btn = document.querySelector(`#group-editor [data-bs-target="#group-${activeGroupId}"]`) as HTMLElement | null;
+            btn?.click();
+        }
+
         console.log("Groups rendered");
     };
 
@@ -197,8 +225,20 @@ class Groups {
     }
 
     async addGroup(data: Omit<Group, "id">) {
-        if (data.name.trim() === "") {
-            alert("Group name cannot be empty");
+        const name = data.name
+        const input = document.getElementById('group-name') as HTMLInputElement;
+        const errorSpan = document.getElementById('new-group-name-error');
+        errorSpan.style.display = 'none';
+        if (name === "") {
+            blinkInput(input);
+            setTimeout(() => {input.classList.remove('input-error-blink');}, 4000);
+            return;
+        }
+        if (Object.values(this.groupsData.groups).some(g => g.name.toLowerCase() === name.toLowerCase())) {
+            blinkInput(input);
+            setTimeout(() => {input.classList.remove('input-error-blink');}, 4000);
+            errorSpan.style.display = 'inline';
+            setTimeout(() => {errorSpan.style.display = 'none';}, 4000);
             return;
         }
         const res = await fetch("/api/groups", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)});
@@ -223,7 +263,7 @@ class Groups {
         document.getElementById('create-group-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             this.addGroup({
-                name: (document.getElementById('group-name') as HTMLInputElement).value
+                name: (document.getElementById('group-name') as HTMLInputElement).value.trim()
             });
         });
     }

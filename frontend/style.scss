@@ -249,6 +249,17 @@ button.overlay-button {
   border-color: red;
 }
 
+.input-error-text {
+    color: #df0c41;
+    font-size: 0.85rem;
+    margin-left: 4px;
+    transition: opacity 0.2s;
+}
+.input-error-text.show {
+    display: inline;
+}
+
+
 .user-menu-item {
     display: flex;
     align-items: center;

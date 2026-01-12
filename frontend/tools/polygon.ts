@@ -5,7 +5,7 @@ import { Vector } from "ol/layer.js";
 import { Vector as VectorSource } from "ol/source.js";
 import { Fill, Stroke, Style, Text } from "ol/style.js";
 import { createEditingStyle } from "ol/style/Style.js";
-import { blinkInput } from "../../lib/errorBlink.ts";
+import { blinkInput } from "./errorBlink.js";
 
 
 class Polygon {
