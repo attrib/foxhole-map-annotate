@@ -14,6 +14,7 @@ import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import indexRouter from "./routes/index.js";
 import { getManifest } from "./lib/manifest.js";
+import groupApiRouter from "./routes/api/groups.js";
 
 if (process.env.NODE_ENV !== "production") {
   try {
@@ -170,6 +171,7 @@ app.use((req, res, next) => {
   }
 })
 app.use('/', indexRouter);
+app.use("/api/groups", groupApiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

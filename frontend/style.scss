@@ -247,6 +247,31 @@ button.overlay-button {
   max-height: 400px;
 }
 
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-menu-item.active {
+    font-weight: 600;
+}
+
+.group-panel {
+  display: none;
+}
+
+.group-panel.active {
+  display: block;
+}
+
 @keyframes blink-red {
   0%   { 
     box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.8); 
