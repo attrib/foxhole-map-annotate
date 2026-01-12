@@ -18,5 +18,5 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "include": ["websocket.js", "app.js", "lib"]
+  "include": ["websocket.js", "app.js", "lib", "frontend/tools/errorBlink.ts"]
 }

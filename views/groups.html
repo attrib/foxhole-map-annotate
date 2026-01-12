@@ -33,7 +33,10 @@
                         <form id="create-group-form">
                             <div class="mb-3">
                                 <label for="group-name" class="form-label">Group Name</label>
-                                <input type="text" class="form-control" id="group-name" required>
+                                <input type="text" class="form-control" id="group-name">
+                                <span id="new-group-name-error" class="input-error-text" style="display: none;">
+                                    A group with this name already exists.
+                                </span>
                             </div>
                             <button type="submit" class="btn btn-success" id="create-group-btn">Create Group</button>
                     </div>
@@ -49,6 +52,9 @@
         <div class="mb-3">
             <label for="group-name" class="form-label">Group Name</label>
             <input type="text" class="form-control" id="group-name" required>
+            <span id="existing-group-name-error" class="input-error-text" style="display: none;">
+                A group with this name already exists.
+            </span>
         </div>
         <div>
             <h5>Add Role</h5>
