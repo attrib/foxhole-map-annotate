@@ -19,8 +19,12 @@ router.get('/help', function(req, res, next) {
   res.render('help');
 });
 
-router.get('/cmap', function(req, res, next) {
+router.get('/cmap', function (req, res, next) {
   res.render('index');
+});
+
+router.get('/groups', function (req, res, next) {
+  res.render('groups');
 });
 
 router.get('/admin', function (req, res, next) {
