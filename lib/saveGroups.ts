@@ -42,8 +42,6 @@ export interface GroupsFile {
   hash: string;
 }
 
-const GROUPS_FILE_PATH = resolve("data/groups.json");
-
 const GROUPS_PATH = resolve("data/groups.json");
 
 function ensureFile(): void {
@@ -56,49 +54,57 @@ function ensureFile(): void {
   }
 }
 
+//Just delayedSave but duplicated in file to update data during the timer
+const timers: Record<string, NodeJS.Timeout> = {};
+
+function throttledSave(filePath: string, delay = 5000, formatted = true): void {
+
+  if (timers[filePath]) {
+    return;
+  }
+
+  timers[filePath] = setTimeout(() => {
+    fs.writeFile(
+      filePath,
+      formatted ? JSON.stringify(file, null, 2) : JSON.stringify(file),
+      (err) => {
+        delete timers[filePath];
+        if (err) {
+          console.error(err);
+        }
+      }
+    );
+  }, delay);
+}
+
+
 export function loadAllGroups(): GroupsFile {
   ensureFile();
   return JSON.parse(fs.readFileSync(GROUPS_PATH, "utf-8"));
 }
 
-export function saveAllGroups(data: GroupsFile): void {
-  data.hash = createHash("sha1")
-    .update(JSON.stringify(data.users))
-    .digest("hex");
+const file = loadAllGroups();
 
-  fs.writeFileSync(
-    GROUPS_PATH,
-    JSON.stringify(data, null, 2),
-    "utf-8"
-  );
+export function saveAllGroups(): void {
+  file.hash = createHash("sha1")
+  .update(JSON.stringify(file.users))
+  .digest("hex");
+
+  throttledSave(GROUPS_PATH);
+
 }
 
 export function getUserGroups(userId: string): UserGroups {
-  const file = loadAllGroups();
 
   if (!file.users[userId]) {
     file.users[userId] = { groups: {} };
-    saveAllGroups(file);
+    saveAllGroups();
   }
 
   return file.users[userId];
 }
 
-export function saveGroups(data: GroupsFile): void {
-  const allGroups = loadAllGroups();
-  data.hash = createHash("sha1")
-    .update(JSON.stringify(data.users))
-    .digest("hex");
-
-  fs.writeFileSync(
-    GROUPS_FILE_PATH,
-    JSON.stringify(data, null, 2),
-    "utf-8"
-  );
-}
-
 export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
-  const file = loadAllGroups();
 
   if (!file.users[userId]) {
     file.users[userId] = { groups: {} };
@@ -113,14 +119,13 @@ export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
     discord_roles: {},
   };
 
-  saveAllGroups(file);
+  saveAllGroups();
   return file.users[userId];
 }
 
 
 
 export function updateGroup(userId: string, groupId: string, updates: Partial<Group>): UserGroups {
-  const file = loadAllGroups();
   const user = file.users[userId];
 
   if (!user || !user.groups[groupId]) {
@@ -135,14 +140,13 @@ export function updateGroup(userId: string, groupId: string, updates: Partial<Gr
     id: groupId,
   };
 
-  saveAllGroups(file);
+  saveAllGroups();
   return user;
 }
 
 
 
 export function deleteGroup(userId: string, groupId: string): UserGroups {
-  const file = loadAllGroups();
   const user = file.users[userId];
 
   if (!user || !user.groups[groupId]) {
@@ -151,7 +155,7 @@ export function deleteGroup(userId: string, groupId: string): UserGroups {
 
   delete user.groups[groupId];
 
-  saveAllGroups(file);
+  saveAllGroups();
   return user;
 }
 

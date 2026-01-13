@@ -23,8 +23,15 @@ class Groups {
     renderGroups() {
         if (!this.groupsData) return;
 
-        const activeButton = document.querySelector('#group-editor .list-group-item.active') as HTMLElement | null;
-        const activeGroupId = activeButton?.getAttribute('data-bs-target')?.replace('#group-', '') ?? null;
+        let activeGroupId = null;
+
+        function updateActiveButton() {
+            const activeButton = document.querySelector('#group-editor .list-group-item.active') as HTMLElement | null;
+            if (activeButton) {
+                activeGroupId = activeButton.getAttribute('data-bs-target')?.replace('#group-', '') || null;
+            }
+        }
+        updateActiveButton();
 
         const list = document.getElementById('group-editor');
         const panels = document.querySelector(".tab-content");
@@ -81,7 +88,8 @@ class Groups {
                 });
                 const groupsFile = await res.json();
                 this.groupsData = groupsFile;
-                this.renderGroups();
+                root.querySelector("h4")!.textContent = newName;
+                btn.textContent = newName;
             });
 
             this.renderGroupMembers(group, root);
