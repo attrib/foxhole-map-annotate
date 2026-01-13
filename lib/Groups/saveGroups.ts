@@ -2,45 +2,7 @@ import fs from "node:fs";
 import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
-
-
-
-export interface Group {
-  id: string;
-  name: string;
-
-  individual_members?: Record<
-    string,
-    {
-      id: string;
-      username?: string;
-    }
-  >;
-
-  discord_roles?: Record<
-    string,
-    {
-      role: string;
-      server: string;
-      info?: string;
-    }
-  >;
-
-  permissions?: Record<string, boolean>;
-}
-
-export interface UserGroups {
-  groups: Record<string, Group>;
-}
-
-export interface GroupsFile {
-  users: {
-    [userId: string]: {
-      groups: Record<string, UserGroups>;
-    };
-  };
-  hash: string;
-}
+import type {GroupsFile, Group, UserGroupMembership} from "../lib/Groups/types.ts";
 
 const GROUPS_PATH = resolve("data/groups.json");
 
@@ -85,6 +47,18 @@ export function loadAllGroups(): GroupsFile {
 
 const file = loadAllGroups();
 
+// Refreshes the in-memory file object in case of bad data. Fix groups.json manually to clear it with this.
+export function reloadGroupsFile(): GroupsFile {
+  const fresh = JSON.parse(fs.readFileSync(GROUPS_PATH, "utf-8")) as GroupsFile;
+
+  
+  Object.keys(file).forEach(key => delete file[key]); 
+  Object.assign(file, fresh); 
+
+  return file;
+}
+reloadGroupsFile();
+
 export function saveAllGroups(): void {
   file.hash = createHash("sha1")
   .update(JSON.stringify(file.users))
@@ -123,9 +97,18 @@ export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
   return file.users[userId];
 }
 
+export function updateMemberships(userId: string, newMemberships: Record<string, UserGroupMembership>): GroupsFile {
+    const user = file.users[userId];
+    if (!user) {
+      throw new Error(`User ${userId} does not exist`);
+    }
 
+    user.memberships = newMemberships;
+    saveAllGroups();
+    return file;
+};
 
-export function updateGroup(userId: string, groupId: string, updates: Partial<Group>): UserGroups {
+export function updateGroup(userId: string, groupId: string, updates: Partial<Group>): GroupsFile {
   const user = file.users[userId];
 
   if (!user || !user.groups[groupId]) {

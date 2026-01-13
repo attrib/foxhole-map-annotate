@@ -4,9 +4,21 @@ import {
   updateGroup,
   deleteGroup,
   getUserGroups
-} from "../../lib/saveGroups.ts";
+} from "../../lib/Groups/saveGroups.ts";
+import { refreshMembershipsIfNeeded } from "../../lib/groups/groupMemberships.ts";
 
 const router = Router();
+
+router.use(async (req, res, next) => {
+  try {
+    await refreshMembershipsIfNeeded(req.session);
+    console.log("ensureFreshMemberships DONE");
+    next();
+  } catch (err) {
+    console.error("ensureFreshMemberships ERROR", err);
+    next(err);
+  }
+});
 
 router.get("/", (req, res) => {
   const userId = req.session.userId;
@@ -26,8 +38,11 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
+  console.log("Is it working?", req.session.userId);
   const group = deleteGroup(req.session.userId, req.params.id);
   res.json(group);
 });
+
+
 
 export default router;

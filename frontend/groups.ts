@@ -1,6 +1,6 @@
 import { render } from "nunjucks";
 import { blinkInput } from "./tools/errorBlink";
-import type {UserGroups, Group} from "../lib/saveGroups";
+import type {UserGroups, Group} from "../lib/Groups/types.ts";
 import { set } from "ol/transform";
 
 class Groups {
