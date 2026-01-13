@@ -8,12 +8,13 @@ const timers: Record<string, string> = {};
 export function delayedSave(file: string, data: unknown, delay: number = 5000, formatted: boolean = true): void {
   
   const formattedData: string = formatted ? JSON.stringify(data, null, 2) : JSON.stringify(data);
-  timers[file] = formattedData;
+  
 
   if (file in timers) {
+    timers[file] = formattedData;
     return;
   }
-
+  timers[file] = formattedData;
   setTimeout(() => {
     try {
       fs.writeFileSync(file, timers[file], "utf-8");
