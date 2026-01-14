@@ -41,6 +41,7 @@ class Groups {
 
         for (const id in this.groupsData.groups) {
             const group = this.groupsData.groups[id];
+
             // Left side group list
             const btn = document.createElement('button');
             btn.className = 'list-group-item list-group-item-action groupList';
@@ -53,6 +54,7 @@ class Groups {
             });
 
             list.appendChild(btn);
+
             // Right side group editing panel
             const panel = template.content.cloneNode(true) as DocumentFragment;
             const root = panel.querySelector(".tab-pane")!;
@@ -62,15 +64,20 @@ class Groups {
             const nameInput = root.querySelector("#group-name") as HTMLInputElement;
             root.querySelector("h4")!.textContent = group.name;
             nameInput.value = group.name;
+
+            //Save new group name on unfocus
             nameInput.addEventListener('blur', async () => {
                 const newName = nameInput.value.trim();
+
                 if (newName === group.name) return;
+
                 if (newName === '') {
                     nameInput.value = group.name;
                     blinkInput(nameInput);
                     setTimeout(() => {nameInput.classList.remove('input-error-blink');}, 3000);
                     return;
                 }
+
                 if (Object.values(this.groupsData.groups).some(g => g.name.toLowerCase() === newName.toLowerCase() && g.id !== group.id)) {
                     nameInput.value = group.name;
                     blinkInput(nameInput);
@@ -79,6 +86,7 @@ class Groups {
                     setTimeout(() => {root.querySelector('#existing-group-name-error')!.style.display = 'none';}, 4000);
                     return;
                 }
+
                 const newData = this.groupsData;
                 newData.groups[group.id].name = newName;
                 const res = await fetch(`/api/groups/${group.id}`, {
@@ -88,6 +96,7 @@ class Groups {
                 });
                 const groupsFile = await res.json();
                 this.groupsData = groupsFile;
+                //Updates UI without full re-render
                 root.querySelector("h4")!.textContent = newName;
                 btn.textContent = newName;
             });
@@ -104,18 +113,24 @@ class Groups {
                 const memberNoteInput = root.querySelector("#add-member-note") as HTMLInputElement;
                 const memberId = memberIdInput.value.trim();
                 const memberNote = memberNoteInput.value.trim();
+
                 if (memberId === '') {
                     blinkInput(memberIdInput);
                     setTimeout(() => {memberIdInput.classList.remove('input-error-blink');}, 3000);
                     return;
                 }
+                //Reset red border if previously errored
                 if (memberIdInput.classList.contains('input-error-blink')) {
                     memberIdInput.classList.remove('input-error-blink');
                 }
+
                 const newData = this.groupsData;
+
                 memberIdInput.value = '';
                 memberNoteInput.value = '';
+
                 if (!memberId) return;
+
                 newData.groups[group.id].individual_members[memberId] = {id: memberId, username: memberNote || undefined};
                 const res = await fetch(`/api/groups/${group.id}`, {
                     method: "PUT",
@@ -134,6 +149,7 @@ class Groups {
                 const serverId = serverIdInput.value.trim();
                 const roleId = roleIdInput.value.trim();
                 const roleNote = roleNoteInput.value.trim();
+                //Error blink
                 if (serverId === '' || roleId === '') {
                     if (roleId === '') {
                         blinkInput(roleIdInput);
@@ -145,14 +161,19 @@ class Groups {
                     }
                     return;
                 }
+                //Reset red border if previously errored
                 root.querySelectorAll(".input-error-blink#add-server, .input-error-blink#add-role").forEach(el => {
                     el.classList.remove('input-error-blink');
                 });
+
                 const newData = this.groupsData;
+
                 serverIdInput.value = '';
                 roleIdInput.value = '';
                 roleNoteInput.value = '';
+
                 if (!serverId || !roleId) return;
+
                 newData.groups[group.id].discord_roles[roleId] = {role: roleId, server: serverId, info: roleNote || undefined};
                 const res = await fetch(`/api/groups/${group.id}`, {
                     method: "PUT",
@@ -161,6 +182,7 @@ class Groups {
                 });
                 const groupsFile = await res.json();
                 this.groupsData = groupsFile;
+
                 this.renderGroupRoles(groupsFile.groups[group.id], root);
             });
 
@@ -174,6 +196,7 @@ class Groups {
 
             panels.appendChild(panel);
         }
+        //Reselect previously active group after re-render
         if (activeGroupId) {
             const btn = document.querySelector(`#group-editor [data-bs-target="#group-${activeGroupId}"]`) as HTMLElement | null;
             btn?.click();
@@ -182,18 +205,25 @@ class Groups {
         console.log("Groups rendered");
     };
 
+
     renderGroupMembers(group: Group, root: HTMLElement) {
+
         const memberList = root.querySelector("#member-list") as HTMLElement;
         memberList.innerHTML = '';
+
         for (const member_id in group.individual_members || []) {
+
             const memberItemTemplate = document.getElementById("member-list-item-template") as HTMLTemplateElement;
             const memberItem = memberItemTemplate.content.cloneNode(true) as DocumentFragment;
             const member_name = group.individual_members[member_id]?.username;
+
             (memberItem.querySelector(".member-info") as HTMLElement).textContent = (member_name ?  member_name + " - " : "") + member_id;
             (memberItem.querySelector(".remove-member-btn") as HTMLButtonElement).dataset.memberId = member_id;
+
             memberItem.querySelector(".remove-member-btn")!.addEventListener('click', async () => {
                 const newData = this.groupsData;
                 delete newData.groups[group.id].individual_members[member_id];
+
                 const res = await fetch(`/api/groups/${group.id}`, {
                     method: "PUT",
                     headers: {"Content-Type": "application/json"},
@@ -201,24 +231,31 @@ class Groups {
                 });
                 const groupsFile = await res.json();
                 this.groupsData = groupsFile;
+
                 this.renderGroupMembers(groupsFile.groups[group.id], root);
             });
+
             memberList.appendChild(memberItem);
         }
     }
 
     renderGroupRoles(group: Group, root: HTMLElement) {
+
         const roleList = root.querySelector("#role-list") as HTMLElement;
         roleList.innerHTML = '';
+
         for (const discord_role in group.discord_roles || []) {
             const roleItemTemplate = document.getElementById("role-list-item-template") as HTMLTemplateElement;
             const roleItem = roleItemTemplate.content.cloneNode(true) as DocumentFragment;
             const role_name = group.discord_roles[discord_role]?.info;
+
             (roleItem.querySelector(".role-info") as HTMLElement).textContent = (role_name ? role_name + " - " : "") + "Role ID: " + discord_role + " Server ID: " + group.discord_roles[discord_role]?.server;
             (roleItem.querySelector(".remove-role-btn") as HTMLButtonElement).dataset.roleId = discord_role;
+
             roleItem.querySelector(".remove-role-btn")!.addEventListener('click', async () => {
                 const newData = this.groupsData;
                 delete newData.groups[group.id].discord_roles[discord_role];
+
                 const res = await fetch(`/api/groups/${group.id}`, {
                     method: "PUT",
                     headers: {"Content-Type": "application/json"},
@@ -226,22 +263,28 @@ class Groups {
                 });
                 const groupsFile = await res.json();
                 this.groupsData = groupsFile;
+
                 this.renderGroupRoles(groupsFile.groups[group.id], root);
             });
+
             roleList.appendChild(roleItem);
         }
     }
 
     async addGroup(data: Omit<Group, "id">) {
+
         const name = data.name
         const input = document.getElementById('group-name') as HTMLInputElement;
+
         const errorSpan = document.getElementById('new-group-name-error');
         errorSpan.style.display = 'none';
+
         if (name === "") {
             blinkInput(input);
             setTimeout(() => {input.classList.remove('input-error-blink');}, 4000);
             return;
         }
+        //Check for existing group name
         if (Object.values(this.groupsData.groups).some(g => g.name.toLowerCase() === name.toLowerCase())) {
             blinkInput(input);
             setTimeout(() => {input.classList.remove('input-error-blink');}, 4000);
@@ -249,15 +292,20 @@ class Groups {
             setTimeout(() => {errorSpan.style.display = 'none';}, 4000);
             return;
         }
+
         const res = await fetch("/api/groups", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)});
         const groupsFile = await res.json();
         this.groupsData = groupsFile;
+
         this.renderGroups();
     }
 
-    bindUI(groupRerender = false) {
+    //Just used on startup
+    bindUI() {
+
         const target = (document.getElementById('new-group-btn') as HTMLElement).dataset.target;
         const groupsList = document.querySelectorAll("button.list-group-item.list-group-item-action.groupList");
+
         document.getElementById('new-group-btn').addEventListener('click', () => {
             if (!target) return;
             this.showPanel(target);
@@ -268,6 +316,7 @@ class Groups {
                 element.classList.remove('active');
             });
         });
+
         document.getElementById('create-group-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             this.addGroup({

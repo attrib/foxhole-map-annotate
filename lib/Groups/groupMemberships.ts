@@ -1,13 +1,14 @@
 import discord from "../discord.js";
-import { loadAllGroups, saveAllGroups, updateMemberships } from "./saveGroups.ts";
+import { loadAllGroups, saveAllGroups, updateMemberships, getGroupsFile } from "./saveGroups.ts";
 import type {GroupsFile, Group, UserGroupMembership} from "../lib/Groups/types.ts";
 import config from "../config.js";
+import { get } from "node:http";
 
 const MEMBERSHIP_TTL = 60_000; // 1 minute
 
 export async function refreshMembershipsIfNeeded(session) {
   const userId = session.userId;
-  const groupsFile = loadAllGroups();
+  const groupsFile = getGroupsFile();
 
   console.log("Checking if memberships need refresh for user", userId);
 
@@ -18,13 +19,17 @@ export async function refreshMembershipsIfNeeded(session) {
 
   const needsRefresh = !user.memberships || Object.values(user.memberships).some(m => now - m.verifiedAt > MEMBERSHIP_TTL);
 
-  //if (!needsRefresh) return;
+  if (!needsRefresh) return;
 
   await recomputeMemberships(session, groupsFile);
 }
 
 async function recomputeMemberships(session, groupsFile) {
   const userId = session.userId;
+
+  if (!userId) {
+    throw new Error("userId is undefined");
+  }
 
   const guildRoles = await fetchUserDiscordRoles(session);
 

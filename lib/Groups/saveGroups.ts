@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
 import type {GroupsFile, Group, UserGroupMembership} from "../lib/Groups/types.ts";
+import { get } from "node:http";
 
 const GROUPS_PATH = resolve("data/groups.json");
 
@@ -26,17 +27,17 @@ function throttledSave(filePath: string, delay = 5000, formatted = true): void {
   }
 
   timers[filePath] = setTimeout(() => {
-    fs.writeFile(
-      filePath,
-      formatted ? JSON.stringify(file, null, 2) : JSON.stringify(file),
-      (err) => {
-        delete timers[filePath];
-        if (err) {
-          console.error(err);
-        }
-      }
-    );
+    try {
+      fs.writeFileSync(
+        filePath,
+        formatted ? JSON.stringify(file, null, 2) : JSON.stringify(file),
+        "utf-8"
+      );
+    } finally {
+      delete timers[filePath];
+    }
   }, delay);
+
 }
 
 
@@ -57,7 +58,7 @@ export function reloadGroupsFile(): GroupsFile {
 
   return file;
 }
-reloadGroupsFile();
+//reloadGroupsFile();
 
 export function saveAllGroups(): void {
   file.hash = createHash("sha1")
@@ -80,6 +81,11 @@ export function getUserGroups(userId: string): UserGroups {
 
 export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
 
+  if (!userId) {
+    throw new Error("userId is undefined");
+  }
+
+
   if (!file.users[userId]) {
     file.users[userId] = { groups: {} };
   }
@@ -98,17 +104,27 @@ export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
 }
 
 export function updateMemberships(userId: string, newMemberships: Record<string, UserGroupMembership>): GroupsFile {
-    const user = file.users[userId];
-    if (!user) {
-      throw new Error(`User ${userId} does not exist`);
-    }
 
-    user.memberships = newMemberships;
-    saveAllGroups();
-    return file;
+  if (!userId) {
+    throw new Error("userId is undefined");
+  }
+  const user = file.users[userId];
+
+  if (!user) {
+    throw new Error(`User ${userId} does not exist`);
+  }
+
+  user.memberships = newMemberships;
+  saveAllGroups();
+  return file;
 };
 
 export function updateGroup(userId: string, groupId: string, updates: Partial<Group>): GroupsFile {
+
+  if (!userId) {
+    throw new Error("userId is undefined");
+  }
+
   const user = file.users[userId];
 
   if (!user || !user.groups[groupId]) {
@@ -127,9 +143,12 @@ export function updateGroup(userId: string, groupId: string, updates: Partial<Gr
   return user;
 }
 
-
-
 export function deleteGroup(userId: string, groupId: string): UserGroups {
+
+  if (!userId) {
+    throw new Error("userId is undefined");
+  }
+
   const user = file.users[userId];
 
   if (!user || !user.groups[groupId]) {
@@ -140,6 +159,10 @@ export function deleteGroup(userId: string, groupId: string): UserGroups {
 
   saveAllGroups();
   return user;
+}
+
+export function getGroupsFile(): GroupsFile {
+  return file;
 }
 
 
