@@ -10,14 +10,15 @@ export async function refreshMembershipsIfNeeded(session) {
   const userId = session.userId;
   const groupsFile = getGroupsFile();
 
-  console.log("Checking if memberships need refresh for user", userId);
+  if (!userId) return;
 
   const user = groupsFile.users[userId];
+
   if (!user) return;
 
   const now = Date.now();
 
-  const needsRefresh = !user.memberships || Object.values(user.memberships).some(m => now - m.verifiedAt > MEMBERSHIP_TTL);
+  const needsRefresh = user.memberships === {} || Object.values(user.memberships).some(m => now - m.verifiedAt > MEMBERSHIP_TTL);
 
   if (!needsRefresh) return;
 
@@ -26,7 +27,7 @@ export async function refreshMembershipsIfNeeded(session) {
 
 async function recomputeMemberships(session, groupsFile) {
   const userId = session.userId;
-
+  console.log("Recomputing memberships for user", userId);
   if (!userId) {
     throw new Error("userId is undefined");
   }
