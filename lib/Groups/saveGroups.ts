@@ -17,10 +17,24 @@ function ensureFile(): void {
   }
 }
 
+function ensureUser(userId: string) {
+  if (!file.users[userId]) {
+    file.users[userId] = {
+      groups: {},
+      memberships: {},
+    };
+  } else {
+    // ensure missing fields are restored
+    file.users[userId].groups ??= {};
+    file.users[userId].memberships ??= {};
+  }
+}
+
+
 //Just delayedSave but duplicated in file to update data during the timer
 const timers: Record<string, NodeJS.Timeout> = {};
 
-function throttledSave(filePath: string, delay = 5000, formatted = true): void {
+function throttledSave(filePath: string, delay = 5000): void {
 
   if (timers[filePath]) {
     return;
@@ -28,9 +42,10 @@ function throttledSave(filePath: string, delay = 5000, formatted = true): void {
 
   timers[filePath] = setTimeout(() => {
     try {
+      console.log(file.users["285113857326710784"].memberships);
       fs.writeFileSync(
         filePath,
-        formatted ? JSON.stringify(file, null, 2) : JSON.stringify(file),
+        JSON.stringify(file, null, 2),
         "utf-8"
       );
     } finally {
@@ -61,6 +76,7 @@ export function reloadGroupsFile(): GroupsFile {
 //reloadGroupsFile();
 
 export function saveAllGroups(): void {
+
   file.hash = createHash("sha1")
   .update(JSON.stringify(file.users))
   .digest("hex");
@@ -71,13 +87,12 @@ export function saveAllGroups(): void {
 
 export function getUserGroups(userId: string): UserGroups {
 
-  if (!file.users[userId]) {
-    file.users[userId] = { groups: {} };
-    saveAllGroups();
+    ensureUser(userId);
+    return file.users[userId];
+
   }
 
-  return file.users[userId];
-}
+
 
 export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
 
@@ -86,9 +101,7 @@ export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
   }
 
 
-  if (!file.users[userId]) {
-    file.users[userId] = { groups: {} };
-  }
+  ensureUser(userId);
 
   const id = randomUUID();
 
@@ -108,14 +121,11 @@ export function updateMemberships(userId: string, newMemberships: Record<string,
   if (!userId) {
     throw new Error("userId is undefined");
   }
-  const user = file.users[userId];
 
-  if (!user) {
-    throw new Error(`User ${userId} does not exist`);
-  }
-
-  user.memberships = newMemberships;
+  ensureUser(userId);
+  file.users[userId].memberships = newMemberships;
   saveAllGroups();
+
   return file;
 };
 

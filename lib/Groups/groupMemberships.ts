@@ -1,10 +1,10 @@
 import discord from "../discord.js";
-import { loadAllGroups, saveAllGroups, updateMemberships, getGroupsFile } from "./saveGroups.ts";
+import { saveAllGroups, updateMemberships, getGroupsFile } from "./saveGroups.ts";
 import type {GroupsFile, Group, UserGroupMembership} from "../lib/Groups/types.ts";
 import config from "../config.js";
 import { get } from "node:http";
 
-const MEMBERSHIP_TTL = 60_000; // 1 minute
+const MEMBERSHIP_TTL = 60000; // 1 minute
 
 export async function refreshMembershipsIfNeeded(session) {
   const userId = session.userId;
@@ -18,9 +18,7 @@ export async function refreshMembershipsIfNeeded(session) {
 
   const now = Date.now();
 
-  const needsRefresh = user.memberships === {} || Object.values(user.memberships).some(m => now - m.verifiedAt > MEMBERSHIP_TTL);
-
-  if (!needsRefresh) return;
+  //Implement a if needed check based on ttl but also if memberships get deleted
 
   await recomputeMemberships(session, groupsFile);
 }
@@ -38,8 +36,6 @@ async function recomputeMemberships(session, groupsFile) {
 
   for (const groupOwner of Object.values(groupsFile.users)) {
     for (const group of Object.values(groupOwner.groups)) {
-      if (!group.discord_roles) continue;
-
       for (const userEntry of Object.values(group.individual_members)) {
 
         if (userId === userEntry.id) {
@@ -53,7 +49,7 @@ async function recomputeMemberships(session, groupsFile) {
         }
       }
 
-      if (!guildRoles) return;
+      if (memberships[group.id]) continue;
 
       for (const roleEntry of Object.values(group.discord_roles)) {
         const rolesInGuild = guildRoles[roleEntry.server];
@@ -71,7 +67,7 @@ async function recomputeMemberships(session, groupsFile) {
     }
   }
 
-  console.log(groupsFile.users);
+  console.log("Old:", groupsFile.users, "Memberships computed:", memberships);
   updateMemberships(userId, memberships);
 }
 
