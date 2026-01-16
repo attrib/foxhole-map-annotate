@@ -1,27 +1,12 @@
 export interface GroupsFile {
-  users: {
-    [userId: string]: {
-      groups: Record<string, Group>;
-      memberships: Record<string, UserGroupMembership>;
-    };
-  };
+  groups: Record<string, Group>;
   hash: string;
-}
-
-export interface UserGroupMembership {
-  groupId: string;
-  source: "discord";
-  discord: {
-    guildId: string;
-    roleIds: string[];
-  };
-  verifiedAt: number;
-  membershipStale: boolean;
 }
 
 export interface Group {
   id: string;
   name: string;
+  creator: string;
 
   individual_members?: Record<
     string,
@@ -31,17 +16,29 @@ export interface Group {
     }
   >;
 
-  discord_roles?: Record<
-    string,
-    {
-      role: string;
-      server: string;
-      info?: string;
-    }
-  >;
+  discord_roles?: Record<string, DiscordRole>;
+
+  memberships?: Record<string, GroupMembership>[];
 
   permissions?: Record<string, boolean>;
 }
 
+export interface DiscordRole {
+  role: string;
+  server: string;
+  info?: string;
+}
 
+export interface GroupMembership {
+  userId: string;
+  source: "discord" | "manual";
+
+  verifiedAt: number; // Date.now() ms
+  membershipStale: boolean;
+
+  discord?: {
+    guildId: string;
+    roleIds: string[];
+  };
+}
 

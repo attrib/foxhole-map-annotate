@@ -3,46 +3,78 @@ import {
   addGroup,
   updateGroup,
   deleteGroup,
-  getUserGroups
+  getUsersGroups,
 } from "../../lib/Groups/saveGroups.ts";
 import { refreshMembershipsIfNeeded } from "../../lib/groups/groupMemberships.ts";
 
 const router = Router();
 
+/* =========================
+   Membership refresh middleware
+========================= */
+
 router.use(async (req, res, next) => {
   try {
-    await refreshMembershipsIfNeeded(req.session);
-    console.log("ensureFreshMemberships DONE");
+    if (req.session?.userId) {
+      await refreshMembershipsIfNeeded(req.session);
+    }
     next();
   } catch (err) {
-    console.error("ensureFreshMemberships ERROR", err);
+    console.error("refreshMembershipsIfNeeded ERROR", err);
     next(err);
   }
 });
 
-router.get("/", (req, res) => {
-  const userId = req.session.userId;
-  if (!userId) return res.sendStatus(401);
+/* =========================
+   GET all groups
+========================= */
 
-  res.json(getUserGroups(userId));
+router.get("/", (req, res) => {
+  if (!req.session?.userId) {
+    return res.sendStatus(401);
+  }
+
+  res.json(getUsersGroups(req.session.userId));
 });
+
+/* =========================
+   CREATE group
+========================= */
 
 router.post("/", (req, res) => {
-  const group = addGroup(req.session.userId, req.body);
+  const userId = req.session?.userId;
+  if (!userId) return res.sendStatus(401);
+
+  const group = addGroup(userId, req.body);
   res.json(group);
 });
+
+/* =========================
+   UPDATE group
+========================= */
 
 router.put("/:id", (req, res) => {
-  const group = updateGroup(req.session.userId, req.params.id, req.body);
-  res.json(group);
+  const userId = req.session?.userId;
+  if (!userId) return res.sendStatus(401);
+
+  const groupId = req.params.id;
+  const updated = updateGroup(userId, groupId, req.body);
+
+  res.json(updated);
 });
+
+/* =========================
+   DELETE group
+========================= */
 
 router.delete("/:id", (req, res) => {
-  console.log("Is it working?", req.session.userId);
-  const group = deleteGroup(req.session.userId, req.params.id);
-  res.json(group);
+  const userId = req.session?.userId;
+  if (!userId) return res.sendStatus(401);
+
+  const groupId = req.params.id;
+  const result = deleteGroup(userId, groupId);
+
+  res.json(result);
 });
-
-
 
 export default router;

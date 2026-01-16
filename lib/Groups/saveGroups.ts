@@ -1,178 +1,176 @@
 import fs from "node:fs";
 import { resolve } from "node:path";
-import { randomUUID } from "node:crypto";
-import { createHash } from "node:crypto";
-import type {GroupsFile, Group, UserGroupMembership} from "../lib/Groups/types.ts";
-import { get } from "node:http";
+import { randomUUID, createHash } from "node:crypto";
+import type {
+  GroupsFile,
+  Group,
+  GroupMembership,
+} from "../lib/Groups/types.ts";
 
 const GROUPS_PATH = resolve("data/groups.json");
 
+/* ---------- file bootstrap ---------- */
+
 function ensureFile(): void {
   if (!fs.existsSync(GROUPS_PATH)) {
-    fs.writeFileSync(
-      GROUPS_PATH,
-      JSON.stringify({ users: {}, hash: "" }, null, 2),
-      "utf-8"
-    );
-  }
-}
-
-function ensureUser(userId: string) {
-  if (!file.users[userId]) {
-    file.users[userId] = {
+    const initial: GroupsFile = {
       groups: {},
-      memberships: {},
+      hash: "",
     };
-  } else {
-    // ensure missing fields are restored
-    file.users[userId].groups ??= {};
-    file.users[userId].memberships ??= {};
+    fs.writeFileSync(GROUPS_PATH, JSON.stringify(initial, null, 2), "utf-8");
   }
 }
 
+/* ---------- throttled save ---------- */
 
-//Just delayedSave but duplicated in file to update data during the timer
 const timers: Record<string, NodeJS.Timeout> = {};
 
 function throttledSave(filePath: string, delay = 5000): void {
-
-  if (timers[filePath]) {
-    return;
-  }
+  if (timers[filePath]) return;
 
   timers[filePath] = setTimeout(() => {
     try {
-      console.log(file.users["285113857326710784"].memberships);
-      fs.writeFileSync(
-        filePath,
-        JSON.stringify(file, null, 2),
-        "utf-8"
-      );
+      fs.writeFileSync(filePath, JSON.stringify(file, null, 2), "utf-8");
     } finally {
       delete timers[filePath];
     }
   }, delay);
-
 }
 
+/* ---------- load ---------- */
 
 export function loadAllGroups(): GroupsFile {
   ensureFile();
   return JSON.parse(fs.readFileSync(GROUPS_PATH, "utf-8"));
 }
 
-const file = loadAllGroups();
+const file: GroupsFile = loadAllGroups();
 
-// Refreshes the in-memory file object in case of bad data. Fix groups.json manually to clear it with this.
+/* ---------- reload (in-place) ---------- */
+
 export function reloadGroupsFile(): GroupsFile {
   const fresh = JSON.parse(fs.readFileSync(GROUPS_PATH, "utf-8")) as GroupsFile;
 
-  
-  Object.keys(file).forEach(key => delete file[key]); 
-  Object.assign(file, fresh); 
+  Object.keys(file).forEach(k => delete (file as any)[k]);
+  Object.assign(file, fresh);
 
   return file;
 }
-//reloadGroupsFile();
+
+/* ---------- save ---------- */
 
 export function saveAllGroups(): void {
-
   file.hash = createHash("sha1")
-  .update(JSON.stringify(file.users))
-  .digest("hex");
+    .update(JSON.stringify(file.groups))
+    .digest("hex");
 
   throttledSave(GROUPS_PATH);
-
 }
 
-export function getUserGroups(userId: string): UserGroups {
-
-    ensureUser(userId);
-    return file.users[userId];
-
-  }
-
-
-
-export function addGroup(userId: string, group: Omit<Group, "id">): UserGroups {
-
-  if (!userId) {
-    throw new Error("userId is undefined");
-  }
-
-
-  ensureUser(userId);
-
-  const id = randomUUID();
-
-  file.users[userId].groups[id] = {
-    id,
-    name: group.name,
-    individual_members: {},
-    discord_roles: {},
-  };
-
-  saveAllGroups();
-  return file.users[userId];
-}
-
-export function updateMemberships(userId: string, newMemberships: Record<string, UserGroupMembership>): GroupsFile {
-
-  if (!userId) {
-    throw new Error("userId is undefined");
-  }
-
-  ensureUser(userId);
-  file.users[userId].memberships = newMemberships;
-  saveAllGroups();
-
-  return file;
-};
-
-export function updateGroup(userId: string, groupId: string, updates: Partial<Group>): GroupsFile {
-
-  if (!userId) {
-    throw new Error("userId is undefined");
-  }
-
-  const user = file.users[userId];
-
-  if (!user || !user.groups[groupId]) {
-    throw new Error(`Group ${groupId} does not exist`);
-  }
-
-  const group = user.groups[groupId];
-
-  user.groups[groupId] = {
-    ...group,
-    ...updates,
-    id: groupId,
-  };
-
-  saveAllGroups();
-  return user;
-}
-
-export function deleteGroup(userId: string, groupId: string): UserGroups {
-
-  if (!userId) {
-    throw new Error("userId is undefined");
-  }
-
-  const user = file.users[userId];
-
-  if (!user || !user.groups[groupId]) {
-    throw new Error(`Group ${groupId} does not exist`);
-  }
-
-  delete user.groups[groupId];
-
-  saveAllGroups();
-  return user;
-}
+/* ---------- getters ---------- */
 
 export function getGroupsFile(): GroupsFile {
   return file;
 }
 
+export function getUsersGroups(userId: string): GroupsFile {
+  const userGroups: GroupsFile = file.groups
+    ? {
+        groups: Object.fromEntries(
+          Object.entries(file.groups).filter(([_, group]) => group.creator === userId)
+        ),
+        hash: file.hash,
+      }
+    : {
+        groups: {},
+        hash: "",
+      };
 
+  return userGroups;
+}
+
+export function getGroup(groupId: string): Group | undefined {
+  return file.groups[groupId];
+}
+
+/* ---------- group mutation ---------- */
+
+export function addGroup(
+  creator: string,
+  group: Omit<Group, "id" | "creator">
+): Group {
+  if (!creator) throw new Error("creator is undefined");
+
+  const id = randomUUID();
+
+  file.groups[id] = {
+    id,
+    name: group.name,
+    creator,
+    individual_members: group.individual_members ?? {},
+    discord_roles: group.discord_roles ?? [],
+    memberships: [],
+    permissions: group.permissions ?? {},
+  };
+
+  saveAllGroups();
+  return file.groups;
+}
+
+export function updateGroup(
+  userId: string,
+  groupId: string,
+  updates: Partial<Group>
+): Group {
+  const group = file.groups[groupId];
+  if (!group) throw new Error(`Group ${groupId} does not exist`);
+
+  if (group.creator !== userId) {
+    throw new Error("Forbidden");
+  }
+
+  file.groups[groupId] = {
+    ...group,
+    ...updates,
+    id: groupId,          // protect invariants
+    creator: group.creator,
+  };
+
+  saveAllGroups();
+  return getUsersGroups(userId);
+}
+
+export function deleteGroup(userId: string, groupId: string): void {
+  if (!file.groups[groupId]) {
+    throw new Error(`Group ${groupId} does not exist`);
+  }
+
+  if (file.groups[groupId].creator !== userId) {
+    throw new Error("Forbidden");
+  }
+
+  delete file.groups[groupId];
+  saveAllGroups();
+}
+
+/* ---------- memberships ---------- */
+
+export function updateGroupMemberships(
+  groupId: string,
+  memberships: GroupMembership[]
+): Group {
+  const group = file.groups[groupId];
+  if (!group) throw new Error(`Group ${groupId} does not exist`);
+
+  group.memberships = memberships;
+  saveAllGroups();
+  return group;
+}
+
+export function clearGroupMemberships(groupId: string): void {
+  const group = file.groups[groupId];
+  if (!group) throw new Error(`Group ${groupId} does not exist`);
+
+  group.memberships = [];
+  saveAllGroups();
+}

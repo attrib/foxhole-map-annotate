@@ -19,7 +19,7 @@
             <div class="col-12 col-md-3 border-end border-2">
                 <h4>My Groups</h4>
                 <ul class="list-group overflow-auto" id="group-editor"></ul>
-                <button class="btn btn-primary mt-3" id="new-group-btn" data-target="create" type="button">
+                <button class="btn btn-primary mt-3" id="new-group-btn" type="button">
                 + New Group
                 </button>
             </div>
@@ -28,17 +28,18 @@
             <div class="col-12 col-md-6">
                 <div class="tab-content">
                     <!-- Create group pane -->
-                    <div class="group-panel" id="create-group" data-panel="create">
+                    <div class="group-panel" id="create-group" role="tabpanel">
                         <h4>New Group</h4>
                         <form id="create-group-form">
                             <div class="mb-3">
                                 <label for="group-name" class="form-label">Group Name</label>
                                 <input type="text" class="form-control" id="group-name">
-                                <span id="new-group-name-error" class="input-error-text" style="display: none;">
+                                <span id="new-group-name-error" class="input-error-text d-none">
                                     A group with this name already exists.
                                 </span>
                             </div>
                             <button type="submit" class="btn btn-success" id="create-group-btn">Create Group</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -52,7 +53,7 @@
         <div class="mb-3">
             <label for="group-name" class="form-label">Group Name</label>
             <input type="text" class="form-control" id="group-name" required>
-            <span id="existing-group-name-error" class="input-error-text" style="display: none;">
+            <span id="existing-group-name-error" class="input-error-text d-none">
                 A group with this name already exists.
             </span>
         </div>

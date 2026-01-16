@@ -1,78 +1,106 @@
 import discord from "../discord.js";
-import { saveAllGroups, updateMemberships, getGroupsFile } from "./saveGroups.ts";
-import type {GroupsFile, Group, UserGroupMembership} from "../lib/Groups/types.ts";
+import { getGroupsFile, saveAllGroups } from "./saveGroups.ts";
+import type { GroupMembership } from "../lib/Groups/types.ts";
 import config from "../config.js";
-import { get } from "node:http";
 
-const MEMBERSHIP_TTL = 60000; // 1 minute
+const MEMBERSHIP_TTL = 60_000; // 1 minute
+
+/* ---------- entry ---------- */
 
 export async function refreshMembershipsIfNeeded(session) {
   const userId = session.userId;
-  const groupsFile = getGroupsFile();
-
   if (!userId) return;
 
-  const user = groupsFile.users[userId];
-
-  if (!user) return;
-
+  const file = getGroupsFile();
   const now = Date.now();
 
-  //Implement a if needed check based on ttl but also if memberships get deleted
+  let needsRefresh = false;
 
-  await recomputeMemberships(session, groupsFile);
-}
+  for (const group of Object.values(file.groups)) {
+    const membership = group.memberships?.find(m => m.userId === userId);
 
-async function recomputeMemberships(session, groupsFile) {
-  const userId = session.userId;
-  console.log("Recomputing memberships for user", userId);
-  if (!userId) {
-    throw new Error("userId is undefined");
+    if (!membership) {
+      needsRefresh = true;
+      break;
+    }
+
+    if (now - membership.verifiedAt > MEMBERSHIP_TTL) {
+      needsRefresh = true;
+      break;
+    }
   }
 
+  if (!needsRefresh) return;
+
+  await recomputeMemberships(session, file);
+}
+
+/* ---------- recompute ---------- */
+
+async function recomputeMemberships(session, file) {
+  const userId = session.userId;
+  if (!userId) throw new Error("userId is undefined");
+
+  console.log("Recomputing memberships for user", userId);
+
   const guildRoles = await fetchUserDiscordRoles(session);
+  const now = Date.now();
 
-  const memberships = {};
+  for (const group of Object.values(file.groups)) {
+    group.memberships ??= [];
 
-  for (const groupOwner of Object.values(groupsFile.users)) {
-    for (const group of Object.values(groupOwner.groups)) {
-      for (const userEntry of Object.values(group.individual_members)) {
+    // remove old membership for this user
+    group.memberships = group.memberships.filter(m => m.userId !== userId);
 
-        if (userId === userEntry.id) {
-          console.log("Adding individual membership for group", group.id);
-          memberships[group.id] = {
-            groupId: group.id,
-            source: "discord",
-            verifiedAt: Date.now(),
-          };
+    let isMember = false;
+
+    /* ----- individual members ----- */
+    if (group.individual_members) {
+      for (const member of Object.values(group.individual_members)) {
+        if (member.id === userId) {
+          isMember = true;
           break;
         }
       }
+    }
 
-      if (memberships[group.id]) continue;
-
+    /* ----- discord roles ----- */
+    if (!isMember && group.discord_roles && guildRoles) {
       for (const roleEntry of Object.values(group.discord_roles)) {
         const rolesInGuild = guildRoles[roleEntry.server];
         if (!rolesInGuild) continue;
 
         if (rolesInGuild.includes(roleEntry.role)) {
-          memberships[group.id] = {
-            groupId: group.id,
-            source: "discord",
-            verifiedAt: Date.now(),
-          };
+          isMember = true;
           break;
         }
       }
     }
+
+    /* ----- apply membership ----- */
+    if (isMember) {
+      const membership: GroupMembership = {
+        userId,
+        source: "discord",
+        verifiedAt: now,
+        membershipStale: false,
+        discord: {
+          guildId: "",      // optional: populate if needed
+          roleIds: [],
+        },
+      };
+
+      group.memberships.push(membership);
+    }
   }
 
-  console.log("Old:", groupsFile.users, "Memberships computed:", memberships);
-  updateMemberships(userId, memberships);
+  saveAllGroups();
 }
 
+/* ---------- discord ---------- */
+
 async function fetchUserDiscordRoles(session) {
-  const rolesByGuild = {};
+  const rolesByGuild: Record<string, string[]> = {};
 
   for (const guildId of Object.keys(config.config.access.discords)) {
     const info = await discord.getGuildInformation(session, guildId);

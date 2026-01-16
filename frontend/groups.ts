@@ -1,336 +1,321 @@
-import { render } from "nunjucks";
 import { blinkInput } from "./tools/errorBlink";
-import type {UserGroups, Group} from "../lib/Groups/types.ts";
-import { set } from "ol/transform";
+import type { Group } from "../lib/Groups/types.ts";
+
+/* =======================
+   Groups UI Controller
+======================= */
 
 class Groups {
+  private groupsData: any;
 
-    constructor() {
-        this.init();
-        this.bindUI();
+  constructor() {
+    this.init();
+    this.bindUI();
+  }
+
+  /* =======================
+     Init & Data
+  ======================= */
+
+  async init() {
+    this.groupsData = await this.loadGroups();
+    this.renderGroups();
+  }
+
+  async loadGroups() {
+    const res = await fetch("/api/groups");
+    return res.json();
+  }
+
+  /* =======================
+     Rendering
+  ======================= */
+
+  renderGroups() {
+    if (!this.groupsData) return;
+
+    const list = document.getElementById("group-editor")!;
+    const panels = document.querySelector(".tab-content")!;
+    const template = document.getElementById("group-editor-template") as HTMLTemplateElement;
+
+    const activeGroupId = this.getActiveGroupId();
+
+    list.innerHTML = "";
+    panels.querySelectorAll(".tab-pane[data-group-id]").forEach(p => p.remove());
+
+    for (const group of Object.values(this.groupsData.groups)) {
+      const button = this.createGroupButton(group);
+      const panel = this.createGroupPanel(group, template);
+
+      list.appendChild(button);
+      panels.appendChild(panel);
     }
 
-    async init() {
-        this.groupsData = await this.loadGroups();
-        this.renderGroups();
+    if (activeGroupId) {
+      document
+        .querySelector<HTMLElement>(`[data-bs-target="#group-${activeGroupId}"]`)
+        ?.click();
     }
 
-    async loadGroups() {
-        const res = await fetch("/api/groups");
-        return res.json();
+    console.log("Groups rendered");
+  }
+
+  getActiveGroupId(): string | null {
+    const active = document.querySelector<HTMLElement>(
+      "#group-editor .list-group-item.active"
+    );
+    return active?.dataset.bsTarget?.replace("#group-", "") ?? null;
+  }
+
+  /* =======================
+     Group Button
+  ======================= */
+
+  createGroupButton(group: Group): HTMLButtonElement {
+    const btn = document.createElement("button");
+    btn.className = "list-group-item list-group-item-action groupList";
+    btn.textContent = group.name;
+    btn.type = "button";
+    btn.dataset.bsToggle = "list";
+    btn.dataset.bsTarget = `#group-${group.id}`;
+
+    btn.addEventListener("click", () => {
+      document.getElementById("create-group")?.classList.remove("active");
+    });
+
+    return btn;
+  }
+
+  /* =======================
+     Group Panel
+  ======================= */
+
+  createGroupPanel(group: Group, template: HTMLTemplateElement): HTMLElement {
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
+    const root = fragment.querySelector(".tab-pane") as HTMLElement;
+
+    root.id = `group-${group.id}`;
+    root.dataset.groupId = group.id;
+
+    this.setupGroupName(group, root);
+    this.setupMemberControls(group, root);
+    this.setupRoleControls(group, root);
+    this.setupDeleteGroup(group, root);
+
+    this.renderGroupMembers(group, root);
+    this.renderGroupRoles(group, root);
+
+    return root;
+  }
+
+  setupGroupName(group: Group, root: HTMLElement) {
+    const nameInput = root.querySelector<HTMLInputElement>("#group-name")!;
+    const title = root.querySelector("h4")!;
+
+    nameInput.value = group.name;
+    title.textContent = group.name;
+
+    nameInput.addEventListener("blur", async () => {
+      const newName = nameInput.value.trim();
+      if (!this.validateGroupName(newName, group, nameInput, root)) return;
+
+      await this.updateGroup(group.id, { name: newName });
+      title.textContent = newName;
+    });
+  }
+
+  setupMemberControls(group: Group, root: HTMLElement) {
+    const addBtn = root.querySelector("#add-member-btn")!;
+    const memberId = root.querySelector<HTMLInputElement>("#add-member")!;
+    const memberNote = root.querySelector<HTMLInputElement>("#add-member-note")!;
+
+    addBtn.addEventListener("click", async () => {
+      const memberIdVal = memberId.value.trim();
+      if (!memberIdVal) return;
+
+      await this.updateGroup(group.id, {
+        individual_members: {
+          ...(this.groupsData.groups[group.id].individual_members ?? {}),
+          [memberIdVal]: { id: memberIdVal, username: memberNote.value.trim() },
+        },
+      });
+      memberId.value = "";
+      memberNote.value = "";
+      this.renderGroupMembers(this.groupsData.groups[group.id], root);
+    });
+  }
+
+  setupRoleControls(group: Group, root: HTMLElement) {
+    const addBtn = root.querySelector("#add-role-btn")!;
+    const roleId = root.querySelector<HTMLInputElement>("#add-role")!;
+    const serverId = root.querySelector<HTMLInputElement>("#add-server")!;
+    const roleNote = root.querySelector<HTMLInputElement>("#add-role-note")!;
+    addBtn.addEventListener("click", async () => {
+      const roleIdVal = roleId.value.trim();
+      const serverIdVal = serverId.value.trim();
+      if (!roleIdVal || !serverIdVal) return;
+        await this.updateGroup(group.id, {
+        discord_roles: {
+          ...(this.groupsData.groups[group.id].discord_roles ?? {}),
+          [roleIdVal]: {
+            role: roleIdVal,
+            server: serverIdVal,
+            info: roleNote.value.trim(),
+            },
+        },
+      });
+        roleId.value = "";
+        serverId.value = "";
+        roleNote.value = "";
+        this.renderGroupRoles(this.groupsData.groups[group.id], root);
+    });
+  }
+  
+  validateGroupName(
+    name: string,
+    group: Group,
+    input: HTMLInputElement,
+    root: HTMLElement
+  ): boolean {
+    if (!name || name === group.name) return false;
+
+    const exists = Object.values(this.groupsData.groups).some(
+      g => g.name.toLowerCase() === name.toLowerCase() && g.id !== group.id
+    );
+
+    if (exists) {
+      blinkInput(input);
+      root.querySelector<HTMLElement>("#existing-group-name-error")!.style.display = "inline";
+      return false;
     }
 
-    renderGroups() {
-        if (!this.groupsData) return;
+    return true;
+  }
 
-        let activeGroupId = null;
+  /* =======================
+     Members
+  ======================= */
 
-        function updateActiveButton() {
-            const activeButton = document.querySelector('#group-editor .list-group-item.active') as HTMLElement | null;
-            if (activeButton) {
-                activeGroupId = activeButton.getAttribute('data-bs-target')?.replace('#group-', '') || null;
-            }
-        }
-        updateActiveButton();
+  renderGroupMembers(group: Group, root: HTMLElement) {
+    const list = root.querySelector("#member-list")!;
+    list.innerHTML = "";
 
-        const list = document.getElementById('group-editor');
-        const panels = document.querySelector(".tab-content");
-        const template = document.getElementById("group-editor-template") as HTMLTemplateElement;
-        list.innerHTML = '';
-        panels.querySelectorAll(".tab-pane[data-group-id]").forEach(p => p.remove());
+    for (const [id, member] of Object.entries(group.individual_members ?? {})) {
+      const item = this.createMemberItem(group, id, member?.username, root);
+      list.appendChild(item);
+    }
+  }
 
-        for (const id in this.groupsData.groups) {
-            const group = this.groupsData.groups[id];
+  createMemberItem(group: Group, id: string, username?: string, root?: HTMLElement) {
+    const template = document.getElementById("member-list-item-template") as HTMLTemplateElement;
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
 
-            // Left side group list
-            const btn = document.createElement('button');
-            btn.className = 'list-group-item list-group-item-action groupList';
-            btn.textContent = group.name;
-            btn.setAttribute('data-bs-toggle', 'list');
-            btn.setAttribute('data-bs-target', `#group-${group.id}`);
-            btn.type = 'button';
-            btn.addEventListener('click', (e) => {
-                document.getElementById('create-group').classList.remove('active');
-            });
+    fragment.querySelector(".member-info")!.textContent =
+      `${username ? username + " - " : ""}${id}`;
 
-            list.appendChild(btn);
+    fragment.querySelector(".remove-member-btn")!
+      .addEventListener("click", () => this.removeMember(group, id, root!));
 
-            // Right side group editing panel
-            const panel = template.content.cloneNode(true) as DocumentFragment;
-            const root = panel.querySelector(".tab-pane")!;
-            root.id = `group-${group.id}`;
-            root.dataset.groupId = group.id;
+    return fragment;
+  }
 
-            const nameInput = root.querySelector("#group-name") as HTMLInputElement;
-            root.querySelector("h4")!.textContent = group.name;
-            nameInput.value = group.name;
+  async removeMember(group: Group, memberId: string, root: HTMLElement) {
+    delete this.groupsData.groups[group.id].individual_members[memberId];
+    await this.updateGroup(group.id, {
+      individual_members: this.groupsData.groups[group.id].individual_members,
+    });
+    this.renderGroupMembers(this.groupsData.groups[group.id], root);
+  }
 
-            //Save new group name on unfocus
-            nameInput.addEventListener('blur', async () => {
-                const newName = nameInput.value.trim();
+  /* =======================
+     Roles
+  ======================= */
 
-                if (newName === group.name) return;
+  renderGroupRoles(group: Group, root: HTMLElement) {
+    const list = root.querySelector("#role-list")!;
+    list.innerHTML = "";
 
-                if (newName === '') {
-                    nameInput.value = group.name;
-                    blinkInput(nameInput);
-                    setTimeout(() => {nameInput.classList.remove('input-error-blink');}, 3000);
-                    return;
-                }
+    for (const [roleId, role] of Object.entries(group.discord_roles ?? {})) {
+      const template = document.getElementById("role-list-item-template") as HTMLTemplateElement;
+      const fragment = template.content.cloneNode(true) as DocumentFragment;
 
-                if (Object.values(this.groupsData.groups).some(g => g.name.toLowerCase() === newName.toLowerCase() && g.id !== group.id)) {
-                    nameInput.value = group.name;
-                    blinkInput(nameInput);
-                    setTimeout(() => {nameInput.classList.remove('input-error-blink');}, 3000);
-                    root.querySelector('#existing-group-name-error')!.style.display = 'inline';
-                    setTimeout(() => {root.querySelector('#existing-group-name-error')!.style.display = 'none';}, 4000);
-                    return;
-                }
+      fragment.querySelector(".role-info")!.textContent =
+        `${role.info ? role.info + " - " : ""}Role ID: ${roleId} Server ID: ${role.server}`;
 
-                const newData = this.groupsData;
-                newData.groups[group.id].name = newName;
-                const res = await fetch(`/api/groups/${group.id}`, {
-                    method: "PUT",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({name: newName})
-                });
-                const groupsFile = await res.json();
-                this.groupsData = groupsFile;
-                //Updates UI without full re-render
-                root.querySelector("h4")!.textContent = newName;
-                btn.textContent = newName;
-            });
+      fragment.querySelector(".remove-role-btn")!
+        .addEventListener("click", () => this.removeRole(group, roleId, root));
 
-            this.renderGroupMembers(group, root);
-            this.renderGroupRoles(group, root);
+      list.appendChild(fragment);
+    }
+  }
 
-            root.querySelectorAll("button[data-group-id]").forEach(button => {
-                button.setAttribute('data-group-id', group.id);
-            });
+  async removeRole(group: Group, roleId: string, root: HTMLElement) {
+    delete this.groupsData.groups[group.id].discord_roles[roleId];
+    await this.updateGroup(group.id, {
+      discord_roles: this.groupsData.groups[group.id].discord_roles,
+    });
+    this.renderGroupRoles(this.groupsData.groups[group.id], root);
+  }
 
-            root.querySelector("#add-member-btn")!.addEventListener('click', async () => {
-                const memberIdInput = root.querySelector("#add-member") as HTMLInputElement;
-                const memberNoteInput = root.querySelector("#add-member-note") as HTMLInputElement;
-                const memberId = memberIdInput.value.trim();
-                const memberNote = memberNoteInput.value.trim();
+  /* =======================
+     Actions
+  ======================= */
 
-                if (memberId === '') {
-                    blinkInput(memberIdInput);
-                    setTimeout(() => {memberIdInput.classList.remove('input-error-blink');}, 3000);
-                    return;
-                }
-                //Reset red border if previously errored
-                if (memberIdInput.classList.contains('input-error-blink')) {
-                    memberIdInput.classList.remove('input-error-blink');
-                }
+  async updateGroup(groupId: string, body: object) {
+    const res = await fetch(`/api/groups/${groupId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    this.groupsData = await res.json();
+  }
 
-                const newData = this.groupsData;
+  setupDeleteGroup(group: Group, root: HTMLElement) {
+    root.querySelector("#delete-group-btn")!.addEventListener("click", async () => {
+      if (!confirm(`Delete "${group.name}" permanently?`)) return;
 
-                memberIdInput.value = '';
-                memberNoteInput.value = '';
+      const res = await fetch(`/api/groups/${group.id}`, { method: "DELETE" });
+      this.groupsData = await res.json();
+      this.renderGroups();
+    });
+  }
 
-                if (!memberId) return;
+  /* =======================
+     UI Binding
+  ======================= */
 
-                newData.groups[group.id].individual_members[memberId] = {id: memberId, username: memberNote || undefined};
-                const res = await fetch(`/api/groups/${group.id}`, {
-                    method: "PUT",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({individual_members: newData.groups[group.id].individual_members})
-                });
-                const groupsFile = await res.json();
-                this.groupsData = groupsFile;
-                this.renderGroupMembers(groupsFile.groups[group.id], root);
-            });
+  bindUI() {
+    document.getElementById("new-group-btn")!
+      .addEventListener("click", () => document.getElementById("create-group")?.classList.add("active"));
+    document.getElementById("create-group-form")!
+      .addEventListener("submit", async e => {
+        e.preventDefault();
+        await this.addGroup();
+      });
+  }
 
-            root.querySelector("#add-role-btn")!.addEventListener('click', async () => {
-                const serverIdInput = root.querySelector("#add-server") as HTMLInputElement;
-                const roleIdInput = root.querySelector("#add-role") as HTMLInputElement;  
-                const roleNoteInput = root.querySelector("#add-role-note") as HTMLInputElement;
-                const serverId = serverIdInput.value.trim();
-                const roleId = roleIdInput.value.trim();
-                const roleNote = roleNoteInput.value.trim();
-                //Error blink
-                if (serverId === '' || roleId === '') {
-                    if (roleId === '') {
-                        blinkInput(roleIdInput);
-                        setTimeout(() => {roleIdInput.classList.remove('input-error-blink');}, 3000);
-                    }
-                    if (serverId === '') {
-                        blinkInput(serverIdInput);
-                        setTimeout(() => {serverIdInput.classList.remove('input-error-blink');}, 3000);  
-                    }
-                    return;
-                }
-                //Reset red border if previously errored
-                root.querySelectorAll(".input-error-blink#add-server, .input-error-blink#add-role").forEach(el => {
-                    el.classList.remove('input-error-blink');
-                });
+  async addGroup() {
+    const input = document.getElementById("group-name") as HTMLInputElement;
+    const name = input.value.trim();
 
-                const newData = this.groupsData;
-
-                serverIdInput.value = '';
-                roleIdInput.value = '';
-                roleNoteInput.value = '';
-
-                if (!serverId || !roleId) return;
-
-                newData.groups[group.id].discord_roles[roleId] = {role: roleId, server: serverId, info: roleNote || undefined};
-                const res = await fetch(`/api/groups/${group.id}`, {
-                    method: "PUT",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({discord_roles: newData.groups[group.id].discord_roles})
-                });
-                const groupsFile = await res.json();
-                this.groupsData = groupsFile;
-
-                this.renderGroupRoles(groupsFile.groups[group.id], root);
-            });
-
-            root.querySelector("#delete-group-btn")!.addEventListener('click', async () => {
-                if (!confirm(`Are you sure you want to delete the group "${group.name}"? This action cannot be undone.`)) return;
-                const res = await fetch(`/api/groups/${group.id}`, {method: "DELETE"});
-                const groupsFile = await res.json();
-                this.groupsData = groupsFile;
-                this.renderGroups();
-            });
-
-            panels.appendChild(panel);
-        }
-        //Reselect previously active group after re-render
-        if (activeGroupId) {
-            const btn = document.querySelector(`#group-editor [data-bs-target="#group-${activeGroupId}"]`) as HTMLElement | null;
-            btn?.click();
-        }
-
-        console.log("Groups rendered");
-    };
-
-
-    renderGroupMembers(group: Group, root: HTMLElement) {
-
-        const memberList = root.querySelector("#member-list") as HTMLElement;
-        memberList.innerHTML = '';
-
-        for (const member_id in group.individual_members || []) {
-
-            const memberItemTemplate = document.getElementById("member-list-item-template") as HTMLTemplateElement;
-            const memberItem = memberItemTemplate.content.cloneNode(true) as DocumentFragment;
-            const member_name = group.individual_members[member_id]?.username;
-
-            (memberItem.querySelector(".member-info") as HTMLElement).textContent = (member_name ?  member_name + " - " : "") + member_id;
-            (memberItem.querySelector(".remove-member-btn") as HTMLButtonElement).dataset.memberId = member_id;
-
-            memberItem.querySelector(".remove-member-btn")!.addEventListener('click', async () => {
-                const newData = this.groupsData;
-                delete newData.groups[group.id].individual_members[member_id];
-
-                const res = await fetch(`/api/groups/${group.id}`, {
-                    method: "PUT",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({individual_members: newData.groups[group.id].individual_members})
-                });
-                const groupsFile = await res.json();
-                this.groupsData = groupsFile;
-
-                this.renderGroupMembers(groupsFile.groups[group.id], root);
-            });
-
-            memberList.appendChild(memberItem);
-        }
+    if (!name) {
+      blinkInput(input);
+      return;
     }
 
-    renderGroupRoles(group: Group, root: HTMLElement) {
+    const res = await fetch("/api/groups", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
 
-        const roleList = root.querySelector("#role-list") as HTMLElement;
-        roleList.innerHTML = '';
-
-        for (const discord_role in group.discord_roles || []) {
-            const roleItemTemplate = document.getElementById("role-list-item-template") as HTMLTemplateElement;
-            const roleItem = roleItemTemplate.content.cloneNode(true) as DocumentFragment;
-            const role_name = group.discord_roles[discord_role]?.info;
-
-            (roleItem.querySelector(".role-info") as HTMLElement).textContent = (role_name ? role_name + " - " : "") + "Role ID: " + discord_role + " Server ID: " + group.discord_roles[discord_role]?.server;
-            (roleItem.querySelector(".remove-role-btn") as HTMLButtonElement).dataset.roleId = discord_role;
-
-            roleItem.querySelector(".remove-role-btn")!.addEventListener('click', async () => {
-                const newData = this.groupsData;
-                delete newData.groups[group.id].discord_roles[discord_role];
-
-                const res = await fetch(`/api/groups/${group.id}`, {
-                    method: "PUT",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({discord_roles: newData.groups[group.id].discord_roles})
-                });
-                const groupsFile = await res.json();
-                this.groupsData = groupsFile;
-
-                this.renderGroupRoles(groupsFile.groups[group.id], root);
-            });
-
-            roleList.appendChild(roleItem);
-        }
-    }
-
-    async addGroup(data: Omit<Group, "id">) {
-
-        const name = data.name
-        const input = document.getElementById('group-name') as HTMLInputElement;
-
-        const errorSpan = document.getElementById('new-group-name-error');
-        errorSpan.style.display = 'none';
-
-        if (name === "") {
-            blinkInput(input);
-            setTimeout(() => {input.classList.remove('input-error-blink');}, 4000);
-            return;
-        }
-        //Check for existing group name
-        if (Object.values(this.groupsData.groups).some(g => g.name.toLowerCase() === name.toLowerCase())) {
-            blinkInput(input);
-            setTimeout(() => {input.classList.remove('input-error-blink');}, 4000);
-            errorSpan.style.display = 'inline';
-            setTimeout(() => {errorSpan.style.display = 'none';}, 4000);
-            return;
-        }
-
-        const res = await fetch("/api/groups", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)});
-        const groupsFile = await res.json();
-        this.groupsData = groupsFile;
-
-        this.renderGroups();
-    }
-
-    //Just used on startup
-    bindUI() {
-
-        const target = (document.getElementById('new-group-btn') as HTMLElement).dataset.target;
-        const groupsList = document.querySelectorAll("button.list-group-item.list-group-item-action.groupList");
-
-        document.getElementById('new-group-btn').addEventListener('click', () => {
-            if (!target) return;
-            this.showPanel(target);
-            document.querySelectorAll('.tab-pane.fade').forEach(element => {
-                element.classList.remove('active', 'show');
-            });
-            groupsList.forEach(element => {
-                element.classList.remove('active');
-            });
-        });
-
-        document.getElementById('create-group-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            this.addGroup({
-                name: (document.getElementById('group-name') as HTMLInputElement).value.trim()
-            });
-        });
-    }
-
-    showPanel(target: string) {
-        document.querySelectorAll('.group-panel').forEach(p =>
-        p.classList.toggle('active')
-        );
-    }
-
+    this.groupsData = await res.json();
+    this.renderGroups();
+  }
 }
+
+/* =======================
+   Start
+======================= */
 
 new Groups();
