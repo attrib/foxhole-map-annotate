@@ -117,7 +117,7 @@ class Groups {
 
     nameInput.addEventListener("blur", async () => {
       const newName = nameInput.value.trim();
-      if (!this.validateGroupName(newName, group, nameInput, root)) return;
+      if (!this.validateGroupName(newName, nameInput, root, group)) return;
 
       await this.updateGroup(group.id, { name: newName });
       title.textContent = newName;
@@ -132,6 +132,10 @@ class Groups {
     addBtn.addEventListener("click", async () => {
       const memberIdVal = memberId.value.trim();
       if (!memberIdVal) return;
+      if (!(/^\d{18}$/.test(memberIdVal))) {
+        blinkInput(memberId)
+        return
+      }
 
       await this.updateGroup(group.id, {
         individual_members: {
@@ -173,19 +177,19 @@ class Groups {
   
   validateGroupName(
     name: string,
-    group: Group,
     input: HTMLInputElement,
-    root: HTMLElement
+    root: HTMLElement, 
+    group: Group = undefined
   ): boolean {
-    if (!name || name === group.name) return false;
+    if (!name || name === group?.name) return false;
 
     const exists = Object.values(this.groupsData.groups).some(
-      g => g.name.toLowerCase() === name.toLowerCase() && g.id !== group.id
+      g => g.name.toLowerCase() === name.toLowerCase()
     );
 
     if (exists) {
       blinkInput(input);
-      root.querySelector<HTMLElement>("#existing-group-name-error")!.style.display = "inline";
+      root.querySelector<HTMLElement>(".input-error-text")!.classList.remove("d-none");
       return false;
     }
 
@@ -302,6 +306,8 @@ class Groups {
       blinkInput(input);
       return;
     }
+
+    if(!this.validateGroupName(name, input, document.getElementById("create-group-form"))) return
 
     const res = await fetch("/api/groups", {
       method: "POST",
