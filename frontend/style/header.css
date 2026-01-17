@@ -571,12 +571,13 @@ body > header {
   }
 
   &:has(#link-open:checked) {
-    & > .user-menu-links {
+    & > .user-menu-links.links {
+
       overflow: visible;
       grid-template-rows: 1fr;
     }
 
-    & > label {
+    & > label[for="links-open"] {
       background-color: light-dark(color-mix(in oklab, var(--foreground-light) 40%, var(--copy-light-lighter) 20%), color-mix(in oklab, var(--foreground-dark) 40%, var(--copy-dark-lighter) 20%));
 
       & > svg {
@@ -585,13 +586,20 @@ body > header {
     }
   }
 
+  > .hidden,
+  .user-menu-details > .hidden {
+    display: none;
+  }
+
+
   &:has(#groups-open:checked) {
-    & > .user-menu-links {
+    & > .user-menu-links.group {
+      display: grid;
       overflow: visible;
       grid-template-rows: 1fr;
     }
 
-    & > label {
+    & > label[for="groups-open"] {
       background-color: light-dark(color-mix(in oklab, var(--foreground-light) 40%, var(--copy-light-lighter) 20%), color-mix(in oklab, var(--foreground-dark) 40%, var(--copy-dark-lighter) 20%));
 
       & > svg {

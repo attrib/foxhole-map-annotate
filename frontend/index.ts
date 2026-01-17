@@ -17,6 +17,8 @@ import EditTools from "./mapEditTools.js";
 import Measure from "./measure.js";
 import StaticLayers from "./staticLayer.js";
 import Socket from "./webSocket.js";
+import { set } from "ol/transform.js";
+import {setUserGroups} from "./cmapUserGroups.js"
 
 const url = new URL(window.location);
 
@@ -115,6 +117,8 @@ const socket = new Socket();
 let lastClientVersion = null
 let lastFeatureHash = ''
 let realACL = null
+let userGroups = []
+let activeGroupId: string | null = localStorage.getItem('activeGroupId');
 const userDiscordId = document.getElementById('discord-username').dataset.userId
 const discordId = ref(null)
 const adminAccess = ref(false)
@@ -137,6 +141,16 @@ socket.on('init', (data) => {
     console.log('Version change detected, reloading page')
     window.location = '/'
   }
+  userGroups = data.userGroups || []
+  setUserGroups(userGroups, activeGroupId, (newGroupId) => {
+    activeGroupId = newGroupId
+    localStorage.setItem('activeGroupId', newGroupId ?? '')
+
+    socket.send('setActiveGroup', {
+      groupId: newGroupId
+    })
+    console.log("Set active group ID to:", activeGroupId)
+  });  
 })
 
 createApp(Draft, {
@@ -343,6 +357,9 @@ socket.on('open', () => {
     featureHash: lastFeatureHash,
     warVersion: warFeatures.version,
   })
+  socket.send('setActiveGroup', {
+    groupId: activeGroupId
+  })
 })
 socket.on('close', () => {
   disconnectedWarning.style.display = 'block'
@@ -367,3 +384,4 @@ function prepareWarTimer() {
 if (document.getElementById('resistance').style.display === '') {
   prepareWarTimer()
 }
+

@@ -42,7 +42,7 @@ class Groups {
 
     list.innerHTML = "";
     panels.querySelectorAll(".tab-pane[data-group-id]").forEach(p => p.remove());
-
+    console.log(this.groupsData.groups);
     for (const group of Object.values(this.groupsData.groups)) {
       const button = this.createGroupButton(group);
       const panel = this.createGroupPanel(group, template);

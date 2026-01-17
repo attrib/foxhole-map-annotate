@@ -34,6 +34,7 @@ import {
 import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import Discord from "./lib/discord.js";
+import { getGroupsFile } from "./lib/Groups/saveGroups.ts";
 
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 const publicWss = new WebSocketServer({
@@ -66,6 +67,8 @@ let cachedQueue = {
   queues: {},
   ratio: 0.5,
 }
+
+const groups = getGroupsFile().groups;
 
 if (fs.existsSync(resolve('data/queue.json'))) {
   fs.watch(resolve('data/queue.json'), (event) => {
@@ -107,6 +110,8 @@ wss.on('connection', function (ws, request) {
     const username = request.session.user;
     const userId = request.session.userId;
     let discordId = request.session.discordId ?? null;
+    /** @type {?string} */
+    let activeGroupId = null;
 
     // Casting here because it must be set
     /** @type{Access} */
@@ -147,7 +152,6 @@ wss.on('connection', function (ws, request) {
         loginChecker.set(userId, setTimeout(loginCheckFunction, 3_600_000 - (Date.now() - lastLoginCheck)))
       }
     }
-
     ws.send(JSON.stringify(/** @type{PrivateWebSocketOutgoingTraffic<"init">} */ ({
       type: 'init',
       data: {
@@ -156,6 +160,7 @@ wss.on('connection', function (ws, request) {
         warStatus: warapi.warData.status,
         featureHash: features.hash,
         discordId,
+        userGroups: Object.values(groups).filter(group => group.memberships?.includes(userId) ?? false),
       }
     })));
 
@@ -202,6 +207,7 @@ wss.on('connection', function (ws, request) {
           feature.properties.user = username
           feature.properties.userId = userId
           feature.properties.discordId = discordId
+          feature.properties.groupId = activeGroupId ?? undefined
           feature.properties.time = (new Date()).toISOString()
           feature.properties.notes = sanitizeHtml(feature.properties.notes, sanitizeOptions)
           if (feature.properties.color) {
@@ -277,6 +283,19 @@ wss.on('connection', function (ws, request) {
           saveFeatures(features)
           sendUpdateFeature('delete', featureToDelete, oldHash, features.hash)
           break;
+        
+        case 'setActiveGroup': {
+          const { groupId } = content.data;
+
+          if (
+            groupId === null ||
+            groups[groupId]?.memberships?.includes(userId)
+          ) {
+            activeGroupId = groupId;
+            console.log("Set active group ID to:", activeGroupId)
+          }
+          break;
+        }
 
         case 'ping':
           ws.send(JSON.stringify({type: 'pong'}))
@@ -617,6 +636,20 @@ export default function startServer (server) {
   });
 }
 
+
+/**
+ * User Group
+ * 
+ * @typedef {object} UserGroup
+ * @property {string} id
+ * @property {string} name
+ */
+/**
+ * Set Active Group message
+ * 
+ * @typedef {object} SetActiveGroupMessage
+ * @property {?string} groupId
+ */
 /**
  * Feature update action
  * 
@@ -672,6 +705,7 @@ export default function startServer (server) {
  * @property {WarEvent} warStatus
  * @property {string} featureHash
  * @property {?string} discordId
+ * @property {UserGroup[]} userGroups
  */
 
 /**
@@ -756,6 +790,7 @@ export default function startServer (server) {
  * 
  * @typedef {object} PrivateIncomingTypes
  * @property {PrivateIncomingInit} init
+ *  @property {SetActiveGroupMessage} setActiveGroup
  * @property {never} getAllFeatures
  * @property {never} getConquerStatus
  * @property {never} getWarFeatures

@@ -6,6 +6,7 @@ import type {
   Group,
   GroupMembership,
 } from "../lib/Groups/types.ts";
+import { get } from "node:http";
 
 const GROUPS_PATH = resolve("data/groups.json");
 
@@ -109,12 +110,12 @@ export function addGroup(
     creator,
     individual_members: group.individual_members ?? {},
     discord_roles: group.discord_roles ?? [],
-    memberships: [],
+    memberships: [creator],
     permissions: group.permissions ?? {},
   };
 
   saveAllGroups();
-  return file.groups;
+  return getUsersGroups(creator);
 }
 
 export function updateGroup(
@@ -151,6 +152,7 @@ export function deleteGroup(userId: string, groupId: string): void {
 
   delete file.groups[groupId];
   saveAllGroups();
+  return getUsersGroups(userId);
 }
 
 /* ---------- memberships ---------- */
