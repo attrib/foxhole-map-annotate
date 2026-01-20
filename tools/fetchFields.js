@@ -6,7 +6,7 @@ import icons from "../data/icons.json";
 import warapi from "../lib/warapi.js";
 import regions from "../public/regions.json";
 
-const extent = [-2046, 1777]
+const extent = [-2042, 1776]
 const deleteFields = []
 for (const i in icons.features) {
   const feature = icons.features[i]

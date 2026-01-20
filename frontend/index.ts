@@ -34,11 +34,11 @@ const map = new Map({
           preload: Infinity,
           // opacity: 0.7,
           source: new TileImage({
-            attributions: '<a href="https://knight-of-science.itch.io/improved-map-mod-kos-edit">Improved Map Mod (Knight of Science Edit)</a> - <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
+            attributions: '<a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>', // hopefully soon again <a href="https://knight-of-science.itch.io/improved-map-mod-kos-edit">Improved Map Mod (Knight of Science Edit)</a>
             tileGrid: new TileGrid({
-              extent: [0,-12432,14336,0],
+              extent: [0,-12432,20480,0],
               origin: [0,-12432],
-              resolutions: [64,32,16,8,4,2,1],
+              resolutions: [128,64,32,16,8,4,2,1],
               tileSize: [256, 256]
             }),
             tileUrlFunction: function (tileCoord) {

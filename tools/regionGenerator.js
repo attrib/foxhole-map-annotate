@@ -84,26 +84,41 @@ lastCoords = leftUp(region.features[13].geometry.coordinates[0])
 names = [{notes: 'Nevish Line', id: 'NevishLineHex'}, {notes: 'Farranac Coast', id: 'FarranacCoastHex'}, {notes: 'Westgate', id: 'WestgateHex'}, {notes: 'Origin', id: 'OriginHex'}];
 goDown(names, lastCoords)
 
-lastCoords = leftUp(region.features[18].geometry.coordinates[0])
-names = [{notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}, {notes: 'Fisherman\'s Row', id: 'FishermansRowHex'}, {notes: 'Stema Landing', id: 'StemaLandingHex'}];
+lastCoords = leftUp2(region.features[18].geometry.coordinates[0])
+names = [{notes: 'Kuura Strand', id: 'Airborne4Hex'}, {notes: 'The Gutter', id: 'Airborne5Hex'},  {notes: 'Fisherman\'s Row', id: 'FishermansRowHex'}, {notes: 'Stema Landing', id: 'StemaLandingHex'}];
+goDown(names, lastCoords)
+
+lastCoords = leftUp(region.features[22].geometry.coordinates[0])
+names = [{notes: 'Pari Peak', id: 'Airborne2Hex'}, {notes: 'Palantine Berm', id: 'Airborne3Hex'},  {notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}];
+goDown(names, lastCoords)
+
+lastCoords = leftUp(region.features[26].geometry.coordinates[0])
+names = [{notes: 'Olavi\'s Wake', id: 'Airborne1Hex'}];
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[3].geometry.coordinates[0])
 names = [{notes: 'Howl County', id: 'HowlCountyHex'}, {notes: 'Viper Pit', id: 'ViperPitHex'}, {notes: 'Marban Hollow', id: 'MarbanHollow'}, {notes: 'The Drowned Vale', id: 'DrownedValeHex'}, {notes: 'Shackled Chasm', id: 'ShackledChasmHex'}, {notes: 'Arcithia', id: 'AcrithiaHex'}];
 goDown(names, lastCoords)
 
-lastCoords = rightUp(region.features[25].geometry.coordinates[0])
+lastCoords = rightUp(region.features[30].geometry.coordinates[0])
 names = [{notes: 'Clanshead Valley', id: 'ClansheadValleyHex'}, {notes: 'Weathered Expanse', id: 'WeatheredExpanseHex'}, {notes: 'The Clahstra', id: 'ClahstraHex'}, {notes: 'Allod\'s Bight', id: 'AllodsBightHex'}, {notes: 'Terminus', id: 'TerminusHex'}];
 goDown(names, lastCoords)
 
-lastCoords = rightUp(region.features[31].geometry.coordinates[0])
+lastCoords = rightUp(region.features[36].geometry.coordinates[0])
 names = [{notes: 'Morgen\'s Crossing', id: 'MorgensCrossingHex'}, {notes: 'Stlican Shelf', id: 'StlicanShelfHex'}, {notes: 'Endless Shore', id: 'EndlessShoreHex'}, {notes: 'Reaver\'s Pass', id: 'ReaversPassHex'}];
 goDown(names, lastCoords)
 
-lastCoords = rightUp(region.features[36].geometry.coordinates[0])
-names = [{notes: 'Godcrofts', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'The Fingers', id: 'TheFingersHex'}];
+lastCoords = rightUp(region.features[41].geometry.coordinates[0])
+names = [{notes: 'Godcrofts', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'Wresta', id: 'Airborne6Hex'}, {notes: 'Ónyx', id: 'Airborne7Hex'}];
 goDown(names, lastCoords)
 
+lastCoords = rightUp(region.features[45].geometry.coordinates[0])
+names = [{notes: 'Lykos Isle', id: 'Airborne8Hex'}, {notes: 'The Fingers', id: 'TheFingersHex'}, {notes: 'Tyrant Foothills', id: 'Airborne9Hex'}];
+goDown(names, lastCoords)
+
+lastCoords = rightUp(region.features[50].geometry.coordinates[0])
+names = [{notes: 'Piper\'s Enclave', id: 'Airborne10Hex'}];
+goDown(names, lastCoords)
 
 const extend = [diffX + 2*diffX2, diffY]
 console.log('extend', extend)
@@ -111,6 +126,7 @@ console.log('extend', extend)
 const promises = []
 for (const reg of region.features) {
     promises.push(warapi.staticMap(reg.id).then((data) => {
+        if (data === null) return;
         for (const item of data.mapTextItems) {
             const id = idMap[item.mapMarkerType + item.text + reg.id] || crypto.randomUUID()
             region.features.push({
@@ -294,6 +310,24 @@ function leftUp(coords) {
     lastCoords[4][0] = lastCoords[0][0]
     lastCoords[5][0] = lastCoords[0][0] + diffX2
     return lastCoords;
+}
+
+function leftUp2(coords) {
+  let lastCoords = [[],[],[],[],[],[]]
+  lastCoords[0][1] = coords[5][1] + 2*diffY
+  lastCoords[1][1] = coords[5][1] + 2*diffY
+  lastCoords[3][1] = lastCoords[0][1] - diffY
+  lastCoords[4][1] = lastCoords[0][1] - diffY
+  lastCoords[2][1] = coords[3][1] + 2*diffY
+  lastCoords[5][1] = coords[3][1] + 2*diffY
+
+  lastCoords[0][0] = coords[5][0] + diffX
+  lastCoords[1][0] = coords[5][0]
+  lastCoords[2][0] = coords[4][0]
+  lastCoords[3][0] = lastCoords[1][0]
+  lastCoords[4][0] = lastCoords[0][0]
+  lastCoords[5][0] = lastCoords[0][0] + diffX2
+  return lastCoords;
 }
 
 function rightUp(coords) {

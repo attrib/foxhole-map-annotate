@@ -9,7 +9,7 @@ const newIconTypes = [27];
 
 const regions = JSON.parse(fs.readFileSync(path.resolve('public/static.json'), 'utf8'))
 
-const extent = [-2046, 1777]
+const extent = [-2042, 1776]
 const promises = []
 
 const knownFeatures = [];
