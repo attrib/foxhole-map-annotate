@@ -18,7 +18,7 @@ const NO_CLOCK = [...NO_USER_INFO, 'sign']
 
 const RADIUS = {
   stormCannon: {
-    MapIconIntelCenter: 2000,
+    MapIconIntelCenter: 2500,
     MapIconStormCannon: 1000,
     MapIconRocketSite: 2000,
     MapIconRocketSiteWithRocket: 2000,
@@ -39,14 +39,14 @@ const RADIUS = {
     MapIconCoastalGun: 200,
   },
   base: {
-    friendly_planned_intel_center: 2000,
+    friendly_planned_intel_center: 2500,
     friendly_planned_storm_cannon: 1000,
     base_obs: 180,
     base_obs_t2: 130,
     EmplacementHouse: 100,
   },
   'facility-enemy': {
-    enemy_planned_intel_center: 2000,
+    enemy_planned_intel_center: 2500,
     enemy_planned_storm_cannon: 1000,
     enemy_base_obs: 180,
     enemy_base_obs_t2: 130,
