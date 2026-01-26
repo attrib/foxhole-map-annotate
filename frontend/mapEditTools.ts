@@ -15,6 +15,8 @@ import Sidebar from "./tools/sidebar.js";
 import SidebarArty from "./tools/sidebarArty.js";
 import Rectangle from "./tools/rectangle.js";
 import Move from "./tools/move.js";
+import AirRange from "./tools/airrange";
+import SidebarAirRange from "./tools/sidebarAirRange";
 
 export class EditTools {
   EVENT_EDIT_MODE_ENABLED = 'editModeEnabled';
@@ -106,6 +108,7 @@ export class EditTools {
 
     this.sidebar = new Sidebar(this, map)
     this.sidebarArty = new SidebarArty(this, map)
+    this.sidebarAirRange = new SidebarAirRange(this, map)
     this.line = new Line(this, map)
     this.scissor = new Scissor(this, map)
     this.merge = new Merge(this, map)
@@ -114,6 +117,7 @@ export class EditTools {
     this.select = new Select(this, map)
     this.edit = new Edit(this, map)
     this.arty = new Arty(this, map)
+    this.airrange = new AirRange(this, map)
     this.rectangle = new Rectangle(this, map)
     this.move = new Move(this, map)
   }
@@ -133,6 +137,7 @@ export class EditTools {
       this.map.removeControl(this.edit.control)
     }
     this.map.addControl(this.arty.control)
+    this.map.addControl(this.airrange.control)
     this.sidebar.setAcl(acl)
   }
 
