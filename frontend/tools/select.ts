@@ -26,6 +26,7 @@ const RADIUS = {
     MapIconRocketGroundZero: 80,
     MapiIconAircraftRunwayT1: 3500,
     MapiIconAircraftRunwayT2: 3500,
+    MapIconFortLargeRadar: 500, // AirRadar
   },
   town: {
     MapIconObservationTower: 500,
