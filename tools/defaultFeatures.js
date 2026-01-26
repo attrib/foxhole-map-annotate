@@ -10,7 +10,7 @@ defaultFeature.features.forEach((feature) => {
   delete feature.properties.muserId;
   delete feature.properties.time;
   feature.geometry.coordinates[0].map((coord) => {
-    coord[0] = coord[0] + 2042;
+    coord[0] = coord[0] + 1021;
   })
 });
 

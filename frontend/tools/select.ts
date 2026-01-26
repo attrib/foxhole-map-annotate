@@ -24,6 +24,8 @@ const RADIUS = {
     MapIconRocketSiteWithRocket: 2000,
     MapIconRocketTarget: 80,
     MapIconRocketGroundZero: 80,
+    MapiIconAircraftRunwayT1: 3500,
+    MapiIconAircraftRunwayT2: 3500,
   },
   town: {
     MapIconObservationTower: 500,
@@ -515,13 +517,13 @@ class Select {
       const rtf1 = new Intl.RelativeTimeFormat('en', { style: 'short' });
       note += '<br>Targeting since ' + rtf1.format(((new Date(feature.get('lastChange')).getTime() - new Date().getTime()) / 3600000).toFixed(2), 'hour')
     }
-    if (feature.get('icon') === 'MapIconObservationTower') {
-      let angle = ((this.tools.staticLayer.sources['obsTower'].getFeatureById(feature.getId()).get('angle') + 15 + 360 + 90) * -1) % 360
-      if (angle < 0) {
-        angle += 360
-      }
-      note += '<br>Azimuth: ' + angle
-    }
+    // if (feature.get('icon') === 'MapIconObservationTower') {
+    //   let angle = ((this.tools.staticLayer.sources['obsTower'].getFeatureById(feature.getId()).get('angle') + 15 + 360 + 90) * -1) % 360
+    //   if (angle < 0) {
+    //     angle += 360
+    //   }
+    //   note += '<br>Azimuth: ' + angle
+    // }
     return note
   }
 
@@ -575,19 +577,19 @@ class Select {
       })
       newRadius.set('type', 'radius')
       newRadius.setId('radius-' + feature.getId())
-      if (feature.get('icon') === 'MapIconObservationTower') {
-        newRadius.setStyle(new Style({
-          stroke: new Stroke({
-            color: '#21252955',
-            lineDash: [261, 20],
-            width: 2,
-          }),
-          fill: new Fill({
-            color: '#21252922',
-
-          })
-        }))
-      }
+      // if (feature.get('icon') === 'MapIconObservationTower') {
+      //   newRadius.setStyle(new Style({
+      //     stroke: new Stroke({
+      //       color: '#21252955',
+      //       lineDash: [261, 20],
+      //       width: 2,
+      //     }),
+      //     fill: new Fill({
+      //       color: '#21252922',
+      //
+      //     })
+      //   }))
+      // }
       this.radiusSource.addFeature(newRadius)
     }
   }
