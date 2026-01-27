@@ -85,15 +85,15 @@ names = [{notes: 'Nevish Line', id: 'NevishLineHex'}, {notes: 'Farranac Coast', 
 goDown(names, lastCoords)
 
 lastCoords = leftUp2(region.features[18].geometry.coordinates[0])
-names = [{notes: 'Kuura Strand', id: 'Airborne4Hex'}, {notes: 'The Gutter', id: 'Airborne5Hex'},  {notes: 'Fisherman\'s Row', id: 'FishermansRowHex'}, {notes: 'Stema Landing', id: 'StemaLandingHex'}];
+names = [{notes: 'Kuura Strand', id: 'KuuraStrandHex'}, {notes: 'The Gutter', id: 'GutterHex'},  {notes: 'Fisherman\'s Row', id: 'FishermansRowHex'}, {notes: 'Stema Landing', id: 'StemaLandingHex'}];
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[22].geometry.coordinates[0])
-names = [{notes: 'Pari Peak', id: 'Airborne2Hex'}, {notes: 'Palantine Berm', id: 'Airborne3Hex'},  {notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}];
+names = [{notes: 'Pari Peak', id: 'PariPeakHex'}, {notes: 'Palantine Berm', id: 'PalantineBermHex'},  {notes: 'The Oarbreaker Isles', id: 'OarbreakerHex'}];
 goDown(names, lastCoords)
 
 lastCoords = leftUp(region.features[26].geometry.coordinates[0])
-names = [{notes: 'Olavi\'s Wake', id: 'Airborne1Hex'}];
+names = [{notes: 'Olavi\'s Wake', id: 'OlavisWakeHex'}];
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[3].geometry.coordinates[0])
@@ -109,15 +109,15 @@ names = [{notes: 'Morgen\'s Crossing', id: 'MorgensCrossingHex'}, {notes: 'Stlic
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[41].geometry.coordinates[0])
-names = [{notes: 'Godcrofts', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'Wresta', id: 'Airborne6Hex'}, {notes: 'Ónyx', id: 'Airborne7Hex'}];
+names = [{notes: 'Godcrofts', id: 'GodcroftsHex'}, {notes: 'Tempest Island', id: 'TempestIslandHex'}, {notes: 'Wresta', id: 'WrestaHex'}, {notes: 'Ónyx', id: 'OnyxHex'}];
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[45].geometry.coordinates[0])
-names = [{notes: 'Lykos Isle', id: 'Airborne8Hex'}, {notes: 'The Fingers', id: 'TheFingersHex'}, {notes: 'Tyrant Foothills', id: 'Airborne9Hex'}];
+names = [{notes: 'Lykos Isle', id: 'LykosIsleHex'}, {notes: 'The Fingers', id: 'TheFingersHex'}, {notes: 'Tyrant Foothills', id: 'TyrantFoothillsHex'}];
 goDown(names, lastCoords)
 
 lastCoords = rightUp(region.features[50].geometry.coordinates[0])
-names = [{notes: 'Piper\'s Enclave', id: 'Airborne10Hex'}];
+names = [{notes: 'Piper\'s Enclave', id: 'PipersEnclaveHex'}];
 goDown(names, lastCoords)
 
 const extend = [diffX + 2*diffX2, diffY]
