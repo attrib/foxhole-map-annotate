@@ -20,7 +20,7 @@ class SidebarArty {
       "max": 80, // MaxDistance
       "minAcc": 5.5, // ArtilleryAccuracyMinDist
       "maxAcc": 12.0, // ArtilleryAccuracyMaxDist
-      "offset": 2, // AccuracyRadius (from ammo)
+      "offset": 1, // AccuracyRadius (from ammo)
       "ammo": "Mortar Shell", // MortarAmmo
       "team": "N"
     },
@@ -29,7 +29,7 @@ class SidebarArty {
       "max": 80,
       "minAcc": 2.50,
       "maxAcc": 9.45,
-      "offset": 2,
+      "offset": 1,
       "ammo": "Mortar Shell", // MortarAmmo
       "team": "N"
     },
@@ -38,7 +38,7 @@ class SidebarArty {
       "max": 100,
       "minAcc": 2.5,
       "maxAcc": 14.5,
-      "offset": 2,
+      "offset": 1,
       "ammo": "Mortar Shell", // MortarAmmo
       "team": "N"
     },
@@ -47,7 +47,7 @@ class SidebarArty {
       "max": 250,
       "minAcc": 22.50,
       "maxAcc": 30,
-      "offset": 40,
+      "offset": 20,
       "ammo": "120mm", // LightArtilleryAmmo
       "team": "C"
     },
@@ -56,7 +56,7 @@ class SidebarArty {
       "max": 300,
       "minAcc": 25,
       "maxAcc": 35,
-      "offset": 40,
+      "offset": 20,
       "ammo": "120mm", // LightArtilleryAmmo
       "team": "W"
     },
@@ -65,7 +65,7 @@ class SidebarArty {
       "max": 200,
       "minAcc": 2.5,
       "maxAcc": 8.5,
-      "offset": 40,
+      "offset": 20,
       "ammo": "120mm", // LightArtilleryAmmo
       "team": "N"
     },
@@ -74,7 +74,7 @@ class SidebarArty {
       "max": 225,
       "minAcc": 2.5,
       "maxAcc": 8.5,
-      "offset": 40,
+      "offset": 20,
       "ammo": "120mm", // LightArtilleryAmmo
       "team": "C"
     },
@@ -119,7 +119,7 @@ class SidebarArty {
       "max": 575,
       "minAcc": 25,
       "maxAcc": 41.5,
-      "offset": 25, // works but guessed
+      "offset": 15, // works but guessed
       "ammo": "3C-HE", // HERocketAmmo
       "team": "C"
     },
@@ -128,7 +128,7 @@ class SidebarArty {
       "max": 500,
       "minAcc": 25,
       "maxAcc": 41.5,
-      "offset": 25, // works but guessed
+      "offset": 15, // works but guessed
       "ammo": "3C-HE", // HERocketAmmo
       "team": "C"
     },
@@ -137,7 +137,7 @@ class SidebarArty {
       "max": 350,
       "minAcc": 30,
       "maxAcc": 41.5,
-      "offset": 25, // works but guessed
+      "offset": 15, // works but guessed
       "ammo": "3C-HE", // HERocketAmmo
       "team": "W"
     },
@@ -146,7 +146,7 @@ class SidebarArty {
       "max": 500,
       "minAcc": 25, // needs source, just copied from skycaller
       "maxAcc": 37.5,  // needs source, just copied from skycaller
-      "offset": 25, // works but guessed
+      "offset": 15, // works but guessed
       "ammo": "3C-HE", // HERocketAmmo
       "team": "W"
     },
