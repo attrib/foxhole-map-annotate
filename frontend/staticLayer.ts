@@ -243,7 +243,7 @@ class StaticLayers {
       searchable: false,
     }))
     staticGroup.getLayers().push(new Vector({
-      title: 'Storm Cannons',
+      title: 'Storm Cannons / Airfields',
       source: this.sources.stormCannon,
       zIndex: 6,
       maxResolution: 6,
@@ -520,17 +520,17 @@ class StaticLayers {
       if (!(type in collections)) {
         collections[type] = []
       }
-      if (feature.get('icon') === 'MapIconObservationTower') {
-        const obsGeo = feature.getGeometry()
-        const obsFeature = new Feature({
-          id: feature.getId(),
-          type: 'obsTowerRadius',
-          geometry: new CircleGeo(obsGeo.getCoordinates(), 0.94 * 500),
-          angle: this.conquerStatus.features[feature.getId()]?.angle || 255,
-        })
-        obsFeature.setId(feature.getId())
-        collections.obsTower.push(obsFeature)
-      }
+      // if (feature.get('icon') === 'MapIconObservationTower') {
+      //   const obsGeo = feature.getGeometry()
+      //   const obsFeature = new Feature({
+      //     id: feature.getId(),
+      //     type: 'obsTowerRadius',
+      //     geometry: new CircleGeo(obsGeo.getCoordinates(), 0.94 * 500),
+      //     angle: this.conquerStatus.features[feature.getId()]?.angle || 255,
+      //   })
+      //   obsFeature.setId(feature.getId())
+      //   collections.obsTower.push(obsFeature)
+      // }
       if (feature.get('id') in this.conquerStatus.features) {
         const csFeature = this.conquerStatus.features[feature.get('id')]
         feature.set('icon', csFeature.icon, true)

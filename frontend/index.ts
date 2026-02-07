@@ -36,11 +36,11 @@ const map = new Map({
           preload: Infinity,
           // opacity: 0.7,
           source: new TileImage({
-            attributions: '<a href="https://knight-of-science.itch.io/improved-map-mod-kos-edit">Improved Map Mod (Knight of Science Edit)</a> - <a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>',
+            attributions: '<a href="https://www.foxholegame.com/" target="_blank">Siege Camp</a>', // hopefully soon again <a href="https://knight-of-science.itch.io/improved-map-mod-kos-edit">Improved Map Mod (Knight of Science Edit)</a>
             tileGrid: new TileGrid({
-              extent: [0,-12432,14336,0],
+              extent: [0,-12432,20480,0],
               origin: [0,-12432],
-              resolutions: [64,32,16,8,4,2,1],
+              resolutions: [128,64,32,16,8,4,2,1],
               tileSize: [256, 256]
             }),
             tileUrlFunction: function (tileCoord) {
@@ -55,7 +55,7 @@ const map = new Map({
     }),
   ],
   view: new View({
-    center: [url.searchParams.get('cx') ? parseFloat(url.searchParams.get('cx')) : 5625.500000, url.searchParams.get('cy') ? parseFloat(url.searchParams.get('cy')) : -6216.000000],
+    center: [url.searchParams.get('cx') ? parseFloat(url.searchParams.get('cx')) : 10015.50000, url.searchParams.get('cy') ? parseFloat(url.searchParams.get('cy')) : -5886.00000],
     resolution: url.searchParams.get('r') ? parseFloat(url.searchParams.get('r')) : 10.000000,
     minResolution: 0.5,
     maxResolution: 16,
