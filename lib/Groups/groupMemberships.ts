@@ -25,7 +25,7 @@ export async function recomputeMemberships(session, userId) {
     /* ----- individual members ----- */
     if (group.individual_members) {
       isMember = Object.values(group.individual_members)
-        .some(m => m.id === userId);
+        .some(m => m.userId === userId);
     }
 
     /* ----- discord roles ----- */
@@ -62,8 +62,8 @@ export async function recomputeMembershipsForGroup(session, groupId: string) {
 
   // individual members
   for (const member of Object.values(group.individual_members ?? {})) {
-    if (typeof member.id === "string" && member.id.length > 0) {
-      affectedUsers.add(member.id);
+    if (typeof member.userId === "string" && member.userId.length > 0) {
+      affectedUsers.add(member.userId);
     }
   }
 

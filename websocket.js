@@ -110,6 +110,7 @@ wss.on('connection', function (ws, request) {
     const username = request.session.user;
     const userId = request.session.userId;
     const groups = getGroupsFile().groups;
+    console.log("all groups", userId, groups)
     let discordId = request.session.discordId ?? null;
     /** @type {?string} */
     let activeGroupId = null;
@@ -161,17 +162,18 @@ wss.on('connection', function (ws, request) {
         warStatus: warapi.warData.status,
         featureHash: features.hash,
         discordId,
-        userGroups: Object.values(groups).filter(group => group.memberships?.includes(userId) ?? false),
+        userGroups: Object.values(groups).filter(group => group.memberships?.some(m => m.userId === userId) ?? false),
       }
     })));
 
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
       const groups = getGroupsFile().groups;
-      console.log("message")
+
       const oldHash = features.hash
       const content = /** @type{PrivateWebSocketIncomingTraffic} */ (JSON.parse(message.toString()));
-      const userGroups = Object.values(groups).filter(group => group.memberships?.includes(userId) ?? false)
+      const userGroups = Object.values(groups).filter(group => group.memberships?.some(m => m.userId === userId) ?? false)
+      console.log("userGroups", userId, userGroups)
       switch (content.type) {
         case 'init':
           if (content.data.conquerStatus !== getConquerStatusVersion()) {

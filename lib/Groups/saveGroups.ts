@@ -111,7 +111,7 @@ export function addGroup(
     creator,
     individual_members: group.individual_members ?? {},
     discord_roles: group.discord_roles ?? [],
-    memberships: [creator],
+    memberships: [{"userId": creator, "source": "creator"}],
     permissions: group.permissions ?? {},
   };
 
