@@ -149,7 +149,6 @@ socket.on('init', (data) => {
     socket.send('setActiveGroup', {
       groupId: newGroupId
     })
-    console.log("Set active group ID to:", activeGroupId)
   });  
 })
 

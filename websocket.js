@@ -34,7 +34,7 @@ import {
 import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import Discord from "./lib/discord.js";
-import { getGroupsFile } from "./lib/Groups/saveGroups.ts";
+import { getGroupsFile, getUserMemberships } from "./lib/Groups/saveGroups.ts";
 
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 const publicWss = new WebSocketServer({
@@ -110,7 +110,6 @@ wss.on('connection', function (ws, request) {
     const username = request.session.user;
     const userId = request.session.userId;
     const groups = getGroupsFile().groups;
-    console.log("all groups", userId, groups)
     let discordId = request.session.discordId ?? null;
     /** @type {?string} */
     let activeGroupId = null;
@@ -162,7 +161,7 @@ wss.on('connection', function (ws, request) {
         warStatus: warapi.warData.status,
         featureHash: features.hash,
         discordId,
-        userGroups: Object.values(groups).filter(group => group.memberships?.some(m => m.userId === userId) ?? false),
+        userGroups: getUserMemberships(userId) ?? [],
       }
     })));
 
@@ -172,8 +171,7 @@ wss.on('connection', function (ws, request) {
 
       const oldHash = features.hash
       const content = /** @type{PrivateWebSocketIncomingTraffic} */ (JSON.parse(message.toString()));
-      const userGroups = Object.values(groups).filter(group => group.memberships?.some(m => m.userId === userId) ?? false)
-      console.log("userGroups", userId, userGroups)
+      const userGroups = getUserMemberships(userId).map(g => g.id);
       switch (content.type) {
         case 'init':
           if (content.data.conquerStatus !== getConquerStatusVersion()) {
@@ -213,7 +211,7 @@ wss.on('connection', function (ws, request) {
           feature.properties.user = username
           feature.properties.userId = userId
           feature.properties.discordId = discordId
-          feature.properties.groupId = activeGroupId ?? undefined
+          feature.properties.groupId = activeGroupId ?? undefined;
           feature.properties.time = (new Date()).toISOString()
           feature.properties.notes = sanitizeHtml(feature.properties.notes, sanitizeOptions)
           if (feature.properties.color) {
@@ -239,7 +237,7 @@ wss.on('connection', function (ws, request) {
           for (const existingFeature of features.features) {
             if (content.data.properties.id === existingFeature.properties.id) {
               editFeature = existingFeature
-              if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_EDIT, existingFeature, userGroups)) {
+              if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_EDIT, existingFeature, /** @type {string[]} */ (userGroups))) {
                 return;
               }
               existingFeature.properties = content.data.properties
@@ -277,7 +275,7 @@ wss.on('connection', function (ws, request) {
           if (featureToDelete === undefined) {
             return;
           }
-          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_DELETE, featureToDelete, userGroups)) {
+          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_DELETE, featureToDelete, /** @type {string[]} */ (userGroups))) {
             return;
           }
           features.features = features.features.filter((feature) => {
@@ -295,10 +293,9 @@ wss.on('connection', function (ws, request) {
 
           if (
             groupId === null ||
-            groups[groupId]?.memberships?.includes(userId)
+            groups[groupId]?.memberships?.some((/** @type {{ userId: string; }} */ m) => m.userId === userId)
           ) {
             activeGroupId = groupId;
-            console.log("Set active group ID to:", activeGroupId)
           }
           break;
         }

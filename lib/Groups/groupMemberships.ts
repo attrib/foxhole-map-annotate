@@ -11,10 +11,8 @@ import config from "../config.js";
 /* ---------- recompute ---------- */
 
 export async function recomputeMemberships(session, userId) {
-  console.log(userId);
-  if (!userId) throw new Error("userId is undefined");
 
-  console.log("Recomputing memberships for user", userId);
+  if (!userId) throw new Error("userId is undefined");
 
   const file = getGroupsFile();
   const guildRoles = await fetchUserDiscordRoles(session);
@@ -25,7 +23,7 @@ export async function recomputeMemberships(session, userId) {
     /* ----- individual members ----- */
     if (group.individual_members) {
       isMember = Object.values(group.individual_members)
-        .some(m => m.userId === userId);
+        .some(m => m.id === userId);
     }
 
     /* ----- discord roles ----- */
@@ -62,8 +60,8 @@ export async function recomputeMembershipsForGroup(session, groupId: string) {
 
   // individual members
   for (const member of Object.values(group.individual_members ?? {})) {
-    if (typeof member.userId === "string" && member.userId.length > 0) {
-      affectedUsers.add(member.userId);
+    if (typeof member.id === "string" && member.id.length > 0) {
+      affectedUsers.add(member.id);
     }
   }
 
@@ -75,10 +73,8 @@ export async function recomputeMembershipsForGroup(session, groupId: string) {
   }
 
   // now recompute each user
-  console.log("affectedUsers raw:", [...affectedUsers]);
 
   for (const userId of affectedUsers) {
-    console.log("recomputeMembershipsForGroup")
     await recomputeMemberships(session, userId);
   }
 }

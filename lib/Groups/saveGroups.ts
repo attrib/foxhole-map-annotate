@@ -87,12 +87,18 @@ export function getUsersGroups(userId: string): GroupsFile {
         groups: {},
         hash: "",
       };
-  console.log(userId, userGroups)
   return userGroups;
 }
 
 export function getGroup(groupId: string): Group | undefined {
   return file.groups[groupId];
+}
+
+export function getUserMemberships(userId: string): Group[] {
+  return Object.values(file.groups).filter(
+    (group): group is Group =>
+      group.memberships?.some(m => m.userId === userId) ?? false
+  );
 }
 
 /* ---------- group mutation ---------- */
@@ -174,14 +180,19 @@ export function setUserMembershipForGroup(
     m => m.userId !== userId
   );
 
-  if (membership) {
-    if (!membership.userId || typeof membership.userId !== "string") {
-      throw new Error("Invalid membership.userId");
-    }
-    group.memberships.push(membership);
+  if (!group.memberships.some(m => m.userId === group.creator)) {
+    group.memberships.push({
+      userId: group.creator,
+      source: "creator",
+    });
   }
 
+  if (membership && membership.userId !== group.creator) {
+    group.memberships.push(membership);
+  }
+  saveAllGroups();
 }
+
 
 
 export function clearGroupMemberships(groupId: string): void {

@@ -1,3 +1,5 @@
+import { getUserMemberships } from "./Groups/saveGroups.ts";
+
 export const ACL_ADMIN = "admin" as const;
 export const ACL_MOD = "moderator" as const;
 export const ACL_FULL = "full" as const;
@@ -81,7 +83,12 @@ export function hasAccess(
       return true;
     }
     // if its not add, there needs to be a feature and the userIds need to match
-    if (!feature || (feature.properties.userId && feature.properties.userId !== userId && userGroups.indexOf(feature.properties.groupId) === -1)) {
+    if (
+        !feature || 
+        (feature.properties.userId && 
+        feature.properties.userId !== userId && 
+        userGroups.indexOf(feature.properties.groupId) === -1)
+    ) {
       return false
     }
     // own or undefined feature, allowed to edit
