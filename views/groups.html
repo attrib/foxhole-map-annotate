@@ -48,63 +48,69 @@
 </main>
 
 <template id="group-editor-template">
-    <div class="tab-pane fade" role="tabpanel">
-        <h4></h4> 
-        <div class="mb-3">
-            <label for="group-name" class="form-label">Group Name</label>
-            <input type="text" class="form-control" id="group-name" required>
-            <span id="existing-group-name-error" class="input-error-text d-none">
-                A group with this name already exists.
-            </span>
-        </div>
-        <div>
-            <h5>Add Role</h5>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" id="add-server" placeholder="Server ID">
-                <input type="text" class="form-control" id="add-role" placeholder="Role ID">
-                <input type="text" class="form-control" id="add-role-note" placeholder="Role Info (Optional)">
-                <button class="btn btn-outline-secondary" type="button" id="add-role-btn" data-group-id="">Add</button>
-            </div>
-        </div>
-        
-        <div>
-            <h5>Add Member</h5>
-            <p>If they have a role with access they do not need to be added individually.</p>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" id="add-member" placeholder="Discord User ID">
-                <input type="text" class="form-control" id="add-member-note" placeholder="Member Name (Optional)">
-                <button class="btn btn-outline-secondary" type="button" id="add-member-btn" data-group-id="">Add</button>
-            </div>
-        </div>
-        <div class="d-flex justify-content-between row">
-            <div class="col-6">   
-                <h5>Members</h5>
-                <ul class="list-group mb-3" id="member-list">
-                </ul>
-            </div>
-            <div class="col-6">
-                <h5>Roles</h5>
-                <ul class="list-group mb-3" id="role-list">
-                </ul>
-            </div>
-        </div>
-        <button class="btn btn-danger " data-group-id="" id="delete-group-btn">Delete Group</button>
+  <div class="tab-pane fade" role="tabpanel">
+    <h4 class="group-title"></h4>
+
+    <div class="mb-3">
+      <label class="form-label">Group Name</label>
+      <input type="text" class="form-control group-name-input" required>
+      <span class="input-error-text d-none">
+        A group with this name already exists.
+      </span>
     </div>
+
+    <div>
+      <h5>Add Role</h5>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control add-server" placeholder="Server ID">
+        <input type="text" class="form-control add-role" placeholder="Role ID">
+        <input type="text" class="form-control add-role-note" placeholder="Role Info (Optional)">
+        <button class="btn btn-outline-secondary add-role-btn" type="button">Add</button>
+      </div>
+    </div>
+
+    <div>
+      <h5>Add Member</h5>
+      <p>If they have a role with access they do not need to be added individually.</p>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control add-member" placeholder="Discord User ID">
+        <input type="text" class="form-control add-member-note" placeholder="Member Name (Optional)">
+        <button class="btn btn-outline-secondary add-member-btn" type="button">Add</button>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between row">
+      <div class="col-6">
+        <h5>Members</h5>
+        <ul class="list-group mb-3 member-list"></ul>
+      </div>
+      <div class="col-6">
+        <h5>Roles</h5>
+        <ul class="list-group mb-3 role-list"></ul>
+      </div>
+    </div>
+
+    <button class="btn btn-danger delete-group-btn">Delete Group</button>
+  </div>
 </template>
 
 <template id="role-list-item-template">
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span class="role-info"></span>
-        <button class="btn btn-sm btn-danger remove-role-btn" data-group-id="" data-role-id="">Remove</button>
-    </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center"
+      data-role-id="">
+    <span class="role-info"></span>
+    <button class="btn btn-sm btn-danger remove-role-btn">Remove</button>
+  </li>
 </template>
 
+
 <template id="member-list-item-template">
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span class="member-info"></span>
-        <button class="btn btn-sm btn-danger remove-member-btn" data-group-id="" data-member-id="">Remove</button>
-    </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center"
+      data-member-id="">
+    <span class="member-info"></span>
+    <button class="btn btn-sm btn-danger remove-member-btn">Remove</button>
+  </li>
 </template>
+
 
 {% endblock %}
 

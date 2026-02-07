@@ -68,7 +68,7 @@ let cachedQueue = {
   ratio: 0.5,
 }
 
-const groups = getGroupsFile().groups;
+
 
 if (fs.existsSync(resolve('data/queue.json'))) {
   fs.watch(resolve('data/queue.json'), (event) => {
@@ -109,6 +109,7 @@ wss.on('connection', function (ws, request) {
     }
     const username = request.session.user;
     const userId = request.session.userId;
+    const groups = getGroupsFile().groups;
     let discordId = request.session.discordId ?? null;
     /** @type {?string} */
     let activeGroupId = null;
@@ -166,8 +167,11 @@ wss.on('connection', function (ws, request) {
 
     //connection is up, let's add a simple event
     ws.on('message', (message) => {
+      const groups = getGroupsFile().groups;
+      console.log("message")
       const oldHash = features.hash
       const content = /** @type{PrivateWebSocketIncomingTraffic} */ (JSON.parse(message.toString()));
+      const userGroups = Object.values(groups).filter(group => group.memberships?.includes(userId) ?? false)
       switch (content.type) {
         case 'init':
           if (content.data.conquerStatus !== getConquerStatusVersion()) {
@@ -233,7 +237,7 @@ wss.on('connection', function (ws, request) {
           for (const existingFeature of features.features) {
             if (content.data.properties.id === existingFeature.properties.id) {
               editFeature = existingFeature
-              if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_EDIT, existingFeature)) {
+              if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_EDIT, existingFeature, userGroups)) {
                 return;
               }
               existingFeature.properties = content.data.properties
@@ -271,7 +275,7 @@ wss.on('connection', function (ws, request) {
           if (featureToDelete === undefined) {
             return;
           }
-          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_DELETE, featureToDelete)) {
+          if (!hasAccess(userId, acl, ACL_ACTIONS.ICON_DELETE, featureToDelete, userGroups)) {
             return;
           }
           features.features = features.features.filter((feature) => {

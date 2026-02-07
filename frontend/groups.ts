@@ -1,12 +1,17 @@
 import { blinkInput } from "./tools/errorBlink";
 import type { Group } from "../lib/Groups/types.ts";
 
+type GroupsResponse = {
+  groups: Record<string, Group>;
+  hash: string;
+};
+
 /* =======================
    Groups UI Controller
 ======================= */
 
 class Groups {
-  private groupsData: any;
+  private groupsData!: GroupsResponse;
 
   constructor() {
     this.init();
@@ -56,8 +61,6 @@ class Groups {
         .querySelector<HTMLElement>(`[data-bs-target="#group-${activeGroupId}"]`)
         ?.click();
     }
-
-    console.log("Groups rendered");
   }
 
   getActiveGroupId(): string | null {
@@ -98,8 +101,6 @@ class Groups {
     root.dataset.groupId = group.id;
 
     this.setupGroupName(group, root);
-    this.setupMemberControls(group, root);
-    this.setupRoleControls(group, root);
     this.setupDeleteGroup(group, root);
 
     this.renderGroupMembers(group, root);
@@ -109,7 +110,7 @@ class Groups {
   }
 
   setupGroupName(group: Group, root: HTMLElement) {
-    const nameInput = root.querySelector<HTMLInputElement>("#group-name")!;
+    const nameInput = root.querySelector<HTMLInputElement>(".group-name-input")!;
     const title = root.querySelector("h4")!;
 
     nameInput.value = group.name;
@@ -124,56 +125,6 @@ class Groups {
     });
   }
 
-  setupMemberControls(group: Group, root: HTMLElement) {
-    const addBtn = root.querySelector("#add-member-btn")!;
-    const memberId = root.querySelector<HTMLInputElement>("#add-member")!;
-    const memberNote = root.querySelector<HTMLInputElement>("#add-member-note")!;
-
-    addBtn.addEventListener("click", async () => {
-      const memberIdVal = memberId.value.trim();
-      if (!memberIdVal) return;
-      if (!(/^\d{18}$/.test(memberIdVal))) {
-        blinkInput(memberId)
-        return
-      }
-
-      await this.updateGroup(group.id, {
-        individual_members: {
-          ...(this.groupsData.groups[group.id].individual_members ?? {}),
-          [memberIdVal]: { id: memberIdVal, username: memberNote.value.trim() },
-        },
-      });
-      memberId.value = "";
-      memberNote.value = "";
-      this.renderGroupMembers(this.groupsData.groups[group.id], root);
-    });
-  }
-
-  setupRoleControls(group: Group, root: HTMLElement) {
-    const addBtn = root.querySelector("#add-role-btn")!;
-    const roleId = root.querySelector<HTMLInputElement>("#add-role")!;
-    const serverId = root.querySelector<HTMLInputElement>("#add-server")!;
-    const roleNote = root.querySelector<HTMLInputElement>("#add-role-note")!;
-    addBtn.addEventListener("click", async () => {
-      const roleIdVal = roleId.value.trim();
-      const serverIdVal = serverId.value.trim();
-      if (!roleIdVal || !serverIdVal) return;
-        await this.updateGroup(group.id, {
-        discord_roles: {
-          ...(this.groupsData.groups[group.id].discord_roles ?? {}),
-          [roleIdVal]: {
-            role: roleIdVal,
-            server: serverIdVal,
-            info: roleNote.value.trim(),
-            },
-        },
-      });
-        roleId.value = "";
-        serverId.value = "";
-        roleNote.value = "";
-        this.renderGroupRoles(this.groupsData.groups[group.id], root);
-    });
-  }
   
   validateGroupName(
     name: string,
@@ -196,70 +147,208 @@ class Groups {
     return true;
   }
 
+  getGroupRoot(groupId: string): HTMLElement | null {
+    return document.querySelector(`#group-${groupId}`);
+  }
+
+
   /* =======================
      Members
   ======================= */
+  async handleAddMember(btn: HTMLElement) {
+    const root = btn.closest(".tab-pane") as HTMLElement;
+    if (!root) return;
+
+    const groupId = root.dataset.groupId!;
+    const group = this.groupsData.groups?.[groupId];
+    if (!group) return;
+
+    const memberIdInput = root.querySelector<HTMLInputElement>(".add-member")!;
+    const noteInput = root.querySelector<HTMLInputElement>(".add-member-note")!;
+
+    const memberId = memberIdInput.value.trim();
+    if (!memberId) return;
+
+    if (!/^\d{18}$/.test(memberId)) {
+      blinkInput(memberIdInput);
+      return;
+    }
+
+    await this.updateGroup(groupId, {
+      individual_members: {
+        ...(group.individual_members ?? {}),
+        [memberId]: {
+          id: memberId,
+          username: noteInput.value.trim(),
+        },
+      },
+    });
+
+    memberIdInput.value = "";
+    noteInput.value = "";
+
+    const updatedGroup = this.groupsData.groups[groupId];
+    const liveRoot = this.getGroupRoot(groupId);
+    if (!updatedGroup || !liveRoot) return;
+
+    this.renderGroupMembers(updatedGroup, liveRoot);
+  }
 
   renderGroupMembers(group: Group, root: HTMLElement) {
-    const list = root.querySelector("#member-list")!;
-    list.innerHTML = "";
+    const list = root.querySelector(".member-list")!;
+    list.replaceChildren(); // better than innerHTML = ""
 
     for (const [id, member] of Object.entries(group.individual_members ?? {})) {
-      const item = this.createMemberItem(group, id, member?.username, root);
-      list.appendChild(item);
+      list.appendChild(
+        this.createMemberItem(group, id, member?.username, root)
+      );
+      list.offsetHeight;
     }
   }
 
-  createMemberItem(group: Group, id: string, username?: string, root?: HTMLElement) {
-    const template = document.getElementById("member-list-item-template") as HTMLTemplateElement;
-    const fragment = template.content.cloneNode(true) as DocumentFragment;
 
-    fragment.querySelector(".member-info")!.textContent =
+  createMemberItem(group: Group, id: string, username?: string) {
+    const template = document.getElementById(
+      "member-list-item-template"
+    ) as HTMLTemplateElement;
+
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
+    const item = fragment.firstElementChild as HTMLElement;
+
+    item.dataset.memberId = id; // ⭐ key line
+
+    item.querySelector(".member-info")!.textContent =
       `${username ? username + " - " : ""}${id}`;
 
-    fragment.querySelector(".remove-member-btn")!
-      .addEventListener("click", () => this.removeMember(group, id, root!));
-
-    return fragment;
+    return item;
   }
 
-  async removeMember(group: Group, memberId: string, root: HTMLElement) {
-    delete this.groupsData.groups[group.id].individual_members[memberId];
-    await this.updateGroup(group.id, {
-      individual_members: this.groupsData.groups[group.id].individual_members,
+  async handleRemoveMember(btn: HTMLElement) {
+    const root = btn.closest(".tab-pane") as HTMLElement;
+    if (!root) return;
+
+    const groupId = root.dataset.groupId!;
+    const group = this.groupsData.groups?.[groupId];
+    if (!group) return;
+
+    const item = btn.closest("li") as HTMLElement;
+    const memberId = item.dataset.memberId;
+    if (!memberId) return;
+
+    delete group.individual_members?.[memberId];
+
+    await this.updateGroup(groupId, {
+      individual_members: group.individual_members,
     });
-    this.renderGroupMembers(this.groupsData.groups[group.id], root);
+
+    const updatedGroup = this.groupsData.groups[groupId];
+    const liveRoot = this.getGroupRoot(groupId);
+    if (!updatedGroup || !liveRoot) return;
+
+    this.renderGroupMembers(updatedGroup, liveRoot);
   }
 
   /* =======================
      Roles
   ======================= */
 
+  async handleAddRole(btn: HTMLElement) {
+    const root = btn.closest(".tab-pane") as HTMLElement;
+    if (!root) return;
+
+    const groupId = root.dataset.groupId!;
+    const group = this.groupsData.groups?.[groupId];
+    if (!group) return;
+
+    const roleId = root.querySelector<HTMLInputElement>(".add-role")!;
+    const serverId = root.querySelector<HTMLInputElement>(".add-server")!;
+    const note = root.querySelector<HTMLInputElement>(".add-role-note")!;
+
+    const roleIdVal = roleId.value.trim();
+    const serverIdVal = serverId.value.trim();
+    if (!roleIdVal || !serverIdVal) return;
+
+    await this.updateGroup(groupId, {
+      discord_roles: {
+        ...(group.discord_roles ?? {}),
+        [roleIdVal]: {
+          role: roleIdVal,
+          server: serverIdVal,
+          info: note.value.trim(),
+        },
+      },
+    });
+
+    roleId.value = "";
+    serverId.value = "";
+    note.value = "";
+
+    const updatedGroup = this.groupsData.groups[groupId];
+    const liveRoot = this.getGroupRoot(groupId);
+    if (!updatedGroup || !liveRoot) return;
+
+    this.renderGroupRoles(updatedGroup, liveRoot);
+  }
+
   renderGroupRoles(group: Group, root: HTMLElement) {
-    const list = root.querySelector("#role-list")!;
-    list.innerHTML = "";
+    const list = root.querySelector(".role-list")!;
+    list.replaceChildren();
 
     for (const [roleId, role] of Object.entries(group.discord_roles ?? {})) {
-      const template = document.getElementById("role-list-item-template") as HTMLTemplateElement;
-      const fragment = template.content.cloneNode(true) as DocumentFragment;
 
-      fragment.querySelector(".role-info")!.textContent =
-        `${role.info ? role.info + " - " : ""}Role ID: ${roleId} Server ID: ${role.server}`;
+      list.appendChild(this.createRoleItem(group, roleId, role));
 
-      fragment.querySelector(".remove-role-btn")!
-        .addEventListener("click", () => this.removeRole(group, roleId, root));
-
-      list.appendChild(fragment);
+      list.offsetHeight;
     }
   }
 
-  async removeRole(group: Group, roleId: string, root: HTMLElement) {
-    delete this.groupsData.groups[group.id].discord_roles[roleId];
-    await this.updateGroup(group.id, {
-      discord_roles: this.groupsData.groups[group.id].discord_roles,
-    });
-    this.renderGroupRoles(this.groupsData.groups[group.id], root);
+  createRoleItem(group: Group, roleId: string, role: any) {
+    const template = document.getElementById(
+      "role-list-item-template"
+    ) as HTMLTemplateElement;
+
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
+    const item = fragment.firstElementChild as HTMLElement;
+
+    item.dataset.roleId = roleId; 
+
+    item.querySelector(".role-info")!.textContent =
+      `${role.info ? role.info + " - " : ""}Role ID: ${roleId} Server ID: ${role.server}`;
+
+    return item;
   }
+
+
+
+  async handleRemoveRole(btn: HTMLElement) {
+    const root = btn.closest(".tab-pane") as HTMLElement;
+    if (!root) return;
+
+    const groupId = root.dataset.groupId!;
+    const group = this.groupsData.groups?.[groupId];
+    if (!group) return;
+
+    const item = btn.closest("li") as HTMLElement;
+    const roleId = item.dataset.roleId;
+    if (!roleId) return;
+
+    delete group.discord_roles?.[roleId];
+
+    await this.updateGroup(groupId, {
+      discord_roles: group.discord_roles,
+    });
+    if (!this.groupsData?.groups) {
+      console.error("groupsData corrupted", this.groupsData);
+      return;
+    }
+
+    const updatedGroup = this.groupsData.groups[groupId];
+    const liveRoot = this.getGroupRoot(groupId);
+    if (!updatedGroup || !liveRoot) return;
+
+    this.renderGroupRoles(updatedGroup, liveRoot);
+  }
+
 
   /* =======================
      Actions
@@ -271,11 +360,19 @@ class Groups {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    this.groupsData = await res.json();
+    const updated = await res.json();
+
+    if (!updated?.groups) {
+      console.error("Invalid groups response", updated);
+      return;
+    }
+
+    this.groupsData.groups = updated.groups;
+    this.groupsData.hash = updated.hash;
   }
 
   setupDeleteGroup(group: Group, root: HTMLElement) {
-    root.querySelector("#delete-group-btn")!.addEventListener("click", async () => {
+    root.querySelector(".delete-group-btn")!.addEventListener("click", async () => {
       if (!confirm(`Delete "${group.name}" permanently?`)) return;
 
       const res = await fetch(`/api/groups/${group.id}`, { method: "DELETE" });
@@ -289,6 +386,27 @@ class Groups {
   ======================= */
 
   bindUI() {
+    document
+    .querySelector(".tab-content")!
+    .addEventListener("click", e => {
+      const target = e.target as HTMLElement;
+
+      if (target.classList.contains("add-role-btn")) {
+        this.handleAddRole(target);
+      }
+
+      if (target.classList.contains("add-member-btn")) {
+        this.handleAddMember(target);
+      }
+
+      if (target.classList.contains("remove-role-btn")) {
+        this.handleRemoveRole(target);
+      }
+
+      if (target.classList.contains("remove-member-btn")) {
+        this.handleRemoveMember(target);
+      }
+    });
     document.getElementById("new-group-btn")!
       .addEventListener("click", () => document.getElementById("create-group")?.classList.add("active"));
     document.getElementById("create-group-form")!

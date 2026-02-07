@@ -5,25 +5,9 @@ import {
   deleteGroup,
   getUsersGroups,
 } from "../../lib/Groups/saveGroups.ts";
-import { refreshMembershipsIfNeeded } from "../../lib/groups/groupMemberships.ts";
 
 const router = Router();
 
-/* =========================
-   Membership refresh middleware
-========================= */
-
-router.use(async (req, res, next) => {
-  try {
-    if (req.session?.userId) {
-      await refreshMembershipsIfNeeded(req.session);
-    }
-    next();
-  } catch (err) {
-    console.error("refreshMembershipsIfNeeded ERROR", err);
-    next(err);
-  }
-});
 
 /* =========================
    GET all groups
@@ -53,15 +37,20 @@ router.post("/", (req, res) => {
    UPDATE group
 ========================= */
 
-router.put("/:id", (req, res) => {
-  const userId = req.session?.userId;
-  if (!userId) return res.sendStatus(401);
+router.put("/:id", async (req, res, next) => {
+  try {
+    const userId = req.session?.userId;
+    if (!userId) return res.sendStatus(401);
 
-  const groupId = req.params.id;
-  const updated = updateGroup(userId, groupId, req.body);
+    const groupId = req.params.id;
+    const updated = await updateGroup(req.session, groupId, req.body);
 
-  res.json(updated);
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
 });
+
 
 /* =========================
    DELETE group

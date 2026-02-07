@@ -7,6 +7,7 @@ import type {
   GroupMembership,
 } from "../lib/Groups/types.ts";
 import { get } from "node:http";
+import { recomputeMembershipsForGroup } from "./groupMemberships.ts";
 
 const GROUPS_PATH = resolve("data/groups.json");
 
@@ -86,7 +87,7 @@ export function getUsersGroups(userId: string): GroupsFile {
         groups: {},
         hash: "",
       };
-
+  console.log(userId, userGroups)
   return userGroups;
 }
 
@@ -118,12 +119,13 @@ export function addGroup(
   return getUsersGroups(creator);
 }
 
-export function updateGroup(
-  userId: string,
+export async function updateGroup(
+  session,
   groupId: string,
   updates: Partial<Group>
-): Group {
+): Promise<Group> {
   const group = file.groups[groupId];
+  const userId = session?.userId;
   if (!group) throw new Error(`Group ${groupId} does not exist`);
 
   if (group.creator !== userId) {
@@ -133,11 +135,14 @@ export function updateGroup(
   file.groups[groupId] = {
     ...group,
     ...updates,
-    id: groupId,          // protect invariants
+    id: groupId,
     creator: group.creator,
   };
 
   saveAllGroups();
+
+  await recomputeMembershipsForGroup(session, groupId);
+
   return getUsersGroups(userId);
 }
 
@@ -157,17 +162,27 @@ export function deleteGroup(userId: string, groupId: string): void {
 
 /* ---------- memberships ---------- */
 
-export function updateGroupMemberships(
+export function setUserMembershipForGroup(
   groupId: string,
-  memberships: GroupMembership[]
-): Group {
+  userId: string,
+  membership: GroupMembership | null
+): void {
   const group = file.groups[groupId];
-  if (!group) throw new Error(`Group ${groupId} does not exist`);
+  if (!group) return;
 
-  group.memberships = memberships;
-  saveAllGroups();
-  return group;
+  group.memberships = (group.memberships ?? []).filter(
+    m => m.userId !== userId
+  );
+
+  if (membership) {
+    if (!membership.userId || typeof membership.userId !== "string") {
+      throw new Error("Invalid membership.userId");
+    }
+    group.memberships.push(membership);
+  }
+
 }
+
 
 export function clearGroupMemberships(groupId: string): void {
   const group = file.groups[groupId];
