@@ -14,11 +14,11 @@ import {
   getConquerStatus,
   getConquerStatusVersion,
   getPublicWarFeatures,
+  getWarFeatures,
+  getWarFeaturesVersion,
+  moveObs,
   regenRegions,
   updateMap,
-  getWarFeaturesVersion,
-  getWarFeatures,
-  moveObs,
 } from "./lib/conquerUpdater.js";
 
 import type {
