@@ -16,6 +16,9 @@ import {
   getPublicWarFeatures,
   regenRegions,
   updateMap,
+  getWarFeaturesVersion,
+  getWarFeatures,
+  moveObs,
 } from "./lib/conquerUpdater.js";
 
 import type {
