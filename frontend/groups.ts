@@ -118,6 +118,11 @@ class Groups {
     nameInput.addEventListener("blur", async () => {
       const newName = nameInput.value.trim();
       if (!this.validateGroupName(newName, nameInput, root, group)) return;
+      
+      const el = document.querySelector<HTMLElement>(".groupList.active");
+      if (el) {
+        el.textContent = newName;
+      }
 
       await this.updateGroup(group.id, { name: newName });
       title.textContent = newName;
@@ -131,15 +136,39 @@ class Groups {
     root: HTMLElement, 
     group: Group = undefined
   ): boolean {
-    if (!name || name === group?.name) return false;
+    if (name === group?.name) return false;
 
+    const error = root.querySelector<HTMLElement>(".input-error-text")!;
+
+    if (name.length < 1) {
+      blinkInput(input);
+      error.classList.remove("d-none");
+      error.textContent = "Name cannot be empty.";
+      return false;
+    }
+
+    if (name.length > 30) {
+      blinkInput(input);
+      error.classList.remove("d-none");
+      error.textContent = "Name too long. Max 30 characters.";
+      return false;
+    }
+
+    if (!/^[^\x00-\x1F\x7F]+$/.test(name)) {
+      blinkInput(input);
+      error.classList.remove("d-none");
+      error.textContent = "Invalid characters.";
+      return false;
+    }
+    
     const exists = Object.values(this.groupsData.groups).some(
       g => g.name.toLowerCase() === name.toLowerCase()
     );
 
     if (exists) {
       blinkInput(input);
-      root.querySelector<HTMLElement>(".input-error-text")!.classList.remove("d-none");
+      error.classList.remove("d-none");
+      error.textContent = "Group name already exists.";
       return false;
     }
 
@@ -407,7 +436,10 @@ class Groups {
       }
     });
     document.getElementById("new-group-btn")!
-      .addEventListener("click", () => document.getElementById("create-group")?.classList.add("active"));
+      .addEventListener("click", () => {
+        document.querySelectorAll(".active").forEach(btn => btn.classList.remove("active"));
+        document.getElementById("create-group")?.classList.add("active")
+      });
     document.getElementById("create-group-form")!
       .addEventListener("submit", async e => {
         e.preventDefault();

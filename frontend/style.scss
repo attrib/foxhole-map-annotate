@@ -303,3 +303,14 @@ button.overlay-button {
   display: block;
 }
 
+#group-editor {
+  max-height: 60vh;   /* adjust as needed */
+  overflow-y: auto;
+}
+
+.member-list,
+.role-list {
+  max-height: 40vh;   /* or something smaller like 300px */
+  overflow-y: auto;
+}
+
