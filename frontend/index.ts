@@ -16,7 +16,7 @@ import { addDefaultMapControls, enableLayerMemory, toggleLayersFunction } from "
 import EditTools from "./mapEditTools.js";
 import Measure from "./measure.js";
 import StaticLayers from "./staticLayer.js";
-import Socket from "./webSocket.js";
+import Socket from "./webSocket.ts";
 import { set } from "ol/transform.js";
 import {setUserGroups} from "./cmapUserGroups.js"
 

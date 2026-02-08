@@ -2,7 +2,7 @@ import { createApp, reactive } from "vue";
 
 import Stats from "./Components/Stats.vue";
 import VPCounterStats from "./Components/VPCounterStats.vue";
-import Socket from "./webSocket.js";
+import Socket from "./webSocket.ts";
 
 
 const data = reactive({
