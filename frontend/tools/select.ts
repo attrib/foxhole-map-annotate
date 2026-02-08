@@ -529,7 +529,7 @@ class Select {
   }
 
   getUser = (feature) => {
-    return feature.get('clan') || feature.get('user') || 'World'
+    return feature.get('displayName') || feature.get('user') || 'World'
   }
 
   updateDecay = (event) => {
