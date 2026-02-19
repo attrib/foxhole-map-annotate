@@ -65,6 +65,25 @@
                     <textarea id="notes-input" name="notes" class="notes form-control"></textarea>
                 </div>
             </div>
+            <div class="row mb-2 align-items-center py-1">
+                <div class="col-3">
+                    <span>Expires in</span>
+                </div>
+                <div class="col-9">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        <input type="number" class="form-control form-control-sm input-2digit" id="expire-time-days" min="0" max="30" step="1">
+                        <label for="expire-time-days" class="mb-0">days and</label>
+
+                        <input type="number" class="form-control form-control-sm input-2digit" id="expire-time-hours" min="0" max="23" step="1">
+                        <label for="expire-time-hours" class="mb-0">hours</label>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
             <div class="row mb-2" id="button-row">
                 <div class="btn-group col-sm-12">
                     <input type="submit" id="delete-button" value="Delete" name="delete"
