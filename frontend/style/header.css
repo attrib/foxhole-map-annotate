@@ -521,8 +521,12 @@ body > header {
       min-height: 0;
 
       & > a {
-        display: flex;
+        display: block;
         align-items: center;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         padding-block: 0.25rem;
         padding-inline: 0.5rem;
         border-top-color: light-dark(var(--border-light), var(--border-dark));
@@ -595,7 +599,9 @@ body > header {
   &:has(#groups-open:checked) {
     & > .user-menu-links.group {
       display: grid;
-      overflow: visible;
+      overflow-y: auto;
+      max-height: 40vh;
+      scrollbar-color: rgba(235, 234, 234, 0.4) transparent;
       grid-template-rows: 1fr;
     }
 

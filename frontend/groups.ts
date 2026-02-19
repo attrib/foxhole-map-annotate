@@ -75,7 +75,7 @@ class Groups {
 
   createGroupButton(group: Group): HTMLButtonElement {
     const btn = document.createElement("button");
-    btn.className = "list-group-item list-group-item-action groupList";
+    btn.className = "list-group-item list-group-item-action group-list truncate";
     btn.textContent = group.name;
     btn.type = "button";
     btn.dataset.bsToggle = "list";
@@ -119,7 +119,7 @@ class Groups {
       const newName = nameInput.value.trim();
       if (!this.validateGroupName(newName, nameInput, root, group)) return;
       
-      const el = document.querySelector<HTMLElement>(".groupList.active");
+      const el = document.querySelector<HTMLElement>(".group-list.active");
       if (el) {
         el.textContent = newName;
       }

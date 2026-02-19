@@ -304,13 +304,25 @@ button.overlay-button {
 }
 
 #group-editor {
-  max-height: 60vh;   /* adjust as needed */
+  flex: 1;
+  min-height: 0;
+  max-height: 60vh;   
   overflow-y: auto;
+  scrollbar-color: rgba(0,0,0,0.4) transparent;
 }
 
 .member-list,
 .role-list {
-  max-height: 40vh;   /* or something smaller like 300px */
-  overflow-y: auto;
+  max-height: 40vh;   
+  overflow-y: auto;                    
+  scrollbar-color: rgba(0,0,0,0.4) transparent;
 }
 
+.truncate {
+  flex: 1;
+  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

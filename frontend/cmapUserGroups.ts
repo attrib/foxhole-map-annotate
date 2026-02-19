@@ -37,7 +37,9 @@ export function setUserGroups(userGroups, activeGroupId, onChange) {
   function createEntry(id: string, label: string) {
     const a = document.createElement('a');
     a.textContent = label;
+    a.title = label;
     a.dataset.groupId = id;
+    a.classList.add("user-group-link");
 
     a.addEventListener('click', () => activate(id, label));
 
