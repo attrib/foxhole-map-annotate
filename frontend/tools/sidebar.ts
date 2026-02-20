@@ -54,6 +54,7 @@ class Sidebar {
     const secondaryColorPicker = document.getElementById('secondary-color-picker')
     const defaultColor = localStorage.getItem('defaultColor');
     const secondaryDefaultColor = localStorage.getItem('secondaryDefaultColor');
+
     if (defaultColor) {
       this.colorInput.value = defaultColor;
     }
@@ -148,7 +149,25 @@ class Sidebar {
       })
     }
     this.tools.on(this.tools.EVENT_TOOL_SELECTED, this.selectTool)
+
+    document.getElementById('expire-toggle').addEventListener('click', () => {
+      const expireCustomToggle = document.getElementById('expire-toggle');
+      const expirePreset = document.getElementById('expire-preset');
+      const expireCustom = document.getElementById('expire-custom');
+      const isCustom = expirePreset.classList.contains('d-none')
+      if (isCustom) {
+        expirePreset.classList.remove('d-none')
+        expireCustom.classList.add('d-none')
+        expireCustomToggle.textContent = 'Custom'
+      } else {
+        expirePreset.classList.add('d-none')
+        expireCustom.classList.remove('d-none')
+        expireCustomToggle.textContent = 'Preset'
+      }
+    })
   }
+
+  
 
   rgb2hex = (rgb) => {
     function hex(x) {
