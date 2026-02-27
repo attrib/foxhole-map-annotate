@@ -65,26 +65,26 @@
                     <textarea id="notes-input" name="notes" class="notes form-control"></textarea>
                 </div>
             </div>
-            <div class="row mb-2 align-items-center py-1">
+            <div class="row mb-2 align-items-center py-1" id="expire-inputs">
                 <div class="col-3">
                     <span>Expires in</span>
                 </div>
-                <div class="col-6">
-                    <div class="btn-group btn-group-sm" role="group" id="expire-preset">
+                <div id="expire-input" class="col-6">
+                    <div class="btn-group btn-group-sm active" role="group" id="expire-preset">
                         <input type="radio" class="btn-check" name="expire" id="exp-never" checked>
                         <label class="btn btn-outline-light" for="exp-never">Never</label>
 
-                        <input type="radio" class="btn-check" name="expire" id="exp-1h">
-                        <label class="btn btn-outline-light" for="exp-1h">1h</label>
+                        <input type="radio" class="btn-check" name="expire" id="3600000">
+                        <label class="btn btn-outline-light" for="3600000">1h</label>
 
-                        <input type="radio" class="btn-check" name="expire" id="exp-6h">
-                        <label class="btn btn-outline-light" for="exp-6h">6h</label>
+                        <input type="radio" class="btn-check" name="expire" id="21600000">
+                        <label class="btn btn-outline-light" for="21600000">6h</label>
 
-                        <input type="radio" class="btn-check" name="expire" id="exp-1d">
-                        <label class="btn btn-outline-light" for="exp-1d">1d</label>
+                        <input type="radio" class="btn-check" name="expire" id="86400000">
+                        <label class="btn btn-outline-light" for="86400000">1d</label>
 
-                        <input type="radio" class="btn-check" name="expire" id="exp-7d">
-                        <label class="btn btn-outline-light" for="exp-7d">7d</label>
+                        <input type="radio" class="btn-check" name="expire" id="604800000">
+                        <label class="btn btn-outline-light" for="604800000">7d</label>
 
                     </div>
                     <div class="d-flex align-items-start gap-3 d-none" id="expire-custom">
@@ -100,8 +100,7 @@
                     <button class="btn btn-outline-light btn-sm" id="expire-toggle" type="button">
                     Custom
                     </button>
-                </div>
-                 
+                </div>  
             </div>
             
             <div class="row mb-2" id="button-row">

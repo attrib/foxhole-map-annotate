@@ -472,6 +472,7 @@ function sendData(client, type, data) {
  * @param {string} newHash 
  */
 function sendUpdateFeature(operation, feature, oldHash, newHash) {
+  checkExpiredFeatures()
   sendDataToAll('featureUpdate', {
     operation,
     feature,
@@ -493,7 +494,37 @@ function sendFeaturesToAll() {
  * @param {WebSocket} client 
  */
 function sendFeatures(client) {
+  checkExpiredFeatures()
   sendData(client, 'allFeatures', features)
+}
+
+let checkedExpiredRecently = false;
+
+function checkExpiredFeatures() {
+  if (checkedExpiredRecently) {
+    return;
+  }
+  checkedExpiredRecently = true;
+  setTimeout(() => {
+    checkedExpiredRecently = false;
+  }, 60_000)
+  for (const featureToCheck of features.features) {
+
+    const expireTime = featureToCheck.properties?.expireTime;
+
+    if (expireTime && (new Date(expireTime).getTime() >= Date.now() || new Date(expireTime).getTime() <= 0 )) {
+      continue
+    }
+    
+    if (expireTime && new Date(expireTime).getTime() < Date.now()) {
+      features.features = features.features.filter((feature) => {
+        return feature.properties.id !== featureToCheck.properties.id
+      })
+    const oldHash = features.hash
+    saveFeatures(features)
+    sendUpdateFeature('delete', featureToCheck, oldHash, features.hash)
+    }
+  }
 }
 
 /**

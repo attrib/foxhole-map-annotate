@@ -92,6 +92,7 @@ class Line {
       event.feature.set('color', tools.sidebar.colorInput.value, true)
       event.feature.set('clan', tools.sidebar.clanInput.value, true)
       event.feature.set('lineType', tools.sidebar.lineTypeInput.value)
+      event.feature.set("expireTime", tools.sidebar.getExpireTime())
       this.sketchFeature = null
       tools.emit(tools.EVENT_ICON_ADDED, event.feature)
     })

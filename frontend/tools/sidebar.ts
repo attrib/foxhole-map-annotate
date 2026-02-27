@@ -48,6 +48,7 @@ class Sidebar {
     this.secondaryColorInput = document.getElementById('secondary-color-input')
     this.notesInput = document.getElementById('notes-input')
     this.buttonRow = document.getElementById('button-row')
+    this.expireInputs = document.getElementById('expire-inputs')?.querySelectorAll('input, select, button')
     this.displayForm(['notes'])
 
     const colorPicker = document.getElementById('color-picker')
@@ -157,11 +158,15 @@ class Sidebar {
       const isCustom = expirePreset.classList.contains('d-none')
       if (isCustom) {
         expirePreset.classList.remove('d-none')
+        expirePreset.classList.add('active')
         expireCustom.classList.add('d-none')
+        expireCustom.classList.remove('active')
         expireCustomToggle.textContent = 'Custom'
       } else {
         expirePreset.classList.add('d-none')
+        expirePreset.classList.remove('active')
         expireCustom.classList.remove('d-none')
+        expireCustom.classList.add('active')
         expireCustomToggle.textContent = 'Preset'
       }
     })
@@ -254,6 +259,7 @@ class Sidebar {
     if (this.editFeature) {
       this.tools.emit(this.tools.EVENT_UPDATE_CANCELED, this.editFeature)
       this.buttonRow.style.display = 'none'
+      this.expireInputs.forEach(input => {input.disabled = false}); 
     }
   }
 
@@ -264,6 +270,7 @@ class Sidebar {
     this.secondaryColorInput.parentElement.parentElement.style.display = visibleFields.includes('secondaryColor') ? '' : 'none'
     this.notesInput.parentElement.parentElement.style.display = visibleFields.includes('notes') ? '' : 'none'
     this.buttonRow.style.display = this.editFeature ? '' : 'none'
+    this.expireInputs.forEach(input => {input.disabled = this.editFeature ? true : false}) 
   }
 
   setAcl = (acl) => {
@@ -298,6 +305,37 @@ class Sidebar {
     val = val == null ? '' : '' + val;
     return val.replace(RegExp('(?:' + Object.keys(replace).join('|') + ')', 'g'), function (m) { return replace[m]; });
   }
+
+  getExpireTime() {
+    const active = document.getElementById("expire-input")?.querySelector(".active");
+
+    if (!active || active.querySelector("input").disabled) return 0;
+
+    if (active.id === "expire-preset") {
+      const time = Number(active.querySelector("input:checked")?.id) || 0;
+
+      return new Date(Date.now() + Number(time)).toISOString();
+    }
+
+    if (active.id === "expire-custom") {
+      const inputValue = document.getElementById("custom-expire-input")?.value;
+      const actualValue = Number(inputValue > 999 ? 0 : inputValue ) || 0; 
+      const unit = document.getElementById("custom-expire-unit")?.value;
+
+      let multiplier = 1;
+
+      if (unit === "minutes") multiplier = 60000;
+      else if (unit === "hours") multiplier = 3600000;
+      else if (unit === "days") multiplier = 86400000;
+
+      const time = Number(actualValue) * multiplier || 0;
+
+      return new Date(Date.now() + Number(time)).toISOString();
+    }
+
+    return 0;
+  }
+
 }
 
 export default Sidebar

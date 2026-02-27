@@ -75,6 +75,7 @@ class Polygon {
       feature.set('type', 'polygon', true)
       feature.set('color', tools.sidebar.colorInput.value + 'AA', true)
       feature.set('notes', tools.sidebar.notesInput.value)
+      feature.set("expireTime", tools.sidebar.getExpireTime())
       tools.emit(tools.EVENT_ICON_ADDED, feature)
       tools.changeTool(false)
       this.sketchFeature = null
