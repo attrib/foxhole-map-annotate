@@ -44,6 +44,7 @@ const RADIUS = {
   base: {
     friendly_planned_intel_center: 2500,
     friendly_planned_storm_cannon: 1000,
+    friendly_planned_radar: 500,
     base_obs: 180,
     base_obs_t2: 130,
     EmplacementHouse: 100,
