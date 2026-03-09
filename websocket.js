@@ -472,7 +472,6 @@ function sendData(client, type, data) {
  * @param {string} newHash 
  */
 function sendUpdateFeature(operation, feature, oldHash, newHash) {
-  checkExpiredFeatures()
   sendDataToAll('featureUpdate', {
     operation,
     feature,
@@ -494,11 +493,8 @@ function sendFeaturesToAll() {
  * @param {WebSocket} client 
  */
 function sendFeatures(client) {
-  checkExpiredFeatures()
   sendData(client, 'allFeatures', features)
 }
-
-let checkedExpiredRecently = false;
 
 function checkExpiredFeatures() {
   if (checkedExpiredRecently) {
@@ -541,6 +537,7 @@ async function conquerUpdater() {
       return await updateMap()
     })
     .then((data) => {
+      checkExpiredFeatures()
       if (data) {
         const payload = Object.assign(data, { oldVersion, warNumber: warapi.warData.warNumber })
         sendDataToAll('conquer', payload)
