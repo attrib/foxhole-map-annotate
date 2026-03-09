@@ -292,6 +292,8 @@ wss.on('connection', function (ws, request) {
           for (const feature of features.features) {
             if (feature.properties.id === content.data.id) {
               const newTime = (new Date()).toISOString();
+              const newExpireDate = new Date(new Date().getTime() + (feature.properties.expireTime || -(new Date().getTime() + 1))).toISOString()
+              feature.properties.expireDate = newExpireDate
               feature.properties.time = newTime;
               feature.properties.muser = username
               feature.properties.muserId = userId
@@ -300,6 +302,8 @@ wss.on('connection', function (ws, request) {
                 id: feature.properties.id,
                 type: feature.properties.type,
                 time: newTime,
+                expireDate: newExpireDate,
+                expireTime: feature.properties.expireTime,
               })
             }
           }
@@ -496,6 +500,29 @@ function sendFeatures(client) {
   sendData(client, 'allFeatures', features)
 }
 
+function checkExpiredFeatures() {
+
+  const now = Date.now();
+
+  for (const featureToCheck of features.features) {
+
+    const expireDate = new Date(featureToCheck.properties?.expireDate || -1).getTime();
+
+    if (expireDate >= now || expireDate <= 0 ) {
+      continue
+    }
+    
+    if (expireDate < now) {
+      features.features = features.features.filter((feature) => {
+        return feature.properties.id !== featureToCheck.properties.id
+      })
+    const oldHash = features.hash
+    sendUpdateFeature('delete', featureToCheck, oldHash, features.hash)
+    saveFeatures(features)
+    }
+  }
+}
+
 /**
  * Checks the warapi for updates and sends the data to all clients
  * @returns {Promise<void>}
@@ -507,6 +534,7 @@ async function conquerUpdater() {
       return await updateMap()
     })
     .then((data) => {
+      checkExpiredFeatures()
       if (data) {
         const payload = Object.assign(data, { oldVersion, warNumber: warapi.warData.warNumber })
         sendDataToAll('conquer', payload)
@@ -690,6 +718,8 @@ export default function startServer (server) {
  * @property {string} id
  * @property {string} type
  * @property {string} time
+ * @property {string} expireDate
+ * @property {number | undefined} expireTime
  */
 
 /**
