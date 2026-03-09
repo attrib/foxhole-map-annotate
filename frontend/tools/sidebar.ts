@@ -336,6 +336,13 @@ class Sidebar {
     return 0;
   }
 
+  getExpireDate(ms) {
+    if (!ms) return null;
+
+    const expireDate = new Date(Date.now() + ms);
+    return expireDate.toISOString();
+  }
+
 }
 
 export default Sidebar

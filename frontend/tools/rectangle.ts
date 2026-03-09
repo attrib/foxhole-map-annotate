@@ -62,6 +62,7 @@ class Rectangle {
       feature.set('secondary-color', tools.sidebar.secondaryColorInput.value + this.opacity, true)
       feature.set('notes', tools.sidebar.notesInput.value)
       feature.set("expireTime", tools.sidebar.getExpireTime())
+      feature.set("expireDate", tools.sidebar.getExpireDate(feature.get("expireTime")))
       tools.emit(tools.EVENT_ICON_ADDED, feature)
       tools.changeTool(false)
       this.sketchFeature = null

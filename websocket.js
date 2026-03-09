@@ -292,6 +292,8 @@ wss.on('connection', function (ws, request) {
           for (const feature of features.features) {
             if (feature.properties.id === content.data.id) {
               const newTime = (new Date()).toISOString();
+              const newExpireDate = new Date(new Date().getTime() + (feature.properties.expireTime || -(new Date().getTime() + 1))).toISOString()
+              feature.properties.expireDate = newExpireDate
               feature.properties.time = newTime;
               feature.properties.muser = username
               feature.properties.muserId = userId
@@ -300,6 +302,8 @@ wss.on('connection', function (ws, request) {
                 id: feature.properties.id,
                 type: feature.properties.type,
                 time: newTime,
+                expireDate: newExpireDate,
+                expireTime: feature.properties.expireTime,
               })
             }
           }
@@ -497,31 +501,24 @@ function sendFeatures(client) {
 }
 
 function checkExpiredFeatures() {
-  if (checkedExpiredRecently) {
-    return;
-  }
-  checkedExpiredRecently = true;
-  setTimeout(() => {
-    checkedExpiredRecently = false;
-  }, 60_000)
 
   const now = Date.now();
 
   for (const featureToCheck of features.features) {
 
-    const expireTime = new Date(featureToCheck.properties?.expireTime || -(now + 1)).getTime() + now;
+    const expireDate = new Date(featureToCheck.properties?.expireDate || -1).getTime();
 
-    if (expireTime >= now || expireTime <= 0 ) {
+    if (expireDate >= now || expireDate <= 0 ) {
       continue
     }
     
-    if (expireTime < now) {
+    if (expireDate < now) {
       features.features = features.features.filter((feature) => {
         return feature.properties.id !== featureToCheck.properties.id
       })
     const oldHash = features.hash
-    saveFeatures(features)
     sendUpdateFeature('delete', featureToCheck, oldHash, features.hash)
+    saveFeatures(features)
     }
   }
 }
@@ -721,6 +718,8 @@ export default function startServer (server) {
  * @property {string} id
  * @property {string} type
  * @property {string} time
+ * @property {string} expireDate
+ * @property {number | undefined} expireTime
  */
 
 /**

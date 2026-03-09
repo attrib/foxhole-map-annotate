@@ -117,6 +117,7 @@ class Icon {
       feature.set('type', this.featureType, true)
       feature.set('notes', tools.sidebar.notesInput.value)
       feature.set("expireTime", tools.sidebar.getExpireTime())
+      feature.set("expireDate", tools.sidebar.getExpireDate(feature.get("expireTime")))
       this.unselectIcon()
       tools.emit(tools.EVENT_ICON_ADDED, feature)
     })
