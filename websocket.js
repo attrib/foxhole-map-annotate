@@ -508,15 +508,18 @@ function checkExpiredFeatures() {
   setTimeout(() => {
     checkedExpiredRecently = false;
   }, 60_000)
+
+  const now = Date.now();
+
   for (const featureToCheck of features.features) {
 
-    const expireTime = featureToCheck.properties?.expireTime;
+    const expireTime = new Date(featureToCheck.properties?.expireTime || -(now + 1)).getTime() + now;
 
-    if (expireTime && (new Date(expireTime).getTime() >= Date.now() || new Date(expireTime).getTime() <= 0 )) {
+    if (expireTime >= now || expireTime <= 0 ) {
       continue
     }
     
-    if (expireTime && new Date(expireTime).getTime() < Date.now()) {
+    if (expireTime < now) {
       features.features = features.features.filter((feature) => {
         return feature.properties.id !== featureToCheck.properties.id
       })

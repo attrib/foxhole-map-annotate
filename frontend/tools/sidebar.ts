@@ -314,7 +314,7 @@ class Sidebar {
     if (active.id === "expire-preset") {
       const time = Number(active.querySelector("input:checked")?.id) || 0;
 
-      return new Date(Date.now() + Number(time)).toISOString();
+      return time;
     }
 
     if (active.id === "expire-custom") {
@@ -330,7 +330,7 @@ class Sidebar {
 
       const time = Number(actualValue) * multiplier || 0;
 
-      return new Date(Date.now() + Number(time)).toISOString();
+      return Number(time);
     }
 
     return 0;
