@@ -104,7 +104,7 @@
 
         <div class="container-fluid d-flex flex-column flex-grow-1">
 
-            <h1 class="display-5 fw-bold">Help</h1>
+            <h1 class="display-5 fw-bold mb-5">Help</h1>
 
             <div class="row flex-grow-1">
 
@@ -114,6 +114,15 @@
 
                         <li class="nav-item">
                             <button class="nav-link active"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#tab-groups"
+                                    type="button">
+                            Groups
+                            </button>
+                        </li>
+
+                        <li class="nav-item">
+                            <button class="nav-link"
                                     data-bs-toggle="tab"
                                     data-bs-target="#tab-decay"
                                     type="button">
@@ -208,7 +217,22 @@
                 <div class="col-9">
                     <div class="tab-content">
 
-                        <div class="tab-pane fade show active" id="tab-decay">
+                        <div class="tab-pane fade show active" id="tab-groups">
+                            <h2>Groups</h2>
+                            <p>Groups allow you to place markers and edit features as a group instead of as an individual representing a group</p>
+                            <br>
+                            <h4>What can I do when I am in a group?</h4>
+                            <p>Once you are added to a group, you can switch who you are acting as, by clicking on your names in the top right and selecting one of the name from the "Groups" drop down menu</p>
+                            <p>If you did everything correctly "Acting as" should now display the name of the group you selected.</p>
+                            <p>Any markers you place on the map will now display as created by [your group] instead of by [your name] and you will be able to edit all markers placed by other users who had the same group selected</p>
+                            <br>
+                            <h4>Creating and editing a group</h4>
+                            <p>You can create and edit your groups by going to the "Groups" tab at the top of the site.</p>
+                            <p>You can add members to your groups by either entering a discord role ID from a specific server or by submitting a discord user ID directly.</p>
+                            <p>You can view user, role and server IDs, by enabling developer mode in your discord options and then rightclicking on what ever you need the ID off.</p>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-decay">
                             <h2>Decay Information</h2>
                             <p>If an expiration time was selected a clock will show in the info box of the corresponding feature (<span id="clock" class="clock">{% include 'clock.svg' %}</span>).</p>
                             <p>This goes from green (just placed) to red (about to expire).</p>
