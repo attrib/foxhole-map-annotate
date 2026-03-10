@@ -326,3 +326,27 @@ button.overlay-button {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.sidebar-tabs {
+  border-right: 1px solid #dee2e6;
+  border-bottom: none;
+}
+
+.sidebar-tabs .nav-link {
+  border-radius: 0;
+  width: 100%;
+  text-align: left;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+  margin-bottom: 0px;
+}
+
+.sidebar-tabs .nav-link.active {
+  border-right: 1px solid white;
+  border-bottom: 1px solid #dee2e6;
+  background-color: var(--bs-body-bg);
+  width: 100.5%
+}
+
+
+

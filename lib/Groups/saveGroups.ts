@@ -6,8 +6,8 @@ import type {
   Group,
   GroupMembership,
 } from "../lib/Groups/types.ts";
-import { get } from "node:http";
 import { recomputeMembershipsForGroup } from "./groupMemberships.ts";
+import { delayedSave } from "./../fileHandler.ts";
 
 const GROUPS_PATH = resolve("data/groups.json");
 
@@ -23,22 +23,6 @@ function ensureFile(): void {
   }
 }
 
-/* ---------- throttled save ---------- */
-
-const timers: Record<string, NodeJS.Timeout> = {};
-
-function throttledSave(filePath: string, delay = 5000): void {
-  if (timers[filePath]) return;
-
-  timers[filePath] = setTimeout(() => {
-    try {
-      fs.writeFileSync(filePath, JSON.stringify(file, null, 2), "utf-8");
-    } finally {
-      delete timers[filePath];
-    }
-  }, delay);
-}
-
 /* ---------- load ---------- */
 
 export function loadAllGroups(): GroupsFile {
@@ -48,16 +32,6 @@ export function loadAllGroups(): GroupsFile {
 
 const file: GroupsFile = loadAllGroups();
 
-/* ---------- reload (in-place) ---------- */
-
-export function reloadGroupsFile(): GroupsFile {
-  const fresh = JSON.parse(fs.readFileSync(GROUPS_PATH, "utf-8")) as GroupsFile;
-
-  Object.keys(file).forEach(k => delete (file as any)[k]);
-  Object.assign(file, fresh);
-
-  return file;
-}
 
 /* ---------- save ---------- */
 
@@ -66,7 +40,7 @@ export function saveAllGroups(): void {
     .update(JSON.stringify(file.groups))
     .digest("hex");
 
-  throttledSave(GROUPS_PATH);
+  delayedSave(GROUPS_PATH);
 }
 
 /* ---------- getters ---------- */
