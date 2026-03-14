@@ -40,7 +40,7 @@ export function saveAllGroups(): void {
     .update(JSON.stringify(file.groups))
     .digest("hex");
 
-  delayedSave(GROUPS_PATH);
+  delayedSave(GROUPS_PATH, file);
 }
 
 /* ---------- getters ---------- */
