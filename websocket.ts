@@ -111,6 +111,8 @@ interface PrivateDecayUpdatedMessage {
   id: string;
   type: string;
   time: string;
+  expireDate: string;
+  expireTime: number | undefined;
 }
 
 interface PrivateFeatureUpdateMessage {
@@ -159,6 +161,7 @@ interface PrivateIncomingTypes {
   init: PrivateIncomingInit;
   setActiveGroup: SetActiveGroupMessage;
   getAllFeatures: never;
+  getWarFeatures: never;
   getConquerStatus: never;
   getDraftStatus: never;
   featureAdd: UserMapFeature;
@@ -517,6 +520,8 @@ wss.on("connection", (ws: WebSocket, request: any) => {
         for (const feature of features.features) {
           if (feature.properties.id === content.data.id) {
             const time = new Date().toISOString();
+            const newExpireDate = new Date(new Date().getTime() + (feature.properties.expireTime || -(new Date().getTime() + 1))).toISOString()
+            feature.properties.expireDate = newExpireDate
             feature.properties.time = time;
             feature.properties.muser = username;
             feature.properties.muserId = userId;
@@ -532,6 +537,8 @@ wss.on("connection", (ws: WebSocket, request: any) => {
               id: feature.properties.id,
               type: feature.properties.type,
               time,
+              expireDate: newExpireDate,
+              expireTime: feature.properties.expireTime,
             });
           }
         }
@@ -769,12 +776,35 @@ function sendFeaturesToAll(): void {
 /* War updater */
 /* ------------------------------------------------------------------ */
 
+function checkExpiredFeatures() {
+  const now = Date.now();
+
+  for (const featureToCheck of features.features) {
+
+    const expireDate = new Date(featureToCheck.properties?.expireDate || -1).getTime();
+
+    if (expireDate >= now || expireDate <= 0 ) {
+      continue
+    }
+
+    if (expireDate < now) {
+      features.features = features.features.filter((feature) => {
+        return feature.properties.id !== featureToCheck.properties.id
+      })
+      const oldHash = features.hash
+      sendUpdateFeature('delete', featureToCheck, oldHash, features.hash)
+      saveFeatures(features)
+    }
+  }
+}
+
 async function conquerUpdater(): Promise<void> {
   const oldVersion = getConquerStatusVersion();
 
   await warapi.warDataUpdate()
     .then(updateMap)
     .then(data => {
+      checkExpiredFeatures()
       if (data) {
         const payload: ConquerWebSocketObject = {
           ...data,
