@@ -9,6 +9,7 @@ export default defineConfig({
         stats: "./frontend/stats.ts",
         main: "./frontend/main.ts",
         admin: "./frontend/admin.ts",
+        groups: "./frontend/groups.ts",
       },
     },
     copyPublicDir: false,
