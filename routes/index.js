@@ -1,7 +1,7 @@
 import express from "express";
 import sanitizeHtml from "sanitize-html";
 
-import { ACL_ADMIN, ACL_MOD } from "../lib/ACLS.js";
+import { ACL_ADMIN, ACL_MOD } from "../lib/ACLS.ts";
 import config from "../lib/config.js";
 import { clearRegionsCache } from "../lib/conquerUpdater.js";
 import Discord from "../lib/discord.js";

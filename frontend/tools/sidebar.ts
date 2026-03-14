@@ -1,4 +1,4 @@
-import { ACL_ICONS_ONLY } from "../../lib/ACLS.js";
+import { ACL_ICONS_ONLY } from "../../lib/ACLS.ts";
 import { blinkInput } from "./errorBlink.js";
 
 class Sidebar {

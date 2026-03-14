@@ -6,8 +6,8 @@ import { URL } from "node:url";
 import sanitizeHtml from "sanitize-html";
 import WebSocket, { WebSocketServer } from "ws";
 
-import { ACL_ACTIONS, ACL_BLOCKED, hasAccess } from "./lib/ACLS.js";
-import type { Access } from "./lib/ACLS.js";
+import { ACL_ACTIONS, ACL_BLOCKED, hasAccess } from "./lib/ACLS.ts";
+import type { Access } from "./lib/ACLS.ts";
 
 import {
   clearRegions,
@@ -311,7 +311,7 @@ wss.on("connection", (ws: WebSocket, request: any) => {
   /* ---------------- init message ---------------- */
 
   ws.send(
-    JSON.stringify(<PrivateWebSocketOutgoingTraffic<"init">>{
+    JSON.stringify({
       type: "init",
       data: {
         acl,
@@ -321,7 +321,7 @@ wss.on("connection", (ws: WebSocket, request: any) => {
         discordId,
         userGroups: getUserMemberships(userId),
       },
-    })
+    } as PrivateWebSocketOutgoingTraffic<"init">)
   );
 
   /* ---------------- message handler ---------------- */
@@ -688,7 +688,7 @@ publicWss.on("connection", (ws: WebSocket, request: any) => {
   publicClients.set(wsId, ws);
 
   ws.send(
-    JSON.stringify(<PublicWebSocketOutgoingTraffic<"init">>{
+    JSON.stringify({
       type: "init",
       data: {
         version: process.env.COMMIT_HASH,
@@ -697,7 +697,7 @@ publicWss.on("connection", (ws: WebSocket, request: any) => {
         warFeatures: getPublicWarFeatures(),
         queueStatus: cachedQueue,
       },
-    })
+    } as PublicWebSocketOutgoingTraffic<"init">)
   );
 
   ws.on("message", message => {

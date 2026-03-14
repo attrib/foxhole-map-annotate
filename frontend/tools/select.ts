@@ -8,7 +8,7 @@ import { Vector } from "ol/layer.js";
 import { Vector as VectorSource } from "ol/source.js";
 import { Circle, Fill, Stroke, Style } from "ol/style.js";
 
-import { ACL_ACTIONS } from "../../lib/ACLS.js";
+import { ACL_ACTIONS } from "../../lib/ACLS.ts";
 import { diff } from "util";
 
 

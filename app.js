@@ -8,13 +8,13 @@ import grant from "grant";
 import createError from "http-errors";
 import nunjucks from "nunjucks";
 
-import { ACL_ADMIN, ACL_BLOCKED, ACL_FULL, ACL_ICONS_ONLY, ACL_MOD, ACL_READ } from "./lib/ACLS.js";
+import { ACL_ADMIN, ACL_BLOCKED, ACL_FULL, ACL_ICONS_ONLY, ACL_MOD, ACL_READ } from "./lib/ACLS.ts";
 import config from "./lib/config.js";
 import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import indexRouter from "./routes/index.js";
 import { getManifest } from "./lib/manifest.js";
-import groupApiRouter from "./routes/api/groups.js";
+import groupApiRouter from "./routes/api/groups.ts";
 
 if (process.env.NODE_ENV !== "production") {
   try {
