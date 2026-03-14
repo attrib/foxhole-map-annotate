@@ -60,6 +60,7 @@ export class EditTools {
     this.map = map
 
     this.userId = document.getElementById('discord-username').dataset.userId;
+
     this.geoJson = new GeoJSON();
 
     this.facilitiesGroup = new Group({
@@ -122,6 +123,12 @@ export class EditTools {
     this.move = new Move(this, map)
   }
 
+  get userGroups() {
+      return Array.from(
+        document.querySelectorAll("#user-groups-list a")
+      ).map(a => a.dataset.groupId)
+    };
+
   resetAcl = () => {
     this.acl = ACL_READ;
     this.map.removeControl(this.edit.control)
@@ -142,7 +149,7 @@ export class EditTools {
   }
 
   hasAccess = (action, feature = null) => {
-    return hasAccess(this.userId, this.acl, action, feature ? this.geoJson.writeFeatureObject(feature) : null)
+    return hasAccess(this.userId, this.acl, action, feature ? this.geoJson.writeFeatureObject(feature) : null, this.userGroups)
   }
 
   changeMode = (newMode) => {

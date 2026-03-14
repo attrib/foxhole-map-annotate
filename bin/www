@@ -34,7 +34,7 @@ server.on('listening', onListening);
 /**
  * Websocket
  */
-import('../websocket.js')
+import('../websocket.ts')
   .then((module) => module.default)
   .then((startServer) => startServer(server))
 

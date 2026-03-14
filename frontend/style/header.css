@@ -521,8 +521,12 @@ body > header {
       min-height: 0;
 
       & > a {
-        display: flex;
+        display: block;
         align-items: center;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         padding-block: 0.25rem;
         padding-inline: 0.5rem;
         border-top-color: light-dark(var(--border-light), var(--border-dark));
@@ -571,12 +575,37 @@ body > header {
   }
 
   &:has(#link-open:checked) {
-    & > .user-menu-links {
+    & > .user-menu-links.links {
+
       overflow: visible;
       grid-template-rows: 1fr;
     }
 
-    & > label {
+    & > label[for="links-open"] {
+      background-color: light-dark(color-mix(in oklab, var(--foreground-light) 40%, var(--copy-light-lighter) 20%), color-mix(in oklab, var(--foreground-dark) 40%, var(--copy-dark-lighter) 20%));
+
+      & > svg {
+        rotate: 90deg;
+      }
+    }
+  }
+
+  > .hidden,
+  .user-menu-details > .hidden {
+    display: none;
+  }
+
+
+  &:has(#groups-open:checked) {
+    & > .user-menu-links.group {
+      display: grid;
+      overflow-y: auto;
+      max-height: 40vh;
+      scrollbar-color: rgba(235, 234, 234, 0.4) transparent;
+      grid-template-rows: 1fr;
+    }
+
+    & > label[for="groups-open"] {
       background-color: light-dark(color-mix(in oklab, var(--foreground-light) 40%, var(--copy-light-lighter) 20%), color-mix(in oklab, var(--foreground-dark) 40%, var(--copy-dark-lighter) 20%));
 
       & > svg {
@@ -653,6 +682,23 @@ body > header {
       }
     }
   }
+}
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-menu-item.active {
+    font-weight: 600;
 }
 
 #war-score {

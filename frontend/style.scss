@@ -266,3 +266,96 @@ button.overlay-button {
   animation: blink-red 0.4s ease-in-out 2;
   border-color: red;
 }
+
+.input-error-text {
+    color: #df0c41;
+    font-size: 0.85rem;
+    margin-left: 4px;
+    transition: opacity 0.2s;
+}
+.input-error-text.show {
+    display: inline;
+}
+
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-menu-item.active {
+    font-weight: 600;
+}
+
+.group-panel {
+  display: none;
+}
+
+.group-panel.active {
+  display: block;
+}
+
+#group-editor {
+  flex: 1;
+  min-height: 0;
+  max-height: 60vh;   
+  overflow-y: auto;
+  scrollbar-color: rgba(0,0,0,0.4) transparent;
+}
+
+.member-list,
+.role-list {
+  max-height: 40vh;   
+  overflow-y: auto;                    
+  scrollbar-color: rgba(0,0,0,0.4) transparent;
+}
+
+.truncate {
+  flex: 1;
+  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebar-tabs {
+  border-right: 1px solid #dee2e6;
+  border-bottom: none;
+}
+
+.sidebar-tabs .nav-item {
+  width: 100%;
+}
+
+.sidebar-tabs .nav-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border-radius: 0;
+  border-top-left-radius: .375rem;
+  border-bottom-left-radius: .375rem;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.sidebar-tabs .nav-link.active {
+  border-right: none;
+  background-color: var(--bs-body-bg);
+  border-bottom: 1px solid #dee2e6;
+  position: relative;
+  z-index: 2;
+  width: calc(100% + 1px);
+}
+
+
+
+

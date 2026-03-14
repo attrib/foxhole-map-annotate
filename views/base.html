@@ -56,6 +56,7 @@
                     {% endif %}
                     <li><a class="{% if path == '/help' %}active{% endif %}" href="/help">Help</a></li>
                     <li><a class="{% if path == '/' %}active{% endif %}" href="/">Stats</a></li>
+                    <li><a class="{% if path == '/groups' %}active{% endif %}" href="/groups">Groups</a></li>
                 </ul>
                 <div id="war-score"></div>
                 <div>
@@ -129,6 +130,20 @@
                     {% endif %}
                 </span>
             </div>
+            <div class="hidden">
+                <span>Acting as: </span><span id="current-group"></span>
+            </div>
+        </div>
+        <label for="groups-open" class="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m9 18l6-6l-6-6" />
+            </svg>
+            <span>Groups</span>
+            <input type="checkbox" id="groups-open">
+        </label>
+        <div class="user-menu-links group hidden">
+            <div id="user-groups-list"></div>
         </div>
         {% if config.basic.links|length > 0 %}
         <label for="link-open">
@@ -139,7 +154,7 @@
             <span>Links</span>
             <input type="checkbox" id="link-open">
         </label>
-        <div class="user-menu-links">
+        <div class="user-menu-links links">
             <div>
                 {% for item in config.basic.links %}
                 <a href="{{ item.href }}" referrerpolicy="no-referrer" target="_blank" title="{{ item.title }}">
