@@ -267,6 +267,11 @@ button.overlay-button {
   border-color: red;
 }
 
+.input-2digit {
+  width: 7ch;
+  text-align: left;
+}
+
 .input-error-text {
     color: #df0c41;
     font-size: 0.85rem;
@@ -306,15 +311,15 @@ button.overlay-button {
 #group-editor {
   flex: 1;
   min-height: 0;
-  max-height: 60vh;   
+  max-height: 60vh;
   overflow-y: auto;
   scrollbar-color: rgba(0,0,0,0.4) transparent;
 }
 
 .member-list,
 .role-list {
-  max-height: 40vh;   
-  overflow-y: auto;                    
+  max-height: 40vh;
+  overflow-y: auto;
   scrollbar-color: rgba(0,0,0,0.4) transparent;
 }
 

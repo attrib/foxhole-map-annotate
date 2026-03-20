@@ -11,6 +11,7 @@ import config from "../config.js";
 /* ---------- recompute ---------- */
 
 export async function recomputeMemberships(session, userId) {
+
   if (!userId) throw new Error("userId is undefined");
 
   const file = getGroupsFile();

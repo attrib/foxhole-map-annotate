@@ -8,7 +8,8 @@ import { Vector } from "ol/layer.js";
 import { Vector as VectorSource } from "ol/source.js";
 import { Circle, Fill, Stroke, Style } from "ol/style.js";
 
-import { ACL_ACTIONS } from "../../lib/ACLS.js";
+import { ACL_ACTIONS } from "../../lib/ACLS.ts";
+import { diff } from "util";
 
 
 const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius', 'grid', 'obsTowerRadius']
@@ -44,6 +45,7 @@ const RADIUS = {
   base: {
     friendly_planned_intel_center: 2500,
     friendly_planned_storm_cannon: 1000,
+    friendly_planned_radar: 500,
     base_obs: 180,
     base_obs_t2: 130,
     EmplacementHouse: 100,
@@ -203,7 +205,7 @@ class Select {
 
     tools.on(tools.EVENT_DECAY_UPDATED, (data) => {
       if (data.id in this.clocks) {
-        this.setClockColor(this.clocks[data.id], new Date(data.time))
+        this.setClockColor(this.clocks[data.id], data.expireTime, new Date(data.expireDate))
       }
     })
 
@@ -453,27 +455,37 @@ class Select {
   }
 
   clockColor = (clock, feature) => {
-    if (NO_CLOCK.includes(feature.get('type'))) {
-      clock.style.display = 'none'
+    if (!feature.get("expireDate") || new Date(feature.get("expireDate")).getTime() <= 0) {
+      clock.querySelector("svg").style.display = 'none'
+      clock.querySelector(".clock-time").display = ''
+      this.roundedTimeText(clock, new Date(feature.get('time')).getTime() - new Date().getTime())
       return
     }
-    clock.style.display = ''
-    const time = new Date(feature.get('time'))
+    clock.querySelector("svg").style.display = ''
+    const expDate = new Date(feature.get('expireDate'))
+    const time = feature.get('expireTime')
     clock.dataset.id = feature.getId() || null
     clock.dataset.type = feature.get('type') || null
-    this.setClockColor(clock, time)
+    this.setClockColor(clock, time, expDate)
   }
 
-  setClockColor = (clock, time) => {
-    const diff = new Date().getTime() - time.getTime()
-    clock.getElementsByTagName('circle')[0].style.fill = this.getColorForPercentage((24 - diff / 3600000) / 24)
-    clock.title = time.toLocaleString();
-    if (diff < 3600000) {
-      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 60000), 'minute')
-    } else if (diff < 86400000) {
-      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 3600000), 'hour')
-    } else {
-      clock.getElementsByClassName('clock-time')[0].innerHTML = this.relativeTimeFormat.format(Math.round(-diff / 86400000), 'day')
+  setClockColor = (clock, time, expDate) => {
+    const diff =  expDate.getTime() - new Date().getTime()
+    clock.getElementsByTagName('circle')[0].style.fill = this.getColorForPercentage(diff / time)
+    this.roundedTimeText(clock, diff, "Expires ")
+  
+  }
+
+  roundedTimeText = (clock, diff, text = "") => {
+    if (diff) {
+        const diffP = diff < 0 ? -diff : diff
+        if (diffP < 3600000) {
+        clock.getElementsByClassName('clock-time')[0].innerHTML = text + this.relativeTimeFormat.format(Math.round(diff / 60000), 'minute')
+      } else if (diffP < 86400000) {
+        clock.getElementsByClassName('clock-time')[0].innerHTML = text + this.relativeTimeFormat.format(Math.round(diff / 3600000), 'hour')
+      } else {
+        clock.getElementsByClassName('clock-time')[0].innerHTML = text + this.relativeTimeFormat.format(Math.round(diff / 86400000), 'day')
+      }
     }
   }
 

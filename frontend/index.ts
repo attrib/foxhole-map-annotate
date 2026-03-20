@@ -9,7 +9,7 @@ import { TileImage } from "ol/source.js";
 import TileGrid from "ol/tilegrid/TileGrid.js";
 import { createApp, reactive, ref } from "vue";
 
-import { ACL_ACTIONS, ACL_ADMIN, ACL_MOD, hasAccess } from "../lib/ACLS.js";
+import { ACL_ACTIONS, ACL_ADMIN, ACL_MOD, hasAccess } from "../lib/ACLS.ts";
 import Draft from "./Components/Draft.vue";
 import Flags from "./flags.js";
 import { addDefaultMapControls, enableLayerMemory, toggleLayersFunction } from "./mapControls.js";
@@ -18,7 +18,7 @@ import Measure from "./measure.js";
 import StaticLayers from "./staticLayer.js";
 import Socket from "./webSocket.ts";
 import { set } from "ol/transform.js";
-import {setUserGroups} from "./cmapUserGroups.js"
+import {setUserGroups} from "./cmapUserGroups.ts"
 
 const url = new URL(window.location);
 

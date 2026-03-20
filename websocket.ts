@@ -6,8 +6,8 @@ import { URL } from "node:url";
 import sanitizeHtml from "sanitize-html";
 import WebSocket, { WebSocketServer } from "ws";
 
-import { ACL_ACTIONS, ACL_BLOCKED, hasAccess } from "./lib/ACLS.js";
-import type { Access } from "./lib/ACLS.js";
+import { ACL_ACTIONS, ACL_BLOCKED, hasAccess } from "./lib/ACLS.ts";
+import type { Access } from "./lib/ACLS.ts";
 
 import {
   clearRegions,
@@ -112,6 +112,8 @@ interface PrivateDecayUpdatedMessage {
   id: string;
   type: string;
   time: string;
+  expireDate: string;
+  expireTime: number | undefined;
 }
 
 interface PrivateFeatureUpdateMessage {
@@ -160,6 +162,7 @@ interface PrivateIncomingTypes {
   init: PrivateIncomingInit;
   setActiveGroup: SetActiveGroupMessage;
   getAllFeatures: never;
+  getWarFeatures: never;
   getConquerStatus: never;
   getDraftStatus: never;
   featureAdd: UserMapFeature;
@@ -311,7 +314,7 @@ wss.on("connection", (ws: WebSocket, request: any) => {
   /* ---------------- init message ---------------- */
 
   ws.send(
-    JSON.stringify(<PrivateWebSocketOutgoingTraffic<"init">>{
+    JSON.stringify({
       type: "init",
       data: {
         acl,
@@ -321,7 +324,7 @@ wss.on("connection", (ws: WebSocket, request: any) => {
         discordId,
         userGroups: getUserMemberships(userId),
       },
-    })
+    } as PrivateWebSocketOutgoingTraffic<"init">)
   );
 
   /* ---------------- message handler ---------------- */
@@ -520,6 +523,8 @@ wss.on("connection", (ws: WebSocket, request: any) => {
         for (const feature of features.features) {
           if (feature.properties.id === content.data.id) {
             const time = new Date().toISOString();
+            const newExpireDate = new Date(new Date().getTime() + (feature.properties.expireTime || -(new Date().getTime() + 1))).toISOString()
+            feature.properties.expireDate = newExpireDate
             feature.properties.time = time;
             feature.properties.muser = username;
             feature.properties.muserId = userId;
@@ -535,6 +540,8 @@ wss.on("connection", (ws: WebSocket, request: any) => {
               id: feature.properties.id,
               type: feature.properties.type,
               time,
+              expireDate: newExpireDate,
+              expireTime: feature.properties.expireTime,
             });
           }
         }
@@ -684,7 +691,7 @@ publicWss.on("connection", (ws: WebSocket, request: any) => {
   publicClients.set(wsId, ws);
 
   ws.send(
-    JSON.stringify(<PublicWebSocketOutgoingTraffic<"init">>{
+    JSON.stringify({
       type: "init",
       data: {
         version: process.env.COMMIT_HASH,
@@ -693,7 +700,7 @@ publicWss.on("connection", (ws: WebSocket, request: any) => {
         warFeatures: getPublicWarFeatures(),
         queueStatus: cachedQueue,
       },
-    })
+    } as PublicWebSocketOutgoingTraffic<"init">)
   );
 
   ws.on("message", message => {
@@ -772,12 +779,35 @@ function sendFeaturesToAll(): void {
 /* War updater */
 /* ------------------------------------------------------------------ */
 
+function checkExpiredFeatures() {
+  const now = Date.now();
+
+  for (const featureToCheck of features.features) {
+
+    const expireDate = new Date(featureToCheck.properties?.expireDate || -1).getTime();
+
+    if (expireDate >= now || expireDate <= 0 ) {
+      continue
+    }
+
+    if (expireDate < now) {
+      features.features = features.features.filter((feature) => {
+        return feature.properties.id !== featureToCheck.properties.id
+      })
+      const oldHash = features.hash
+      sendUpdateFeature('delete', featureToCheck, oldHash, features.hash)
+      saveFeatures(features)
+    }
+  }
+}
+
 async function conquerUpdater(): Promise<void> {
   const oldVersion = getConquerStatusVersion();
 
   await warapi.warDataUpdate()
     .then(updateMap)
     .then(data => {
+      checkExpiredFeatures()
       if (data) {
         const payload: ConquerWebSocketObject = {
           ...data,

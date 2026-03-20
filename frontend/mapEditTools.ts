@@ -5,7 +5,7 @@ import Arty from "./tools/arty.js";
 import Edit from "./tools/edit.js";
 import Select from "./tools/select.js";
 
-import { ACL_READ, hasAccess } from "../lib/ACLS.js";
+import { ACL_READ, hasAccess } from "../lib/ACLS.ts";
 import Icon from "./tools/icon.js";
 import Line from "./tools/line.js";
 import Merge from "./tools/merge.js";

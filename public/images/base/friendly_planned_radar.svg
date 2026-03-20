@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Layer_2"
+   viewBox="0 0 80 80"
+   width="32"
+   height="32"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs5600">
+    <style
+       id="style5598">
+      .cls-1{fill:#fff}
+    </style>
+  </defs>
+  <g
+     id="Layer_1-2">
+    <rect
+       width="78"
+       height="78"
+       x="1"
+       y="1"
+       rx="4"
+       ry="4"
+       style="fill:#7a4501;fill-opacity:1"
+       id="rect5602" />
+    <path
+       d="M75 2a3 3 0 0 1 3 3v70a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h70m0-2H5a5 5 0 0 0-5 5v70a5 5 0 0 0 5 5h70a5 5 0 0 0 5-5V5a5 5 0 0 0-5-5Z"
+       class="cls-1"
+       id="path5604" />
+  </g>
+  <path
+     style="display:inline;fill:#ffffff;stroke:none;stroke-width:0.658526"
+     d="m 9.2800246,69.958695 59.2232194,3e-6 C 69.093638,62.864695 52.911425,59.553942 48.612075,59.382415 V 44.994448 c 6.483009,4.040629 9.705185,4.790806 19.939684,4.248323 L 40.849668,11.012915 c -3.848721,8.078851 -4.329464,16.837907 1.135447,27.00197 l -2.773485,2.636054 -7.09467,0.0047 v 9.800039 l -4.075264,-3.1e-5 v 8.926768 C 17.917783,60.929011 8.6992488,64.640482 9.2800246,69.958726 Z"
+     id="path179"/>
+  <path
+     style="display:inline;fill:#ffffff;stroke:none;stroke-width:1.25"
+     d="m 52.008594,27.991406 8.393202,-8.393202 2.238442,2.414845 -8.545962,8.745489 z"
+     id="path1183"/>
+  <path
+     style="display:inline;fill:#ffffff;stroke:none;stroke-width:1.25"
+     d="M 62.640238,22.013049 61.445506,40.807695 60.089454,38.953967 61.242246,23.44368 Z"
+     id="path1185"/>
+</svg>

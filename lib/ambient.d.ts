@@ -1,7 +1,7 @@
 import type session from "express-session";
 import type { GrantSession, GrantResponse } from "grant";
 
-import type { Access } from "./ACLS.js";
+import type { Access } from "./ACLS.ts";
 import type { Session, SessionData } from "express-session";
 
 declare global {

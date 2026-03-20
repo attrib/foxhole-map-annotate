@@ -65,6 +65,44 @@
                     <textarea id="notes-input" name="notes" class="notes form-control"></textarea>
                 </div>
             </div>
+            <div class="row mb-2 align-items-center py-1" id="expire-inputs">
+                <div class="col-3">
+                    <span>Expires in</span>
+                </div>
+                <div id="expire-input" class="col-6">
+                    <div class="btn-group btn-group-sm active" role="group" id="expire-preset">
+                        <input type="radio" class="btn-check" name="expire" id="exp-never" checked>
+                        <label class="btn btn-outline-light" for="exp-never">Never</label>
+
+                        <input type="radio" class="btn-check" name="expire" id="3600000">
+                        <label class="btn btn-outline-light" for="3600000">1h</label>
+
+                        <input type="radio" class="btn-check" name="expire" id="21600000">
+                        <label class="btn btn-outline-light" for="21600000">6h</label>
+
+                        <input type="radio" class="btn-check" name="expire" id="86400000">
+                        <label class="btn btn-outline-light" for="86400000">1d</label>
+
+                        <input type="radio" class="btn-check" name="expire" id="604800000">
+                        <label class="btn btn-outline-light" for="604800000">7d</label>
+
+                    </div>
+                    <div class="d-flex align-items-start gap-3 d-none" id="expire-custom">
+                        <input type="number" id="custom-expire-input" class="form-control form-control-sm" min="1" max="60" value="10" title="expire value">
+                        <select id="custom-expire-unit" class="form-select form-select-sm w-auto" title="expire unit">
+                            <option>minutes</option>
+                            <option>hours</option>
+                            <option>days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-outline-light btn-sm" id="expire-toggle" type="button">
+                    Custom
+                    </button>
+                </div>  
+            </div>
+            
             <div class="row mb-2" id="button-row">
                 <div class="btn-group col-sm-12">
                     <input type="submit" id="delete-button" value="Delete" name="delete"
@@ -472,6 +510,9 @@
                         </div>
                         <div class="btn btn-outline-secondary public-radio private-radio">
                             <img src="/images/base/friendly_planned_weather_station.svg" alt="Planned Weather Station" title="Planned Weather Station">
+                        </div>
+                        <div class="btn btn-outline-secondary public-radio private-radio">
+                            <img src="/images/base/friendly_planned_radar.svg" alt="Planned Radar Station" title="Planned Radar Station">
                         </div>
                         <div class="btn btn-outline-secondary public-radio private-radio">
                             <img src="/images/base/EmplacementHouse.svg" alt="Emplacement House" title="Emplacement House">
