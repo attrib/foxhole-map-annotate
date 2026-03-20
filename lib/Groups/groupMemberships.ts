@@ -11,7 +11,6 @@ import config from "../config.js";
 /* ---------- recompute ---------- */
 
 export async function recomputeMemberships(session, userId) {
-
   if (!userId) throw new Error("userId is undefined");
 
   const file = getGroupsFile();
@@ -19,6 +18,8 @@ export async function recomputeMemberships(session, userId) {
 
   for (const group of Object.values(file.groups)) {
     let isMember = false;
+    let hasGuildId = false;
+    let hasRoleIds = false;
 
     /* ----- individual members ----- */
     if (group.individual_members) {
@@ -30,6 +31,8 @@ export async function recomputeMemberships(session, userId) {
     if (!isMember && group.discord_roles && guildRoles) {
       isMember = Object.values(group.discord_roles).some(roleEntry => {
         const rolesInGuild = guildRoles[roleEntry.server];
+        hasGuildId = roleEntry.server;
+        hasRoleIds = rolesInGuild;
         return rolesInGuild?.includes(roleEntry.role);
       });
     }
@@ -39,8 +42,8 @@ export async function recomputeMemberships(session, userId) {
           userId,
           source: "discord",
           discord: {
-            guildId: "",
-            roleIds: [],
+            guildId: hasGuildId,
+            roleIds: hasRoleIds,
           },
         }
       : null;
@@ -48,7 +51,6 @@ export async function recomputeMemberships(session, userId) {
     setUserMembershipForGroup(group.id, userId, membership);
   }
 
-  saveAllGroups();
 }
 
 
@@ -84,12 +86,17 @@ export async function recomputeMembershipsForGroup(session, groupId: string) {
 async function fetchUserDiscordRoles(session) {
   const rolesByGuild: Record<string, string[]> = {};
 
-  for (const guildId of Object.keys(config.config.access.discords)) {
+  const file = getGroupsFile();
+
+  const guilds = file.groups ? Object.values(file.groups).flatMap(g => g.discord_roles ? Object.values(g.discord_roles).map(r => r.server) : []) : [];
+  const uniqueGuilds = Array.from(new Set(guilds));
+
+  for (const guildId of uniqueGuilds) {
     const info = await discord.getGuildInformation(session, guildId);
     if (info?.roles) {
       rolesByGuild[guildId] = info.roles;
     }
   }
-
+ 
   return rolesByGuild;
 }
