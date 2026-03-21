@@ -53,6 +53,7 @@ import Discord from "./lib/discord.js";
 
 import { getGroupsFile, getUserMemberships } from "./lib/Groups/saveGroups.ts";
 import type { Group } from "./lib/Groups/types.ts";
+import { recomputeMemberships } from "./lib/Groups/groupMemberships.ts";
 
 /* ------------------------------------------------------------------ */
 /* Types */
@@ -267,6 +268,8 @@ wss.on("connection", (ws: WebSocket, request: any) => {
 
   const wsId = randomUUID();
   clients.set(wsId, ws);
+
+  recomputeMemberships(request.session, userId);
 
   /* ---------------- login checker ---------------- */
 
