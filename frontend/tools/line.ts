@@ -260,9 +260,6 @@ class Line {
 
   toolDeSelected = () => {
     if (this.draw) {
-      if (this.draw.getActive()) {
-        this.draw.finishDrawing()
-      }
       this.map.removeInteraction(this.draw)
       this.map.removeInteraction(this.snap)
     }
