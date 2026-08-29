@@ -20,7 +20,7 @@ class Weather {
         const weatherLayer = new Vector({
             source: this.weatherSource,
             title: 'Weather',
-            zIndex: 5,
+            zIndex: 1,
             // maxResolution: 6,
             style: this.style.bind(this),
             searchable: false,

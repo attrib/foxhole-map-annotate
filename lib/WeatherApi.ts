@@ -52,7 +52,7 @@ class WeatherApi {
     bearer: string
 
     constructor(opts: WeatherInitOpts) {
-        if (opts.url && opts.bearer) {
+        if (opts && opts.url && opts.bearer) {
             this.url = opts.url
             this.bearer = opts.bearer
             this.enabled = true
@@ -102,6 +102,7 @@ class WeatherApi {
                             type: 'storm',
                             flags: [],
                             type_code: storm.type_code,
+                            radius: storm.radius,
                             // ...storm
                         },
                         geometry: {
