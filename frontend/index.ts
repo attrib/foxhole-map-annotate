@@ -17,6 +17,7 @@ import EditTools from "./mapEditTools.js";
 import Measure from "./measure.js";
 import StaticLayers from "./staticLayer.js";
 import Socket from "./webSocket.js";
+import Weather from "./Weather";
 
 const url = new URL(window.location);
 
@@ -245,6 +246,7 @@ tools.on(tools.EVENT_OBS_MOVED, (data) => {
 })
 
 new Measure(map, tools)
+new Weather(map, socket, tools.MAGIC_MAP_SCALING_FACTOR)
 
 socket.on('conquer', (data) => {
   if (conquerStatus.warNumber !== data.warNumber) {

@@ -34,6 +34,7 @@ import {
 import { sessionParser } from "./lib/session.js";
 import warapi from "./lib/warapi.js";
 import Discord from "./lib/discord.js";
+import Weather from "./lib/WeatherApi.ts";
 
 const wss = new WebSocketServer({ clientTracking: false, noServer: true });
 const publicWss = new WebSocketServer({
@@ -82,6 +83,20 @@ if (fs.existsSync(resolve('data/queue.json'))) {
         }
       }, 1000)
     }
+  })
+}
+
+const weatherFeatures = {
+  type: "FeatureCollection",
+  features: [],
+  hash: ""
+};
+setTimeout(fetchWeather, 120_000)
+fetchWeather()
+function fetchWeather() {
+  Weather.getStormFeatures().then(function(data) {
+    weatherFeatures.features = data
+    sendDataToAll('weather', weatherFeatures)
   })
 }
 
@@ -175,6 +190,7 @@ wss.on('connection', function (ws, request) {
             sendData(ws, 'warFeatures', getWarFeatures())
           }
           sendData(ws, 'queue', cachedQueue)
+          sendData(ws, 'weather', weatherFeatures)
           break;
 
         case 'getAllFeatures':
@@ -779,6 +795,7 @@ export default function startServer (server) {
  * @property {PrivateDecayUpdatedMessage} decayUpdated
  * @property {PrivateFeatureUpdateMessage} featureUpdate
  * @property {QueueObject} queue
+ * @property {UserMapFeature} weather
  */
 
 /**

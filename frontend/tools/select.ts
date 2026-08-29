@@ -13,7 +13,7 @@ import { diff } from "util";
 
 
 const NO_TOOLTIP = ['Region', 'Major', 'Minor', 'voronoi', 'radius', 'grid', 'obsTowerRadius']
-const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field', 'ruler']
+const NOT_SELECTABLE = [...NO_TOOLTIP, 'town', 'industry', 'field', 'ruler', 'storm']
 const NO_USER_INFO = [...NOT_SELECTABLE, 'stormCannon']
 const NO_CLOCK = [...NO_USER_INFO, 'sign']
 
