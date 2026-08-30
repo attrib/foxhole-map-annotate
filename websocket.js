@@ -91,13 +91,13 @@ const weatherFeatures = {
   features: [],
   hash: ""
 };
-setTimeout(fetchWeather, 120_000)
 fetchWeather()
 function fetchWeather() {
   Weather.getStormFeatures().then(function(data) {
     weatherFeatures.features = data
     sendDataToAll('weather', weatherFeatures)
   })
+  setTimeout(fetchWeather, 120_000)
 }
 
 const sanitizeOptions = {
