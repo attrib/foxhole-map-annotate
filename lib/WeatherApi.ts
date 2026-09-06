@@ -67,7 +67,7 @@ class WeatherApi {
         if (!this.enabled) {
             return [];
         }
-        return await fetch(`https://${this.url}/api/storms`, {
+        return await fetch(`https://${this.url}/api/storms/`, {
             headers: {
                 "Content-Type": "application/json",
                 "User-Agent": "warden.express",

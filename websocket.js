@@ -93,10 +93,14 @@ const weatherFeatures = {
 };
 fetchWeather()
 function fetchWeather() {
-  Weather.getStormFeatures().then(function(data) {
-    weatherFeatures.features = data
-    sendDataToAll('weather', weatherFeatures)
-  })
+  Weather.getStormFeatures()
+    .then(function(data) {
+      weatherFeatures.features = data
+      sendDataToAll('weather', weatherFeatures)
+    })
+    .catch(function(e) {
+      console.log('error fetching weather', e)
+    })
   setTimeout(fetchWeather, 120_000)
 }
 
