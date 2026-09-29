@@ -191,5 +191,5 @@
 }
 
 :root {
-  --discrete-ease-in: all 300ms ease-in-out allow-discrete;
+  --discrete-ease-in: all 300ms ease-in-out; /* allow-discrete kills chrome??? */
 }

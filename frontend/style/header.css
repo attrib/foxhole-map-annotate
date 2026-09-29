@@ -675,13 +675,13 @@ body > header {
     }
   }
 
-  /*@media (prefers-reduced-motion: no-preference) {*/
-  /*  transition: var(--discrete-ease-in);*/
+  @media (prefers-reduced-motion: no-preference) {
+    transition: var(--discrete-ease-in);
 
-  /*  @starting-style {*/
-  /*    opacity: 0;*/
-  /*  }*/
-  /*}*/
+    @starting-style {
+      opacity: 0;
+    }
+  }
 
   & > .team-score {
     display: flex;
