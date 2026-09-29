@@ -7,6 +7,25 @@ import {Circle as CircleGeo} from "ol/geom";
 import {FeatureLike} from "ol/Feature";
 import {GeoJSON} from "ol/format";
 
+const WEATHER_STYLES = {
+    snow: [
+        new Style({
+            fill: new Fill({ color: '#F1F7FF66' })
+        }),
+        new Style({
+            image: new olIcon({ src: '/images/information/WeatherEventSnow.svg' })
+        })
+    ],
+    rain: [
+        new Style({
+            fill: new Fill({ color: '#36C5D066' })
+        }),
+        new Style({
+            image: new olIcon({ src: '/images/information/WeatherEventRain.svg' })
+        })
+    ]
+};
+
 class Weather {
 
     weatherSource: VectorSource
@@ -25,8 +44,13 @@ class Weather {
             style: this.style.bind(this),
             searchable: false,
             tooltip: true,
+            renderMode: 'image',
         })
-        map.addLayer(weatherLayer)
+        const urlParams = new URLSearchParams(window.location.search);
+        const disableWeather = urlParams.get('no_weather') === 'true';
+        if (!disableWeather) {
+            map.addLayer(weatherLayer)
+        }
         socket.on('weather', this.updateWeather.bind(this))
         this.geoJson = new GeoJSON();
         this.scaling = scaling
@@ -34,26 +58,15 @@ class Weather {
 
     style(feature: FeatureLike): Style[] {
         const isSnow = feature.get('type_code') === 'snow';
-        return [
-            new Style({
-                fill: new Fill({
-                    color: isSnow ? '#F1F7FF66' : '#36C5D066'
-                }),
-                geometry: (feature) => {
-                    return new CircleGeo(feature.getGeometry().getFirstCoordinate(), feature.get('radius') * this.scaling)
-                }
-            }),
-            new Style({
-                image: new olIcon({
-                    src: `/images/information/WeatherEvent${isSnow ? 'Snow' : 'Rain'}.svg`,
-                }),
-            })
-        ];
+        return isSnow ? WEATHER_STYLES.snow : WEATHER_STYLES.rain;
     }
 
     updateWeather(weather) {
         const col = this.geoJson.readFeatures(weather)
         this.weatherSource.clear(true)
+        for (const weather of col) {
+            weather.setGeometry(new CircleGeo(weather.getGeometry().getFirstCoordinate(), weather.get('radius') * this.scaling))
+        }
         this.weatherSource.addFeatures(col)
     }
 }
